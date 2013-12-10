@@ -27,7 +27,7 @@ namespace Frost.Display
 		public const string DefaultTitle = "Frost Game Engine";
 		#endregion
 
-		protected readonly RenderWindow _window;
+		protected readonly RenderWindow Implementation;
 
 		/// <summary>
 		/// Creates a new window to display graphics
@@ -46,7 +46,8 @@ namespace Frost.Display
 		/// <param name="title">Text displayed in the title bar</param>
 		public Window (uint width, uint height, string title)
 		{
-			_window = new RenderWindow(new VideoMode(width, height), title);
+			_title = title ?? String.Empty;
+			Implementation = new RenderWindow(new VideoMode(width, height), _title);
 		}
 
 		#region Size and location
@@ -58,7 +59,7 @@ namespace Frost.Display
 		/// <param name="height">New height in pixels</param>
 		public void SetSize (uint width, uint height)
 		{
-			_window.Size = new Vector2u(width, height);
+			Implementation.Size = new Vector2u(width, height);
 		}
 
 		/// <summary>
@@ -66,7 +67,7 @@ namespace Frost.Display
 		/// </summary>
 		public uint Width
 		{
-			get { return _window.Size.X; }
+			get { return Implementation.Size.X; }
 			set { SetSize(value, Height); }
 		}
 
@@ -75,7 +76,7 @@ namespace Frost.Display
 		/// </summary>
 		public uint Height
 		{
-			get { return _window.Size.Y; }
+			get { return Implementation.Size.Y; }
 			set { SetSize(Width, value); }
 		}
 
@@ -86,7 +87,7 @@ namespace Frost.Display
 		/// <param name="y">New y-coordinate</param>
 		public void SetPosition (int x, int y)
 		{
-			_window.Position = new Vector2i(x, y);
+			Implementation.Position = new Vector2i(x, y);
 		}
 
 		/// <summary>
@@ -94,7 +95,7 @@ namespace Frost.Display
 		/// </summary>
 		public int X
 		{
-			get { return _window.Position.X; }
+			get { return Implementation.Position.X; }
 			set { SetPosition(value, Y); }
 		}
 
@@ -103,10 +104,48 @@ namespace Frost.Display
 		/// </summary>
 		public int Y
 		{
-			get { return _window.Position.Y; }
+			get { return Implementation.Position.Y; }
 			set { SetPosition(X, value); }
 		}
 		#endregion
+
+		/// <summary>
+		/// Cached string for the window title
+		/// </summary>
+		/// <remarks>This is needed since SFML doesn't supply a way to get the window title.</remarks>
+		private string _title;
+
+		/// <summary>
+		/// Text displayed in the title bar
+		/// </summary>
+		public string Title
+		{
+			get { return _title; }
+			set
+			{
+				_title = value ?? String.Empty;
+				Implementation.SetTitle(_title);
+			}
+		}
+
+		/// <summary>
+		/// Cached flag for window visibility
+		/// </summary>
+		/// <remarks>This is needed since SFML doesn't supply a way to get the window visibility.</remarks>
+		private bool _visible = true;
+
+		/// <summary>
+		/// Indicates if the window is visible on the screen
+		/// </summary>
+		public bool Visible
+		{
+			get { return _visible; }
+			set
+			{
+				_visible = value;
+				Implementation.SetVisible(_visible);
+			}
+		}
 
 		#region Disposable
 
@@ -125,7 +164,7 @@ namespace Frost.Display
 			if(!Disposed)
 			{// Window hasn't been disposed of yet
 				Disposed = true;
-				throw new NotImplementedException();
+				Implementation.Close();
 			}
 		}
 		#endregion
