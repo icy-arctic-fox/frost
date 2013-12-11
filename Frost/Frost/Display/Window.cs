@@ -27,6 +27,10 @@ namespace Frost.Display
 		public const string DefaultTitle = "Frost Game Engine";
 		#endregion
 
+		/// <summary>
+		/// Underlying implementation of the window.
+		/// This references the SFML window object that displays and controls the window functionality.
+		/// </summary>
 		protected readonly RenderWindow Implementation;
 
 		/// <summary>
@@ -150,7 +154,7 @@ namespace Frost.Display
 		#region Disposable
 
 		/// <summary>
-		/// Indicates whether or not the window has been disposed
+		/// Indicates whether or not the window and its resources have been freed
 		/// </summary>
 		public bool Disposed { get; private set; }
 
@@ -165,6 +169,7 @@ namespace Frost.Display
 			{// Window hasn't been disposed of yet
 				Disposed = true;
 				Implementation.Close();
+				Implementation.Dispose();
 			}
 		}
 		#endregion
