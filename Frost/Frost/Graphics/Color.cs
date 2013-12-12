@@ -8,6 +8,8 @@ namespace Frost.Graphics
 	/// There are also methods for retrieving and setting HSL properties, but these operations take slightly longer.
 	/// This structure "unifies" the .net and SFML color objects so that they can be seamlessly converted.
 	/// </summary>
+	/// <remarks>Since the color components are stored as RGB,
+	/// using HSL values may cause color loss or loss of precision if changed repeatedly.</remarks>
 	public struct Color
 	{
 		/// <summary>
@@ -110,12 +112,50 @@ namespace Frost.Graphics
 		/// <summary>
 		/// Hue degrees of the color (0 - 1)
 		/// </summary>
-		/// <remarks>This property calculates the hue value which is not an instantaneous operation (try to reduce usage).
-		/// Repeatedly changing the hue can cause color loss.</remarks>
 		public float Hue
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get
+			{
+				var r = Red   / 255f;
+				var g = Green / 255f;
+				var b = Blue  / 255f;
+
+				var min = (r < g) ? ((r < b) ? r : b) : ((b < g) ? b : g);
+				var max = (r > g) ? ((r > b) ? r : b) : ((b > g) ? b : g);
+
+				var diff = max - min;
+				if(Math.Abs(diff) < Single.Epsilon) // Achromatic
+					return 0f;
+
+				float h;
+				if(r > g && r > b)
+					h = (g - b) / diff + (g < b ? 6f : 0f);
+				else if(g > b)
+					h = (b - r) / diff + 2f;
+				else
+					h = (r - g) / diff + 4f;
+				return h / 6f;
+			}
+
+			set
+			{
+				var s = Saturation;
+				if(Math.Abs(s) < Single.Epsilon)
+				{// Achromatic
+					var l = (int)(Lightness * 255f);
+					if(l > Byte.MaxValue)
+						l = Byte.MaxValue;
+					_value = (_value & unchecked((int)0xff000000)) | (l << 16) | (l << 8) | l;
+				}
+				else
+				{
+					byte r, g, b;
+					float q, p;
+					computeQp(s, Lightness, out q, out p);
+					computeRgbFromQp(q, p, value, out r, out g, out b);
+					_value = (_value & unchecked((int)0xff000000)) | (r << 16) | (g << 8) | b;
+				}
+			}
 		}
 
 		/// <summary>
@@ -123,8 +163,41 @@ namespace Frost.Graphics
 		/// </summary>
 		public float Saturation
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get
+			{
+				var r = Red   / 255f;
+				var g = Green / 255f;
+				var b = Blue  / 255f;
+
+				var min = (r < g) ? ((r < b) ? r : b) : ((b < g) ? b : g);
+				var max = (r > g) ? ((r > b) ? r : b) : ((b > g) ? b : g);
+
+				var diff = max - min;
+				if(Math.Abs(diff) < Single.Epsilon) // Achromatic
+					return 0f;
+				var span = max + min;
+				var l = span / 2f;
+				return diff / ((l > 0.5f) ? 2f - span : span);
+			}
+
+			set
+			{
+				if(Math.Abs(value) < Single.Epsilon)
+				{// Achromatic
+					var l = (int)(Lightness * 255f);
+					if(l > Byte.MaxValue)
+						l = Byte.MaxValue;
+					_value = (_value & unchecked((int)0xff000000)) | (l << 16) | (l << 8) | l;
+				}
+				else
+				{
+					byte r, g, b;
+					float q, p, h = Hue;
+					computeQp(value, Lightness, out q, out p);
+					computeRgbFromQp(q, p, h, out r, out g, out b);
+					_value = (_value & unchecked((int)0xff000000)) | (r << 16) | (g << 8) | b;
+				}
+			}
 		}
 
 		/// <summary>
@@ -132,8 +205,36 @@ namespace Frost.Graphics
 		/// </summary>
 		public float Lightness
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get
+			{
+				var r = Red   / 255f;
+				var g = Green / 255f;
+				var b = Blue  / 255f;
+
+				var min = (r < g) ? ((r < b) ? r : b) : ((b < g) ? b : g);
+				var max = (r > g) ? ((r > b) ? r : b) : ((b > g) ? b : g);
+				return (max + min) / 2f;
+			}
+
+			set
+			{
+				var s = Saturation;
+				if(Math.Abs(s) < Single.Epsilon)
+				{// Achromatic
+					var l = (int)(value * 255f);
+					if(l > Byte.MaxValue)
+						l = Byte.MaxValue;
+					_value = (_value & unchecked((int)0xff000000)) | (l << 16) | (l << 8) | l;
+				}
+				else
+				{
+					byte r, g, b;
+					float q, p, h = Hue;
+					computeQp(s, value, out q, out p);
+					computeRgbFromQp(q, p, h, out r, out g, out b);
+					_value = (_value & unchecked((int)0xff000000)) | (r << 16) | (g << 8) | b;
+				}
+			}
 		}
 		#endregion
 
@@ -190,7 +291,21 @@ namespace Frost.Graphics
 		/// <returns>Combined color</returns>
 		public static Color operator + (Color a, Color b)
 		{
-			throw new NotImplementedException();
+			var red   = a.Red   + b.Red;
+			var green = a.Green + b.Green;
+			var blue  = a.Blue  + b.Blue;
+			var alpha = a.Alpha + b.Alpha;
+
+			if(red > Byte.MaxValue)
+				red = Byte.MaxValue;
+			if(green > Byte.MaxValue)
+				green = Byte.MaxValue;
+			if(blue > Byte.MaxValue)
+				blue = Byte.MaxValue;
+			if(alpha > Byte.MaxValue)
+				alpha = Byte.MaxValue;
+
+			return new Color((byte)red, (byte)green, (byte)blue, (byte)alpha);
 		}
 
 		/// <summary>
@@ -201,7 +316,21 @@ namespace Frost.Graphics
 		/// <returns>Resulting color</returns>
 		public static Color operator - (Color a, Color b)
 		{
-			throw new NotImplementedException();
+			var red   = a.Red   - b.Red;
+			var green = a.Green - b.Green;
+			var blue  = a.Blue  - b.Blue;
+			var alpha = a.Alpha - b.Alpha;
+
+			if(red < Byte.MinValue)
+				red = Byte.MinValue;
+			if(green < Byte.MinValue)
+				green = Byte.MinValue;
+			if(blue < Byte.MinValue)
+				blue = Byte.MinValue;
+			if(alpha < Byte.MinValue)
+				alpha = Byte.MinValue;
+
+			return new Color((byte)red, (byte)green, (byte)blue, (byte)alpha);
 		}
 
 		/// <summary>
@@ -212,7 +341,12 @@ namespace Frost.Graphics
 		/// <returns>Resulting color</returns>
 		public static Color operator * (Color a, Color b)
 		{
-			throw new NotImplementedException();
+			var red   = a.Red   * b.Red   / Byte.MaxValue;
+			var green = a.Green * b.Green / Byte.MaxValue;
+			var blue  = a.Blue  * b.Blue  / Byte.MaxValue;
+			var alpha = a.Alpha * b.Alpha / Byte.MaxValue;
+
+			return new Color((byte)red, (byte)green, (byte)blue, (byte)alpha);
 		}
 		#endregion
 
@@ -260,7 +394,31 @@ namespace Frost.Graphics
 		/// <param name="lightness">Lightness (0 - 1)</param>
 		public static void RgbToHsl (byte red, byte green, byte blue, out float hue, out float saturation, out float lightness)
 		{
-			throw new NotImplementedException();
+			var r = red   / 255f;
+			var g = green / 255f;
+			var b = blue  / 255f;
+
+			var min = (red < green) ? ((red < blue) ? r : b) : ((blue < green) ? b : g);
+			var max = (red > green) ? ((red > blue) ? r : b) : ((blue > green) ? b : g);
+
+			var span = min + max;
+			var diff = max - min;
+			lightness = span / 2f;
+			if(Math.Abs(diff) < Single.Epsilon) // Achromatic
+				hue = saturation = 0f;
+			else
+			{
+				saturation = diff / ((lightness > 0.5f)
+					                   ? 2f - span
+					                   : span);
+				if(red > green && red > blue)
+					hue = (g - b) / diff + (green < blue ? 6f : 0f);
+				else if(green > blue)
+					hue = (b - r) / diff + 2f;
+				else
+					hue = (r - g) / diff + 4f;
+				hue /= 6f;
+			}
 		}
 
 		/// <summary>
@@ -274,7 +432,55 @@ namespace Frost.Graphics
 		/// <param name="blue">Amount of blue (0 - 255)</param>
 		public static void HslToRgb (float hue, float saturation, float lightness, out byte red, out byte green, out byte blue)
 		{
-			throw new NotImplementedException();
+			if(Math.Abs(saturation) < Single.Epsilon)
+			{// Achromatic
+				var l = (int)(lightness * 255f);
+				if(l > Byte.MaxValue)
+					l = Byte.MaxValue;
+				red = green = blue = (byte)l;
+			}
+			else
+			{
+				float q, p;
+				computeQp(saturation, lightness, out q, out p);
+				computeRgbFromQp(q, p, hue, out red, out green, out blue);
+			}
+		}
+
+		private static void computeQp (float s, float l, out float q, out float p)
+		{
+			q = l < 0.5f ? l * (1f + s) : l + s - l * s;
+			p = 2f * l - q;
+		}
+
+		private static void computeRgbFromQp (float q, float p, float h, out byte red, out byte green, out byte blue)
+		{
+			var r = hueToRgb(q, p, h + 1f / 3f);
+			var g = hueToRgb(q, p, h);
+			var b = hueToRgb(q, p, h - 1f / 3f);
+
+			var value = (int)(r * 255f);
+			red   = value > Byte.MaxValue ? Byte.MaxValue : (byte)value;
+			value = (int)(g * 255f);
+			green = value > Byte.MaxValue ? Byte.MaxValue : (byte)value;
+			value = (int)(b * 255f);
+			blue  = value > Byte.MaxValue ? Byte.MaxValue : (byte)value;
+		}
+
+		private static float hueToRgb (float q, float p, float t)
+		{
+			if(t < 0f)
+				t += 1f;
+			else if(t > 1f)
+				t -= 1f;
+
+			if(t < 1f / 6f)
+				return p + (q - p) * 6f * t;
+			if(t < 1f / 2f)
+				return q;
+			if(t < 2f / 3f)
+				return p + (q - p) * (2f / 3f - t) * 6f;
+			return p;
 		}
 		#endregion
 	}
