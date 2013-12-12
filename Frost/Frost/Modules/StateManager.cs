@@ -36,7 +36,7 @@ namespace Frost.Modules
 			if(renderRoot == null)
 				throw new ArgumentNullException("renderRoot", "The game render root node can't be null.");
 #endif
-			_renderThread = new Thread(doRenderThread);
+			_renderThread = new Thread(doRenderLoop);
 
 			_display = display;
 			_updateRoot = updateRoot;
@@ -44,13 +44,31 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
+		/// Indicates if the state manager is running.
+		/// When false and executing, the update and render loops should exit.
+		/// </summary>
+		private bool _running;
+
+		/// <summary>
 		/// Starts the state manager.
 		/// This call blocks until told to exit by the <see cref="Stop"/> method.
 		/// </summary>
 		public void Run ()
 		{
-			_renderThread.Start();
-			throw new NotImplementedException();
+			if(!_renderThread.IsAlive)
+			{// Have not started yet
+				try
+				{
+					_running = true;
+					_renderThread.Start();
+				}
+				catch(ThreadStateException e)
+				{// Thread has already started and finished
+					_running = false;
+					throw new InvalidOperationException("The state manager has already exited - cannot restart.", e);
+				}
+				doUpdateLoop();
+			}
 		}
 
 		/// <summary>
@@ -59,18 +77,31 @@ namespace Frost.Modules
 		/// </summary>
 		public void Stop ()
 		{
-			throw new NotImplementedException();
+			_running = false;
+		}
+
+		/// <summary>
+		/// Performs updates to the game state
+		/// </summary>
+		private void doUpdateLoop ()
+		{
+			while(_running)
+			{
+				_updateRoot.StepState(0, 1); // TODO: Use correct state indices
+			}
 		}
 
 		/// <summary>
 		/// Threaded method that runs the render loop
 		/// </summary>
-		private void doRenderThread ()
+		private void doRenderLoop ()
 		{
-			// TODO: Loop
-			_display.EnterFrame();
-			_renderRoot.DrawState(0); // TODO: Add state number
-			_display.ExitFrame();
+			while(_running)
+			{
+				_display.EnterFrame();
+				_renderRoot.DrawState(0); // TODO: Use correct index
+				_display.ExitFrame();
+			}
 			throw new NotImplementedException();
 		}
 	}
