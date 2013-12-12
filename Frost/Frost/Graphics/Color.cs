@@ -14,7 +14,7 @@ namespace Frost.Graphics
 		/// Combined values of the color.
 		/// This is stored as ARGB with 8 bits per character (32 bits, 4 bytes total).
 		/// </summary>
-		private uint _value;
+		private int _value;
 
 		#region Constructors
 
@@ -28,7 +28,7 @@ namespace Frost.Graphics
 		/// 0 is fully transparent and 255 is fully opaque.</param>
 		public Color (byte red, byte green, byte blue, byte alpha = 255)
 		{
-			throw new NotImplementedException();
+			_value = ArgbToInt(red, green, blue, alpha);
 		}
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace Frost.Graphics
 		/// <param name="color">Original color</param>
 		public Color (Color color)
 		{
-			throw new NotImplementedException();
+			_value = color._value;
 		}
 
 		/// <summary>
@@ -46,7 +46,7 @@ namespace Frost.Graphics
 		/// <param name="color">.net color</param>
 		public Color (System.Drawing.Color color)
 		{
-			throw new NotImplementedException();
+			_value = color.ToArgb();
 		}
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace Frost.Graphics
 		/// <param name="color">SFML color</param>
 		public Color (SFML.Graphics.Color color)
 		{
-			throw new NotImplementedException();
+			_value = ArgbToInt(color.R, color.G, color.B, color.A);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace Frost.Graphics
 		/// <param name="name">Color name - color names are based on .net's predefined colors.</param>
 		public Color (string name)
 		{
-			throw new NotImplementedException();
+			_value = System.Drawing.Color.FromName(name).ToArgb();
 		}
 		#endregion
 
@@ -75,8 +75,8 @@ namespace Frost.Graphics
 		/// </summary>
 		public byte Red
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return (byte)((_value >> 16) & 0xff); }
+			set { _value = (_value & unchecked((int)0xff00ffff)) | (value << 16); }
 		}
 
 		/// <summary>
@@ -84,8 +84,8 @@ namespace Frost.Graphics
 		/// </summary>
 		public byte Green
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return (byte)((_value >> 8) & 0xff); }
+			set { _value = (_value & unchecked((int)0xffff00ff)) | (value << 8); }
 		}
 
 		/// <summary>
@@ -93,8 +93,8 @@ namespace Frost.Graphics
 		/// </summary>
 		public byte Blue
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return (byte)(_value & 0xff); }
+			set { _value = (_value & unchecked((int)0xffffff00)) | value; }
 		}
 
 		/// <summary>
@@ -103,8 +103,8 @@ namespace Frost.Graphics
 		/// </summary>
 		public byte Alpha
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return (byte)((_value >> 24) & 0xff); }
+			set { _value = (_value & 0x00ffffff) | (value << 24); }
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace Frost.Graphics
 		/// <returns>A color structure</returns>
 		public static implicit operator Color (System.Drawing.Color color)
 		{
-			throw new NotImplementedException();
+			return new Color(color);
 		}
 
 		/// <summary>
@@ -156,7 +156,7 @@ namespace Frost.Graphics
 		/// <returns>A color structure</returns>
 		public static implicit operator Color (SFML.Graphics.Color color)
 		{
-			throw new NotImplementedException();
+			return new Color(color);
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace Frost.Graphics
 		/// <returns>A .net color</returns>
 		public static implicit operator System.Drawing.Color (Color color)
 		{
-			throw new NotImplementedException();
+			return System.Drawing.Color.FromArgb(color._value);
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace Frost.Graphics
 		/// <returns>A SFML color</returns>
 		public static implicit operator SFML.Graphics.Color (Color color)
 		{
-			throw new NotImplementedException();
+			return new SFML.Graphics.Color(color.Red, color.Green, color.Blue, color.Alpha);
 		}
 		#endregion
 
@@ -227,23 +227,26 @@ namespace Frost.Graphics
 		/// <param name="alpha">Amount of alpha (0 - 255).
 		/// 0 is fully transparent and 255 is fully opaque.</param>
 		/// <returns>An integer containing the color values</returns>
-		public static uint ArgbToInt (byte red, byte green, byte blue, byte alpha = 255)
+		public static int ArgbToInt (byte red, byte green, byte blue, byte alpha = 255)
 		{
-			throw new NotImplementedException();
+			return (alpha << 24) | (red << 16) | (green << 8) | blue;
 		}
 
 		/// <summary>
 		/// Converts an integer to its color values
 		/// </summary>
-		/// <param name="color">Integer containing the color values</param>
+		/// <param name="value">Integer containing the color values</param>
 		/// <param name="red">Amount of red (0 - 255)</param>
 		/// <param name="green">Amount of green (0 - 255)</param>
 		/// <param name="blue">Amount of blue (0 - 255)</param>
 		/// <param name="alpha">Amount of alpha (0 - 255).
 		/// 0 is fully transparent and 255 is fully opaque.</param>
-		public static void IntToArgb (uint color, out byte red, out byte green, out byte blue, out byte alpha)
+		public static void IntToArgb (int value, out byte red, out byte green, out byte blue, out byte alpha)
 		{
-			throw new NotImplementedException();
+			red   = (byte)((value >> 16) & 0xff);
+			green = (byte)((value >> 8) & 0xff);
+			blue  = (byte)(value & 0xff);
+			alpha = (byte)((value >> 24) & 0xff);
 		}
 
 		/// <summary>
