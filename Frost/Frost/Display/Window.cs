@@ -152,9 +152,19 @@ namespace Frost.Display
 		}
 
 		/// <summary>
+		/// SFML color for the background.
+		/// This is used instead of the <see cref="Frost.Graphics.Color"/> structure because converting it every frame would be a waste.
+		/// </summary>
+		private Color _backColor = Color.Black;
+
+		/// <summary>
 		/// Background color displayed beneath all of the drawn components
 		/// </summary>
-		public Color BackgroundColor { get; set; }
+		public Graphics.Color BackgroundColor
+		{
+			get { return _backColor; }
+			set { _backColor = value; }
+		}
 
 		#region Display
 
@@ -163,7 +173,7 @@ namespace Frost.Display
 		/// </summary>
 		public void EnterFrame ()
 		{
-			Implementation.Clear(BackgroundColor);
+			Implementation.Clear(_backColor);
 		}
 
 		/// <summary>
