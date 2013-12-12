@@ -7,7 +7,7 @@ namespace Frost.Display
 	/// <summary>
 	/// Interface for displaying graphics to the user
 	/// </summary>
-	public class Window : IDisposable
+	public class Window : IDisplay, IDisposable
 	{
 		#region Constants
 
@@ -150,6 +150,30 @@ namespace Frost.Display
 				Implementation.SetVisible(_visible);
 			}
 		}
+
+		/// <summary>
+		/// Background color displayed beneath all of the drawn components
+		/// </summary>
+		public Color BackgroundColor { get; set; }
+
+		#region Display
+
+		/// <summary>
+		/// Starts a new frame
+		/// </summary>
+		public void EnterFrame ()
+		{
+			Implementation.Clear(BackgroundColor);
+		}
+
+		/// <summary>
+		/// Ends drawing commands for a frame and displays it
+		/// </summary>
+		public void ExitFrame ()
+		{
+			Implementation.Display();
+		}
+		#endregion
 
 		#region Disposable
 
