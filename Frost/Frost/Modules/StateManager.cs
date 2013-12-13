@@ -113,7 +113,7 @@ namespace Frost.Modules
 		private readonly Stopwatch _updateTimer = new Stopwatch();
 
 		/// <summary>
-		/// Actual number of logic updates per second
+		/// Current number of logic updates per second
 		/// </summary>
 		public double UpdateRate
 		{
@@ -149,7 +149,7 @@ namespace Frost.Modules
 				// Update the game logic
 				_display.Update();
 //				_updateRoot.StepState(0, 1); // TODO: Use correct state indices
-				((Window)_display).Title = UpdateRate + " u/s";
+				((Window)_display).Title = UpdateRate + " u/s " + RenderRate + " fps";
 
 				// Measure how long it took to update
 				var elapsed = _updateTimer.Elapsed;
@@ -171,20 +171,91 @@ namespace Frost.Modules
 		}
 		#endregion
 
+		#region Render
+
+		/// <summary>
+		/// Default length of time to target for rendering a frame
+		/// </summary>
+		public const double DefaultTargetRenderPeriod = 1f / 30f;
+
+		/// <summary>
+		/// Target length of time (in seconds) for renders per frame
+		/// </summary>
+		private double _targetRenderPeriod = DefaultTargetRenderPeriod;
+
+		/// <summary>
+		/// Actual length of time (in seconds) that rendering took during the last frame
+		/// </summary>
+		private double _prevRenderPeriod;
+
+		/// <summary>
+		/// Length of time (in seconds) that passed during the last frame rendering
+		/// </summary>
+		private double _renderPeriod;
+
+		/// <summary>
+		/// Tracks the amount of time taken to render a frame
+		/// </summary>
+		private readonly Stopwatch _renderTimer = new Stopwatch();
+
+		/// <summary>
+		/// Current number of rendered frames per second
+		/// </summary>
+		public double RenderRate
+		{
+			get { return 1d / _renderPeriod; }
+		}
+
+		/// <summary>
+		/// Target number of rendered frames per second.
+		/// A value of 0 represents no limit of renders per second.
+		/// </summary>
+		public double TargetRenderRate
+		{
+			get { return (Math.Abs(_targetRenderPeriod) < Double.Epsilon) ? 0d : 1d / _targetRenderPeriod; }
+			set { _targetRenderPeriod = (Math.Abs(value) < Double.Epsilon) ? 0d : 1d / value; }
+		}
+
+		/// <summary>
+		/// Length of time (in seconds) that it took to render the last frame
+		/// </summary>
+		public double RenderTime
+		{
+			get { return _prevRenderPeriod; }
+		}
+
 		/// <summary>
 		/// Threaded method that runs the render loop
 		/// </summary>
 		private void doRenderLoop ()
 		{
+			_renderTimer.Start();
 			while(_running)
-			{
+			{// Continue rendering until told to stop
+				// Render the frame
 				_display.EnterFrame();
 //				_renderRoot.DrawState(0); // TODO: Use correct index
 				_display.ExitFrame();
-				Thread.Sleep(1000 / 60);
+
+				// Measure how long it took to render
+				var elapsed = _renderTimer.Elapsed;
+				_prevRenderPeriod = elapsed.TotalSeconds;
+
+				// Calculate how long to sleep for the remaining time (if there's any) in the frame
+				var sleepTime = (int)((_targetRenderPeriod - _prevRenderPeriod) * 1000);
+				if(sleepTime < 0) // Don't sleep for a negative time
+					sleepTime = 0;
+
+				// The sleep time can be zero, which will yield the render thread.
+				// This is important for single-core processors and allowing the update thread to continue.
+				Thread.Sleep(sleepTime); // TODO: Reduce how much time is spent sleeping to avoid over sleeping
+
+				// Save how long it took for reporting and restart the timer
+				_renderPeriod = _renderTimer.Elapsed.TotalSeconds;
+				_renderTimer.Restart();
 			}
-			throw new NotImplementedException();
 		}
+		#endregion
 		#endregion
 	}
 }
