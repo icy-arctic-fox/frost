@@ -53,12 +53,14 @@ namespace Frost.Modules
 		/// Starts the state manager.
 		/// This call blocks until told to exit by the <see cref="Stop"/> method.
 		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the state manager has already stopped with <see cref="Stop"/>.
+		/// The state manager cannot be restarted after it has been stopped.</exception>
 		public void Run ()
 		{
 			if(!_renderThread.IsAlive)
-			{// Have not started yet
+			{// Thread is not running
 				try
-				{
+				{// ... but has it already exited?
 					_running = true;
 					_renderThread.Start();
 				}

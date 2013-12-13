@@ -55,6 +55,7 @@
     <Compile Include="CancellableEventArgs.cs" />
     <Compile Include="Display\Window.cs" />
     <Compile Include="Display\IDisplay.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="ICancellable.cs" />
     <Compile Include="Modules\IDrawableNode.cs">
