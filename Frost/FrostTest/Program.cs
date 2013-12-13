@@ -11,7 +11,8 @@ namespace FrostTest
 		static void Main (string[] args)
 		{
 			var window = new Frost.Display.Window();
-			Thread.Sleep(5000);
+			var sm = new Frost.Modules.StateManager(window, null, null);
+			sm.Run();
 		}
 	}
 }

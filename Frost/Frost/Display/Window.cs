@@ -169,6 +169,14 @@ namespace Frost.Display
 		#region Display
 
 		/// <summary>
+		/// Processes window messages
+		/// </summary>
+		public void Update ()
+		{
+			Implementation.DispatchEvents();
+		}
+
+		/// <summary>
 		/// Starts a new frame
 		/// </summary>
 		public void EnterFrame ()
