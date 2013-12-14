@@ -6,7 +6,8 @@ using Frost.Display;
 namespace Frost.Modules
 {
 	/// <summary>
-	/// Tracks the frames to be updated and rendered
+	/// Tracks the frames to be updated and rendered.
+	/// The state manager uses multiple states in memory so that updates and rendering can take place on separate threads concurrently.
 	/// </summary>
 	public class StateManager
 	{
@@ -48,7 +49,7 @@ namespace Frost.Modules
 		/// Indicates if the state manager is running.
 		/// When false and executing, the update and render loops should exit.
 		/// </summary>
-		private bool _running;
+		private volatile bool _running;
 
 		/// <summary>
 		/// Starts the state manager.
@@ -84,6 +85,67 @@ namespace Frost.Modules
 		}
 
 		#region Update and render loops/logic
+
+		/// <summary>
+		/// Current frame number - this is the update frame number
+		/// </summary>
+		private ulong _frame = 0;
+
+		/// <summary>
+		/// Number of frames rendered
+		/// </summary>
+		private ulong _framesRendered = 0;
+
+		/// <summary>
+		/// Number of times a frame has been rendered more than once
+		/// </summary>
+		private ulong _duplicateFrames = 0;
+
+		/// <summary>
+		/// Current frame number - this is the update frame number
+		/// </summary>
+		public ulong Frame
+		{
+			get { return _frame; }
+		}
+
+		/// <summary>
+		/// Number of frames rendered
+		/// </summary>
+		public ulong FramesRendered
+		{
+			get { return _framesRendered; }
+		}
+
+		/// <summary>
+		/// Number of times a frame has been rendered more than once
+		/// </summary>
+		public ulong DuplicateFrames
+		{
+			get { return _duplicateFrames; }
+		}
+
+		private readonly object _locker = new object();
+
+		/// <summary>
+		/// Index of the previous state updated
+		/// </summary>
+		private int _updateIndex = -1;
+
+		/// <summary>
+		/// Index of the previous state rendered
+		/// </summary>
+		private int _renderIndex = -1;
+
+		/// <summary>
+		/// Last frame number that was updated
+		/// </summary>
+		private ulong _updateFrame = 0;
+
+		/// <summary>
+		/// Last frame number that was rendered
+		/// </summary>
+		private ulong _renderFrame = 0;
 
 		#region Update
 
@@ -146,10 +208,36 @@ namespace Frost.Modules
 			_updateTimer.Start();
 			while(_running)
 			{// Continue performing game logic updates until told to stop
+				// Find out which frame state object that should be updating and referencing
+				int prevState, nextState;
+				lock(_locker)
+				{
+					prevState = _updateIndex;
+					switch(_updateIndex)
+					{
+					case 0:
+						nextState = _renderIndex == 1 ? 2 : 1;
+						break;
+					case 1:
+						nextState = _renderIndex == 0 ? 2 : 0;
+						break;
+					default: // 2 or -1
+						nextState = _renderIndex == 0 ? 1 : 0;
+						break;
+					}
+				}
+
 				// Update the game logic
 				_display.Update();
-//				_updateRoot.StepState(0, 1); // TODO: Use correct state indices
+//				_updateRoot.StepState(prevState, nextState); // TODO: Use correct state indices
 				((Window)_display).Title = UpdateRate + " u/s " + RenderRate + " fps";
+
+				// Store information about the frame we just updated
+				lock(_locker)
+				{
+					_updateIndex = nextState;
+					++_updateFrame;
+				}
 
 				// Measure how long it took to update
 				var elapsed = _updateTimer.Elapsed;
@@ -232,9 +320,28 @@ namespace Frost.Modules
 			_renderTimer.Start();
 			while(_running)
 			{// Continue rendering until told to stop
+				// Find out which frame we should be updating and referencing
+				int state;
+				lock(_locker)
+				{
+					state = _renderIndex;
+					switch(_renderIndex)
+					{
+					case 0:
+						state = _updateIndex == 1 ? 2 : 1;
+						break;
+					case 1:
+						state = _updateIndex == 0 ? 2 : 0;
+						break;
+					default: // 2 or -1
+						state = _updateIndex == 0 ? 1 : 0;
+						break;
+					}
+				}
+
 				// Render the frame
 				_display.EnterFrame();
-//				_renderRoot.DrawState(0); // TODO: Use correct index
+//				_renderRoot.DrawState(state); // TODO: Use correct index
 				_display.ExitFrame();
 
 				// Measure how long it took to render
