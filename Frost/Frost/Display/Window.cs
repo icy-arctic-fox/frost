@@ -169,6 +169,20 @@ namespace Frost.Display
 		#region Display
 
 		/// <summary>
+		/// Sets a window as being actively rendered in on a thread.
+		/// The window can be rendered from only one thread at a time.
+		/// The initial thread that created the window will be "active."
+		/// Call this method with false to disable it so that other threads can render to it.
+		/// A thread must call this method with a true flag to enable rendering for that thread, but this will not work if rendering is active on another thread.
+		/// </summary>
+		/// <param name="flag">True if the window is active for rendering on the current thread, or false to disable rendering on the current thread</param>
+		/// <returns>True if the current thread is now active for rendering, false if another thread is already rendering.</returns>
+		public bool SetActive (bool flag = true)
+		{
+			return Implementation.SetActive(flag);
+		}
+
+		/// <summary>
 		/// Processes window messages
 		/// </summary>
 		public void Update ()

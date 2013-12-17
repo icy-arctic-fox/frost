@@ -38,7 +38,10 @@ namespace Frost.Modules
 			if(renderRoot == null)
 				throw new ArgumentNullException("renderRoot", "The game render root node can't be null.");*/
 #endif
-			_renderThread = new Thread(doRenderLoop);
+			_renderThread = new Thread(doRenderLoop) {
+				Name     = "State Manager Render Thread",
+				Priority = ThreadPriority.AboveNormal
+			};
 
 			_display = display;
 			_updateRoot = updateRoot;
@@ -59,6 +62,9 @@ namespace Frost.Modules
 		/// The state manager cannot be restarted after it has been stopped.</exception>
 		public void Run ()
 		{
+			// Disable rendering on the current thread so that the render thread can do it
+			_display.SetActive(false);
+
 			if(!_renderThread.IsAlive)
 			{// Thread is not running
 				try
@@ -315,8 +321,13 @@ namespace Frost.Modules
 		/// <summary>
 		/// Threaded method that runs the render loop
 		/// </summary>
+		/// <exception cref="AccessViolationException">Thrown if the display to render to could not be enabled for the current thread.
+		/// Make sure the display is disabled on all other threads.</exception>
 		private void doRenderLoop ()
 		{
+			if(!_display.SetActive())
+				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
+
 			_renderTimer.Start();
 			while(_running)
 			{// Continue rendering until told to stop
@@ -341,7 +352,7 @@ namespace Frost.Modules
 
 				// Render the frame
 				_display.EnterFrame();
-//				_renderRoot.DrawState(state); // TODO: Use correct index
+//				_renderRoot.DrawState(state);
 				_display.ExitFrame();
 
 				// Measure how long it took to render
