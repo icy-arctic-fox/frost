@@ -214,8 +214,8 @@ namespace Frost.Modules
 
 				// Update the game logic
 				_display.Update();
-//				_updateRoot.StepState(prevState, nextState); // TODO: Use correct state indices
-				((Window)_display).Title = "Frame: " + Frame + " - " + UpdateRate + " u/s - " + RenderRate + " f/s [" + DuplicateFrames + " dups, " + SkippedFrames + " skipped]";
+//				_updateRoot.StepState(prevState, nextState);
+				((Window)_display).Title = ToString() + " " + StateString;
 
 				// Measure how long it took to update
 				var elapsed = _updateTimer.Elapsed;
@@ -374,5 +374,74 @@ namespace Frost.Modules
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Generates a string that represents the status of the state manager
+		/// </summary>
+		/// <returns>A string in the form:
+		/// Frame: # - # u/s - # f/s (# dups, # skipped)</returns>
+		public override string ToString ()
+		{
+			var sb = new System.Text.StringBuilder();
+			sb.Append("Frame: ");
+			sb.Append(Frame);
+			sb.Append(" - ");
+			sb.Append(String.Format("{0:0.00}", UpdateRate));
+			sb.Append(" u/s - ");
+			sb.Append(String.Format("{0:0.00}", RenderRate));
+			sb.Append(" f/s (");
+			sb.Append(DuplicateFrames);
+			sb.Append(" dups, ");
+			sb.Append(SkippedFrames);
+			sb.Append(" skipped)");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// String that contains the frame states and the operations being performed on them.
+		/// &lt; &gt; signify that the state is being rendered.
+		/// [ ] signify that the state is being updated.
+		/// </summary>
+		public string StateString
+		{
+			get
+			{
+				var frames = new ulong[3];
+				int updateIndex, renderIndex;
+				lock(_stateFrames)
+				{// Grab the values
+					for(var i = 0; i < 3; ++i)
+						frames[i] = _stateFrames[i];
+					updateIndex = _updateIndex;
+					renderIndex = _renderIndex;
+				}
+
+				var sb = new System.Text.StringBuilder();
+				for(var i = 0; i < frames.Length; ++i)
+				{
+					if(updateIndex == i)
+					{
+						sb.Append('[');
+						sb.Append(frames[i]);
+						sb.Append(']');
+					}
+					else if(renderIndex == i)
+					{
+						sb.Append('<');
+						sb.Append(frames[i]);
+						sb.Append('>');
+					}
+					else
+					{
+						sb.Append(' ');
+						sb.Append(frames[i]);
+						sb.Append(' ');
+					}
+					if(i - 1 < frames.Length)
+						sb.Append(' ');
+				}
+				return sb.ToString();
+			}
+		}
 	}
 }
