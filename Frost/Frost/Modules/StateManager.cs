@@ -159,7 +159,7 @@ namespace Frost.Modules
 		/// </summary>
 		public double UpdateRate
 		{
-			get { return 1d / _updatePeriod; }
+			get { return (_updatePeriod > 0d) ? 1d / _updatePeriod : 0d; }
 		}
 
 		/// <summary>
@@ -269,7 +269,7 @@ namespace Frost.Modules
 		/// </summary>
 		public double RenderRate
 		{
-			get { return 1d / _renderPeriod; }
+			get { return (_renderPeriod > 0d) ? 1d / _renderPeriod : 0d; }
 		}
 
 		/// <summary>
