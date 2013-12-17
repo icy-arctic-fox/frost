@@ -95,63 +95,37 @@ namespace Frost.Modules
 		/// <summary>
 		/// Current frame number - this is the update frame number
 		/// </summary>
-		private ulong _frame = 0;
+		public ulong Frame { get; private set; }
 
 		/// <summary>
 		/// Number of frames rendered
 		/// </summary>
-		private ulong _framesRendered = 0;
+		public ulong FramesRendered { get; private set; }
 
 		/// <summary>
 		/// Number of times a frame has been rendered more than once
 		/// </summary>
-		private ulong _duplicateFrames = 0;
+		public ulong DuplicateFrames { get; private set; }
 
 		/// <summary>
-		/// Current frame number - this is the update frame number
+		/// Number of frames that weren't rendered
 		/// </summary>
-		public ulong Frame
-		{
-			get { return _frame; }
-		}
+		public ulong SkippedFrames { get; private set; }
 
 		/// <summary>
-		/// Number of frames rendered
+		/// Frame number that each state is currently at
 		/// </summary>
-		public ulong FramesRendered
-		{
-			get { return _framesRendered; }
-		}
-
-		/// <summary>
-		/// Number of times a frame has been rendered more than once
-		/// </summary>
-		public ulong DuplicateFrames
-		{
-			get { return _duplicateFrames; }
-		}
-
-		private readonly object _locker = new object();
+		private readonly ulong[] _stateFrames = new ulong[] {0, 0, 0};
 
 		/// <summary>
 		/// Index of the previous state updated
 		/// </summary>
-		private int _updateIndex = -1;
+		private int _updateIndex;
 
 		/// <summary>
 		/// Index of the previous state rendered
 		/// </summary>
-		private int _renderIndex = -1;
-
-		/// <summary>
-		/// Last frame number that was updated
-		/// </summary>
-		private ulong _updateFrame = 0;
-
-		/// <summary>
-		/// Last frame number that was rendered
-		/// </summary>
-		private ulong _renderFrame = 0;
+		private int _renderIndex;
 
 		#region Update
 
@@ -214,9 +188,9 @@ namespace Frost.Modules
 			_updateTimer.Start();
 			while(_running)
 			{// Continue performing game logic updates until told to stop
-				// Find out which frame state object that should be updating and referencing
+				// Find out which frame state object that should be updated
 				int prevState, nextState;
-				lock(_locker)
+				lock(_stateFrames)
 				{
 					prevState = _updateIndex;
 					switch(_updateIndex)
@@ -227,23 +201,21 @@ namespace Frost.Modules
 					case 1:
 						nextState = _renderIndex == 0 ? 2 : 0;
 						break;
-					default: // 2 or -1
+					default: // 2
 						nextState = _renderIndex == 0 ? 1 : 0;
 						break;
 					}
+
+					// Store information about the frame we just updated
+					_updateIndex = nextState;
+					++Frame;
+					_stateFrames[nextState] = Frame;
 				}
 
 				// Update the game logic
 				_display.Update();
 //				_updateRoot.StepState(prevState, nextState); // TODO: Use correct state indices
-				((Window)_display).Title = UpdateRate + " u/s " + RenderRate + " fps";
-
-				// Store information about the frame we just updated
-				lock(_locker)
-				{
-					_updateIndex = nextState;
-					++_updateFrame;
-				}
+				((Window)_display).Title = "Frame: " + Frame + " - " + UpdateRate + " u/s - " + RenderRate + " f/s [" + DuplicateFrames + " dups, " + SkippedFrames + " skipped]";
 
 				// Measure how long it took to update
 				var elapsed = _updateTimer.Elapsed;
@@ -319,6 +291,12 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
+		/// Indicates if duplicate frames should be rendered.
+		/// Duplicate frames occur when the game updates lag behind the screen (render) updates.
+		/// </summary>
+		public bool RenderDuplicateFrames { get; set; }
+
+		/// <summary>
 		/// Threaded method that runs the render loop
 		/// </summary>
 		/// <exception cref="AccessViolationException">Thrown if the display to render to could not be enabled for the current thread.
@@ -331,11 +309,13 @@ namespace Frost.Modules
 			_renderTimer.Start();
 			while(_running)
 			{// Continue rendering until told to stop
-				// Find out which frame we should be updating and referencing
+				var dup = false;
+
+				// Find out which frame should be rendered.
+				// Make sure to NOT pick the frame that is currently being updated, as it will be unstable.
 				int state;
-				lock(_locker)
+				lock(_stateFrames)
 				{
-					state = _renderIndex;
 					switch(_renderIndex)
 					{
 					case 0:
@@ -344,16 +324,35 @@ namespace Frost.Modules
 					case 1:
 						state = _updateIndex == 0 ? 2 : 0;
 						break;
-					default: // 2 or -1
+					default: // 2
 						state = _updateIndex == 0 ? 1 : 0;
 						break;
 					}
+
+					// Check if this is a duplicated frame (update is behind render)
+					var prevFrame = _stateFrames[_renderIndex];
+					var nextFrame = _stateFrames[state];
+					if(nextFrame <= prevFrame)
+					{
+						dup = true;
+						++DuplicateFrames;
+						// Set the state to be rendered back to the previous one to prevent "jitter" (briefly showing the previous frame again).
+						state = _renderIndex;
+					}
+					else
+					{// New frame
+						SkippedFrames += nextFrame - prevFrame - 1;
+						_renderIndex = state;
+					}
 				}
 
-				// Render the frame
-				_display.EnterFrame();
-//				_renderRoot.DrawState(state);
-				_display.ExitFrame();
+				if(!dup || RenderDuplicateFrames)
+				{// Render the frame
+					_display.EnterFrame();
+//					_renderRoot.DrawState(state);
+					_display.ExitFrame();
+					++FramesRendered;
+				}
 
 				// Measure how long it took to render
 				var elapsed = _renderTimer.Elapsed;
