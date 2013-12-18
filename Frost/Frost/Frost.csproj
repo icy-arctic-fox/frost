@@ -58,12 +58,14 @@
     <Compile Include="Game.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="ICancellable.cs" />
-    <Compile Include="Modules\IDrawableNode.cs">
+    <Compile Include="Modules\State\IDrawableNode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Modules\IStepableNode.cs" />
+    <Compile Include="Modules\State\IStepableNode.cs" />
     <Compile Include="Modules\StateManager.cs" />
+    <Compile Include="Modules\State\StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Interface.cs" />
     <Compile Include="Utility\DelegateUtility.cs" />
   </ItemGroup>
   <ItemGroup>

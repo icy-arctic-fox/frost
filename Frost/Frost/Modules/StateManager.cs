@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using Frost.Display;
+using Frost.Modules.State;
 
 namespace Frost.Modules
 {
@@ -11,6 +12,12 @@ namespace Frost.Modules
 	/// </summary>
 	public class StateManager
 	{
+		/// <summary>
+		/// Number of active states in memory.
+		/// Each component that can be modified during runtime needs to have this many states.
+		/// </summary>
+		public const int StateCount = 3;
+
 		/// <summary>
 		/// Thread that runs the render loop
 		/// </summary>
@@ -33,10 +40,10 @@ namespace Frost.Modules
 #if DEBUG
 			if(display == null)
 				throw new ArgumentNullException("display", "The display that renders frames can't be null.");
-/*			if(updateRoot == null)
+			if(updateRoot == null)
 				throw new ArgumentNullException("updateRoot", "The game update root node can't be null.");
 			if(renderRoot == null)
-				throw new ArgumentNullException("renderRoot", "The game render root node can't be null.");*/
+				throw new ArgumentNullException("renderRoot", "The game render root node can't be null.");
 #endif
 			_renderThread = new Thread(doRenderLoop) {
 				Name     = "State Manager Render Thread",
@@ -132,7 +139,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Default length of time to target for each update frame
 		/// </summary>
-		public const double DefaultTargetUpdatePeriod = 1f / 60f;
+		public const double DefaultTargetUpdatePeriod = 1f / 30f;
 
 		/// <summary>
 		/// Target length of time (in seconds) for updates per frame
@@ -214,7 +221,7 @@ namespace Frost.Modules
 
 				// Update the game logic
 				_display.Update();
-//				_updateRoot.StepState(prevState, nextState);
+				_updateRoot.StepState(prevState, nextState);
 				((Window)_display).Title = ToString() + " " + StateString;
 
 				// Measure how long it took to update
@@ -349,7 +356,7 @@ namespace Frost.Modules
 				if(!dup || RenderDuplicateFrames)
 				{// Render the frame
 					_display.EnterFrame();
-//					_renderRoot.DrawState(state);
+					_renderRoot.DrawState(state);
 					_display.ExitFrame();
 					++FramesRendered;
 				}

@@ -1,4 +1,4 @@
-﻿namespace Frost.Modules
+﻿namespace Frost.Modules.State
 {
 	/// <summary>
 	/// A node that can draw the state of a component
