@@ -14,6 +14,13 @@ namespace Frost.Display
 		void Draw (Sprite sprite);
 
 		/// <summary>
+		/// Draws a sprite to the display with additional transformation and render options
+		/// </summary>
+		/// <param name="sprite">Sprite to draw</param>
+		/// <param name="states">Additional transformation and render options</param>
+		void Draw (Sprite sprite, RenderStates states);
+
+		/// <summary>
 		/// Performs any updates to the display's state (not part of the rendered frames)
 		/// </summary>
 		void Update ();

@@ -173,6 +173,11 @@ namespace Frost.Display
 			Implementation.Draw(sprite);
 		}
 
+		public void Draw (Sprite sprite, RenderStates states)
+		{
+			Implementation.Draw(sprite, states);
+		}
+
 		/// <summary>
 		/// Sets a window as being actively rendered in on a thread.
 		/// The window can be rendered from only one thread at a time.
