@@ -1,10 +1,18 @@
-﻿namespace Frost.Display
+﻿using SFML.Graphics;
+
+namespace Frost.Display
 {
 	/// <summary>
 	/// Describes an object that displays frames on the screen
 	/// </summary>
 	public interface IDisplay
 	{
+		/// <summary>
+		/// Draws a sprite to the display
+		/// </summary>
+		/// <param name="sprite">Sprite to draw</param>
+		void Draw (Sprite sprite);
+
 		/// <summary>
 		/// Performs any updates to the display's state (not part of the rendered frames)
 		/// </summary>

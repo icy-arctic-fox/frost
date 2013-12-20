@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Display;
 using Frost.Modules.State;
 
 namespace Frost.UI
@@ -21,8 +22,9 @@ namespace Frost.UI
 		/// <summary>
 		/// Draws the state of the interface
 		/// </summary>
+		/// <param name="display">Display to draw the interface on</param>
 		/// <param name="state">Index of the state to draw</param>
-		public void DrawState (int state)
+		public void DrawState (IDisplay display, int state)
 		{
 			throw new NotImplementedException();
 		}

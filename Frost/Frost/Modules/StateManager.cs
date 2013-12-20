@@ -356,7 +356,7 @@ namespace Frost.Modules
 				if(!dup || RenderDuplicateFrames)
 				{// Render the frame
 					_display.EnterFrame();
-					_renderRoot.DrawState(state);
+					_renderRoot.DrawState(_display, state);
 					_display.ExitFrame();
 					++FramesRendered;
 				}
