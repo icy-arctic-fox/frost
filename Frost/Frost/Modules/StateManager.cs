@@ -134,12 +134,21 @@ namespace Frost.Modules
 		/// </summary>
 		private int _renderIndex;
 
+		private readonly ManualResetEventSlim _updateDrift = new ManualResetEventSlim(),
+		                                      _renderDrift = new ManualResetEventSlim();
+
+		/// <summary>
+		/// Indicates if the update and render threads will synchronize with each other if they drift too far apart.
+		/// This feature is only beneficial if the update and render rates should be the same.
+		/// </summary>
+		public bool SynchronizeThreads { get; set; }
+
 		#region Update
 
 		/// <summary>
 		/// Default length of time to target for each update frame
 		/// </summary>
-		public const double DefaultTargetUpdatePeriod = 1f / 30f;
+		public const double DefaultTargetUpdatePeriod = 1f / 60f;
 
 		/// <summary>
 		/// Target length of time (in seconds) for updates per frame
@@ -240,6 +249,13 @@ namespace Frost.Modules
 				// Save how long it took for reporting and restart the timer
 				_updatePeriod = _updateTimer.Elapsed.TotalSeconds;
 				_updateTimer.Restart();
+
+				if(SynchronizeThreads)
+				{// Synchronize threads to prevent stutter
+					_renderDrift.Set();
+					_updateDrift.Reset();
+					_updateDrift.Wait();
+				}
 			}
 		}
 		#endregion
@@ -249,7 +265,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Default length of time to target for rendering a frame
 		/// </summary>
-		public const double DefaultTargetRenderPeriod = 1f / 30f;
+		public const double DefaultTargetRenderPeriod = 1f / 60f;
 
 		/// <summary>
 		/// Target length of time (in seconds) for renders per frame
@@ -377,6 +393,13 @@ namespace Frost.Modules
 				// Save how long it took for reporting and restart the timer
 				_renderPeriod = _renderTimer.Elapsed.TotalSeconds;
 				_renderTimer.Restart();
+
+				if(SynchronizeThreads)
+				{// Synchronize threads to prevent stutter
+					_updateDrift.Set();
+					_renderDrift.Reset();
+					_renderDrift.Wait();
+				}
 			}
 		}
 		#endregion
