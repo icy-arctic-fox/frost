@@ -33,6 +33,34 @@ namespace Frost.Graphics
 			_states    = new StateSet<SFML.Graphics.RenderStates>(states);
 		}
 
+		#region Properties
+
+		/// <summary>
+		/// Offset of the sprite along the x and y-axis.
+		/// </summary>
+		private float _x, _y;
+
+		public float X
+		{
+			get { return _x; }
+			set
+			{
+				_x = value;
+				_dirty = true;
+			}
+		}
+
+		public float Y
+		{
+			get { return _y; }
+			set
+			{
+				_y = value;
+				_dirty = true;
+			}
+		}
+		#endregion
+
 		#region Update and render
 
 		/// <summary>
@@ -59,6 +87,7 @@ namespace Frost.Graphics
 			if(_dirty)
 			{// Apply transformations to the next state
 				var state = InitialState;
+				state.Transform.Translate(_x, _y);
 
 				_states[next] = state;
 				_dirty = false;
