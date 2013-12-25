@@ -58,6 +58,8 @@
     <Compile Include="Game.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="ICancellable.cs" />
+    <Compile Include="IO\ISerializable.cs" />
+    <Compile Include="IO\IStreamable.cs" />
     <Compile Include="Modules\IDrawableNode.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -83,7 +85,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="IO\Tnt\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
