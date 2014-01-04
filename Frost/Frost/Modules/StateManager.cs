@@ -129,8 +129,10 @@ namespace Frost.Modules
 					_running = false;
 					throw new InvalidOperationException("The state manager has already exited - cannot restart.", e);
 				}
+#if DEBUG
 				_updateThreadId = Thread.CurrentThread.ManagedThreadId;
 				_renderThreadId = _renderThread.ManagedThreadId;
+#endif
 				doUpdateLoop();
 			}
 		}
@@ -603,7 +605,9 @@ namespace Frost.Modules
 				var state = acquireNextRenderState();
 				if(RenderDuplicateFrames || prevState != state)
 				{// Render if dups are enabled or it's a new frame
+					_display.EnterFrame();
 					_renderRoot.DrawState(_display, state);
+					_display.ExitFrame();
 					if(prevState == state) // Just rendered a duplicate frame
 						++RenderedDuplicateFrames;
 				}
