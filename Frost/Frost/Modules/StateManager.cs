@@ -520,7 +520,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Index of the previous state that was drawn
 		/// </summary>
-		private int _prevRenderStateIndex;
+		private int _prevRenderStateIndex = -1;
 
 		/// <summary>
 		/// Frame number of the previous state that was drawn
@@ -616,6 +616,11 @@ namespace Frost.Modules
 
 			// TODO: while(!Disposed)
 			// {
+
+			// Wait for the update thread to produce the first frame
+			while(!waitForUpdate(timeout))
+				if(!_running)
+					return;
 
 			var prevState = -1;
 			while(_running)
