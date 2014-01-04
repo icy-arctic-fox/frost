@@ -261,6 +261,18 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
+		/// Running average of the updated frames per second
+		/// </summary>
+		public double AverageUpdateRate
+		{
+			get
+			{
+				var avg = _updateCounter.Average;
+				return (avg < Double.Epsilon) ? 0d : 1d / avg;
+			}
+		}
+
+		/// <summary>
 		/// Target number of logic updates per second.
 		/// A value of 0 represents no limit of frames per second.
 		/// </summary>
@@ -469,6 +481,18 @@ namespace Frost.Modules
 		public double RenderRate
 		{
 			get { return (Math.Abs(_actualRenderInterval) < Double.Epsilon) ? 0d : 1d / _actualRenderInterval; }
+		}
+
+		/// <summary>
+		/// Running average of the rendered frames per second
+		/// </summary>
+		public double AverageRenderRate
+		{
+			get
+			{
+				var avg = _renderCounter.Average;
+				return (avg < Double.Epsilon) ? 0d : 1d / avg;
+			}
 		}
 
 		/// <summary>
