@@ -2,6 +2,7 @@
 using System.Threading;
 using Frost.Display;
 using Frost.Modules.State;
+using Frost.Utility;
 
 namespace Frost.Modules
 {
@@ -184,6 +185,14 @@ namespace Frost.Modules
 		public bool RenderDuplicateFrames { get; set; }
 
 		/// <summary>
+		/// Maximum number of measurements to take for averaging update and render intervals
+		/// </summary>
+		private const int MeasurementCount = 10;
+
+		private readonly AverageCounter _updateCounter = new AverageCounter(MeasurementCount),
+			_renderCounter = new AverageCounter(MeasurementCount);
+
+		/// <summary>
 		/// Maximum proportion of time allowed to pass before frame skipping or duplication takes effect
 		/// </summary>
 		private const double MaxFrameDrift = 1.15;
@@ -195,10 +204,9 @@ namespace Frost.Modules
 		{
 			get
 			{
-				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedUpdateRate/* TODO: || _renderRateSamples == 0 */)
+				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedUpdateRate || _renderCounter.Count == 0)
 					return true;
-//				return TargetUpdateRate > _averageRenderRate * MaxFrameDrift;
-				return false; // TODO
+				return _targetUpdateInterval > _renderCounter.Average * MaxFrameDrift;
 			}
 		}
 
@@ -209,10 +217,9 @@ namespace Frost.Modules
 		{
 			get
 			{
-				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedRenderRate/* TODO: || _updateRateSamples == 0 */)
+				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedRenderRate || _updateCounter.Count == 0)
 					return true;
-//				return TargetRenderRate > _averageUpdateRate * MaxFrameDrift;
-				return false; // TODO
+				return _targetRenderInterval > _updateCounter.Average * MaxFrameDrift;
 			}
 		}
 
@@ -422,6 +429,7 @@ namespace Frost.Modules
 				now = DateTime.Now;
 				_actualUpdateInterval = (now - curStartTime).TotalSeconds;
 				curStartTime = now;
+				_updateCounter.AddMeasurement(_actualUpdateInterval);
 			}
 		}
 		#endregion
@@ -623,6 +631,7 @@ namespace Frost.Modules
 				now = DateTime.Now;
 				_actualRenderInterval = (now - curStartTime).TotalSeconds;
 				curStartTime = now;
+				_renderCounter.AddMeasurement(_actualRenderInterval);
 			}
 			// }
 		}
