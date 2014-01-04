@@ -46,7 +46,7 @@
 			_measurements[_pos++] = measurement;
 			if(_pos >= _measurements.Length)
 				_pos = 0; // Wrap around
-			else
+			else if(Count < _measurements.Length)
 				++Count; // Increment number of measurements
 		}
 	}
