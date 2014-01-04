@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using Frost.Display;
 using Frost.Modules.State;
@@ -180,6 +179,11 @@ namespace Frost.Modules
 		public bool SynchronizeThreads { get; set; }
 
 		/// <summary>
+		/// Indicates whether a frame can be rendered more than once
+		/// </summary>
+		public bool RenderDuplicateFrames { get; set; }
+
+		/// <summary>
 		/// Maximum proportion of time allowed to pass before frame skipping or duplication takes effect
 		/// </summary>
 		private const double MaxFrameDrift = 1.15;
@@ -211,8 +215,6 @@ namespace Frost.Modules
 				return false; // TODO
 			}
 		}
-
-		private readonly ManualResetEventSlim _runningResetEvent = new ManualResetEventSlim();
 
 		#region Update
 
@@ -276,12 +278,12 @@ namespace Frost.Modules
 		/// <summary>
 		/// Index of the previous state that was updated
 		/// </summary>
-		private int _prevUpdateStateIndex = 0;
+		private int _prevUpdateStateIndex;
 
 		/// <summary>
 		/// Frame number of the previous state that was updated
 		/// </summary>
-		private long _prevUpdateFrame = 0;
+		private long _prevUpdateFrame;
 
 		/// <summary>
 		/// Current frame number
@@ -391,7 +393,6 @@ namespace Frost.Modules
 				var state = acquireNextUpdateState();
 				_display.Update();
 				_updateRoot.StepState(_prevUpdateStateIndex, state);
-				Thread.Sleep(3); // Pretend load, TODO: remove this
 				((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 				releaseUpdateState(frameNumber++);
 
@@ -486,12 +487,12 @@ namespace Frost.Modules
 		/// <summary>
 		/// Index of the previous state that was drawn
 		/// </summary>
-		private int _prevRenderStateIndex = 0;
+		private int _prevRenderStateIndex;
 
 		/// <summary>
 		/// Frame number of the previous state that was drawn
 		/// </summary>
-		private long _prevRenderFrame = 0;
+		private long _prevRenderFrame;
 
 		/// <summary>
 		/// Reset event that indicates whether the render thread is busy rendering a state
@@ -533,7 +534,7 @@ namespace Frost.Modules
 		/// </summary>
 		private void releaseRenderState()
 		{
-			lock (_stateFrameNumbers)
+			lock(_stateFrameNumbers)
 			{
 #if DEBUG
 				if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
@@ -582,6 +583,7 @@ namespace Frost.Modules
 			// TODO: while(!Disposed)
 			// {
 
+			var prevState = -1;
 			while(_running)
 			{
 				if(!FrameDuplication) // Wait for a frame
@@ -591,8 +593,13 @@ namespace Frost.Modules
 
 				// Get the next state and draw it
 				var state = acquireNextRenderState();
-				_renderRoot.DrawState(_display, state);
-				Thread.Sleep(3); // Pretend load, TODO: remove this
+				if(RenderDuplicateFrames || prevState != state)
+				{// Render if dups are enabled or it's a new frame
+					_renderRoot.DrawState(_display, state);
+					if(prevState == state) // Just rendered a duplicate frame
+						++RenderedDuplicateFrames;
+				}
+				prevState = state;
 				releaseRenderState();
 
 				// Calculate the amount of time to sleep
@@ -626,7 +633,7 @@ namespace Frost.Modules
 		/// Generates a string that represents the status of the state manager
 		/// </summary>
 		/// <returns>A string in the form:
-		/// Frame: # - # u/s - # f/s (# dups, # skipped)</returns>
+		/// Frame: # - # u/s - # f/s (#/# dups, # skipped)</returns>
 		public override string ToString ()
 		{
 			var sb = new System.Text.StringBuilder();
@@ -637,6 +644,8 @@ namespace Frost.Modules
 			sb.Append(" u/s - ");
 			sb.Append(String.Format("{0:0.00}", RenderRate));
 			sb.Append(" f/s (");
+			sb.Append(RenderedDuplicateFrames);
+			sb.Append('/');
 			sb.Append(DuplicatedFrames);
 			sb.Append(" dups, ");
 			sb.Append(SkippedFrames);
