@@ -12,6 +12,8 @@ namespace Frost.Modules
 	/// </summary>
 	public class StateManager
 	{
+		// TODO: Add ability to save older states for roll-back
+
 		/// <summary>
 		/// Number of active states in memory.
 		/// Each component that can be modified during runtime needs to have this many states.
@@ -23,8 +25,19 @@ namespace Frost.Modules
 		/// </summary>
 		private readonly Thread _renderThread;
 
+		/// <summary>
+		/// Display that will be rendered upon
+		/// </summary>
 		private readonly IDisplay _display;
+
+		/// <summary>
+		/// Root node for updating the game state
+		/// </summary>
 		private readonly IStepableNode _updateRoot;
+
+		/// <summary>
+		/// Root node for drawing the game state
+		/// </summary>
 		private readonly IDrawableNode _renderRoot;
 
 		/// <summary>
@@ -36,6 +49,22 @@ namespace Frost.Modules
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
 		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot)
+			: this(display, updateRoot, renderRoot, DefaultTargetUpdateRate, DefaultTargetRenderRate)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new state manager with the update and render root nodes
+		/// </summary>
+		/// <param name="display">Display that shows frames on the screen</param>
+		/// <param name="updateRoot">Root node for updating the game state</param>
+		/// <param name="renderRoot">Root node for rendering the game state</param>
+		/// <param name="updateRate">Targeted number of updates per second - use 0 to represent no limit</param>
+		/// <param name="renderRate">Targeted number of rendered frames per second - use 0 to represent no limit</param>
+		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
+		/// They can be different for more complex situations.</remarks>
+		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot, double updateRate, double renderRate)
 		{
 #if DEBUG
 			if(display == null)
@@ -53,6 +82,9 @@ namespace Frost.Modules
 			_display = display;
 			_updateRoot = updateRoot;
 			_renderRoot = renderRoot;
+
+			_targetUpdateInterval = (Math.Abs(updateRate) < Double.Epsilon) ? 0d : 1d / updateRate;
+			_targetRenderInterval = (Math.Abs(renderRate) < Double.Epsilon) ? 0d : 1d / renderRate;
 		}
 
 		/// <summary>
@@ -60,6 +92,14 @@ namespace Frost.Modules
 		/// When false and executing, the update and render loops should exit.
 		/// </summary>
 		private volatile bool _running;
+
+		/// <summary>
+		/// Indicates if the state manager has started and is currently operating
+		/// </summary>
+		public bool Running
+		{
+			get { return _running; }
+		}
 
 		/// <summary>
 		/// Starts the state manager.
@@ -77,6 +117,7 @@ namespace Frost.Modules
 				try
 				{// ... but has it already exited?
 					_running = true;
+					// TODO: Set reset event
 					_renderThread.Start();
 				}
 				catch(ThreadStateException e)
@@ -92,108 +133,233 @@ namespace Frost.Modules
 		/// Stops the state manager.
 		/// This will cause the <see cref="Run"/> method to return.
 		/// </summary>
+		/// <remarks>This thread will block until the render thread exits.</remarks>
 		public void Stop ()
 		{
 			_running = false;
+			_renderThread.Join();
 		}
 
 		#region Update and render loops/logic
 
 		/// <summary>
-		/// Current frame number - this is the update frame number
+		/// Frame number that each of the states are on
 		/// </summary>
-		public ulong Frame { get; private set; }
+		private readonly long[] _stateFrameNumbers = new[] {-1L, -1L, -1L};
 
 		/// <summary>
-		/// Number of frames rendered
+		/// Total number of duplicated frames encountered.
+		/// This is not the number of duplicate frames rendered, see <seealso cref="RenderedDuplicateFrames"/> for that.
+		/// An increasing value indicates that the update thread is running slower than the render thread.
 		/// </summary>
-		public ulong FramesRendered { get; private set; }
+		public long DuplicatedFrames { get; private set; }
 
 		/// <summary>
-		/// Number of times a frame has been rendered more than once
+		/// Total number of duplicates frames that have been rendered.
+		/// An increasing value indicates that the update thread is running slower than the render thread.
 		/// </summary>
-		public ulong DuplicateFrames { get; private set; }
+		public long RenderedDuplicateFrames { get; private set; }
 
 		/// <summary>
-		/// Number of frames that weren't rendered
+		/// Total number of frames that were skipped.
+		/// This represents the frames that were updated, but were not rendered.
+		/// An increasing value indicates that the render thread is running slower than the update thread.
 		/// </summary>
-		public ulong SkippedFrames { get; private set; }
+		public long SkippedFrames { get; private set; }
 
 		/// <summary>
-		/// Frame number that each state is currently at
+		/// Indicates whether threads are synchronized in an attempt to reduce stuttering
 		/// </summary>
-		private readonly ulong[] _stateFrames = new ulong[] {0, 0, 0};
-
-		/// <summary>
-		/// Index of the previous state updated
-		/// </summary>
-		private int _updateIndex;
-
-		/// <summary>
-		/// Index of the previous state rendered
-		/// </summary>
-		private int _renderIndex;
-
-		private readonly ManualResetEventSlim _updateDrift = new ManualResetEventSlim(),
-		                                      _renderDrift = new ManualResetEventSlim();
-
-		/// <summary>
-		/// Indicates if the update and render threads will synchronize with each other if they drift too far apart.
-		/// This feature is only beneficial if the update and render rates should be the same.
-		/// </summary>
+		/// <remarks>This option is only effective when the update and render rates should be the same.</remarks>
 		public bool SynchronizeThreads { get; set; }
+
+		/// <summary>
+		/// Maximum proportion of time allowed to pass before frame skipping or duplication takes effect
+		/// </summary>
+		private const double MaxFrameDrift = 1.15;
+
+		/// <summary>
+		/// Indicates whether frames are currently being skipped to help the render thread catch up
+		/// </summary>
+		public bool FrameSkipping
+		{
+			get
+			{
+				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedUpdateRate/* TODO: || _renderRateSamples == 0 */)
+					return true;
+//				return TargetUpdateRate > _averageRenderRate * MaxFrameDrift;
+				return false; // TODO
+			}
+		}
+
+		/// <summary>
+		/// Indicates whether frames are currently being duplicated to help the update thread catch up
+		/// </summary>
+		public bool FrameDuplication
+		{
+			get
+			{
+				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedRenderRate/* TODO: || _updateRateSamples == 0 */)
+					return true;
+//				return TargetRenderRate > _averageUpdateRate * MaxFrameDrift;
+				return false; // TODO
+			}
+		}
+
+		private readonly ManualResetEventSlim _runningResetEvent = new ManualResetEventSlim();
 
 		#region Update
 
 		/// <summary>
-		/// Default length of time to target for each update frame
+		/// Default targeted number of logic updates to perform per second
 		/// </summary>
-		public const double DefaultTargetUpdatePeriod = 1f / 60f;
+		public const double DefaultTargetUpdateRate = 60d;
+
+		/// <summary>
+		/// Default length of time (in seconds) to target for each update frame
+		/// </summary>
+		public const double DefaultTargetUpdateInterval = 1d / DefaultTargetUpdateRate;
 
 		/// <summary>
 		/// Target length of time (in seconds) for updates per frame
 		/// </summary>
-		private double _targetUpdatePeriod = DefaultTargetUpdatePeriod;
+		private double _targetUpdateInterval = DefaultTargetUpdateInterval;
 
 		/// <summary>
-		/// Actual length of time (in seconds) that the game logic updates took during the last frame
+		/// Length of time (in seconds) that it took to just update the previous frame
 		/// </summary>
-		private double _prevUpdatePeriod;
+		public double UpdateInterval { get; private set; }
 
 		/// <summary>
-		/// Length of time (in seconds) that passed during the last frame update
+		/// Actual length of time (in seconds) taken to update and sleep
 		/// </summary>
-		private double _updatePeriod;
-		
-		/// <summary>
-		/// Tracks the amount of time taken to complete game logic updates for a frame
-		/// </summary>
-		private readonly Stopwatch _updateTimer = new Stopwatch();
+		private double _actualUpdateInterval;
 
 		/// <summary>
 		/// Current number of logic updates per second
 		/// </summary>
 		public double UpdateRate
 		{
-			get { return (_updatePeriod > 0d) ? 1d / _updatePeriod : 0d; }
+			get { return (Math.Abs(_actualUpdateInterval) < Double.Epsilon) ? Double.PositiveInfinity : 1d / _actualUpdateInterval; }
 		}
 
 		/// <summary>
 		/// Target number of logic updates per second.
-		/// A value of 0 represents no limit of updates per second.
+		/// A value of 0 represents no limit of frames per second.
 		/// </summary>
 		public double TargetUpdateRate
 		{
-			get { return (Math.Abs(_targetUpdatePeriod) < Double.Epsilon) ? 0d : 1d / _targetUpdatePeriod; }
-			set { _targetUpdatePeriod = (Math.Abs(value) < Double.Epsilon) ? 0d : 1d / value; }
+			get { return (Math.Abs(_targetUpdateInterval) < Double.Epsilon) ? 0d : 1d / _targetUpdateInterval; }
+			set { _targetUpdateInterval = (Math.Abs(value) < Double.Epsilon) ? 0d : 1d / value; }
 		}
 
 		/// <summary>
-		/// Length of time (in seconds) that the logic update took last frame
+		/// Indicates whether the number of logic updates per second is unbounded
 		/// </summary>
-		public double UpdateTime
+		public bool UnboundedUpdateRate
 		{
-			get { return _prevUpdatePeriod; }
+			get { return Math.Abs(_targetUpdateInterval) < Double.Epsilon; }
+		}
+
+		/// <summary>
+		/// Index of the current state being updated.
+		/// -1 means no state is currently being updated.
+		/// </summary>
+		private int _curUpdateStateIndex = -1;
+
+		/// <summary>
+		/// Index of the previous state that was updated
+		/// </summary>
+		private int _prevUpdateStateIndex = 0;
+
+		/// <summary>
+		/// Frame number of the previous state that was updated
+		/// </summary>
+		private long _prevUpdateFrame = 0;
+
+		/// <summary>
+		/// Current frame number
+		/// </summary>
+		public long FrameNumber
+		{
+			get { return _prevUpdateFrame; }
+		}
+
+		/// <summary>
+		/// Reset event that indicates whether the update thread is busy
+		/// </summary>
+		private readonly ManualResetEventSlim _busyUpdating = new ManualResetEventSlim();
+
+		/// <summary>
+		/// Marks the next state as being rendered and retrieves the index
+		/// </summary>
+		/// <returns>A state index</returns>
+		private int acquireNextUpdateState ()
+		{
+			lock(_stateFrameNumbers)
+			{
+#if DEBUG
+				if(_curUpdateStateIndex != -1)
+					throw new InvalidOperationException("Cannot acquire the next state to update until the previous state has been released.");
+#endif
+				if(_curUpdateStateIndex == -1 || _prevUpdateStateIndex == _curRenderStateIndex)
+				{
+					switch(_prevUpdateStateIndex)
+					{
+					case 0:
+						_curUpdateStateIndex = (_stateFrameNumbers[1] < _stateFrameNumbers[2]) ? 1 : 2;
+						break;
+					case 1:
+						_curUpdateStateIndex = (_stateFrameNumbers[0] < _stateFrameNumbers[2]) ? 0 : 2;
+						break;
+					case 2:
+						_curUpdateStateIndex = (_stateFrameNumbers[0] < _stateFrameNumbers[1]) ? 0 : 1;
+						break;
+					default:
+						throw new InvalidOperationException("The previously updated state index should be 0, 1, or 2.");
+					}
+				}
+				else
+					_curUpdateStateIndex = StateCount - (_prevUpdateStateIndex + _curRenderStateIndex);
+				return _curUpdateStateIndex;
+			}
+		}
+
+		/// <summary>
+		/// Releases a state from updating so that it can be rendered
+		/// </summary>
+		/// <param name="frame">Number of the frame that was just updated</param>
+		private void releaseUpdateState (long frame)
+		{
+			lock(_stateFrameNumbers)
+			{
+#if DEBUG
+				if(_curUpdateStateIndex == -1)
+					throw new InvalidOperationException("Cannot release an update state when no state is currently being updated.");
+#endif
+				_prevUpdateStateIndex = _curUpdateStateIndex;
+				_prevUpdateFrame      = _stateFrameNumbers[_prevUpdateStateIndex] = frame;
+				_curUpdateStateIndex  = -1;
+				_busyUpdating.Set();
+			}
+		}
+
+		/// <summary>
+		/// Waits for the render thread to start drawing the frame that was just updated
+		/// </summary>
+		/// <param name="timeout">Amount of time to wait for</param>
+		/// <returns>True if the render thread finished before the timeout elapsed or false if it didn't</returns>
+		private bool waitForRender (TimeSpan timeout)
+		{
+			lock (_stateFrameNumbers)
+			{
+				if (/* TODO: Disposed || */
+					(_curRenderStateIndex == -1 && _prevRenderStateIndex == _prevUpdateStateIndex) || // Render thread just finished
+					_curRenderStateIndex == _prevUpdateStateIndex) // Render thread just started it
+					return true;
+				_busyRendering.Reset();
+			}
+			return _busyRendering.Wait(timeout);
 		}
 
 		/// <summary>
@@ -201,61 +367,48 @@ namespace Frost.Modules
 		/// </summary>
 		private void doUpdateLoop ()
 		{
-			_updateTimer.Start();
+			var timeout = TimeSpan.FromSeconds(1); // 1 second timeout waiting for render thread
+
+			// Set up for the initial frame
+			var frameNumber   = 0L;
+			var prevStartTime = DateTime.Now;  // Time that the previous update started
+			var curStartTime  = prevStartTime; // Time that the update started
+
 			while(_running)
-			{// Continue performing game logic updates until told to stop
-				// Find out which frame state object that should be updated
-				int prevState, nextState;
-				lock(_stateFrames)
-				{
-					prevState = _updateIndex;
-					switch(_updateIndex)
-					{
-					case 0:
-						nextState = _renderIndex == 1 ? 2 : 1;
-						break;
-					case 1:
-						nextState = _renderIndex == 0 ? 2 : 0;
-						break;
-					default: // 2
-						nextState = _renderIndex == 0 ? 1 : 0;
-						break;
-					}
-
-					// Store information about the frame we just updated
-					_updateIndex = nextState;
-					++Frame;
-					_stateFrames[nextState] = Frame;
-				}
-
-				// Update the game logic
+			{
+				// Update the next state
+				var state = acquireNextUpdateState();
 				_display.Update();
-				_updateRoot.StepState(prevState, nextState);
-				((Window)_display).Title = ToString() + " " + StateString;
+				_updateRoot.StepState(_prevUpdateStateIndex, state);
+				Thread.Sleep(3); // Pretend load, TODO: remove this
+				((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
+				releaseUpdateState(frameNumber++);
 
-				// Measure how long it took to update
-				var elapsed = _updateTimer.Elapsed;
-				_prevUpdatePeriod = elapsed.TotalSeconds;
+				// Calculate the amount of time to sleep
+				var now           = DateTime.Now;
+				UpdateInterval    = (now - curStartTime).TotalSeconds;
+				var nextStartTime = curStartTime.AddSeconds(_targetUpdateInterval);
 
-				// Calculate how long to sleep for the remaining time (if there's any) in the frame
-				var sleepTime = (int)((_targetUpdatePeriod - _prevUpdatePeriod) * 1000);
-				if(sleepTime < 0) // Don't sleep for a negative time
-					sleepTime = 0;
-
-				// The sleep time can be zero, which will yield the update thread.
-				// This is important for single-core processors and allowing the render thread to work.
-				Thread.Sleep(sleepTime); // TODO: Reduce how much time is spent sleeping to avoid over sleeping
-
-				// Save how long it took for reporting and restart the timer
-				_updatePeriod = _updateTimer.Elapsed.TotalSeconds;
-				_updateTimer.Restart();
-
-				if(SynchronizeThreads)
-				{// Synchronize threads to prevent stutter
-					_renderDrift.Set();
-					_updateDrift.Reset();
-					_updateDrift.Wait();
+				if(nextStartTime < now)
+				{// Took long to update
+					curStartTime = now;
+					Thread.Sleep(0); // Yield to other threads briefly
 				}
+				else
+				{// Sleep for the remaining time
+					var sleepTime = (int)(nextStartTime - now).TotalMilliseconds;
+					Thread.Sleep(sleepTime);
+				}
+
+				if(!FrameSkipping) // Wait for the render thread to process
+					while(!waitForRender(timeout)) // Use a timeout to prevent lock-up which would not allow the update loop to exit
+						if(!_running) // Exit if not running anymore
+							return;
+
+				// Update time measurements
+				now = DateTime.Now;
+				_actualUpdateInterval = (now - prevStartTime).TotalSeconds;
+				prevStartTime = now;
 			}
 		}
 		#endregion
@@ -263,61 +416,136 @@ namespace Frost.Modules
 		#region Render
 
 		/// <summary>
-		/// Default length of time to target for rendering a frame
+		/// Default targeted number of frames to draw per second
 		/// </summary>
-		public const double DefaultTargetRenderPeriod = 1f / 60f;
+		public const double DefaultTargetRenderRate = 60d;
 
 		/// <summary>
-		/// Target length of time (in seconds) for renders per frame
+		/// Default length of time (in seconds) to target for each frame rendering
 		/// </summary>
-		private double _targetRenderPeriod = DefaultTargetRenderPeriod;
+		public const double DefaultTargetRenderInterval = 1d / DefaultTargetRenderRate;
 
 		/// <summary>
-		/// Actual length of time (in seconds) that rendering took during the last frame
+		/// Target length of time (in seconds) for rendering per frame
 		/// </summary>
-		private double _prevRenderPeriod;
+		private double _targetRenderInterval = DefaultTargetRenderInterval;
 
 		/// <summary>
-		/// Length of time (in seconds) that passed during the last frame rendering
+		/// Length of time (in seconds) that it took to just render the last frame
 		/// </summary>
-		private double _renderPeriod;
+		public double RenderInterval { get; private set; }
 
 		/// <summary>
-		/// Tracks the amount of time taken to render a frame
+		/// Actual time that it took (in seconds) to render and sleep the last frame
 		/// </summary>
-		private readonly Stopwatch _renderTimer = new Stopwatch();
+		private double _actualRenderInterval;
 
 		/// <summary>
-		/// Current number of rendered frames per second
+		/// Current number of frames rendered per second
 		/// </summary>
 		public double RenderRate
 		{
-			get { return (_renderPeriod > 0d) ? 1d / _renderPeriod : 0d; }
+			get { return (Math.Abs(_actualRenderInterval) < Double.Epsilon) ? 0d : 1d / _actualRenderInterval; }
 		}
 
 		/// <summary>
 		/// Target number of rendered frames per second.
-		/// A value of 0 represents no limit of renders per second.
+		/// A value of 0 represents no limit of frames per second.
 		/// </summary>
 		public double TargetRenderRate
 		{
-			get { return (Math.Abs(_targetRenderPeriod) < Double.Epsilon) ? 0d : 1d / _targetRenderPeriod; }
-			set { _targetRenderPeriod = (Math.Abs(value) < Double.Epsilon) ? 0d : 1d / value; }
+			get { return (Math.Abs(_targetRenderInterval) < Double.Epsilon) ? 0d : 1d / _targetRenderInterval; }
+			set { _targetRenderInterval = (Math.Abs(value) < Double.Epsilon) ? 0d : 1d / value; }
 		}
 
 		/// <summary>
-		/// Length of time (in seconds) that it took to render the last frame
+		/// Indicates whether the number of frames rendered per second is unbounded
 		/// </summary>
-		public double RenderTime
+		public bool UnboundedRenderRate
 		{
-			get { return _prevRenderPeriod; }
+			get { return Math.Abs(_targetRenderInterval) < Double.Epsilon; }
 		}
 
 		/// <summary>
-		/// Indicates if duplicate frames should be rendered.
-		/// Duplicate frames occur when the game updates lag behind the screen (render) updates.
+		/// Index of the current state being drawn
 		/// </summary>
-		public bool RenderDuplicateFrames { get; set; }
+		private int _curRenderStateIndex = -1;
+
+		/// <summary>
+		/// Index of the previous state that was drawn
+		/// </summary>
+		private int _prevRenderStateIndex = 0;
+
+		/// <summary>
+		/// Frame number of the previous state that was drawn
+		/// </summary>
+		private long _prevRenderFrame = 0;
+
+		/// <summary>
+		/// Reset event that indicates whether the render thread is busy rendering a state
+		/// </summary>
+		private readonly ManualResetEventSlim _busyRendering = new ManualResetEventSlim();
+
+		/// <summary>
+		/// Marks the next state as being rendered and retrieves the index
+		/// </summary>
+		/// <returns>A state index</returns>
+		private int acquireNextRenderState ()
+		{
+			lock(_stateFrameNumbers)
+			{
+#if DEBUG
+				if(_curRenderStateIndex != -1)
+					throw new InvalidOperationException("Cannot acquire the next state to draw until the previous state has been released.");
+#endif
+				_curRenderStateIndex = _prevUpdateStateIndex;
+				var frame = _stateFrameNumbers[_curRenderStateIndex];
+				if(_prevRenderStateIndex != -1)
+				{
+					if(frame == _prevRenderFrame)
+						++DuplicatedFrames;
+					else
+						SkippedFrames += frame - _prevRenderFrame - 1;
+				}
+				else // First frame being drawn
+					SkippedFrames += frame;
+				_busyRendering.Set();
+				return _curRenderStateIndex;
+			}
+		}
+
+		/// <summary>
+		/// Releases the state currently be rendered
+		/// </summary>
+		private void releaseRenderState()
+		{
+			lock (_stateFrameNumbers)
+			{
+#if DEBUG
+				if (_curRenderStateIndex == -1)
+					throw new InvalidOperationException("Cannot release a render state when no state is currently being drawn.");
+#endif
+				_prevRenderStateIndex = _curRenderStateIndex;
+				_prevRenderFrame = _stateFrameNumbers[_prevRenderStateIndex];
+				_curRenderStateIndex = -1;
+			}
+		}
+
+		/// <summary>
+		/// Waits for the update thread to produce the next frame to draw
+		/// </summary>
+		/// <param name="timeout">Maximum time to wait</param>
+		/// <returns>True if a frame was updated before the timeout elapsed</returns>
+		private bool waitForUpdate (TimeSpan timeout)
+		{
+			lock(_stateFrameNumbers)
+			{
+				if(_prevRenderFrame < _prevUpdateFrame)
+					return true; // There's already a frame waiting
+				_busyUpdating.Reset();
+			}
+			return _busyUpdating.Wait(timeout);
+		}
 
 		/// <summary>
 		/// Threaded method that runs the render loop
@@ -329,78 +557,30 @@ namespace Frost.Modules
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
-			_renderTimer.Start();
+			var timeout = TimeSpan.FromSeconds(1);
+
+			// TODO: while(!Disposed)
+			// {
+
 			while(_running)
-			{// Continue rendering until told to stop
-				var dup = false;
+			{
+				if(!FrameDuplication) // Wait for a frame
+					while(!waitForUpdate(timeout)) // Use a timeout to allow the render loop to exit if the render thread should stop
+						if(!_running) // Exit if not running anymore
+							return;
 
-				// Find out which frame should be rendered.
-				// Make sure to NOT pick the frame that is currently being updated, as it will be unstable.
-				int state;
-				lock(_stateFrames)
-				{
-					switch(_renderIndex)
-					{
-					case 0:
-						state = _updateIndex == 1 ? 2 : 1;
-						break;
-					case 1:
-						state = _updateIndex == 0 ? 2 : 0;
-						break;
-					default: // 2
-						state = _updateIndex == 0 ? 1 : 0;
-						break;
-					}
+				var startTime = DateTime.Now;
 
-					// Check if this is a duplicated frame (update is behind render)
-					var prevFrame = _stateFrames[_renderIndex];
-					var nextFrame = _stateFrames[state];
-					if(nextFrame <= prevFrame)
-					{
-						dup = true;
-						++DuplicateFrames;
-						// Set the state to be rendered back to the previous one to prevent "jitter" (briefly showing the previous frame again).
-						state = _renderIndex;
-					}
-					else
-					{// New frame
-						SkippedFrames += nextFrame - prevFrame - 1;
-						_renderIndex = state;
-					}
-				}
+				// Get the next state and draw it
+				var state = acquireNextRenderState();
+				_renderRoot.DrawState(_display, state);
+				releaseRenderState();
 
-				if(!dup || RenderDuplicateFrames)
-				{// Render the frame
-					_display.EnterFrame();
-					_renderRoot.DrawState(_display, state);
-					_display.ExitFrame();
-					++FramesRendered;
-				}
-
-				// Measure how long it took to render
-				var elapsed = _renderTimer.Elapsed;
-				_prevRenderPeriod = elapsed.TotalSeconds;
-
-				// Calculate how long to sleep for the remaining time (if there's any) in the frame
-				var sleepTime = (int)((_targetRenderPeriod - _prevRenderPeriod) * 1000);
-				if(sleepTime < 0) // Don't sleep for a negative time
-					sleepTime = 0;
-
-				// The sleep time can be zero, which will yield the render thread.
-				// This is important for single-core processors and allowing the update thread to continue.
-				Thread.Sleep(sleepTime); // TODO: Reduce how much time is spent sleeping to avoid over sleeping
-
-				// Save how long it took for reporting and restart the timer
-				_renderPeriod = _renderTimer.Elapsed.TotalSeconds;
-				_renderTimer.Restart();
-
-				if(SynchronizeThreads)
-				{// Synchronize threads to prevent stutter
-					_updateDrift.Set();
-					_renderDrift.Reset();
-					_renderDrift.Wait();
-				}
+				RenderInterval = (DateTime.Now - startTime).TotalSeconds;
+				Thread.Sleep(15); // Yield to other threads and reduce CPU usage
+				_actualRenderInterval = (DateTime.Now - startTime).TotalSeconds;
 			}
+			// }
 		}
 		#endregion
 		#endregion
@@ -414,13 +594,13 @@ namespace Frost.Modules
 		{
 			var sb = new System.Text.StringBuilder();
 			sb.Append("Frame: ");
-			sb.Append(Frame);
+			sb.Append(FrameNumber);
 			sb.Append(" - ");
 			sb.Append(String.Format("{0:0.00}", UpdateRate));
 			sb.Append(" u/s - ");
 			sb.Append(String.Format("{0:0.00}", RenderRate));
 			sb.Append(" f/s (");
-			sb.Append(DuplicateFrames);
+			sb.Append(DuplicatedFrames);
 			sb.Append(" dups, ");
 			sb.Append(SkippedFrames);
 			sb.Append(" skipped)");
@@ -436,14 +616,14 @@ namespace Frost.Modules
 		{
 			get
 			{
-				var frames = new ulong[3];
+				var frames = new long[3];
 				int updateIndex, renderIndex;
-				lock(_stateFrames)
+				lock(_stateFrameNumbers)
 				{// Grab the values
 					for(var i = 0; i < 3; ++i)
-						frames[i] = _stateFrames[i];
-					updateIndex = _updateIndex;
-					renderIndex = _renderIndex;
+						frames[i] = _stateFrameNumbers[i];
+					updateIndex = _curUpdateStateIndex;
+					renderIndex = _curRenderStateIndex;
 				}
 
 				var sb = new System.Text.StringBuilder();
