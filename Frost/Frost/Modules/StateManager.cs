@@ -380,7 +380,8 @@ namespace Frost.Modules
 			var timeout = TimeSpan.FromSeconds(1); // 1 second timeout waiting for render thread
 
 			// Set up for the initial frame
-			var frameNumber   = 0L;
+			var frameCount    = 0;  // Number of updated frames kept in the target interval (used to get an average sleep time)
+			var frameNumber   = 0L; // Logical frame number
 			var prevStartTime = DateTime.Now;  // Time that the previous update started
 			var curStartTime  = prevStartTime; // Time that the update started
 
@@ -397,11 +398,12 @@ namespace Frost.Modules
 				// Calculate the amount of time to sleep
 				var now           = DateTime.Now;
 				UpdateInterval    = (now - curStartTime).TotalSeconds;
-				var nextStartTime = curStartTime.AddSeconds(_targetUpdateInterval);
+				var nextStartTime = prevStartTime.AddSeconds(_targetUpdateInterval * (++frameCount));
 
 				if(nextStartTime < now)
-				{// Took long to update the frame
-					curStartTime = now;
+				{// Took too long to update the frame
+					frameCount    = 0;
+					prevStartTime = now;
 					Thread.Sleep(0); // Yield to other threads briefly
 				}
 				else
@@ -417,8 +419,8 @@ namespace Frost.Modules
 
 				// Update time measurements
 				now = DateTime.Now;
-				_actualUpdateInterval = (now - prevStartTime).TotalSeconds;
-				prevStartTime = now;
+				_actualUpdateInterval = (now - curStartTime).TotalSeconds;
+				curStartTime = now;
 			}
 		}
 		#endregion
@@ -572,6 +574,7 @@ namespace Frost.Modules
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
 			// Variable initialization for timing
+			var frameCount    = 0; // Number of rendered frames kept in the target interval (used to get an average sleep time)
 			var prevStartTime = DateTime.Now;  // Time that the previous update started
 			var curStartTime  = prevStartTime; // Time that the update started
 			var timeout = TimeSpan.FromSeconds(1);
@@ -586,21 +589,21 @@ namespace Frost.Modules
 						if(!_running) // Exit if not running anymore
 							return;
 
-				var startTime = DateTime.Now;
-
 				// Get the next state and draw it
 				var state = acquireNextRenderState();
 				_renderRoot.DrawState(_display, state);
+				Thread.Sleep(3); // Pretend load, TODO: remove this
 				releaseRenderState();
 
 				// Calculate the amount of time to sleep
 				var now           = DateTime.Now;
 				RenderInterval    = (now - curStartTime).TotalSeconds;
-				var nextStartTime = curStartTime.AddSeconds(_targetRenderInterval);
+				var nextStartTime = prevStartTime.AddSeconds(_targetRenderInterval * (++frameCount));
 
 				if(nextStartTime < now)
 				{// Took too long to render the frame
-					curStartTime = now;
+					frameCount    = 0;
+					prevStartTime = now;
 					Thread.Sleep(0); // Yield to other threads briefly
 				}
 				else
@@ -611,8 +614,8 @@ namespace Frost.Modules
 
 				// Update time measurements
 				now = DateTime.Now;
-				_actualRenderInterval = (now - prevStartTime).TotalSeconds;
-				prevStartTime = now;
+				_actualRenderInterval = (now - curStartTime).TotalSeconds;
+				curStartTime = now;
 			}
 			// }
 		}
