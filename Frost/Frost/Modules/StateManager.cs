@@ -101,6 +101,10 @@ namespace Frost.Modules
 			get { return _running; }
 		}
 
+#if DEBUG
+		private int _updateThreadId, _renderThreadId;
+#endif
+
 		/// <summary>
 		/// Starts the state manager.
 		/// This call blocks until told to exit by the <see cref="Stop"/> method.
@@ -125,6 +129,8 @@ namespace Frost.Modules
 					_running = false;
 					throw new InvalidOperationException("The state manager has already exited - cannot restart.", e);
 				}
+				_updateThreadId = Thread.CurrentThread.ManagedThreadId;
+				_renderThreadId = _renderThread.ManagedThreadId;
 				doUpdateLoop();
 			}
 		}
@@ -145,7 +151,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Frame number that each of the states are on
 		/// </summary>
-		private readonly long[] _stateFrameNumbers = new[] {-1L, -1L, -1L};
+		private readonly long[] _stateFrameNumbers = new[] {0L, 0L, 0L};
 
 		/// <summary>
 		/// Total number of duplicated frames encountered.
@@ -286,9 +292,9 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
-		/// Reset event that indicates whether the update thread is busy
+		/// Reset event that indicates whether the update thread has generated a frame
 		/// </summary>
-		private readonly ManualResetEventSlim _busyUpdating = new ManualResetEventSlim();
+		private readonly ManualResetEventSlim _updateSignal = new ManualResetEventSlim();
 
 		/// <summary>
 		/// Marks the next state as being rendered and retrieves the index
@@ -299,6 +305,8 @@ namespace Frost.Modules
 			lock(_stateFrameNumbers)
 			{
 #if DEBUG
+				if(Thread.CurrentThread.ManagedThreadId != _updateThreadId)
+					throw new AccessViolationException("Only the update thread may acquire an update state.");
 				if(_curUpdateStateIndex != -1)
 					throw new InvalidOperationException("Cannot acquire the next state to update until the previous state has been released.");
 #endif
@@ -334,13 +342,15 @@ namespace Frost.Modules
 			lock(_stateFrameNumbers)
 			{
 #if DEBUG
+				if(Thread.CurrentThread.ManagedThreadId != _updateThreadId)
+					throw new AccessViolationException("Only the update thread may release an update state.");
 				if(_curUpdateStateIndex == -1)
 					throw new InvalidOperationException("Cannot release an update state when no state is currently being updated.");
 #endif
 				_prevUpdateStateIndex = _curUpdateStateIndex;
 				_prevUpdateFrame      = _stateFrameNumbers[_prevUpdateStateIndex] = frame;
 				_curUpdateStateIndex  = -1;
-				_busyUpdating.Set();
+				_updateSignal.Set();
 			}
 		}
 
@@ -351,15 +361,15 @@ namespace Frost.Modules
 		/// <returns>True if the render thread finished before the timeout elapsed or false if it didn't</returns>
 		private bool waitForRender (TimeSpan timeout)
 		{
-			lock (_stateFrameNumbers)
+			lock(_stateFrameNumbers)
 			{
-				if (/* TODO: Disposed || */
+				if(/* TODO: Disposed || */
 					(_curRenderStateIndex == -1 && _prevRenderStateIndex == _prevUpdateStateIndex) || // Render thread just finished
 					_curRenderStateIndex == _prevUpdateStateIndex) // Render thread just started it
 					return true;
-				_busyRendering.Reset();
+				_renderSignal.Reset();
 			}
-			return _busyRendering.Wait(timeout);
+			return _renderSignal.Wait(timeout);
 		}
 
 		/// <summary>
@@ -484,7 +494,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Reset event that indicates whether the render thread is busy rendering a state
 		/// </summary>
-		private readonly ManualResetEventSlim _busyRendering = new ManualResetEventSlim();
+		private readonly ManualResetEventSlim _renderSignal = new ManualResetEventSlim();
 
 		/// <summary>
 		/// Marks the next state as being rendered and retrieves the index
@@ -495,6 +505,8 @@ namespace Frost.Modules
 			lock(_stateFrameNumbers)
 			{
 #if DEBUG
+				if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
+					throw new AccessViolationException("Only the render thread may acquire a render state.");
 				if(_curRenderStateIndex != -1)
 					throw new InvalidOperationException("Cannot acquire the next state to draw until the previous state has been released.");
 #endif
@@ -509,7 +521,7 @@ namespace Frost.Modules
 				}
 				else // First frame being drawn
 					SkippedFrames += frame;
-				_busyRendering.Set();
+				_renderSignal.Set();
 				return _curRenderStateIndex;
 			}
 		}
@@ -522,7 +534,9 @@ namespace Frost.Modules
 			lock (_stateFrameNumbers)
 			{
 #if DEBUG
-				if (_curRenderStateIndex == -1)
+				if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
+					throw new AccessViolationException("Only the render thread may release a render state.");
+				if(_curRenderStateIndex == -1)
 					throw new InvalidOperationException("Cannot release a render state when no state is currently being drawn.");
 #endif
 				_prevRenderStateIndex = _curRenderStateIndex;
@@ -542,9 +556,9 @@ namespace Frost.Modules
 			{
 				if(_prevRenderFrame < _prevUpdateFrame)
 					return true; // There's already a frame waiting
-				_busyUpdating.Reset();
+				_updateSignal.Reset();
 			}
-			return _busyUpdating.Wait(timeout);
+			return _updateSignal.Wait(timeout);
 		}
 
 		/// <summary>
