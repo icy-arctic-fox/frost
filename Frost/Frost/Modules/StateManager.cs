@@ -83,8 +83,8 @@ namespace Frost.Modules
 			_updateRoot = updateRoot;
 			_renderRoot = renderRoot;
 
-			_targetUpdateInterval = (Math.Abs(updateRate) < Double.Epsilon) ? 0d : 1d / updateRate;
-			_targetRenderInterval = (Math.Abs(renderRate) < Double.Epsilon) ? 0d : 1d / renderRate;
+			_targetUpdateInterval = (updateRate < Double.Epsilon) ? 0d : 1d / updateRate;
+			_targetRenderInterval = (renderRate < Double.Epsilon) ? 0d : 1d / renderRate;
 		}
 
 		/// <summary>
@@ -256,7 +256,7 @@ namespace Frost.Modules
 		/// </summary>
 		public double UpdateRate
 		{
-			get { return (Math.Abs(_actualUpdateInterval) < Double.Epsilon) ? Double.PositiveInfinity : 1d / _actualUpdateInterval; }
+			get { return (_actualUpdateInterval < Double.Epsilon) ? Double.PositiveInfinity : 1d / _actualUpdateInterval; }
 		}
 
 		/// <summary>
@@ -277,8 +277,8 @@ namespace Frost.Modules
 		/// </summary>
 		public double TargetUpdateRate
 		{
-			get { return (Math.Abs(_targetUpdateInterval) < Double.Epsilon) ? 0d : 1d / _targetUpdateInterval; }
-			set { _targetUpdateInterval = (Math.Abs(value) < Double.Epsilon) ? 0d : 1d / value; }
+			get { return (_targetUpdateInterval < Double.Epsilon) ? 0d : 1d / _targetUpdateInterval; }
+			set { _targetUpdateInterval = (value < Double.Epsilon) ? 0d : 1d / value; }
 		}
 
 		/// <summary>
@@ -286,7 +286,7 @@ namespace Frost.Modules
 		/// </summary>
 		public bool UnboundedUpdateRate
 		{
-			get { return Math.Abs(_targetUpdateInterval) < Double.Epsilon; }
+			get { return _targetUpdateInterval < Double.Epsilon; }
 		}
 
 		/// <summary>
@@ -479,7 +479,7 @@ namespace Frost.Modules
 		/// </summary>
 		public double RenderRate
 		{
-			get { return (Math.Abs(_actualRenderInterval) < Double.Epsilon) ? 0d : 1d / _actualRenderInterval; }
+			get { return (_actualRenderInterval < Double.Epsilon) ? 0d : 1d / _actualRenderInterval; }
 		}
 
 		/// <summary>
@@ -500,8 +500,8 @@ namespace Frost.Modules
 		/// </summary>
 		public double TargetRenderRate
 		{
-			get { return (Math.Abs(_targetRenderInterval) < Double.Epsilon) ? 0d : 1d / _targetRenderInterval; }
-			set { _targetRenderInterval = (Math.Abs(value) < Double.Epsilon) ? 0d : 1d / value; }
+			get { return (_targetRenderInterval < Double.Epsilon) ? 0d : 1d / _targetRenderInterval; }
+			set { _targetRenderInterval = (value < Double.Epsilon) ? 0d : 1d / value; }
 		}
 
 		/// <summary>
@@ -509,7 +509,7 @@ namespace Frost.Modules
 		/// </summary>
 		public bool UnboundedRenderRate
 		{
-			get { return Math.Abs(_targetRenderInterval) < Double.Epsilon; }
+			get { return _targetRenderInterval < Double.Epsilon; }
 		}
 
 		/// <summary>
@@ -565,7 +565,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Releases the state currently be rendered
 		/// </summary>
-		private void releaseRenderState()
+		private void releaseRenderState ()
 		{
 			lock(_stateFrameNumbers)
 			{
