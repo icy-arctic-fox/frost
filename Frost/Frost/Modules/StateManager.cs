@@ -400,13 +400,13 @@ namespace Frost.Modules
 				var nextStartTime = curStartTime.AddSeconds(_targetUpdateInterval);
 
 				if(nextStartTime < now)
-				{// Took long to update
+				{// Took long to update the frame
 					curStartTime = now;
 					Thread.Sleep(0); // Yield to other threads briefly
 				}
 				else
-				{// Sleep for the remaining time
-					var sleepTime = (int)(nextStartTime - now).TotalMilliseconds;
+				{// Sleep for the remaining slot of time
+					var sleepTime = (int)Math.Ceiling((nextStartTime - now).TotalMilliseconds);
 					Thread.Sleep(sleepTime);
 				}
 
@@ -571,6 +571,9 @@ namespace Frost.Modules
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
+			// Variable initialization for timing
+			var prevStartTime = DateTime.Now;  // Time that the previous update started
+			var curStartTime  = prevStartTime; // Time that the update started
 			var timeout = TimeSpan.FromSeconds(1);
 
 			// TODO: while(!Disposed)
@@ -590,9 +593,26 @@ namespace Frost.Modules
 				_renderRoot.DrawState(_display, state);
 				releaseRenderState();
 
-				RenderInterval = (DateTime.Now - startTime).TotalSeconds;
-				Thread.Sleep(15); // Yield to other threads and reduce CPU usage
-				_actualRenderInterval = (DateTime.Now - startTime).TotalSeconds;
+				// Calculate the amount of time to sleep
+				var now           = DateTime.Now;
+				RenderInterval    = (now - curStartTime).TotalSeconds;
+				var nextStartTime = curStartTime.AddSeconds(_targetRenderInterval);
+
+				if(nextStartTime < now)
+				{// Took too long to render the frame
+					curStartTime = now;
+					Thread.Sleep(0); // Yield to other threads briefly
+				}
+				else
+				{// Sleep for the remaining slot of time
+					var sleepTime = (int)Math.Ceiling((nextStartTime - now).TotalMilliseconds);
+					Thread.Sleep(sleepTime);
+				}
+
+				// Update time measurements
+				now = DateTime.Now;
+				_actualRenderInterval = (now - prevStartTime).TotalSeconds;
+				prevStartTime = now;
 			}
 			// }
 		}
