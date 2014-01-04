@@ -10,7 +10,7 @@ namespace Frost.Modules
 	/// Tracks the frames to be updated and rendered.
 	/// The state manager uses multiple states in memory so that updates and rendering can take place on separate threads concurrently.
 	/// </summary>
-	public class StateManager
+	public class StateManager : IDisposable
 	{
 		// TODO: Add ability to save older states for roll-back
 
@@ -102,6 +102,9 @@ namespace Frost.Modules
 		}
 
 #if DEBUG
+		/// <summary>
+		/// IDs of the update and render thread - used to verify that the correct thread is acquiring states
+		/// </summary>
 		private int _updateThreadId = -1, _renderThreadId = -1;
 #endif
 
@@ -111,8 +114,12 @@ namespace Frost.Modules
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown if the state manager has already stopped with <see cref="Stop"/>.
 		/// The state manager cannot be restarted after it has been stopped.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown if the state manager has already been disposed</exception>
 		public void Run ()
 		{
+			if(Disposed)
+				throw new ObjectDisposedException(GetType().FullName);
+
 			// Disable rendering on the current thread so that the render thread can do it
 			_display.SetActive(false);
 
@@ -121,7 +128,6 @@ namespace Frost.Modules
 				try
 				{// ... but has it already exited?
 					_running = true;
-					// TODO: Set reset event
 					_renderThread.Start();
 				}
 				catch(ThreadStateException e)
@@ -205,7 +211,7 @@ namespace Frost.Modules
 		{
 			get
 			{
-				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedUpdateRate || _renderCounter.Count == 0)
+				if(Disposed || !SynchronizeThreads || UnboundedUpdateRate || _renderCounter.Count == 0)
 					return true;
 				return _targetUpdateInterval > _renderCounter.Average * MaxFrameDrift;
 			}
@@ -218,7 +224,7 @@ namespace Frost.Modules
 		{
 			get
 			{
-				if(/* TODO: Disposed || */!SynchronizeThreads || UnboundedRenderRate || _updateCounter.Count == 0)
+				if(Disposed || !SynchronizeThreads || UnboundedRenderRate || _updateCounter.Count == 0)
 					return true;
 				return _targetRenderInterval > _updateCounter.Average * MaxFrameDrift;
 			}
@@ -385,7 +391,7 @@ namespace Frost.Modules
 		{
 			lock(_stateFrameNumbers)
 			{
-				if(/* TODO: Disposed || */
+				if(Disposed ||
 					(_curRenderStateIndex == -1 && _prevRenderStateIndex == _prevUpdateStateIndex) || // Render thread just finished
 					_curRenderStateIndex == _prevUpdateStateIndex) // Render thread just started it
 					return true;
@@ -614,9 +620,6 @@ namespace Frost.Modules
 			var curStartTime  = prevStartTime; // Time that the update started
 			var timeout = TimeSpan.FromSeconds(1);
 
-			// TODO: while(!Disposed)
-			// {
-
 			// Wait for the update thread to produce the first frame
 			while(!waitForUpdate(timeout))
 				if(!_running)
@@ -666,7 +669,6 @@ namespace Frost.Modules
 				curStartTime = now;
 				_renderCounter.AddMeasurement(_actualRenderInterval);
 			}
-			// }
 		}
 		#endregion
 		#endregion
@@ -741,5 +743,46 @@ namespace Frost.Modules
 				return sb.ToString();
 			}
 		}
+
+		#region Disposable
+
+		/// <summary>
+		/// Flag that indicates whether the state manager has been disposed
+		/// </summary>
+		public bool Disposed { get; private set; }
+
+		/// <summary>
+		/// Frees the resources held by the state manager
+		/// </summary>
+		/// <remarks>Disposing of the state manager will stop it if it is still running.</remarks>
+		public void Dispose ()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Tears down the state manager
+		/// </summary>
+		~StateManager ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Underlying method that releases the resources held by the state manager
+		/// </summary>
+		/// <param name="disposing">True if <see cref="Dispose"/> was called and inner resources should be disposed as well</param>
+		protected void Dispose (bool disposing)
+		{
+			if(!Disposed)
+			{// Don't do anything if the state manager is already disposed
+				if(disposing)
+				{// Dispose of the resources this object holds
+					Stop();
+				}
+				Disposed = true;
+			}
+		}
+		#endregion
 	}
 }
