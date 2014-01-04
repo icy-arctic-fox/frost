@@ -102,7 +102,7 @@ namespace Frost.Modules
 		}
 
 #if DEBUG
-		private int _updateThreadId, _renderThreadId;
+		private int _updateThreadId = -1, _renderThreadId = -1;
 #endif
 
 		/// <summary>
@@ -131,7 +131,6 @@ namespace Frost.Modules
 				}
 #if DEBUG
 				_updateThreadId = Thread.CurrentThread.ManagedThreadId;
-				_renderThreadId = _renderThread.ManagedThreadId;
 #endif
 				doUpdateLoop();
 			}
@@ -605,6 +604,7 @@ namespace Frost.Modules
 		/// Make sure the display is disabled on all other threads.</exception>
 		private void doRenderLoop ()
 		{
+			_renderThreadId = Thread.CurrentThread.ManagedThreadId;
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
