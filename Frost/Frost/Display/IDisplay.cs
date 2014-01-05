@@ -8,6 +8,13 @@ namespace Frost.Display
 	public interface IDisplay
 	{
 		/// <summary>
+		/// Indicates whether vertical synchronization is enabled
+		/// </summary>
+		/// <remarks>Vertical synchronization forces frames to be drawn to the screen in time with screen refreshes.
+		/// Enabling VSync can reduce the rendering rate (fps).</remarks>
+		bool VSync { get; set; } // TODO: Implement 'Adaptive' VSync
+
+		/// <summary>
 		/// Draws a sprite to the display
 		/// </summary>
 		/// <param name="sprite">Sprite to draw</param>

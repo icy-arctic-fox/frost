@@ -52,6 +52,7 @@ namespace Frost.Display
 		{
 			_title = title ?? String.Empty;
 			Implementation = new RenderWindow(new VideoMode(width, height), _title);
+//			Implementation.SetVerticalSyncEnabled(false);
 		}
 
 		#region Size and location
@@ -167,6 +168,23 @@ namespace Frost.Display
 		}
 
 		#region Display
+
+		private volatile bool _vsync; // TODO: Is it possible to find out whether VSync is enabled on start? Force on or off on start-up otherwise.
+
+		/// <summary>
+		/// Indicates whether vertical synchronization is enabled
+		/// </summary>
+		/// <remarks>Vertical synchronization forces frames to be drawn to the screen in time with screen refreshes.
+		/// Enabling VSync can reduce the rendering rate (fps).</remarks>
+		public bool VSync
+		{
+			get { return _vsync; } // TODO: This may be incorrect at startup
+			set
+			{
+				_vsync = value;
+				Implementation.SetVerticalSyncEnabled(value);
+			}
+		}
 
 		public void Draw (Sprite sprite)
 		{
