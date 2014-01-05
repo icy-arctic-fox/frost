@@ -135,9 +135,6 @@ namespace Frost.Modules
 					_running = false;
 					throw new InvalidOperationException("The state manager has already exited - cannot restart.", e);
 				}
-#if DEBUG
-				_updateThreadId = Thread.CurrentThread.ManagedThreadId;
-#endif
 				doUpdateLoop();
 			}
 		}
@@ -194,7 +191,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Maximum number of measurements to take for averaging update and render intervals
 		/// </summary>
-		private const int MeasurementCount = 10;
+		private const int MeasurementCount = 30;
 
 		private readonly AverageCounter _updateCounter = new AverageCounter(MeasurementCount),
 			_renderCounter = new AverageCounter(MeasurementCount);
@@ -213,7 +210,7 @@ namespace Frost.Modules
 			{
 				if(Disposed || !SynchronizeThreads || UnboundedUpdateRate || _renderCounter.Count == 0)
 					return true;
-				return _targetUpdateInterval > _renderCounter.Average * MaxFrameDrift;
+				return _targetUpdateInterval > _renderCounter.Average * MaxFrameDrift; // Is the update is taking longer than render?
 			}
 		}
 
@@ -226,7 +223,7 @@ namespace Frost.Modules
 			{
 				if(Disposed || !SynchronizeThreads || UnboundedRenderRate || _updateCounter.Count == 0)
 					return true;
-				return _targetRenderInterval > _updateCounter.Average * MaxFrameDrift;
+				return _targetRenderInterval > _updateCounter.Average * MaxFrameDrift; // Is the render taking longer than the update?
 			}
 		}
 
@@ -309,14 +306,14 @@ namespace Frost.Modules
 		/// <summary>
 		/// Frame number of the previous state that was updated
 		/// </summary>
-		private long _prevUpdateFrame;
+		private long _prevUpdateFrameNumber;
 
 		/// <summary>
 		/// Current frame number
 		/// </summary>
 		public long FrameNumber
 		{
-			get { return _prevUpdateFrame; }
+			get { return _prevUpdateFrameNumber; }
 		}
 
 		/// <summary>
@@ -330,11 +327,13 @@ namespace Frost.Modules
 		/// <returns>A state index</returns>
 		private int acquireNextUpdateState ()
 		{
+#if DEBUG
+			if(Thread.CurrentThread.ManagedThreadId != _updateThreadId)
+				throw new AccessViolationException("Only the update thread may acquire an update state.");
+#endif
 			lock(_stateFrameNumbers)
 			{
 #if DEBUG
-				if(Thread.CurrentThread.ManagedThreadId != _updateThreadId)
-					throw new AccessViolationException("Only the update thread may acquire an update state.");
 				if(_curUpdateStateIndex != -1)
 					throw new InvalidOperationException("Cannot acquire the next state to update until the previous state has been released.");
 #endif
@@ -364,20 +363,22 @@ namespace Frost.Modules
 		/// <summary>
 		/// Releases a state from updating so that it can be rendered
 		/// </summary>
-		/// <param name="frame">Number of the frame that was just updated</param>
-		private void releaseUpdateState (long frame)
+		/// <param name="frameNumber">Number of the frame that was just updated</param>
+		private void releaseUpdateState (long frameNumber)
 		{
+#if DEBUG
+			if(Thread.CurrentThread.ManagedThreadId != _updateThreadId)
+				throw new AccessViolationException("Only the update thread may release an update state.");
+#endif
 			lock(_stateFrameNumbers)
 			{
 #if DEBUG
-				if(Thread.CurrentThread.ManagedThreadId != _updateThreadId)
-					throw new AccessViolationException("Only the update thread may release an update state.");
 				if(_curUpdateStateIndex == -1)
 					throw new InvalidOperationException("Cannot release an update state when no state is currently being updated.");
 #endif
-				_prevUpdateStateIndex = _curUpdateStateIndex;
-				_prevUpdateFrame      = _stateFrameNumbers[_prevUpdateStateIndex] = frame;
-				_curUpdateStateIndex  = -1;
+				_prevUpdateStateIndex  = _curUpdateStateIndex;
+				_prevUpdateFrameNumber = _stateFrameNumbers[_prevUpdateStateIndex] = frameNumber;
+				_curUpdateStateIndex   = -1;
 				_updateSignal.Set();
 			}
 		}
@@ -405,6 +406,9 @@ namespace Frost.Modules
 		/// </summary>
 		private void doUpdateLoop ()
 		{
+#if DEBUG
+			_updateThreadId = Thread.CurrentThread.ManagedThreadId;
+#endif
 			var timeout = TimeSpan.FromSeconds(1); // 1 second timeout waiting for render thread
 
 			// Set up for the initial frame
@@ -419,6 +423,7 @@ namespace Frost.Modules
 				var state = acquireNextUpdateState();
 				_display.Update();
 				_updateRoot.StepState(_prevUpdateStateIndex, state);
+				Thread.Sleep(3); // TODO: Remove this
 				((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 				releaseUpdateState(frameNumber++);
 
@@ -531,7 +536,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Frame number of the previous state that was drawn
 		/// </summary>
-		private long _prevRenderFrame;
+		private long _prevRenderFrameNumber;
 
 		/// <summary>
 		/// Reset event that indicates whether the render thread is busy rendering a state
@@ -544,25 +549,27 @@ namespace Frost.Modules
 		/// <returns>A state index</returns>
 		private int acquireNextRenderState ()
 		{
+#if DEBUG
+			if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
+				throw new AccessViolationException("Only the render thread may acquire a render state.");
+#endif
 			lock(_stateFrameNumbers)
 			{
 #if DEBUG
-				if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
-					throw new AccessViolationException("Only the render thread may acquire a render state.");
 				if(_curRenderStateIndex != -1)
 					throw new InvalidOperationException("Cannot acquire the next state to draw until the previous state has been released.");
 #endif
 				_curRenderStateIndex = _prevUpdateStateIndex;
-				var frame = _stateFrameNumbers[_curRenderStateIndex];
+				var frameNumber = _stateFrameNumbers[_curRenderStateIndex];
 				if(_prevRenderStateIndex != -1)
 				{
-					if(frame == _prevRenderFrame)
+					if(frameNumber == _prevRenderFrameNumber)
 						++DuplicatedFrames;
 					else
-						SkippedFrames += frame - _prevRenderFrame - 1;
+						SkippedFrames += frameNumber - _prevRenderFrameNumber - 1;
 				}
 				else // First frame being drawn
-					SkippedFrames += frame;
+					SkippedFrames += frameNumber;
 				_renderSignal.Set();
 				return _curRenderStateIndex;
 			}
@@ -573,17 +580,20 @@ namespace Frost.Modules
 		/// </summary>
 		private void releaseRenderState ()
 		{
+#if DEBUG
+			
+			if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
+				throw new AccessViolationException("Only the render thread may release a render state.");
+#endif
 			lock(_stateFrameNumbers)
 			{
 #if DEBUG
-				if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
-					throw new AccessViolationException("Only the render thread may release a render state.");
 				if(_curRenderStateIndex == -1)
 					throw new InvalidOperationException("Cannot release a render state when no state is currently being drawn.");
 #endif
-				_prevRenderStateIndex = _curRenderStateIndex;
-				_prevRenderFrame = _stateFrameNumbers[_prevRenderStateIndex];
-				_curRenderStateIndex = -1;
+				_prevRenderStateIndex  = _curRenderStateIndex;
+				_prevRenderFrameNumber = _stateFrameNumbers[_prevRenderStateIndex];
+				_curRenderStateIndex   = -1;
 			}
 		}
 
@@ -596,7 +606,7 @@ namespace Frost.Modules
 		{
 			lock(_stateFrameNumbers)
 			{
-				if(_prevRenderFrame < _prevUpdateFrame)
+				if(_prevRenderFrameNumber < _prevUpdateFrameNumber)
 					return true; // There's already a frame waiting
 				_updateSignal.Reset();
 			}
@@ -610,7 +620,9 @@ namespace Frost.Modules
 		/// Make sure the display is disabled on all other threads.</exception>
 		private void doRenderLoop ()
 		{
+#if DEBUG
 			_renderThreadId = Thread.CurrentThread.ManagedThreadId;
+#endif
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
@@ -620,14 +632,26 @@ namespace Frost.Modules
 			var curStartTime  = prevStartTime; // Time that the update started
 			var timeout = TimeSpan.FromSeconds(1);
 
-			// Wait for the update thread to produce the first frame
-			while(!waitForUpdate(timeout))
-				if(!_running)
-					return;
-
 			var prevState = -1;
 			while(_running)
 			{
+				DateTime now;
+				if(!UnboundedRenderRate /* TODO: && !_display.Vsync */)
+				{// Sleep a bit to slow down
+					now = DateTime.Now;
+					var nextStartTime = prevStartTime.AddSeconds(_targetRenderInterval * (++frameCount));
+					if(nextStartTime < now)
+					{// Took too long to render the previous frame
+						frameCount    = 0;
+						prevStartTime = now;
+					}
+					else
+					{// Sleep for the remaining slot of time
+						var sleepTime = (int)(nextStartTime - now).TotalMilliseconds;
+						Thread.Sleep(sleepTime);
+					}
+				}
+
 				if(!FrameDuplication) // Wait for a frame
 					while(!waitForUpdate(timeout)) // Use a timeout to allow the render loop to exit if the render thread should stop
 						if(!_running) // Exit if not running anymore
@@ -639,35 +663,23 @@ namespace Frost.Modules
 				{// Render if dups are enabled or it's a new frame
 					_display.EnterFrame();
 					_renderRoot.DrawState(_display, state);
+					Thread.Sleep(3); // TODO: Remove this
 					_display.ExitFrame();
+
 					if(prevState == state) // Just rendered a duplicate frame
 						++RenderedDuplicateFrames;
+
+					// Update time measurements
+					now = DateTime.Now;
+					_actualRenderInterval = (now - curStartTime).TotalSeconds;
+					curStartTime = now;
+					_renderCounter.AddMeasurement(_actualRenderInterval);
 				}
 				prevState = state;
 				releaseRenderState();
 
-				// Calculate the amount of time to sleep
-				var now           = DateTime.Now;
-				RenderInterval    = (now - curStartTime).TotalSeconds;
-				var nextStartTime = prevStartTime.AddSeconds(_targetRenderInterval * (++frameCount));
-
-				if(nextStartTime < now)
-				{// Took too long to render the frame
-					frameCount    = 0;
-					prevStartTime = now;
-					Thread.Sleep(0); // Yield to other threads briefly
-				}
-				else
-				{// Sleep for the remaining slot of time
-					var sleepTime = (int)Math.Ceiling((nextStartTime - now).TotalMilliseconds);
-					Thread.Sleep(sleepTime);
-				}
-
-				// Update time measurements
-				now = DateTime.Now;
-				_actualRenderInterval = (now - curStartTime).TotalSeconds;
-				curStartTime = now;
-				_renderCounter.AddMeasurement(_actualRenderInterval);
+				// Switch threads
+				Thread.Sleep(0);
 			}
 		}
 		#endregion
