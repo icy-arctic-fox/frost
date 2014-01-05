@@ -52,7 +52,6 @@ namespace Frost.Display
 		{
 			_title = title ?? String.Empty;
 			Implementation = new RenderWindow(new VideoMode(width, height), _title);
-//			Implementation.SetVerticalSyncEnabled(false);
 		}
 
 		#region Size and location

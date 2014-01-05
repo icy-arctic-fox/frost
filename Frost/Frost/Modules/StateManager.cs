@@ -189,9 +189,9 @@ namespace Frost.Modules
 		public bool RenderDuplicateFrames { get; set; }
 
 		/// <summary>
-		/// Maximum number of measurements to take for averaging update and render intervals
+		/// Maximum number of measurements to take for averaging update and render rates
 		/// </summary>
-		private const int MeasurementCount = 30;
+		private const int MeasurementCount = 120;
 
 		private readonly AverageCounter _updateCounter = new AverageCounter(MeasurementCount),
 			_renderCounter = new AverageCounter(MeasurementCount);
@@ -199,7 +199,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Maximum proportion of time allowed to pass before frame skipping or duplication takes effect
 		/// </summary>
-		private const double MaxFrameDrift = 1.15;
+		private const double MaxFrameDrift = 1.15d;
 
 		/// <summary>
 		/// Indicates whether frames are currently being skipped to help the render thread catch up
@@ -210,7 +210,7 @@ namespace Frost.Modules
 			{
 				if(Disposed || !SynchronizeThreads || UnboundedUpdateRate || _renderCounter.Count == 0)
 					return true;
-				return _targetUpdateInterval > _renderCounter.Average * MaxFrameDrift; // Is the update is taking longer than render?
+				return TargetUpdateRate > _renderCounter.Average * MaxFrameDrift; // Is the update is taking longer than render?
 			}
 		}
 
@@ -223,7 +223,7 @@ namespace Frost.Modules
 			{
 				if(Disposed || !SynchronizeThreads || UnboundedRenderRate || _updateCounter.Count == 0)
 					return true;
-				return _targetRenderInterval > _updateCounter.Average * MaxFrameDrift; // Is the render taking longer than the update?
+				return TargetRenderRate > _updateCounter.Average * MaxFrameDrift; // Is the render taking longer than the update?
 			}
 		}
 
@@ -255,23 +255,12 @@ namespace Frost.Modules
 		private double _actualUpdateInterval;
 
 		/// <summary>
-		/// Current number of logic updates per second
+		/// Number of frames updated per second
 		/// </summary>
+		/// <remarks>This is a running average.</remarks>
 		public double UpdateRate
 		{
-			get { return (_actualUpdateInterval < Double.Epsilon) ? Double.PositiveInfinity : 1d / _actualUpdateInterval; }
-		}
-
-		/// <summary>
-		/// Running average of the updated frames per second
-		/// </summary>
-		public double AverageUpdateRate
-		{
-			get
-			{
-				var avg = _updateCounter.Average;
-				return (avg < Double.Epsilon) ? 0d : 1d / avg;
-			}
+			get { return _updateCounter.Average; }
 		}
 
 		/// <summary>
@@ -393,7 +382,7 @@ namespace Frost.Modules
 			lock(_stateFrameNumbers)
 			{
 				if(Disposed ||
-					(_curRenderStateIndex == -1 && _prevRenderStateIndex == _prevUpdateStateIndex) || // Render thread just finished
+					(_curRenderStateIndex == -1 && _prevRenderStateIndex == _prevUpdateStateIndex) || // Render thread just finished it
 					_curRenderStateIndex == _prevUpdateStateIndex) // Render thread just started it
 					return true;
 				_renderSignal.Reset();
@@ -411,37 +400,52 @@ namespace Frost.Modules
 #endif
 			var timeout = TimeSpan.FromSeconds(1); // 1 second timeout waiting for render thread
 
-			// Set up for the initial frame
-			var frameCount    = 0;  // Number of updated frames kept in the target interval (used to get an average sleep time)
-			var frameNumber   = 0L; // Logical frame number
-			var prevStartTime = DateTime.Now;  // Time that the previous update started
-			var curStartTime  = prevStartTime; // Time that the update started
+			int _PreviousRenderStateBeingUpdated = 0;
+			int _CurrentRenderStateBeingUpdated = 0;
 
+
+			// Set up for the initial frame
+			DateTime lastStepStart;
+			TimeSpan actualStepInterval;
+			TimeSpan stepIntervalExcludingSleep;
+			DateTime updateStartPoint = DateTime.Now;
+			int updatePoints = 0;
+			DateTime nextStepTime = updateStartPoint;
+			int waitTime;
+			int frameNumber = 0;
+			int _UpdateFPSDivideFactor = 1;
+
+			lastStepStart = DateTime.Now;
 			while(_running)
 			{
 				// Update the next state
-				var state = acquireNextUpdateState();
+				_PreviousRenderStateBeingUpdated = _CurrentRenderStateBeingUpdated;
+				_CurrentRenderStateBeingUpdated = acquireNextUpdateState();
+
+				// Step
 				_display.Update();
-				_updateRoot.StepState(_prevUpdateStateIndex, state);
-				Thread.Sleep(3); // TODO: Remove this
+				_updateRoot.StepState(_PreviousRenderStateBeingUpdated, _CurrentRenderStateBeingUpdated);
 				((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 				releaseUpdateState(frameNumber++);
 
 				// Calculate the amount of time to sleep
-				var now           = DateTime.Now;
-				UpdateInterval    = (now - curStartTime).TotalSeconds;
-				var nextStartTime = prevStartTime.AddSeconds(_targetUpdateInterval * (++frameCount));
+				DateTime now = DateTime.Now;
+				stepIntervalExcludingSleep = now - lastStepStart;
+				++updatePoints;
+				nextStepTime = updateStartPoint.AddSeconds(_targetUpdateInterval * updatePoints);
 
-				if(nextStartTime < now)
+				if (nextStepTime < now)
 				{// Took too long to update the frame
-					frameCount    = 0;
-					prevStartTime = now;
+					waitTime = 0;
+					updatePoints = 0;
+					nextStepTime = now;
+					updateStartPoint = now;
 					Thread.Sleep(0); // Yield to other threads briefly
 				}
 				else
 				{// Sleep for the remaining slot of time
-					var sleepTime = (int)Math.Ceiling((nextStartTime - now).TotalMilliseconds);
-					Thread.Sleep(sleepTime);
+					waitTime = (int)Math.Ceiling((nextStepTime - now).TotalMilliseconds);
+					Thread.Sleep(waitTime);
 				}
 
 				if(!FrameSkipping) // Wait for the render thread to process
@@ -451,9 +455,21 @@ namespace Frost.Modules
 
 				// Update time measurements
 				now = DateTime.Now;
-				_actualUpdateInterval = (now - curStartTime).TotalSeconds;
-				curStartTime = now;
-				_updateCounter.AddMeasurement(_actualUpdateInterval);
+				actualStepInterval = now - lastStepStart;
+				lastStepStart = now;
+				double value = actualStepInterval.TotalSeconds;
+				if(value < Double.Epsilon)
+					++_UpdateFPSDivideFactor;
+				else
+				{
+					if(_UpdateFPSDivideFactor == 1)
+						_updateCounter.AddMeasurement(1 / value);
+					else
+					{
+						_updateCounter.AddMeasurement(value / _UpdateFPSDivideFactor);
+						_UpdateFPSDivideFactor = 1;
+					}
+				}
 			}
 		}
 		#endregion
@@ -486,23 +502,12 @@ namespace Frost.Modules
 		private double _actualRenderInterval;
 
 		/// <summary>
-		/// Current number of frames rendered per second
+		/// Number of frames rendered per second
 		/// </summary>
+		/// <remarks>This is a running average.</remarks>
 		public double RenderRate
 		{
-			get { return (_actualRenderInterval < Double.Epsilon) ? 0d : 1d / _actualRenderInterval; }
-		}
-
-		/// <summary>
-		/// Running average of the rendered frames per second
-		/// </summary>
-		public double AverageRenderRate
-		{
-			get
-			{
-				var avg = _renderCounter.Average;
-				return (avg < Double.Epsilon) ? 0d : 1d / avg;
-			}
+			get { return _renderCounter.Average; }
 		}
 
 		/// <summary>
@@ -627,27 +632,28 @@ namespace Frost.Modules
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
 			// Variable initialization for timing
-			var frameCount    = 0; // Number of rendered frames kept in the target interval (used to get an average sleep time)
-			var prevStartTime = DateTime.Now;  // Time that the previous update started
-			var curStartTime  = prevStartTime; // Time that the update started
+			int _RenderPoints = 0;
+			DateTime _RenderStartPoint = DateTime.Now;
+			DateTime gameTime = DateTime.Now;
+			TimeSpan ElapsedGameTime = TimeSpan.Zero;
 			var timeout = TimeSpan.FromSeconds(1);
-
 			var prevState = -1;
+
 			while(_running)
 			{
-				DateTime now;
-				if(!UnboundedRenderRate /* TODO: && !_display.Vsync */)
+				if(!UnboundedRenderRate && !_display.VSync)
 				{// Sleep a bit to slow down
-					now = DateTime.Now;
-					var nextStartTime = prevStartTime.AddSeconds(_targetRenderInterval * (++frameCount));
-					if(nextStartTime < now)
+					++_RenderPoints;
+					DateTime desiredRenderStartTime = _RenderStartPoint.AddSeconds(_targetRenderInterval * _RenderPoints);
+					DateTime now = DateTime.Now;
+					if(desiredRenderStartTime <= now)
 					{// Took too long to render the previous frame
-						frameCount    = 0;
-						prevStartTime = now;
+						_RenderPoints     = 0;
+						_RenderStartPoint = now;
 					}
 					else
 					{// Sleep for the remaining slot of time
-						var sleepTime = (int)(nextStartTime - now).TotalMilliseconds;
+						var sleepTime = (int)(desiredRenderStartTime - now).TotalMilliseconds;
 						Thread.Sleep(sleepTime);
 					}
 				}
@@ -657,29 +663,41 @@ namespace Frost.Modules
 						if(!_running) // Exit if not running anymore
 							return;
 
+				// Calculate timing and FPS
+				DateTime renderStart = DateTime.Now;
+				var secondsElapsed = ElapsedGameTime.TotalSeconds;
+				var rate = (secondsElapsed < Double.Epsilon) ? 0d : 1d / secondsElapsed;
+				_renderCounter.AddMeasurement(rate);
+
 				// Get the next state and draw it
 				var state = acquireNextRenderState();
-				if(RenderDuplicateFrames || prevState != state)
-				{// Render if dups are enabled or it's a new frame
+//				if(RenderDuplicateFrames || prevState != state)
+//				{// Render if dups are enabled or it's a new frame
 					_display.EnterFrame();
 					_renderRoot.DrawState(_display, state);
-					Thread.Sleep(3); // TODO: Remove this
 					_display.ExitFrame();
 
 					if(prevState == state) // Just rendered a duplicate frame
 						++RenderedDuplicateFrames;
-
-					// Update time measurements
-					now = DateTime.Now;
-					_actualRenderInterval = (now - curStartTime).TotalSeconds;
-					curStartTime = now;
-					_renderCounter.AddMeasurement(_actualRenderInterval);
-				}
+//				}
 				prevState = state;
 				releaseRenderState();
 
+				// Calculate elapsed time
+				DateTime renderStop = DateTime.Now;
+				TimeSpan renderTime = renderStop - renderStart;
+
 				// Switch threads
-				Thread.Sleep(0);
+				if(!UnboundedRenderRate)
+				{
+					// TODO: Sleep for remaining time
+					var sleepTime = (int)Math.Ceiling(renderTime.TotalSeconds);
+					if(sleepTime < 0)
+						sleepTime = 0;
+					Thread.Sleep(sleepTime);
+				}
+				ElapsedGameTime = DateTime.Now - gameTime;
+				gameTime = DateTime.Now;
 			}
 		}
 		#endregion
