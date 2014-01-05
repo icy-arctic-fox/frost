@@ -31,8 +31,9 @@
 			get
 			{
 				var avg = 0d;
-				for(var i = 0; i < Count; ++i)
-					avg += _measurements[i] / Count;
+				lock(_measurements)
+					for(var i = 0; i < Count; ++i)
+						avg += _measurements[i] / Count;
 				return avg;
 			}
 		}
@@ -43,11 +44,14 @@
 		/// <param name="measurement">Measurement value</param>
 		public void AddMeasurement (double measurement)
 		{
-			_measurements[_pos++] = measurement;
-			if(_pos >= _measurements.Length)
-				_pos = 0; // Wrap around
-			else if(Count < _measurements.Length)
-				++Count; // Increment number of measurements
+			lock(_measurements)
+			{
+				_measurements[_pos++] = measurement;
+				if(_pos >= _measurements.Length)
+					_pos = 0; // Wrap around
+				else if(Count < _measurements.Length)
+					++Count; // Increment number of measurements
+			}
 		}
 	}
 }
