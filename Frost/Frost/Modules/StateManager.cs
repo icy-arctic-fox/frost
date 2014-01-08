@@ -133,6 +133,7 @@ namespace Frost.Modules
 			// Allocate these on the stack for faster access
 			var updateStopwatch = new Stopwatch();
 			var nextUpdate      = 0d;
+			updateStopwatch.Start();
 
 			while(_running)
 			{
@@ -403,6 +404,7 @@ namespace Frost.Modules
 			// Place these on the stack for faster access
 			var stopwatch  = new Stopwatch();
 			var nextUpdate = 0d;
+			stopwatch.Start();
 
 			while(_running)
 				updateTiming(stopwatch, ref nextUpdate);
@@ -426,7 +428,7 @@ namespace Frost.Modules
 				time = MaxUpdateInterval; // Prevent the game from becoming unresponsive
 
 			// Continue performing updates to catch up (if fallen behind)
-			while(nextUpdate - time <= 0 && time > 0d)
+			while(nextUpdate - time <= 0d && time > 0d)
 			{// It's time for an update
 				nextUpdate -= time;
 				update();
