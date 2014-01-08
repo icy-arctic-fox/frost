@@ -128,23 +128,11 @@ namespace Frost.Modules
 #if DEBUG
 			_renderThreadId = _updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
-			var stopwatch = new System.Diagnostics.Stopwatch();
-			stopwatch.Start();
 
 			while(_running)
 			{
-				// Update the game state and draw it
-				update();
-				render(); // TODO: Add logic for skipping frames if behind
-
-				// Measure how long it took
-				var elapsed   = stopwatch.Elapsed;
-				var remaining = _targetInterval - elapsed.TotalSeconds;
-				var sleepTime = (int)(remaining * 1000);
-				if(sleepTime < 0)
-					sleepTime = 0;
-				Thread.Sleep(sleepTime);
-				stopwatch.Reset();
+				updateTiming();
+				renderTiming();
 			}
 		}
 
@@ -396,37 +384,18 @@ namespace Frost.Modules
 #if DEBUG
 			_updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
-			// Use a single starting point to help counteract drift
-			var startTime      = DateTime.Now;
-			var endTime        = startTime;
-			var nextUpdateTime = startTime;
-			var frameCount     = 0;
 
 			while(_running)
-			{
-				// Calculate when the next update should start
-				if(endTime > nextUpdateTime)
-				{// Overslept or took too long to update, reset timer
-					nextUpdateTime = DateTime.Now;
-					frameCount     = 0;
-				}
-				else
-					nextUpdateTime = startTime.AddSeconds(_targetInterval * ++frameCount);
+				updateTiming();
+		}
 
-				update();
-
-				// Calculate the amount of time to sleep
-				var remaining = nextUpdateTime - DateTime.Now;
-				var sleepTime = (int)Math.Ceiling(remaining.TotalMilliseconds);
-				if(sleepTime < 0) // Don't sleep for a negative time
-					sleepTime = 0;
-				Thread.Sleep(sleepTime); // Sleep for at least 0 seconds to perform a thread switch
-
-				// Update the measurements
-				var updateEnd = DateTime.Now;
-				var elapsed   = updateEnd - nextUpdateTime;
-				_updateCounter.AddMeasurement(elapsed.TotalSeconds);
-			}
+		/// <summary>
+		/// Handles timing for the update phase and only calls <see cref="update"/> if it's time.
+		/// This method returns without updating if it's not time to perform an update step.
+		/// </summary>
+		private void updateTiming ()
+		{
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -438,19 +407,13 @@ namespace Frost.Modules
 			int prevStateIndex;
 			var nextStateIndex = acquireNextUpdateState(out prevStateIndex);
 
-			// Record the time just before starting
-			var startTime = DateTime.Now;
-
 			// Perform the update
 			_display.Update();
 			_updateRoot.StepState(prevStateIndex, nextStateIndex);
 			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
-			releaseUpdateState();
 
-			// Calculate how long processing took
-			var endTime = DateTime.Now;
-			var elapsed = endTime - startTime;
-			LastUpdateInterval = elapsed.TotalSeconds;
+			// Release the state
+			releaseUpdateState();
 		}
 		#endregion
 
@@ -580,10 +543,17 @@ namespace Frost.Modules
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
-			var timeout = TimeSpan.FromSeconds(1); // Break at 1 second intervals to check if the state manager is still running
 			while(_running)
-				if(waitForUpdate(timeout))
-					render();
+				renderTiming();
+		}
+
+		/// <summary>
+		/// Handles timing for the render phase and only calls <see cref="render"/> if it's time.
+		/// This method returns without drawing if it's not time to perform a render.
+		/// </summary>
+		private void renderTiming ()
+		{
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -594,9 +564,6 @@ namespace Frost.Modules
 			// Retrieve the next state to render
 			var stateIndex = acquireNextRenderState();
 
-			// Record the time just before rendering starts
-			var startTime = DateTime.Now;
-
 			// Render the frame
 			_display.EnterFrame();
 			_renderRoot.DrawState(_display, stateIndex);
@@ -604,13 +571,6 @@ namespace Frost.Modules
 
 			// Release the state
 			releaseRenderState();
-
-			// Calculate the length of time that elapsed
-			var endTime = DateTime.Now;
-			var elapsed = endTime - startTime;
-			var seconds = elapsed.TotalSeconds;
-			_renderCounter.AddMeasurement(seconds);
-			LastRenderInterval = seconds;
 		}
 		#endregion
 		#endregion
