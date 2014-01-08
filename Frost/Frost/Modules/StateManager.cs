@@ -132,13 +132,16 @@ namespace Frost.Modules
 
 			// Allocate these on the stack for faster access
 			var updateStopwatch = new Stopwatch();
+			var renderStopwatch = new Stopwatch();
 			var nextUpdate      = 0d;
+			var nextRender      = 0d;
 			updateStopwatch.Start();
+			renderStopwatch.Start();
 
 			while(_running)
 			{
 				updateTiming(updateStopwatch, ref nextUpdate);
-				renderTiming();
+				renderTiming(renderStopwatch, ref nextRender);
 			}
 		}
 
@@ -483,28 +486,78 @@ namespace Frost.Modules
 		#region Render
 
 		/// <summary>
-		/// Length of time (in seconds) that it took to just render the last frame
+		/// Default targeted number of drawn frames per second
+		/// </summary>
+		public const double DefaultTargetRenderRate = 60d;
+
+		/// <summary>
+		/// Default length of time (in seconds) to target for each frame render
+		/// </summary>
+		public const double DefaultTargetRenderInterval = 1d / DefaultTargetRenderRate;
+
+		/// <summary>
+		/// Maximum length of time (in seconds) that can pass before the game is forced to draw.
+		/// This is used to prevent the game from appearing unresponsive.
+		/// </summary>
+		private const double MaxRenderInterval = 1d;
+
+		/// <summary>
+		/// Target length of time (in seconds) for each frame render
+		/// </summary>
+		private double _targetRenderInterval = DefaultTargetRenderInterval;
+
+		/// <summary>
+		/// Number of frames rendered per second
+		/// </summary>
+		/// <remarks>This is a running average.</remarks>
+		public double RenderRate
+		{
+			get
+			{
+				var avg = _renderCounter.Average;
+				return (avg < Double.Epsilon) ? TargetRenderRate : 1d / avg;
+			}
+		}
+
+		/// <summary>
+		/// Target number of rendered frames per second.
+		/// A value of 0 represents no limit of frames per second.
+		/// </summary>
+		public double TargetRenderRate
+		{
+			get { return (_targetRenderInterval < Double.Epsilon) ? 0d : 1d / _targetRenderInterval; }
+			set { _targetRenderInterval = (value < Double.Epsilon) ? 0d : 1d / value; }
+		}
+
+		/// <summary>
+		/// Indicates whether the number of rendered frames per second is unbounded
+		/// </summary>
+		public bool UnboundedRenderRate
+		{
+			get { return _targetRenderInterval < Double.Epsilon; }
+		}
+
+		/// <summary>
+		/// Maximum number of frame renders that can occur consecutively to help the game catch up
+		/// </summary>
+		private const int MaxConsecutiveRenders = 10;
+
+		/// <summary>
+		/// Length of time (in seconds) that it took to just render the previous frame (does not include sleep time)
 		/// </summary>
 		public double LastRenderInterval { get; private set; }
+
+		/// <summary>
+		/// Actual length of time (in seconds) taken to draw and sleep
+		/// </summary>
+		private double _fullRenderInterval;
 
 		/// <summary>
 		/// Running average length of time (in seconds) taken to render a frame
 		/// </summary>
 		public double RenderInterval
 		{
-			get { return _renderCounter.Average; }
-		}
-
-		/// <summary>
-		/// Approximate maximum number of frames that could be rendered per second
-		/// </summary>
-		public double RenderRate
-		{
-			get
-			{
-				var avg = _renderCounter.Average;
-				return (avg < Double.Epsilon) ? Double.PositiveInfinity : 1d / avg;
-			}
+			get { return _updateCounter.Average; }
 		}
 
 		/// <summary>
@@ -606,17 +659,52 @@ namespace Frost.Modules
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
+			// Stack access is faster for these since they're checked quite frequently
+			var stopwatch      = new Stopwatch();
+			var nextRenderTime = 0d;
+
 			while(_running)
-				renderTiming();
+				renderTiming(stopwatch, ref nextRenderTime);
 		}
 
 		/// <summary>
 		/// Handles timing for the render phase and only calls <see cref="render"/> if it's time.
 		/// This method returns without drawing if it's not time to perform a render.
 		/// </summary>
-		private void renderTiming ()
+		/// <param name="stopwatch">Stopwatch used to </param>
+		/// <param name="nextRenderTime">Amount of time remaining (in seconds) until the next render needs to occur</param>
+		private void renderTiming (Stopwatch stopwatch, ref double nextRenderTime)
 		{
-			throw new NotImplementedException();
+			var time = stopwatch.Elapsed.TotalSeconds;
+			if(time <= 0d)
+				return; // "Way too early to render"
+			if(time > MaxRenderInterval)
+				time = MaxRenderInterval; // Prevent the game from appearing unresponsive
+
+			var timeRemaining = nextRenderTime - time;
+			if(timeRemaining <= 0d)
+			{// It's time to draw a frame
+				// Calculate when the next frame should be rendered
+				nextRenderTime = timeRemaining + _targetRenderInterval;
+				if(nextRenderTime < -MaxRenderInterval)
+					nextRenderTime = -MaxRenderInterval; // ... but don't schedule it too soon - give the system some time to breathe
+
+				// Reset the stopwatches to keep accuracy
+				stopwatch.Reset();
+				stopwatch.Start();
+
+				if(time > 0d)
+				{
+					// TODO: Implement adaptive VSync
+
+					// Record intervals and draw the frame
+					_fullRenderInterval = time;
+					render();
+					LastRenderInterval = stopwatch.Elapsed.TotalSeconds;
+				}
+			}
+
+			Thread.Sleep(0); // Sleep a bit to reduce CPU usage
 		}
 
 		/// <summary>
