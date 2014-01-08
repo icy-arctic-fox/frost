@@ -681,6 +681,7 @@ namespace Frost.Modules
 			// Stack access is faster for these since they're checked quite frequently
 			var stopwatch      = new Stopwatch();
 			var nextRenderTime = 0d;
+			stopwatch.Start();
 
 			while(_running)
 				renderTiming(stopwatch, ref nextRenderTime);
