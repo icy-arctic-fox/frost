@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Frost.Display;
 using Frost.Modules.State;
@@ -44,7 +45,7 @@ namespace Frost.Modules
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
 		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot)
-			: this(display, updateRoot, renderRoot, DefaultTargetRate)
+			: this(display, updateRoot, renderRoot, DefaultTargetUpdateRate)
 		{
 			// ...
 		}
@@ -73,7 +74,7 @@ namespace Frost.Modules
 			_updateRoot = updateRoot;
 			_renderRoot = renderRoot;
 
-			_targetInterval = (rate < Double.Epsilon) ? 0d : 1d / rate;
+			_targetUpdateInterval = (rate < Double.Epsilon) ? 0d : 1d / rate;
 		}
 
 		#region Flow control (start/stop)
@@ -129,9 +130,13 @@ namespace Frost.Modules
 			_renderThreadId = _updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 
+			// Allocate these on the stack for faster access
+			var updateStopwatch = new Stopwatch();
+			var nextUpdate      = 0d;
+
 			while(_running)
 			{
-				updateTiming();
+				updateTiming(updateStopwatch, ref nextUpdate);
 				renderTiming();
 			}
 		}
@@ -195,53 +200,64 @@ namespace Frost.Modules
 		/// </summary>
 		private const double MaxFrameDrift = 1.15d;
 
-		/// <summary>
-		/// Default targeted number of frames per second
-		/// </summary>
-		public const double DefaultTargetRate = 60d;
+		#region Update
 
 		/// <summary>
-		/// Default length of time (in seconds) to target for each frame
+		/// Default targeted number of logic updates per second
 		/// </summary>
-		public const double DefaultTargetInterval = 1d / DefaultTargetRate;
+		public const double DefaultTargetUpdateRate = 60d;
 
 		/// <summary>
-		/// Target length of time (in seconds) for each per frame
+		/// Default length of time (in seconds) to target for each frame update
 		/// </summary>
-		private double _targetInterval = DefaultTargetInterval;
+		public const double DefaultTargetUpdateInterval = 1d / DefaultTargetUpdateRate;
 
 		/// <summary>
-		/// Number of frames processed per second
+		/// Maximum length of time (in seconds) that can pass before the game is forced to update.
+		/// This is used to prevent the game from becoming unresponsive.
+		/// </summary>
+		private const double MaxUpdateInterval = 1d;
+
+		/// <summary>
+		/// Target length of time (in seconds) for each frame update
+		/// </summary>
+		private double _targetUpdateInterval = DefaultTargetUpdateInterval;
+
+		/// <summary>
+		/// Number of frames updated per second
 		/// </summary>
 		/// <remarks>This is a running average.</remarks>
-		public double FrameRate
+		public double UpdateRate
 		{
 			get
 			{
 				var avg = _updateCounter.Average;
-				return (avg < Double.Epsilon) ? TargetFrameRate : 1d / avg;
+				return (avg < Double.Epsilon) ? TargetUpdateRate : 1d / avg;
 			}
 		}
 
 		/// <summary>
-		/// Target number of frames per second.
+		/// Target number of frame updates per second.
 		/// A value of 0 represents no limit of frames per second.
 		/// </summary>
-		public double TargetFrameRate
+		public double TargetUpdateRate
 		{
-			get { return (_targetInterval < Double.Epsilon) ? 0d : 1d / _targetInterval; }
-			set { _targetInterval = (value < Double.Epsilon) ? 0d : 1d / value; }
+			get { return (_targetUpdateInterval < Double.Epsilon) ? 0d : 1d / _targetUpdateInterval; }
+			set { _targetUpdateInterval = (value < Double.Epsilon) ? 0d : 1d / value; }
 		}
 
 		/// <summary>
-		/// Indicates whether the number of frames per second is unbounded
+		/// Indicates whether the number of updated frames per second is unbounded
 		/// </summary>
-		public bool UnboundedFrameRate
+		public bool UnboundedUpdateRate
 		{
-			get { return _targetInterval < Double.Epsilon; }
+			get { return _targetUpdateInterval < Double.Epsilon; }
 		}
 
-		#region Update
+		/// <summary>
+		/// Maximum number of updates that can occur consecutively to help the game catch up
+		/// </summary>
+		private const int MaxConsecutiveUpdates = 10;
 
 		/// <summary>
 		/// Length of time (in seconds) that it took to just update the previous frame (does not include sleep time)
@@ -384,18 +400,63 @@ namespace Frost.Modules
 #if DEBUG
 			_updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
+			// Place these on the stack for faster access
+			var stopwatch  = new Stopwatch();
+			var nextUpdate = 0d;
 
 			while(_running)
-				updateTiming();
+				updateTiming(stopwatch, ref nextUpdate);
 		}
 
 		/// <summary>
 		/// Handles timing for the update phase and only calls <see cref="update"/> if it's time.
 		/// This method returns without updating if it's not time to perform an update step.
 		/// </summary>
-		private void updateTiming ()
+		/// <param name="stopwatch">Stopwatch used to calculate when updates should occur</param>
+		/// <param name="nextUpdate">Amount of time (in seconds) until the next update should occur</param>
+		private void updateTiming (Stopwatch stopwatch, ref double nextUpdate)
 		{
-			throw new NotImplementedException();
+			var updatesProcessed = 0;  // Number of updates processed since this method was called
+			var totalUpdateTime  = 0d; // Total time taken to perform all updates since this method was called
+
+			var time = stopwatch.Elapsed.TotalSeconds;
+			if(time <= 0d)
+				return; // What are we even doing here?
+			if(time > MaxUpdateInterval)
+				time = MaxUpdateInterval; // Prevent the game from becoming unresponsive
+
+			// Continue performing updates to catch up (if fallen behind)
+			while(nextUpdate - time <= 0 && time > 0d)
+			{// It's time for an update
+				nextUpdate -= time;
+				update();
+
+				// Calculate the length of time taken by the update
+				time = stopwatch.Elapsed.TotalSeconds - time;
+				LastUpdateInterval = time;
+				totalUpdateTime += time;
+
+				// Reset the stopwatch, since they aren't accurate over longer periods of time.
+				stopwatch.Reset();
+				stopwatch.Start();
+
+				// Schedule the next update
+				nextUpdate += _targetUpdateInterval;
+				nextUpdate  = Math.Max(nextUpdate, -MaxUpdateInterval); // ... but don't schedule it too soon to prevent overload
+
+				// Allow consecutive updates to occur, but not too many.
+				// This allows the hardware to catch up.
+				if(++updatesProcessed >= MaxConsecutiveUpdates || UnboundedUpdateRate)
+					break;
+			}
+
+			if(updatesProcessed > 0)
+			{// Update statistics
+				var avgTime = totalUpdateTime / updatesProcessed;
+				_updateCounter.AddMeasurement(avgTime);
+			}
+
+			Thread.Sleep(0); // Yield to other threads and reduce CPU usage a bit
 		}
 
 		/// <summary>
@@ -586,7 +647,7 @@ namespace Frost.Modules
 			sb.Append("Frame: ");
 			sb.Append(FrameNumber);
 			sb.Append(" - ");
-			sb.Append(String.Format("{0:0.00}", FrameRate));
+			sb.Append(String.Format("{0:0.00}", UpdateRate));
 			sb.Append(" fps (");
 			sb.Append(SkippedFrames);
 			sb.Append(" skipped)");
