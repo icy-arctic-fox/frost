@@ -298,7 +298,7 @@ namespace Frost.Modules
 		/// Gets the next state to update and marks it
 		/// </summary>
 		/// <returns>A state index</returns>
-		private int acquireNextUpdateState ()
+		private int acquireNextUpdateState (out int prevStateIndex)
 		{
 #if DEBUG
 			if(Thread.CurrentThread.ManagedThreadId != _updateThreadId)
@@ -329,6 +329,7 @@ namespace Frost.Modules
 				}
 				else
 					_curUpdateStateIndex = StateCount - (_prevUpdateStateIndex + _curRenderStateIndex);
+				prevStateIndex = _prevUpdateStateIndex;
 				return _curUpdateStateIndex;
 			}
 		}
@@ -410,15 +411,16 @@ namespace Frost.Modules
 		/// </summary>
 		private void update ()
 		{
-			// Get the next state to update
-			var nextStateIndex = acquireNextUpdateState();
+			// Get the previous state and next state to update
+			int prevStateIndex;
+			var nextStateIndex = acquireNextUpdateState(out prevStateIndex);
 
 			// Record the time just before starting
 			var startTime = DateTime.Now;
 
 			// Perform the step
 			_display.Update();
-			_updateRoot.StepState(0 /* TODO */, nextStateIndex);
+			_updateRoot.StepState(prevStateIndex, nextStateIndex);
 			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 			releaseUpdateState();
 
