@@ -130,8 +130,20 @@ namespace Frost.Modules
 #endif
 			while(_running)
 			{
+				// Record starting time
+				var startTime = DateTime.Now;
+				
+				// Update the game state and draw it
 				update();
 				render(); // TODO: Add logic for skipping frames if behind
+
+				// Calculate how long to sleep
+				var endTime   = DateTime.Now;
+				var elapsed   = endTime - startTime;
+				var sleepTime = (int)Math.Ceiling(elapsed.TotalMilliseconds);
+				if(sleepTime < 0) // Don't sleep for a negative length
+					sleepTime = 0;
+				Thread.Sleep(sleepTime); // Always sleep for at least 0 seconds to thread switch (reduces CPU usage a bit)
 			}
 		}
 
@@ -190,7 +202,7 @@ namespace Frost.Modules
 			_renderCounter = new AverageCounter(MeasurementCount);
 
 		/// <summary>
-		/// Maximum proportion of time allowed to pass before frame skipping or duplication takes effect
+		/// Maximum proportion of time allowed to pass before frame skipping
 		/// </summary>
 		private const double MaxFrameDrift = 1.15d;
 
@@ -216,7 +228,7 @@ namespace Frost.Modules
 		public double FrameRate
 		{
 			get
-			{// TODO: Correct for single and multi-thread modes
+			{
 				var avg = _updateCounter.Average;
 				return (avg < Double.Epsilon) ? TargetFrameRate : 1d / avg;
 			}
@@ -394,7 +406,7 @@ namespace Frost.Modules
 
 				// Calculate the amount of time to sleep
 				var timeRemaining = nextUpdate - DateTime.Now;
-				var sleepTime     = (int)Math.Ceiling(timeRemaining.TotalSeconds);
+				var sleepTime     = (int)Math.Ceiling(timeRemaining.TotalMilliseconds);
 				if(sleepTime < 0) // Don't sleep for a negative time
 					sleepTime = 0;
 				Thread.Sleep(sleepTime); // Sleep for at least 0 seconds to perform a thread switch
@@ -418,13 +430,13 @@ namespace Frost.Modules
 			// Record the time just before starting
 			var startTime = DateTime.Now;
 
-			// Perform the step
+			// Perform the update
 			_display.Update();
 			_updateRoot.StepState(prevStateIndex, nextStateIndex);
 			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 			releaseUpdateState();
 
-			// Calculate how long the processing took
+			// Calculate how long processing took
 			var endTime = DateTime.Now;
 			var elapsed = endTime - startTime;
 			LastUpdateInterval = elapsed.TotalSeconds;
@@ -444,6 +456,18 @@ namespace Frost.Modules
 		public double RenderInterval
 		{
 			get { return _renderCounter.Average; }
+		}
+
+		/// <summary>
+		/// Approximate maximum number of frames that could be rendered per second
+		/// </summary>
+		public double RenderRate
+		{
+			get
+			{
+				var avg = _renderCounter.Average;
+				return (avg < Double.Epsilon) ? Double.PositiveInfinity : 1d / avg;
+			}
 		}
 
 		/// <summary>
@@ -573,7 +597,9 @@ namespace Frost.Modules
 			// Calculate the length of time that elapsed
 			var endTime = DateTime.Now;
 			var elapsed = endTime - startTime;
-			LastRenderInterval = elapsed.TotalSeconds;
+			var seconds = elapsed.TotalSeconds;
+			_renderCounter.AddMeasurement(seconds);
+			LastRenderInterval = seconds;
 		}
 		#endregion
 		#endregion
