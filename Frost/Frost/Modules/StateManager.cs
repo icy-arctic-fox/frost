@@ -128,32 +128,23 @@ namespace Frost.Modules
 #if DEBUG
 			_renderThreadId = _updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
-			var startTime      = DateTime.Now;
-			var endTime        = startTime;
-			var nextUpdateTime = startTime;
-			var frameCount     = 0;
+			var stopwatch = new System.Diagnostics.Stopwatch();
+			stopwatch.Start();
 
 			while(_running)
 			{
-				if(endTime > nextUpdateTime)
-				{// Overslept or processing took too long, reset starting point
-					startTime  = DateTime.Now;
-					frameCount = 0;
-				}
-				nextUpdateTime = startTime.AddSeconds(_targetInterval * ++frameCount);
-				
 				// Update the game state and draw it
 				update();
 				render(); // TODO: Add logic for skipping frames if behind
 
-				// Calculate how long to sleep
-				var remaining = nextUpdateTime - DateTime.Now;
-				var sleepTime = (int)remaining.TotalMilliseconds;
-				if(sleepTime < 0) // Don't sleep for a negative length
+				// Measure how long it took
+				var elapsed   = stopwatch.Elapsed;
+				var remaining = _targetInterval - elapsed.TotalSeconds;
+				var sleepTime = (int)(remaining * 1000);
+				if(sleepTime < 0)
 					sleepTime = 0;
-				Thread.Sleep(sleepTime); // Always sleep for at least 0 seconds to thread switch (reduces CPU usage a bit)
-				endTime = DateTime.Now;
-				_updateCounter.AddMeasurement((endTime - startTime).TotalSeconds / frameCount);
+				Thread.Sleep(sleepTime);
+				stopwatch.Reset();
 			}
 		}
 
@@ -167,7 +158,7 @@ namespace Frost.Modules
 			
 			// Create and start the render thread
 			var renderThread = new Thread(doRenderLoop) {
-				Name     = "State Manager Render Thread",
+				Name     = "Render Thread",
 				Priority = ThreadPriority.AboveNormal
 			};
 			renderThread.Start();
