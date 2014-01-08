@@ -180,13 +180,24 @@ namespace Frost.Modules
 		/// <summary>
 		/// Frame number that each of the states are on
 		/// </summary>
-		private readonly long[] _stateFrameNumbers = new[] {0L, 0L, 0L};
+		private readonly long[] _stateFrameNumbers = new[] { 0L, 0L, 0L };
 
 		/// <summary>
 		/// Total number of frames that were skipped.
 		/// This represents the frames that were updated, but were not rendered.
 		/// </summary>
 		public long SkippedFrames { get; private set; }
+
+		/// <summary>
+		/// Total number of frames encountered that are duplicates
+		/// </summary>
+		public long DuplicatedFrames { get; private set; }
+
+		/// <summary>
+		/// Total number of frames that were drawn multiple times.
+		/// This represents the frames that were actually rendered more than once.
+		/// </summary>
+		public long RenderedDuplicateFrames { get; private set; }
 
 		/// <summary>
 		/// Maximum number of measurements to take for averaging update and render intervals
@@ -477,6 +488,7 @@ namespace Frost.Modules
 			_display.Update();
 			_updateRoot.StepState(prevStateIndex, nextStateIndex);
 			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
+			Thread.Sleep(2); // TODO: Remove fake load
 
 			// Release the state
 			releaseUpdateState();
@@ -599,7 +611,12 @@ namespace Frost.Modules
 				_curRenderStateIndex = _prevUpdateStateIndex;
 				var frameNumber = _stateFrameNumbers[_curRenderStateIndex];
 				if(_prevRenderStateIndex != -1)
-					SkippedFrames += frameNumber - _prevRenderFrameNumber - 1;
+				{
+					if(frameNumber == _prevRenderFrameNumber)
+						++DuplicatedFrames;
+					else
+						SkippedFrames += frameNumber - _prevRenderFrameNumber - 1;
+				}
 				else // First frame being drawn
 					SkippedFrames += frameNumber;
 				_renderSignal.Set();
@@ -699,6 +716,7 @@ namespace Frost.Modules
 
 					// Record intervals and draw the frame
 					_fullRenderInterval = time;
+					_renderCounter.AddMeasurement(time);
 					render();
 					LastRenderInterval = stopwatch.Elapsed.TotalSeconds;
 				}
@@ -718,6 +736,7 @@ namespace Frost.Modules
 			// Render the frame
 			_display.EnterFrame();
 			_renderRoot.DrawState(_display, stateIndex);
+			Thread.Sleep(2); // TODO: Remove fake load
 			_display.ExitFrame();
 
 			// Release the state
@@ -738,7 +757,13 @@ namespace Frost.Modules
 			sb.Append(FrameNumber);
 			sb.Append(" - ");
 			sb.Append(String.Format("{0:0.00}", UpdateRate));
-			sb.Append(" fps (");
+			sb.Append(" u/s ");
+			sb.Append(String.Format("{0:0.00}", RenderRate));
+			sb.Append(" f/s (");
+			sb.Append(RenderedDuplicateFrames);
+			sb.Append('/');
+			sb.Append(DuplicatedFrames);
+			sb.Append(" dups, ");
 			sb.Append(SkippedFrames);
 			sb.Append(" skipped)");
 			return sb.ToString();
