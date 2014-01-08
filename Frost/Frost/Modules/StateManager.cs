@@ -144,6 +144,8 @@ namespace Frost.Modules
 			{
 				updateTiming(updateStopwatch, ref nextUpdate);
 				renderTiming(renderStopwatch, ref nextRender);
+
+				// TODO: Use minimum of nextUpdate and nextRender to calculate possible sleep time
 			}
 		}
 
@@ -200,6 +202,18 @@ namespace Frost.Modules
 		/// This represents the frames that were actually rendered more than once.
 		/// </summary>
 		public long RenderedDuplicateFrames { get; private set; }
+
+		/// <summary>
+		/// Indicates whether duplicate frames should be rendered (when game updates are behind display updates)
+		/// </summary>
+		public bool RenderDuplicateFrames { get; set; }
+
+		/// <summary>
+		/// Indicates if the update and render threads should stay in sync with each other.
+		/// This option is only valid and works where multi-threaded is enabled and the update and render rates should be the same.
+		/// </summary>
+		/// <remarks>Thread synchronization will prevent duplicate and skipped frames.</remarks>
+		public bool ThreadSynchronization { get; set; }
 
 		/// <summary>
 		/// Maximum number of measurements to take for averaging update and render intervals
@@ -418,12 +432,16 @@ namespace Frost.Modules
 			_updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 			// Place these on the stack for faster access
-			var stopwatch  = new Stopwatch();
-			var nextUpdate = 0d;
+			var stopwatch      = new Stopwatch();
+			var nextUpdateTime = 0d;
 			stopwatch.Start();
 
+			update(); // Generate the first frame to start the process
 			while(_running)
-				updateTiming(stopwatch, ref nextUpdate);
+				if(!ThreadSynchronization || waitForRender(TimeSpan.FromSeconds(MaxUpdateInterval)))
+					updateTiming(stopwatch, ref nextUpdateTime);
+
+			// TODO: Use minimum of nextUpdateTime to calculate possible sleep time
 		}
 
 		/// <summary>
@@ -431,8 +449,8 @@ namespace Frost.Modules
 		/// This method returns without updating if it's not time to perform an update step.
 		/// </summary>
 		/// <param name="stopwatch">Stopwatch used to calculate when updates should occur</param>
-		/// <param name="nextUpdate">Amount of time (in seconds) until the next update should occur</param>
-		private void updateTiming (Stopwatch stopwatch, ref double nextUpdate)
+		/// <param name="nextUpdateTime">Amount of time (in seconds) until the next update should occur</param>
+		private void updateTiming (Stopwatch stopwatch, ref double nextUpdateTime)
 		{
 			var updatesProcessed = 0;  // Number of updates processed since this method was called
 			var totalUpdateTime  = 0d; // Total time taken to perform all updates since this method was called
@@ -444,9 +462,9 @@ namespace Frost.Modules
 				time = MaxUpdateInterval; // Prevent the game from becoming unresponsive
 
 			// Continue performing updates to catch up (if fallen behind)
-			while(nextUpdate - time <= 0d && time > 0d)
+			while(nextUpdateTime - time <= 0d && time > 0d)
 			{// It's time for an update
-				nextUpdate -= time;
+				nextUpdateTime -= time;
 				update();
 
 				// Calculate the length of time taken by the update
@@ -459,8 +477,8 @@ namespace Frost.Modules
 				stopwatch.Start();
 
 				// Schedule the next update
-				nextUpdate += _targetUpdateInterval;
-				nextUpdate  = Math.Max(nextUpdate, -MaxUpdateInterval); // ... but don't schedule it too soon to prevent overload
+				nextUpdateTime += _targetUpdateInterval;
+				nextUpdateTime  = Math.Max(nextUpdateTime, -MaxUpdateInterval); // ... but don't schedule it too soon to prevent overload
 
 				// Allow consecutive updates to occur, but not too many.
 				// This allows the hardware to catch up.
@@ -597,8 +615,9 @@ namespace Frost.Modules
 		/// <summary>
 		/// Marks the next state as being rendered and retrieves the index
 		/// </summary>
+		/// <param name="nextstateIndex">Index of the previous state that was rendered (used to detect duplicates)</param>
 		/// <returns>A state index</returns>
-		private int acquireNextRenderState ()
+		private int acquireNextRenderState (out int nextstateIndex)
 		{
 #if DEBUG
 			if(Thread.CurrentThread.ManagedThreadId != _renderThreadId)
@@ -622,6 +641,7 @@ namespace Frost.Modules
 				else // First frame being drawn
 					SkippedFrames += frameNumber;
 				_renderSignal.Set();
+				nextstateIndex = _prevRenderStateIndex;
 				return _curRenderStateIndex;
 			}
 		}
@@ -684,7 +704,10 @@ namespace Frost.Modules
 			stopwatch.Start();
 
 			while(_running)
-				renderTiming(stopwatch, ref nextRenderTime);
+				if(!ThreadSynchronization || waitForUpdate(TimeSpan.FromSeconds(MaxRenderInterval)))
+					renderTiming(stopwatch, ref nextRenderTime);
+
+			// TODO: Use minimum of nextRenderTime to calculate possible sleep time
 		}
 
 		/// <summary>
@@ -734,13 +757,19 @@ namespace Frost.Modules
 		private void render ()
 		{
 			// Retrieve the next state to render
-			var stateIndex = acquireNextRenderState();
+			int prevStateIndex;
+			var nextStateIndex = acquireNextRenderState(out prevStateIndex);
 
-			// Render the frame
-			_display.EnterFrame();
-			_renderRoot.DrawState(_display, stateIndex);
-			Thread.Sleep(2); // TODO: Remove fake load
-			_display.ExitFrame();
+			if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
+			{// Render the frame
+				_display.EnterFrame();
+				_renderRoot.DrawState(_display, nextStateIndex);
+				Thread.Sleep(2); // TODO: Remove fake load
+				_display.ExitFrame();
+
+				if(prevStateIndex == nextStateIndex)
+					++RenderedDuplicateFrames;
+			}
 
 			// Release the state
 			releaseRenderState();
