@@ -128,22 +128,32 @@ namespace Frost.Modules
 #if DEBUG
 			_renderThreadId = _updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
+			var startTime      = DateTime.Now;
+			var endTime        = startTime;
+			var nextUpdateTime = startTime;
+			var frameCount     = 0;
+
 			while(_running)
 			{
-				// Record starting time
-				var startTime = DateTime.Now;
+				if(endTime > nextUpdateTime)
+				{// Overslept or processing took too long, reset starting point
+					startTime  = DateTime.Now;
+					frameCount = 0;
+				}
+				nextUpdateTime = startTime.AddSeconds(_targetInterval * ++frameCount);
 				
 				// Update the game state and draw it
 				update();
 				render(); // TODO: Add logic for skipping frames if behind
 
 				// Calculate how long to sleep
-				var endTime   = DateTime.Now;
-				var elapsed   = endTime - startTime;
-				var sleepTime = (int)Math.Ceiling(elapsed.TotalMilliseconds);
+				var remaining = nextUpdateTime - DateTime.Now;
+				var sleepTime = (int)remaining.TotalMilliseconds;
 				if(sleepTime < 0) // Don't sleep for a negative length
 					sleepTime = 0;
 				Thread.Sleep(sleepTime); // Always sleep for at least 0 seconds to thread switch (reduces CPU usage a bit)
+				endTime = DateTime.Now;
+				_updateCounter.AddMeasurement((endTime - startTime).TotalSeconds / frameCount);
 			}
 		}
 
@@ -362,9 +372,8 @@ namespace Frost.Modules
 					throw new InvalidOperationException("Cannot release an update state when no state is currently being updated.");
 #endif
 				_prevUpdateStateIndex  = _curUpdateStateIndex;
-				_prevUpdateFrameNumber = _stateFrameNumbers[_prevUpdateStateIndex];
+				_prevUpdateFrameNumber = _stateFrameNumbers[_prevUpdateStateIndex] = _curUpdateFrameNumber++;
 				_curUpdateStateIndex   = -1;
-				++_curUpdateFrameNumber;
 				_updateSignal.Set(); // Let the renderer know that there's a frame ready
 			}
 		}
@@ -396,24 +405,35 @@ namespace Frost.Modules
 #if DEBUG
 			_updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
+			// Use a single starting point to help counteract drift
+			var startTime      = DateTime.Now;
+			var endTime        = startTime;
+			var nextUpdateTime = startTime;
+			var frameCount     = 0;
+
 			while(_running)
 			{
 				// Calculate when the next update should start
-				var updateStart = DateTime.Now;
-				var nextUpdate  = updateStart.AddSeconds(_targetInterval);
+				if(endTime > nextUpdateTime)
+				{// Overslept or took too long to update, reset timer
+					nextUpdateTime = DateTime.Now;
+					frameCount     = 0;
+				}
+				else
+					nextUpdateTime = startTime.AddSeconds(_targetInterval * ++frameCount);
 
 				update();
 
 				// Calculate the amount of time to sleep
-				var timeRemaining = nextUpdate - DateTime.Now;
-				var sleepTime     = (int)Math.Ceiling(timeRemaining.TotalMilliseconds);
+				var remaining = nextUpdateTime - DateTime.Now;
+				var sleepTime = (int)Math.Ceiling(remaining.TotalMilliseconds);
 				if(sleepTime < 0) // Don't sleep for a negative time
 					sleepTime = 0;
 				Thread.Sleep(sleepTime); // Sleep for at least 0 seconds to perform a thread switch
 
 				// Update the measurements
 				var updateEnd = DateTime.Now;
-				var elapsed   = updateEnd - updateStart;
+				var elapsed   = updateEnd - nextUpdateTime;
 				_updateCounter.AddMeasurement(elapsed.TotalSeconds);
 			}
 		}
