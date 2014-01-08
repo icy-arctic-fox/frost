@@ -263,7 +263,7 @@ namespace Frost.Modules
 		/// <summary>
 		/// Frame number of the previous state that was updated
 		/// </summary>
-		private long _prevUpdateFrameNumber;
+		private long _prevUpdateFrameNumber = -1;
 
 		/// <summary>
 		/// Frame number of the current state being updated
@@ -318,7 +318,6 @@ namespace Frost.Modules
 				}
 				else
 					_curUpdateStateIndex = StateCount - (_prevUpdateStateIndex + _curRenderStateIndex);
-				++_curUpdateFrameNumber;
 				return _curUpdateStateIndex;
 			}
 		}
@@ -341,6 +340,7 @@ namespace Frost.Modules
 				_prevUpdateStateIndex  = _curUpdateStateIndex;
 				_prevUpdateFrameNumber = _stateFrameNumbers[_prevUpdateStateIndex];
 				_curUpdateStateIndex   = -1;
+				++_curUpdateFrameNumber;
 			}
 		}
 
@@ -384,15 +384,21 @@ namespace Frost.Modules
 			// Get the next state to update
 			var nextStateIndex = acquireNextUpdateState();
 
-			// Step
+			// Record the time just before starting
+			var startTime = DateTime.Now;
+
+			// Perform the step
 			_display.Update();
 			_updateRoot.StepState(0 /* TODO */, nextStateIndex);
-			((Window) _display).Title = ToString() + " - " + StateString; // TODO: Remove this
+			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 			releaseUpdateState();
 
 			// TODO: Signal renderer to show that a frame is available
 
-			// TODO: Calculate the length of time that the update took
+			// Calculate how long the processing took
+			var endTime    = DateTime.Now;
+			var elapsed    = endTime - startTime;
+			UpdateInterval = elapsed.TotalSeconds;
 		}
 		#endregion
 
@@ -522,6 +528,9 @@ namespace Frost.Modules
 			// Retrieve the next state to render
 			var stateIndex = acquireNextRenderState();
 
+			// Record the time just before rendering starts
+			var startTime = DateTime.Now;
+
 			// Render the frame
 			_display.EnterFrame();
 			_renderRoot.DrawState(_display, stateIndex);
@@ -530,7 +539,10 @@ namespace Frost.Modules
 			// Release the state
 			releaseRenderState();
 
-			// TODO: Calculate the length of time that it took to render
+			// Calculate the length of time that elapsed
+			var endTime    = DateTime.Now;
+			var elapsed    = endTime - startTime;
+			RenderInterval = elapsed.TotalSeconds;
 		}
 		#endregion
 		#endregion
