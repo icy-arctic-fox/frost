@@ -45,7 +45,7 @@ namespace Frost.Modules
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
 		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot)
-			: this(display, updateRoot, renderRoot, DefaultTargetUpdateRate)
+			: this(display, updateRoot, renderRoot, DefaultTargetUpdateRate, DefaultTargetRenderRate)
 		{
 			// ...
 		}
@@ -56,10 +56,11 @@ namespace Frost.Modules
 		/// <param name="display">Display that shows frames on the screen</param>
 		/// <param name="updateRoot">Root node for updating the game state</param>
 		/// <param name="renderRoot">Root node for rendering the game state</param>
-		/// <param name="rate">Targeted number of frames per second - use 0 to represent no limit</param>
+		/// <param name="updateRate">Targeted number of logical game updates second - use 0 to represent no limit</param>
+		/// <param name="renderRate">Targeted number of frames to render per second - use 0 to represent no limit</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
-		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot, double rate)
+		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot, double updateRate, double renderRate)
 		{
 #if DEBUG
 			if(display == null)
@@ -74,7 +75,8 @@ namespace Frost.Modules
 			_updateRoot = updateRoot;
 			_renderRoot = renderRoot;
 
-			_targetUpdateInterval = (rate < Double.Epsilon) ? 0d : 1d / rate;
+			_targetUpdateInterval = (updateRate < Double.Epsilon) ? 0d : 1d / updateRate;
+			_targetRenderInterval = (renderRate < Double.Epsilon) ? 0d : 1d / renderRate;
 		}
 
 		#region Flow control (start/stop)
@@ -448,8 +450,8 @@ namespace Frost.Modules
 				update();
 
 				// Calculate the length of time taken by the update
+				_updateCounter.AddMeasurement(time);
 				time = stopwatch.Elapsed.TotalSeconds - time;
-				LastUpdateInterval = time;
 				totalUpdateTime += time;
 
 				// Reset the stopwatch, since they aren't accurate over longer periods of time.
@@ -469,7 +471,7 @@ namespace Frost.Modules
 			if(updatesProcessed > 0)
 			{// Update statistics
 				var avgTime = totalUpdateTime / updatesProcessed;
-				_updateCounter.AddMeasurement(avgTime);
+				LastUpdateInterval = avgTime;
 			}
 
 			Thread.Sleep(0); // Yield to other threads and reduce CPU usage a bit
