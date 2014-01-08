@@ -113,9 +113,6 @@ namespace Frost.Modules
 			if(_running)
 				throw new InvalidOperationException("The state manager is already running.");
 
-			// Disable rendering on the current thread so that the render thread can do it
-			_display.SetActive(false);
-
 			_running = true;
 			if(multiThreaded)
 				multiThreadedGameLoop();
@@ -143,11 +140,17 @@ namespace Frost.Modules
 		/// </summary>
 		private void multiThreadedGameLoop ()
 		{
+			// Disable rendering on the current thread so that the render thread can do it
+			_display.SetActive(false);
+			
+			// Create and start the render thread
 			var renderThread = new Thread(doRenderLoop) {
 				Name     = "State Manager Render Thread",
 				Priority = ThreadPriority.AboveNormal
 			};
 			renderThread.Start();
+
+			// Process updates until stopped and wait for the render thread to stop
 			doUpdateLoop();
 			renderThread.Join();
 		}
@@ -213,7 +216,7 @@ namespace Frost.Modules
 		public double FrameRate
 		{
 			get
-			{
+			{// TODO: Correct for single and multi-thread modes
 				var avg = _updateCounter.Average;
 				return (avg < Double.Epsilon) ? TargetFrameRate : 1d / avg;
 			}
@@ -242,12 +245,20 @@ namespace Frost.Modules
 		/// <summary>
 		/// Length of time (in seconds) that it took to just update the previous frame (does not include sleep time)
 		/// </summary>
-		public double UpdateInterval { get; private set; }
+		public double LastUpdateInterval { get; private set; }
 
 		/// <summary>
 		/// Actual length of time (in seconds) taken to update and sleep
 		/// </summary>
-		private double _actualUpdateInterval;
+		private double _fullUpdateInterval;
+
+		/// <summary>
+		/// Running average length of time (in seconds) taken to perform a game update
+		/// </summary>
+		public double UpdateInterval
+		{
+			get { return _updateCounter.Average; }
+		}
 
 		/// <summary>
 		/// Index of the previous state that was updated
@@ -341,6 +352,7 @@ namespace Frost.Modules
 				_prevUpdateFrameNumber = _stateFrameNumbers[_prevUpdateStateIndex];
 				_curUpdateStateIndex   = -1;
 				++_curUpdateFrameNumber;
+				_updateSignal.Set(); // Let the renderer know that there's a frame ready
 			}
 		}
 
@@ -372,8 +384,25 @@ namespace Frost.Modules
 			_updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 			while(_running)
+			{
+				// Calculate when the next update should start
+				var updateStart = DateTime.Now;
+				var nextUpdate  = updateStart.AddSeconds(_targetInterval);
+
 				update();
-			// TODO: Sleep after each update
+
+				// Calculate the amount of time to sleep
+				var timeRemaining = nextUpdate - DateTime.Now;
+				var sleepTime     = (int)Math.Ceiling(timeRemaining.TotalSeconds);
+				if(sleepTime < 0) // Don't sleep for a negative time
+					sleepTime = 0;
+				Thread.Sleep(sleepTime); // Sleep for at least 0 seconds to perform a thread switch
+
+				// Update the measurements
+				var updateEnd = DateTime.Now;
+				var elapsed   = updateEnd - updateStart;
+				_updateCounter.AddMeasurement(elapsed.TotalSeconds);
+			}
 		}
 
 		/// <summary>
@@ -393,12 +422,10 @@ namespace Frost.Modules
 			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 			releaseUpdateState();
 
-			// TODO: Signal renderer to show that a frame is available
-
 			// Calculate how long the processing took
-			var endTime    = DateTime.Now;
-			var elapsed    = endTime - startTime;
-			UpdateInterval = elapsed.TotalSeconds;
+			var endTime = DateTime.Now;
+			var elapsed = endTime - startTime;
+			LastUpdateInterval = elapsed.TotalSeconds;
 		}
 		#endregion
 
@@ -407,12 +434,15 @@ namespace Frost.Modules
 		/// <summary>
 		/// Length of time (in seconds) that it took to just render the last frame
 		/// </summary>
-		public double RenderInterval { get; private set; }
+		public double LastRenderInterval { get; private set; }
 
 		/// <summary>
-		/// Actual time that it took (in seconds) to render and sleep the last frame
+		/// Running average length of time (in seconds) taken to render a frame
 		/// </summary>
-		private double _actualRenderInterval;
+		public double RenderInterval
+		{
+			get { return _renderCounter.Average; }
+		}
 
 		/// <summary>
 		/// Index of the current state being drawn
@@ -511,11 +541,12 @@ namespace Frost.Modules
 			_renderThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 			if(!_display.SetActive())
-				throw new AccessViolationException(
-					"Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
+				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
 
+			var timeout = TimeSpan.FromSeconds(1); // Break at 1 second intervals to check if the state manager is still running
 			while(_running)
-				render(); // TODO: Wait for a frame
+				if(waitForUpdate(timeout))
+					render();
 		}
 
 		/// <summary>
@@ -523,8 +554,6 @@ namespace Frost.Modules
 		/// </summary>
 		private void render ()
 		{
-			// TODO: Wait for a frame
-
 			// Retrieve the next state to render
 			var stateIndex = acquireNextRenderState();
 
@@ -540,9 +569,9 @@ namespace Frost.Modules
 			releaseRenderState();
 
 			// Calculate the length of time that elapsed
-			var endTime    = DateTime.Now;
-			var elapsed    = endTime - startTime;
-			RenderInterval = elapsed.TotalSeconds;
+			var endTime = DateTime.Now;
+			var elapsed = endTime - startTime;
+			LastRenderInterval = elapsed.TotalSeconds;
 		}
 		#endregion
 		#endregion
