@@ -145,12 +145,11 @@ namespace Frost.Modules
 				updateTiming(updateStopwatch, ref nextUpdateTime);
 				renderTiming(renderStopwatch, ref nextRenderTime);
 
-				// TODO: Possibly improve the logic for sleeping
-/*				var min = Math.Min(nextUpdateTime, nextRenderTime);
-				var sleepTime = (int)(min * 1000) / 2;
-				if(sleepTime < 0)
-					sleepTime = 0;
-				Thread.Sleep(sleepTime);*/
+				// Sleep a bit to reduce CPU usage
+				var min = nextUpdateTime < nextRenderTime ? nextUpdateTime : nextRenderTime;
+				var sleepTime = (int)(min * 1000) / 2; // Half-life sleeping to gradually approach the next time, which helps prevent oversleeping
+				if(sleepTime > 0)
+					Thread.Sleep(sleepTime);
 			}
 		}
 
@@ -433,10 +432,10 @@ namespace Frost.Modules
 					updateTiming(stopwatch, ref nextUpdateTime);
 
 				// Sleep a bit to reduce CPU usage
-/*				var sleepTime = (int)(nextUpdateTime * 1000) / 2;
+				var sleepTime = (int)(nextUpdateTime * 1000) / 2;
 				if(sleepTime < 0)
 					sleepTime = 0;
-				Thread.Sleep(sleepTime);*/
+				Thread.Sleep(sleepTime);
 			}
 		}
 
@@ -507,7 +506,6 @@ namespace Frost.Modules
 			_display.Update();
 			_updateRoot.StepState(prevStateIndex, nextStateIndex);
 			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
-			Thread.Sleep(2); // TODO: Remove fake load
 
 			// Release the state
 			releaseUpdateState();
@@ -699,10 +697,10 @@ namespace Frost.Modules
 					renderTiming(stopwatch, ref nextRenderTime);
 
 				// Sleep to reduce CPU usage
-/*				var sleepTime = (int)(nextRenderTime * 1000) / 2;
+				var sleepTime = (int)(nextRenderTime * 1000) / 2;
 				if(sleepTime < 0)
 					sleepTime = 0;
-				Thread.Sleep(sleepTime);*/
+				Thread.Sleep(sleepTime);
 			}
 		}
 
@@ -757,7 +755,6 @@ namespace Frost.Modules
 			{// Render the frame
 				_display.EnterFrame();
 				_renderRoot.DrawState(_display, nextStateIndex);
-				Thread.Sleep(2); // TODO: Remove fake load
 				_display.ExitFrame();
 
 				if(prevStateIndex == nextStateIndex)
