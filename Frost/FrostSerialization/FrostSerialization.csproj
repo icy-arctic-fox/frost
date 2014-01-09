@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="IO\ISerializable.cs" />
     <Compile Include="IO\IStreamable.cs" />
+    <Compile Include="IO\Tnt\Node.cs" />
     <Compile Include="IO\Tnt\NodeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
