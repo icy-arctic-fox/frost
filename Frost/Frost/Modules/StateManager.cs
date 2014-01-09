@@ -56,6 +56,21 @@ namespace Frost.Modules
 		/// <param name="display">Display that shows frames on the screen</param>
 		/// <param name="updateRoot">Root node for updating the game state</param>
 		/// <param name="renderRoot">Root node for rendering the game state</param>
+		/// <param name="rate">Targeted number of frames to update and render per second - use 0 to represent no limit</param>
+		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
+		/// They can be different for more complex situations.</remarks>
+		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot, double rate)
+			: this(display, updateRoot, renderRoot, rate, rate)
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a new state manager with the update and render root nodes
+		/// </summary>
+		/// <param name="display">Display that shows frames on the screen</param>
+		/// <param name="updateRoot">Root node for updating the game state</param>
+		/// <param name="renderRoot">Root node for rendering the game state</param>
 		/// <param name="updateRate">Targeted number of logical game updates second - use 0 to represent no limit</param>
 		/// <param name="renderRate">Targeted number of frames to render per second - use 0 to represent no limit</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
@@ -218,6 +233,11 @@ namespace Frost.Modules
 		/// </summary>
 		/// <remarks>Thread synchronization will prevent duplicate and skipped frames.</remarks>
 		public bool ThreadSynchronization { get; set; }
+
+		/// <summary>
+		/// Indicates whether the update process is falling behind
+		/// </summary>
+		public bool IsRunningSlow { get; private set; }
 
 		/// <summary>
 		/// Maximum number of measurements to take for averaging update and render intervals
@@ -464,7 +484,7 @@ namespace Frost.Modules
 				nextUpdateTime += _targetUpdateInterval;
 				if(nextUpdateTime < -MaxUpdateInterval)
 					nextUpdateTime = -MaxUpdateInterval; // ... but don't schedule it too soon to prevent overload
-				// TODO: Set a "IsRunningSlow" flag to true if (nextUpdateTime <= 0d && !UnboundedUpdateRate)
+				IsRunningSlow = (nextUpdateTime <= 0d && !UnboundedUpdateRate);
 
 				// Perform the update
 				update();
