@@ -10,6 +10,14 @@ namespace Frost.IO
 	public interface IStreamable
 	{
 		/// <summary>
+		/// Writes the contents of the object to a stream
+		/// </summary>
+		/// <param name="s">Stream to write data to</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="s"/> is null.
+		/// The stream to write data to can't be null.</exception>
+		void WriteToStream (Stream s);
+
+		/// <summary>
 		/// Writes the contents of the object to a stream using a stream writer
 		/// </summary>
 		/// <param name="bw">Binary writer to use for writing data to the stream</param>
