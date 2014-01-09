@@ -146,11 +146,11 @@ namespace Frost.Modules
 				renderTiming(renderStopwatch, ref nextRenderTime);
 
 				// TODO: Possibly improve the logic for sleeping
-				var min = Math.Min(nextUpdateTime, nextRenderTime);
+/*				var min = Math.Min(nextUpdateTime, nextRenderTime);
 				var sleepTime = (int)(min * 1000) / 2;
 				if(sleepTime < 0)
 					sleepTime = 0;
-				Thread.Sleep(sleepTime);
+				Thread.Sleep(sleepTime);*/
 			}
 		}
 
@@ -436,6 +436,8 @@ namespace Frost.Modules
 #if DEBUG
 			_updateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
+			var timeout = TimeSpan.FromSeconds(MaxUpdateInterval);
+
 			// Place these on the stack for faster access
 			var stopwatch      = new Stopwatch();
 			var nextUpdateTime = 0d;
@@ -444,14 +446,14 @@ namespace Frost.Modules
 			update(); // Generate the first frame to start the process
 			while(_running)
 			{
-				if(!ThreadSynchronization || waitForRender(TimeSpan.FromSeconds(MaxUpdateInterval)))
+				if(!ThreadSynchronization || waitForRender(timeout))
 					updateTiming(stopwatch, ref nextUpdateTime);
 
 				// Sleep a bit to reduce CPU usage
-				var sleepTime = (int)(nextUpdateTime * 1000) / 2;
+/*				var sleepTime = (int)(nextUpdateTime * 1000) / 2;
 				if(sleepTime < 0)
 					sleepTime = 0;
-				Thread.Sleep(sleepTime);
+				Thread.Sleep(sleepTime);*/
 			}
 		}
 
@@ -476,15 +478,20 @@ namespace Frost.Modules
 			while(nextUpdateTime - time <= 0d && time > 0d)
 			{// It's time for an update
 				// Schedule the next update
-				nextUpdateTime += _targetUpdateInterval;
-				nextUpdateTime  = Math.Max(nextUpdateTime, -MaxUpdateInterval); // ... but don't schedule it too soon to prevent overload
 				nextUpdateTime -= time;
+				nextUpdateTime += _targetUpdateInterval;
+				if(nextUpdateTime < -MaxUpdateInterval)
+					nextUpdateTime = -MaxUpdateInterval; // ... but don't schedule it too soon to prevent overload
+				// TODO: Set a "IsRunningSlow" flag to true if (nextUpdateTime <= 0d && !UnboundedUpdateRate)
 
+				// Perform the update
 				update();
 
-				// Calculate the length of time taken by the update
-				_updateCounter.AddMeasurement(time);
-				time = stopwatch.Elapsed.TotalSeconds - time;
+				// Calculate how long the update took
+				var elapsed = stopwatch.Elapsed.TotalSeconds;
+				_updateCounter.AddMeasurement(elapsed);
+				LastUpdateInterval = time = elapsed - time;
+				nextUpdateTime -= time;
 				totalUpdateTime += time;
 
 				// Reset the stopwatch, since it isn't accurate over longer periods of time.
@@ -706,6 +713,7 @@ namespace Frost.Modules
 #endif
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
+			var timeout = TimeSpan.FromSeconds(MaxRenderInterval);
 
 			// Stack access is faster for these since they're checked quite frequently
 			var stopwatch      = new Stopwatch();
@@ -714,15 +722,21 @@ namespace Frost.Modules
 
 			while(_running)
 			{
-				if(!ThreadSynchronization || waitForUpdate(TimeSpan.FromSeconds(MaxRenderInterval)))
+				if(!ThreadSynchronization || waitForUpdate(timeout))
 					renderTiming(stopwatch, ref nextRenderTime);
 
 				// Sleep to reduce CPU usage
-				var sleepTime = (int)(nextRenderTime * 1000) / 2;
+/*				var sleepTime = (int)(nextRenderTime * 1000) / 2;
 				if(sleepTime < 0)
 					sleepTime = 0;
-				Thread.Sleep(sleepTime);
+				Thread.Sleep(sleepTime);*/
 			}
+		}
+
+		private bool frameReadyForRender ()
+		{
+			lock(_stateFrameNumbers)
+				return _prevRenderFrameNumber < _prevUpdateFrameNumber;
 		}
 
 		/// <summary>
