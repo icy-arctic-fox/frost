@@ -231,11 +231,6 @@ namespace Frost.Modules
 		private readonly AverageCounter _updateCounter = new AverageCounter(MeasurementCount),
 			_renderCounter = new AverageCounter(MeasurementCount);
 
-		/// <summary>
-		/// Maximum proportion of time allowed to pass before frame skipping
-		/// </summary>
-		private const double MaxFrameDrift = 1.15d;
-
 		#region Update
 
 		/// <summary>
@@ -301,11 +296,6 @@ namespace Frost.Modules
 		public double LastUpdateInterval { get; private set; }
 
 		/// <summary>
-		/// Actual length of time (in seconds) taken to update and sleep
-		/// </summary>
-		private double _fullUpdateInterval;
-
-		/// <summary>
 		/// Running average length of time (in seconds) taken to perform a game update
 		/// </summary>
 		public double UpdateInterval
@@ -330,17 +320,10 @@ namespace Frost.Modules
 		private long _prevUpdateFrameNumber = -1;
 
 		/// <summary>
-		/// Frame number of the current state being updated
-		/// </summary>
-		private long _curUpdateFrameNumber;
-
-		/// <summary>
 		/// Current frame number
 		/// </summary>
-		public long FrameNumber
-		{
-			get { return _curUpdateFrameNumber; }
-		}
+		/// <remarks>Technically, this is the frame number of the frame currently being updated.</remarks>
+		public long FrameNumber { get; private set; }
 
 		/// <summary>
 		/// Reset event that indicates whether the update thread has produced a frame
@@ -403,7 +386,7 @@ namespace Frost.Modules
 					throw new InvalidOperationException("Cannot release an update state when no state is currently being updated.");
 #endif
 				_prevUpdateStateIndex  = _curUpdateStateIndex;
-				_prevUpdateFrameNumber = _stateFrameNumbers[_prevUpdateStateIndex] = _curUpdateFrameNumber++;
+				_prevUpdateFrameNumber = _stateFrameNumbers[_prevUpdateStateIndex] = FrameNumber++;
 				_curUpdateStateIndex   = -1;
 				_updateSignal.Set(); // Let the renderer know that there's a frame ready
 			}
@@ -586,19 +569,9 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
-		/// Maximum number of frame renders that can occur consecutively to help the game catch up
-		/// </summary>
-		private const int MaxConsecutiveRenders = 10;
-
-		/// <summary>
 		/// Length of time (in seconds) that it took to just render the previous frame (does not include sleep time)
 		/// </summary>
 		public double LastRenderInterval { get; private set; }
-
-		/// <summary>
-		/// Actual length of time (in seconds) taken to draw and sleep
-		/// </summary>
-		private double _fullRenderInterval;
 
 		/// <summary>
 		/// Running average length of time (in seconds) taken to render a frame
@@ -733,12 +706,6 @@ namespace Frost.Modules
 			}
 		}
 
-		private bool frameReadyForRender ()
-		{
-			lock(_stateFrameNumbers)
-				return _prevRenderFrameNumber < _prevUpdateFrameNumber;
-		}
-
 		/// <summary>
 		/// Handles timing for the render phase and only calls <see cref="render"/> if it's time.
 		/// This method returns without drawing if it's not time to perform a render.
@@ -749,7 +716,7 @@ namespace Frost.Modules
 		{
 			var time = stopwatch.Elapsed.TotalSeconds;
 			if(time <= 0d)
-				return; // "Way too early to render"
+				return; // "Way too early to render," abort to avoid timing corruption
 			if(time > MaxRenderInterval)
 				time = MaxRenderInterval; // Prevent the game from appearing unresponsive
 
@@ -770,7 +737,6 @@ namespace Frost.Modules
 					// TODO: Implement adaptive VSync
 
 					// Record intervals and draw the frame
-					_fullRenderInterval = time;
 					_renderCounter.AddMeasurement(time);
 					render();
 					LastRenderInterval = stopwatch.Elapsed.TotalSeconds;
