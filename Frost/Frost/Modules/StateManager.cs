@@ -135,17 +135,22 @@ namespace Frost.Modules
 			// Allocate these on the stack for faster access
 			var updateStopwatch = new Stopwatch();
 			var renderStopwatch = new Stopwatch();
-			var nextUpdate      = 0d;
-			var nextRender      = 0d;
+			var nextUpdateTime  = 0d;
+			var nextRenderTime  = 0d;
 			updateStopwatch.Start();
 			renderStopwatch.Start();
 
 			while(_running)
 			{
-				updateTiming(updateStopwatch, ref nextUpdate);
-				renderTiming(renderStopwatch, ref nextRender);
+				updateTiming(updateStopwatch, ref nextUpdateTime);
+				renderTiming(renderStopwatch, ref nextRenderTime);
 
-				// TODO: Use minimum of nextUpdate and nextRender to calculate possible sleep time
+				// TODO: Possibly improve the logic for sleeping
+				var min = Math.Min(nextUpdateTime, nextRenderTime);
+				var sleepTime = (int)(min * 1000) / 2;
+				if(sleepTime < 0)
+					sleepTime = 0;
+				Thread.Sleep(sleepTime);
 			}
 		}
 
@@ -438,10 +443,16 @@ namespace Frost.Modules
 
 			update(); // Generate the first frame to start the process
 			while(_running)
+			{
 				if(!ThreadSynchronization || waitForRender(TimeSpan.FromSeconds(MaxUpdateInterval)))
 					updateTiming(stopwatch, ref nextUpdateTime);
 
-			// TODO: Use nextUpdateTime to calculate possible sleep time
+				// Sleep a bit to reduce CPU usage
+				var sleepTime = (int)(nextUpdateTime * 1000) / 2;
+				if(sleepTime < 0)
+					sleepTime = 0;
+				Thread.Sleep(sleepTime);
+			}
 		}
 
 		/// <summary>
@@ -476,7 +487,7 @@ namespace Frost.Modules
 				time = stopwatch.Elapsed.TotalSeconds - time;
 				totalUpdateTime += time;
 
-				// Reset the stopwatch, since they aren't accurate over longer periods of time.
+				// Reset the stopwatch, since it isn't accurate over longer periods of time.
 				stopwatch.Reset();
 				stopwatch.Start();
 
@@ -491,8 +502,6 @@ namespace Frost.Modules
 				var avgTime = totalUpdateTime / updatesProcessed;
 				LastUpdateInterval = avgTime;
 			}
-
-			Thread.Sleep(0); // Yield to other threads and reduce CPU usage a bit
 		}
 
 		/// <summary>
@@ -704,10 +713,16 @@ namespace Frost.Modules
 			stopwatch.Start();
 
 			while(_running)
+			{
 				if(!ThreadSynchronization || waitForUpdate(TimeSpan.FromSeconds(MaxRenderInterval)))
 					renderTiming(stopwatch, ref nextRenderTime);
 
-			// TODO: Use nextRenderTime to calculate possible sleep time
+				// Sleep to reduce CPU usage
+				var sleepTime = (int)(nextRenderTime * 1000) / 2;
+				if(sleepTime < 0)
+					sleepTime = 0;
+				Thread.Sleep(sleepTime);
+			}
 		}
 
 		/// <summary>
@@ -732,7 +747,7 @@ namespace Frost.Modules
 				if(nextRenderTime < -MaxRenderInterval)
 					nextRenderTime = -MaxRenderInterval; // ... but don't schedule it too soon - give the system some time to breathe
 
-				// Reset the stopwatches to keep accuracy
+				// Reset the stopwatch to keep accuracy
 				stopwatch.Reset();
 				stopwatch.Start();
 
@@ -747,8 +762,6 @@ namespace Frost.Modules
 					LastRenderInterval = stopwatch.Elapsed.TotalSeconds;
 				}
 			}
-
-			Thread.Sleep(0); // Sleep a bit to reduce CPU usage
 		}
 
 		/// <summary>
