@@ -441,7 +441,7 @@ namespace Frost.Modules
 				if(!ThreadSynchronization || waitForRender(TimeSpan.FromSeconds(MaxUpdateInterval)))
 					updateTiming(stopwatch, ref nextUpdateTime);
 
-			// TODO: Use minimum of nextUpdateTime to calculate possible sleep time
+			// TODO: Use nextUpdateTime to calculate possible sleep time
 		}
 
 		/// <summary>
@@ -464,7 +464,11 @@ namespace Frost.Modules
 			// Continue performing updates to catch up (if fallen behind)
 			while(nextUpdateTime - time <= 0d && time > 0d)
 			{// It's time for an update
+				// Schedule the next update
+				nextUpdateTime += _targetUpdateInterval;
+				nextUpdateTime  = Math.Max(nextUpdateTime, -MaxUpdateInterval); // ... but don't schedule it too soon to prevent overload
 				nextUpdateTime -= time;
+
 				update();
 
 				// Calculate the length of time taken by the update
@@ -475,10 +479,6 @@ namespace Frost.Modules
 				// Reset the stopwatch, since they aren't accurate over longer periods of time.
 				stopwatch.Reset();
 				stopwatch.Start();
-
-				// Schedule the next update
-				nextUpdateTime += _targetUpdateInterval;
-				nextUpdateTime  = Math.Max(nextUpdateTime, -MaxUpdateInterval); // ... but don't schedule it too soon to prevent overload
 
 				// Allow consecutive updates to occur, but not too many.
 				// This allows the hardware to catch up.
@@ -707,7 +707,7 @@ namespace Frost.Modules
 				if(!ThreadSynchronization || waitForUpdate(TimeSpan.FromSeconds(MaxRenderInterval)))
 					renderTiming(stopwatch, ref nextRenderTime);
 
-			// TODO: Use minimum of nextRenderTime to calculate possible sleep time
+			// TODO: Use nextRenderTime to calculate possible sleep time
 		}
 
 		/// <summary>
@@ -781,7 +781,7 @@ namespace Frost.Modules
 		/// Generates a string that represents the status of the state manager
 		/// </summary>
 		/// <returns>A string in the form:
-		/// Frame: # - # u/s - # f/s (# skipped)</returns>
+		/// Frame: # - # u/s - # f/s (#/# dups, # skipped)</returns>
 		public override string ToString ()
 		{
 			var sb = new System.Text.StringBuilder();
