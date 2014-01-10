@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Frost.IO.Tnt
 {
@@ -60,10 +57,15 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Reads a node from a stream
 		/// </summary>
-		/// <param name="s">Stream to read the node from</param>
+		/// <param name="br">Reader used to pull data from the stream</param>
 		/// <returns>A node read from the stream or null if an "End" node was read</returns>
-		internal static Node ReadNodeFromStream (Stream s)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null.
+		/// The reader used to pull data from the stream can't be null.</exception>
+		internal static Node ReadNodeFromStream (BinaryReader br)
 		{
+			if(br == null)
+				throw new ArgumentNullException("br", "The reader used to pull data from the stream can't be null.");
+
 			throw new NotImplementedException();
 		}
 
