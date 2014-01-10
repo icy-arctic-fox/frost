@@ -44,6 +44,8 @@
     <Compile Include="IO\ISerializable.cs" />
     <Compile Include="IO\IStreamable.cs" />
     <Compile Include="IO\Tnt\ByteNode.cs" />
+    <Compile Include="IO\Tnt\BooleanNode.cs" />
+    <Compile Include="IO\Tnt\SByteNode.cs" />
     <Compile Include="IO\Tnt\Node.cs" />
     <Compile Include="IO\Tnt\NodeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
