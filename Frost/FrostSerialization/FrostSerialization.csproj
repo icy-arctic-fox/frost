@@ -45,6 +45,8 @@
     <Compile Include="IO\IStreamable.cs" />
     <Compile Include="IO\Tnt\ByteNode.cs" />
     <Compile Include="IO\Tnt\BooleanNode.cs" />
+    <Compile Include="IO\Tnt\DoubleNode.cs" />
+    <Compile Include="IO\Tnt\FloatNode.cs" />
     <Compile Include="IO\Tnt\ULongNode.cs" />
     <Compile Include="IO\Tnt\LongNode.cs" />
     <Compile Include="IO\Tnt\UIntNode.cs" />
