@@ -136,6 +136,8 @@ namespace Frost.IO.Tnt
 				return FloatNode.ReadPayload;
 			case NodeType.Double:
 				return DoubleNode.ReadPayload;
+			case NodeType.String:
+				return StringNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}
