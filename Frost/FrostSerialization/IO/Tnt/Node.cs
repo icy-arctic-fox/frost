@@ -61,7 +61,7 @@ namespace Frost.IO.Tnt
 		/// <returns>A node read from the stream or null if an "End" node was read</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null.
 		/// The reader used to pull data from the stream can't be null.</exception>
-		internal static Node ReadNodeFromStream (BinaryReader br)
+		internal static Node ReadFromStream (BinaryReader br)
 		{
 			if(br == null)
 				throw new ArgumentNullException("br", "The reader used to pull data from the stream can't be null.");
@@ -87,7 +87,13 @@ namespace Frost.IO.Tnt
 		/// <returns>A node constructor method</returns>
 		private static NodeConstructor getPayloadReader (NodeType type)
 		{
-			throw new NotImplementedException();
+			switch(type)
+			{
+			case NodeType.Byte:
+				return ByteNode.ReadPayload;
+			default:
+				throw new NotSupportedException("Unknown node type " + type);
+			}
 		}
 
 		/// <summary>
