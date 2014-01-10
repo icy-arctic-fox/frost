@@ -7,7 +7,7 @@ namespace Frost.IO.Tnt
 	/// </summary>
 	public class Coordinate2DNode : Node
 	{
-		#region Properties
+		#region Node properties
 
 		/// <summary>
 		/// Indicates the type of node.

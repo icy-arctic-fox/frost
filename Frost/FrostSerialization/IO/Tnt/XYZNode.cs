@@ -8,7 +8,7 @@ namespace Frost.IO.Tnt
 	/// </summary>
 	public class XyzNode : Node
 	{
-		#region Properties
+		#region Node properties
 
 		/// <summary>
 		/// Indicates the type of node.

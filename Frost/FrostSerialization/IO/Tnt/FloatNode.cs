@@ -5,7 +5,7 @@
 	/// </summary>
 	public class FloatNode : Node
 	{
-		#region Properties
+		#region Node properties
 
 		/// <summary>
 		/// Indicates the type of node.
