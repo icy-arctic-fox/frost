@@ -48,6 +48,7 @@
     <Compile Include="IO\Tnt\BlobNode.cs" />
     <Compile Include="IO\Tnt\Coordinate2DNode.cs" />
     <Compile Include="IO\Tnt\Coordinate3DNode.cs" />
+    <Compile Include="IO\Tnt\ColorNode.cs" />
     <Compile Include="IO\Tnt\XYZNode.cs" />
     <Compile Include="IO\Tnt\XYNode.cs" />
     <Compile Include="IO\Tnt\TimeSpanNode.cs" />

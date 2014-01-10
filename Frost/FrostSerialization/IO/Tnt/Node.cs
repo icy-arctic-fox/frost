@@ -154,6 +154,8 @@ namespace Frost.IO.Tnt
 				return Coordinate2DNode.ReadPayload;
 			case NodeType.Coordinate3D:
 				return Coordinate3DNode.ReadPayload;
+			case NodeType.Color:
+				return ColorNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}
