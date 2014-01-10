@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new byte node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public ByteNode (string name, byte value)
-			: base(name)
+		public ByteNode (byte value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs a byte node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed byte node</returns>
-		internal static ByteNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static ByteNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadByte();
-			return new ByteNode(name, value);
+			return new ByteNode(value);
 		}
 
 		/// <summary>

@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new signed byte node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public SByteNode (string name, sbyte value)
-			: base(name)
+		public SByteNode (sbyte value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs a signed byte node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed signed byte node</returns>
-		internal static SByteNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static SByteNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadSByte();
-			return new SByteNode(name, value);
+			return new SByteNode(value);
 		}
 
 		/// <summary>

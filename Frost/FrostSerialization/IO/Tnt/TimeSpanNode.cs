@@ -36,10 +36,8 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new time span node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public TimeSpanNode (string name, TimeSpan value)
-			: base(name)
+		public TimeSpanNode (TimeSpan value)
 		{
 			Value = value;
 		}
@@ -50,13 +48,12 @@ namespace Frost.IO.Tnt
 		/// Constructs a time span node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed time span node</returns>
-		internal static TimeSpanNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static TimeSpanNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var ticks = br.ReadInt64();
 			var span  = new TimeSpan(ticks);
-			return new TimeSpanNode(name, span);
+			return new TimeSpanNode(span);
 		}
 
 		/// <summary>

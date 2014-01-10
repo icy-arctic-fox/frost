@@ -36,10 +36,8 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new date and time node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public DateTimeNode (string name, DateTime value)
-			: base(name)
+		public DateTimeNode (DateTime value)
 		{
 			Value = value;
 		}
@@ -50,13 +48,12 @@ namespace Frost.IO.Tnt
 		/// Constructs a date and time node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed date and time node</returns>
-		internal static DateTimeNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static DateTimeNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var ticks = br.ReadInt64();
-			var dt = new DateTime(ticks);
-			return new DateTimeNode(name, dt);
+			var dt    = new DateTime(ticks);
+			return new DateTimeNode(dt);
 		}
 
 		/// <summary>

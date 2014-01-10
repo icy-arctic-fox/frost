@@ -49,12 +49,10 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new blob node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="data">Bytes to store in the node</param>
 		/// <exception cref="ArgumentNullException">Thrown when attempting to set the data to null.
 		/// The byte array cannot be null.</exception>
-		public BlobNode (string name, byte[] data)
-			: base(name)
+		public BlobNode (byte[] data)
 		{
 			Data = data;
 		}
@@ -65,13 +63,12 @@ namespace Frost.IO.Tnt
 		/// Constructs a blob node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed blob node</returns>
-		internal static BlobNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static BlobNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var length = br.ReadInt32();
 			var data   = br.ReadBytes(length);
-			return new BlobNode(name, data);
+			return new BlobNode(data);
 		}
 
 		/// <summary>

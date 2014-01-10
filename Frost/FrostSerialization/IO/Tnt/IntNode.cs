@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new integer node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public IntNode (string name, int value)
-			: base(name)
+		public IntNode (int value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs an integer node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed integer node</returns>
-		internal static IntNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static IntNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadInt32();
-			return new IntNode(name, value);
+			return new IntNode(value);
 		}
 
 		/// <summary>

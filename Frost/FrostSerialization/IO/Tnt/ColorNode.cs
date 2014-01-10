@@ -78,10 +78,8 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new color node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="argb">Combined values of the color components arranged as ARGB</param>
-		public ColorNode (string name, int argb)
-			: base(name)
+		public ColorNode (int argb)
 		{
 			Argb = argb;
 		}
@@ -89,13 +87,11 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new color node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="red">Amount of the red component</param>
 		/// <param name="green">Amount of the green component</param>
 		/// <param name="blue">Amount of the blue component</param>
 		/// <param name="alpha">Amount of the alpha component</param>
-		public ColorNode (string name, byte red, byte green, byte blue, byte alpha = 255)
-			: base(name)
+		public ColorNode (byte red, byte green, byte blue, byte alpha = 255)
 		{
 			Argb = (alpha << 24) | (red << 16) | (green << 8) | blue;
 		}
@@ -106,12 +102,11 @@ namespace Frost.IO.Tnt
 		/// Constructs a color node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed color node</returns>
-		internal static ColorNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static ColorNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var argb = br.ReadInt32();
-			return new ColorNode(name, argb);
+			return new ColorNode(argb);
 		}
 
 		/// <summary>

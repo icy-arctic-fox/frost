@@ -39,9 +39,7 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new list node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
-		public ListNode (string name)
-			: base(name)
+		public ListNode ()
 		{
 			throw new NotImplementedException();
 		}
@@ -52,9 +50,8 @@ namespace Frost.IO.Tnt
 		/// Constructs a list node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed list node</returns>
-		internal static ListNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static ListNode ReadPayload (System.IO.BinaryReader br)
 		{
 			throw new NotImplementedException();
 		}

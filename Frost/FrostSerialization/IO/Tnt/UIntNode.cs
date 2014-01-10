@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new unsigned integer node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public UIntNode (string name, uint value)
-			: base(name)
+		public UIntNode (uint value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs an unsigned integer node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed unsigned integer node</returns>
-		internal static UIntNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static UIntNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadUInt32();
-			return new UIntNode(name, value);
+			return new UIntNode(value);
 		}
 
 		/// <summary>

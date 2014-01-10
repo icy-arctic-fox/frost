@@ -43,11 +43,9 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new string node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
 		/// <remarks>A null string for <paramref name="value"/> will be converted to an empty string.</remarks>
-		public StringNode (string name, string value)
-			: base(name)
+		public StringNode (string value)
 		{
 			Value = value;
 		}
@@ -58,12 +56,11 @@ namespace Frost.IO.Tnt
 		/// Constructs a string node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed string node</returns>
-		internal static StringNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static StringNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadString();
-			return new StringNode(name, value);
+			return new StringNode(value);
 		}
 
 		/// <summary>

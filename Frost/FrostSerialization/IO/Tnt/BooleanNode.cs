@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new boolean node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public BooleanNode(string name, bool value)
-			: base(name)
+		public BooleanNode(bool value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs a boolean node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed boolean node</returns>
-		internal static BooleanNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static BooleanNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadBoolean();
-			return new BooleanNode(name, value);
+			return new BooleanNode(value);
 		}
 
 		/// <summary>

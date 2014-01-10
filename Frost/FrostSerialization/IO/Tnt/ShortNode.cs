@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new short node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public ShortNode (string name, short value)
-			: base(name)
+		public ShortNode (short value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs a short node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed short node</returns>
-		internal static ShortNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static ShortNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadInt16();
-			return new ShortNode(name, value);
+			return new ShortNode(value);
 		}
 
 		/// <summary>

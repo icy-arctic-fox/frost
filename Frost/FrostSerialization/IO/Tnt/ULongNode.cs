@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new unsigned long node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public ULongNode (string name, ulong value)
-			: base(name)
+		public ULongNode (ulong value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs an unsigned long node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed unsigned long integer node</returns>
-		internal static ULongNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static ULongNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadUInt64();
-			return new ULongNode(name, value);
+			return new ULongNode(value);
 		}
 
 		/// <summary>

@@ -42,11 +42,9 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new x and y node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="x">X value to store in the node</param>
 		/// <param name="y">Y value to store in the node</param>
-		public XyNode (string name, int x, int y)
-			: base(name)
+		public XyNode (int x, int y)
 		{
 			X = x;
 			Y = y;
@@ -58,13 +56,12 @@ namespace Frost.IO.Tnt
 		/// Constructs an x and y node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed x and y node</returns>
-		internal static XyNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static XyNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var x = br.ReadInt32();
 			var y = br.ReadInt32();
-			return new XyNode(name, x, y);
+			return new XyNode(x, y);
 		}
 
 		/// <summary>

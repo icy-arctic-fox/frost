@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new unsigned short node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public UShortNode (string name, ushort value)
-			: base(name)
+		public UShortNode (ushort value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs an unsigned short node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed unsigned short node</returns>
-		internal static UShortNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static UShortNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadUInt16();
-			return new UShortNode(name, value);
+			return new UShortNode(value);
 		}
 
 		/// <summary>

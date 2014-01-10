@@ -41,11 +41,9 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new 2D coordinate node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="x">X value to store in the node</param>
 		/// <param name="y">Y value to store in the node</param>
-		public Coordinate2DNode (string name, float x, float y)
-			: base(name)
+		public Coordinate2DNode (float x, float y)
 		{
 			X = x;
 			Y = y;
@@ -57,13 +55,12 @@ namespace Frost.IO.Tnt
 		/// Constructs a 2D coordinate node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed 2D coordinate node</returns>
-		internal static Coordinate2DNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static Coordinate2DNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var x = br.ReadSingle();
 			var y = br.ReadSingle();
-			return new Coordinate2DNode(name, x, y);
+			return new Coordinate2DNode(x, y);
 		}
 
 		/// <summary>

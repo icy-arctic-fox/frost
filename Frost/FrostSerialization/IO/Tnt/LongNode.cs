@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new long node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public LongNode (string name, long value)
-			: base(name)
+		public LongNode (long value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs a long node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed long integer node</returns>
-		internal static LongNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static LongNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadInt64();
-			return new LongNode(name, value);
+			return new LongNode(value);
 		}
 
 		/// <summary>

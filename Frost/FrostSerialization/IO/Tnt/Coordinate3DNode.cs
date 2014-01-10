@@ -46,12 +46,10 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new 3D coordinate node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="x">X value to store in the node</param>
 		/// <param name="y">Y value to store in the node</param>
 		/// <param name="z">Z value to store in the node</param>
-		public Coordinate3DNode (string name, float x, float y, float z)
-			: base(name)
+		public Coordinate3DNode (float x, float y, float z)
 		{
 			X = x;
 			Y = y;
@@ -64,14 +62,13 @@ namespace Frost.IO.Tnt
 		/// Constructs a 3D coordinate node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed 3D coordinate node</returns>
-		internal static Coordinate3DNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static Coordinate3DNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var x = br.ReadSingle();
 			var y = br.ReadSingle();
 			var z = br.ReadSingle();
-			return new Coordinate3DNode(name, x, y, z);
+			return new Coordinate3DNode(x, y, z);
 		}
 
 		/// <summary>

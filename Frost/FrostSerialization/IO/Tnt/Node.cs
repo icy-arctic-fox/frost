@@ -11,19 +11,6 @@ namespace Frost.IO.Tnt
 		#region Properties
 
 		/// <summary>
-		/// Name of the node
-		/// </summary>
-		private readonly string _name;
-
-		/// <summary>
-		/// Name of the node
-		/// </summary>
-		public string Name
-		{
-			get { return _name; }
-		}
-
-		/// <summary>
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
@@ -46,28 +33,14 @@ namespace Frost.IO.Tnt
 			return !(String.IsNullOrWhiteSpace(name) || name.Contains("/"));
 		}
 
-		/// <summary>
-		/// Creates the base for a new node
-		/// </summary>
-		/// <param name="name">Name of the node</param>
-		/// <exception cref="ArgumentException">Thrown if the name provided for the node is invalid.
-		/// Valid node names are not null, empty, contain only whitespace, or forward slashes.</exception>
-		protected Node (string name)
-		{
-			if(!isValidNodeName(name))
-				throw new ArgumentException("Invalid string for node name", "name");
-			_name = name;
-		}
-
 		#region Serialization
 
 		/// <summary>
 		/// Describes a method that accepts a stream reader and node name and produces a node
 		/// </summary>
 		/// <param name="br">Stream reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the node</param>
 		/// <returns>A constructed node</returns>
-		private delegate Node NodeConstructor (BinaryReader br, string name);
+		private delegate Node NodeConstructor (BinaryReader br);
 
 		/// <summary>
 		/// Reads a node from a stream
@@ -81,14 +54,13 @@ namespace Frost.IO.Tnt
 			if(br == null)
 				throw new ArgumentNullException("br", "The reader used to pull data from the stream can't be null.");
 
-			string name;
-			var type = readHeader(br, out name);
+			var type = readHeader(br);
 			if(type == NodeType.End)
 				return null; // End node
 			else
 			{// Regular node
 				var reader = getPayloadReader(type);
-				return reader(br, name);
+				return reader(br);
 			}
 		}
 
@@ -96,12 +68,10 @@ namespace Frost.IO.Tnt
 		/// Reads the header of a node
 		/// </summary>
 		/// <param name="br">Reader used to pull data from the stream</param>
-		/// <param name="name">Name of the node</param>
 		/// <returns>Type of node read from the stream</returns>
-		private static NodeType readHeader (BinaryReader br, out string name)
+		private static NodeType readHeader (BinaryReader br)
 		{
 			var type = (NodeType)br.ReadByte();
-			name = (type == NodeType.End) ? null : br.ReadString();
 			return type;
 		}
 
@@ -183,7 +153,6 @@ namespace Frost.IO.Tnt
 		private void writeHeader (BinaryWriter bw)
 		{
 			bw.Write((byte)Type);
-			bw.Write(_name);
 		}
 
 		/// <summary>
@@ -196,10 +165,10 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Generates a string representation of the node
 		/// </summary>
-		/// <returns>A string in the form: Name(Type): Value</returns>
+		/// <returns>A string in the form: Type: Value</returns>
 		public override string ToString ()
 		{
-			return String.Format("{0}({1}): {2}", _name, Type, StringValue);
+			return String.Format("{0}: {1}", Type, StringValue);
 		}
 	}
 }

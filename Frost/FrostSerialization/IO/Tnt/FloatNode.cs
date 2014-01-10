@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new single-precision floating-point node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public FloatNode (string name, float value)
-			: base(name)
+		public FloatNode (float value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs a single-precision floating-point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed single-precision floating-point node</returns>
-		internal static FloatNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static FloatNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadSingle();
-			return new FloatNode(name, value);
+			return new FloatNode(value);
 		}
 
 		/// <summary>

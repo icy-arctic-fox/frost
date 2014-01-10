@@ -34,10 +34,8 @@
 		/// <summary>
 		/// Creates a new double-precision floating-point node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public DoubleNode (string name, double value)
-			: base(name)
+		public DoubleNode (double value)
 		{
 			Value = value;
 		}
@@ -48,12 +46,11 @@
 		/// Constructs a double-precision floating-point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed double-precision floating-point node</returns>
-		internal static DoubleNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static DoubleNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var value = br.ReadDouble();
-			return new DoubleNode(name, value);
+			return new DoubleNode(value);
 		}
 
 		/// <summary>

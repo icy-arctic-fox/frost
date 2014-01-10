@@ -36,10 +36,8 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Creates a new Guid node
 		/// </summary>
-		/// <param name="name">Name of the node</param>
 		/// <param name="value">Value to store in the node</param>
-		public GuidNode (string name, Guid value)
-			: base(name)
+		public GuidNode (Guid value)
 		{
 			Value = value;
 		}
@@ -55,13 +53,12 @@ namespace Frost.IO.Tnt
 		/// Constructs a Guid node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed Guid node</returns>
-		internal static GuidNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static GuidNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var bytes = br.ReadBytes(GuidSize);
 			var guid  = new Guid(bytes);
-			return new GuidNode(name, guid);
+			return new GuidNode(guid);
 		}
 
 		/// <summary>
