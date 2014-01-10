@@ -144,6 +144,8 @@ namespace Frost.IO.Tnt
 				return DateTimeNode.ReadPayload;
 			case NodeType.TimeSpan:
 				return TimeSpanNode.ReadPayload;
+			case NodeType.Blob:
+				return BlobNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}
