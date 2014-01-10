@@ -6,7 +6,7 @@ namespace Frost.IO.Tnt
 	/// X, Y, and Z node.
 	/// Contains X, Y, and Z integer values for sizes or locations.
 	/// </summary>
-	public class XYZNode : Node
+	public class XyzNode : Node
 	{
 		#region Properties
 
@@ -14,10 +14,10 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.XYZ"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Xyz"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.XYZ; }
+			get { return NodeType.Xyz; }
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace Frost.IO.Tnt
 		/// <param name="x">X value to store in the node</param>
 		/// <param name="y">Y value to store in the node</param>
 		/// <param name="z">Z value to store in the node</param>
-		public XYZNode (string name, int x, int y, int z)
+		public XyzNode (string name, int x, int y, int z)
 			: base(name)
 		{
 			X = x;
@@ -67,12 +67,12 @@ namespace Frost.IO.Tnt
 		/// <param name="br">Reader to use to pull data from the stream</param>
 		/// <param name="name">Name to give the new node</param>
 		/// <returns>A constructed x, y, and z node</returns>
-		internal static XYZNode ReadPayload (System.IO.BinaryReader br, string name)
+		internal static XyzNode ReadPayload (System.IO.BinaryReader br, string name)
 		{
 			var x = br.ReadInt32();
 			var y = br.ReadInt32();
 			var z = br.ReadInt32();
-			return new XYZNode(name, x, y, z);
+			return new XyzNode(name, x, y, z);
 		}
 
 		/// <summary>

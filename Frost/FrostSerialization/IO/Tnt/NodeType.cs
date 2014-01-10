@@ -94,12 +94,12 @@
 		/// <summary>
 		/// X and Y size or location as an integer
 		/// </summary>
-		XY = 17,
+		Xy = 17,
 
 		/// <summary>
 		/// X, Y, and Z size of location as an integer
 		/// </summary>
-		XYZ = 18,
+		Xyz = 18,
 
 		/// <summary>
 		/// X and Y-coordinates represented as floating-point numbers
