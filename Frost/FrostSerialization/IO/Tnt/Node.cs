@@ -89,6 +89,8 @@ namespace Frost.IO.Tnt
 		{
 			switch(type)
 			{
+			case NodeType.Boolean:
+				return BooleanNode.ReadPayload;
 			case NodeType.Byte:
 				return ByteNode.ReadPayload;
 			default:

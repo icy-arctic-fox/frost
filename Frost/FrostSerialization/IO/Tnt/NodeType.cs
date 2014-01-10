@@ -12,114 +12,119 @@
 		End = 0,
 
 		/// <summary>
+		/// True or false value
+		/// </summary>
+		Boolean = 1,
+
+		/// <summary>
 		/// 8-bit unsigned integer
 		/// </summary>
-		Byte = 1,
+		Byte = 2,
 
 		/// <summary>
 		/// 8-bit signed integer
 		/// </summary>
-		SByte = 2,
+		SByte = 3,
 
 		/// <summary>
 		/// 16-bit signed integer
 		/// </summary>
-		Short = 3,
+		Short = 4,
 
 		/// <summary>
 		/// 16-bit unsigned integer
 		/// </summary>
-		UShort = 4,
+		UShort = 5,
 
 		/// <summary>
 		/// 32-bit signed integer
 		/// </summary>
-		Int = 5,
+		Int = 6,
 
 		/// <summary>
 		/// 32-bit unsigned integer
 		/// </summary>
-		UInt = 6,
+		UInt = 7,
 
 		/// <summary>
 		/// 64-bit signed integer
 		/// </summary>
-		Long = 7,
+		Long = 8,
 
 		/// <summary>
 		/// 64-bit unsigned integer
 		/// </summary>
-		ULong = 8,
+		ULong = 9,
 
 		/// <summary>
 		/// 32-bit single-precision floating-point number
 		/// </summary>
-		Float = 9,
+		Float = 10,
 
 		/// <summary>
 		/// 64-bit double-precision floating-point number
 		/// </summary>
-		Double = 10,
+		Double = 11,
 
 		/// <summary>
 		/// Collection of characters that make up text
 		/// </summary>
-		String = 11,
+		String = 12,
 
 		/// <summary>
 		/// 128-bit globally unique identifier
 		/// </summary>
-		Guid = 12,
+		Guid = 13,
 
 		/// <summary>
 		/// Date and time
 		/// </summary>
-		DateTime = 13,
+		DateTime = 14,
 
 		/// <summary>
 		/// Length of time
 		/// </summary>
-		TimeSpan = 14,
+		TimeSpan = 15,
 
 		/// <summary>
 		/// Raw binary data (array of bytes)
 		/// </summary>
-		Blob = 15,
+		Blob = 16,
 
 		/// <summary>
 		/// X and Y size or location as an integer
 		/// </summary>
-		XY = 16,
+		XY = 17,
 
 		/// <summary>
 		/// X, Y, and Z size of location as an integer
 		/// </summary>
-		XYZ = 17,
+		XYZ = 18,
 
 		/// <summary>
 		/// X and Y-coordinates represented as floating-point numbers
 		/// </summary>
-		Coordinate2D = 18,
+		Coordinate2D = 19,
 
 		/// <summary>
 		/// X, Y, and Z-coordinates represented as floating-point numbers
 		/// </summary>
-		Coordinate3D = 19,
+		Coordinate3D = 20,
 
 		/// <summary>
 		/// ARGB color value
 		/// </summary>
-		Color = 20,
+		Color = 21,
 
 		/// <summary>
 		/// List of nodes of the same type
 		/// </summary>
-		List = 21,
+		List = 22,
 
 		/// <summary>
 		/// Collection of nodes with varying types
 		/// </summary>
-		Complex = 22
+		Complex = 23
 
 		// TODO: Add 'Reference' type to allow pointing to existing nodes
 	}
