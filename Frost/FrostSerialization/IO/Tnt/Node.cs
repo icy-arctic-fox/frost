@@ -22,6 +22,8 @@ namespace Frost.IO.Tnt
 		public abstract string StringValue { get; }
 		#endregion
 
+		// TODO: Add functionality for cloning nodes
+
 		/// <summary>
 		/// Checks if a string is valid for a node name
 		/// </summary>

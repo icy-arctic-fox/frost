@@ -21,12 +21,14 @@ namespace Frost.IO.Tnt
 			get { return NodeType.List; }
 		}
 
+		private readonly NodeType _elementType;
+
 		/// <summary>
 		/// Node type for each of the contained nodes
 		/// </summary>
 		public NodeType ElementType
 		{
-			get { throw new NotImplementedException(); }
+			get { return _elementType; }
 		}
 
 		/// <summary>
@@ -34,9 +36,11 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		public override string StringValue
 		{
-			get { throw new NotImplementedException(); }
+			get { return String.Format("{0} items", Count); }
 		}
 		#endregion
+
+		private readonly List<Node> _nodes = new List<Node>();
 
 		/// <summary>
 		/// Creates a new empty list node
@@ -44,7 +48,7 @@ namespace Frost.IO.Tnt
 		/// <param name="type">Type of each node that will be in the list</param>
 		public ListNode (NodeType type)
 		{
-			throw new NotImplementedException();
+			_elementType = type;
 		}
 
 		/// <summary>
@@ -53,6 +57,7 @@ namespace Frost.IO.Tnt
 		/// <param name="type">Type of each node that will be in the list</param>
 		/// <param name="nodes">Initial collection of nodes</param>
 		public ListNode (NodeType type, IEnumerable<Node> nodes)
+			: this(type)
 		{
 			throw new NotImplementedException();
 		}
@@ -85,7 +90,7 @@ namespace Frost.IO.Tnt
 		/// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the nodes</returns>
 		public IEnumerator<Node> GetEnumerator ()
 		{
-			throw new NotImplementedException();
+			return _nodes.GetEnumerator();
 		}
 
 		/// <summary>
@@ -101,9 +106,17 @@ namespace Frost.IO.Tnt
 		/// Adds a node to the list
 		/// </summary>
 		/// <param name="item">Node to add to the list</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null.
+		/// The node to add to the list can't be null.</exception>
+		/// <exception cref="ArrayTypeMismatchException">Thrown if the type of node being added does not match the type of the existing nodes in the list</exception>
 		public void Add (Node item)
 		{
-			throw new NotImplementedException();
+			if(item == null)
+				throw new ArgumentNullException("item", "The node to add can't be null.");
+			if(item.Type != _elementType)
+				throw new ArrayTypeMismatchException();
+
+			_nodes.Add(item);
 		}
 
 		/// <summary>
@@ -111,7 +124,7 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		public void Clear ()
 		{
-			throw new NotImplementedException();
+			_nodes.Clear();
 		}
 
 		/// <summary>
@@ -121,7 +134,7 @@ namespace Frost.IO.Tnt
 		/// <returns>True if <paramref name="item"/> is found in the list; otherwise, false</returns>
 		public bool Contains (Node item)
 		{
-			throw new NotImplementedException();
+			return _nodes.Contains(item);
 		}
 
 		/// <summary>
@@ -135,16 +148,7 @@ namespace Frost.IO.Tnt
 		/// <exception cref="T:System.ArgumentException">The number of elements in the source list is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
 		public void CopyTo (Node[] array, int arrayIndex)
 		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Creates an array of nodes that contains the nodes contained in the list node
-		/// </summary>
-		/// <returns>An array of nodes</returns>
-		public Node[] ToArray ()
-		{
-			throw new NotImplementedException();
+			_nodes.CopyTo(array, arrayIndex);
 		}
 
 		/// <summary>
@@ -155,19 +159,25 @@ namespace Frost.IO.Tnt
 		/// This method also returns false if <paramref name="item"/> is not found in the original list.</returns>
 		public bool Remove (Node item)
 		{
-			throw new NotImplementedException();
+			return _nodes.Remove(item);
 		}
 
 		/// <summary>
 		/// Number of nodes contained in the list
 		/// </summary>
-		public int Count { get; private set; }
+		public int Count
+		{
+			get { return _nodes.Count; }
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether the node is read-only
 		/// </summary>
 		/// <remarks>This property is always false.</remarks>
-		public bool IsReadOnly { get; private set; }
+		public bool IsReadOnly
+		{
+			get { return false; }
+		}
 
 		/// <summary>
 		/// Determines the index of a specific node in the list
@@ -176,7 +186,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The index of <paramref name="item"/> if found in the list; otherwise, -1</returns>
 		public int IndexOf (Node item)
 		{
-			throw new NotImplementedException();
+			return _nodes.IndexOf(item);
 		}
 
 		/// <summary>
@@ -185,9 +195,16 @@ namespace Frost.IO.Tnt
 		/// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted</param>
 		/// <param name="item">The node to insert into the list</param>
 		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index in the node's list</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null.
+		/// The node to insert can't be null.</exception>
+		/// <exception cref="ArrayTypeMismatchException">Thrown if the type of node being added does not match the type of the existing nodes in the list</exception>
 		public void Insert (int index, Node item)
 		{
-			throw new NotImplementedException();
+			if(item == null)
+				throw new ArgumentNullException("item", "The new node being inserted can't be null.");
+			if(item.Type != _elementType)
+				throw new ArrayTypeMismatchException();
+			_nodes.Insert(index, item);
 		}
 
 		/// <summary>
@@ -197,7 +214,7 @@ namespace Frost.IO.Tnt
 		/// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the node's list</exception>
 		public void RemoveAt (int index)
 		{
-			throw new NotImplementedException();
+			_nodes.RemoveAt(index);
 		}
 
 		/// <summary>
@@ -205,10 +222,19 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="index">The zero-based index of the node to get or set</param>
 		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index in the node's list</exception>
+		/// <exception cref="ArgumentNullException">Thrown when attempting to set an element to a null node</exception>
+		/// <exception cref="ArrayTypeMismatchException">Thrown if the type of node being set does not match the type of the existing nodes in the list</exception>
 		public Node this [int index]
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return _nodes[index]; }
+			set
+			{
+				if(value == null)
+					throw new ArgumentNullException("value", "The new node being applied can't be null.");
+				if(value.Type != _elementType)
+					throw new ArrayTypeMismatchException();
+				_nodes[index] = value;
+			}
 		}
 
 		/// <summary>
