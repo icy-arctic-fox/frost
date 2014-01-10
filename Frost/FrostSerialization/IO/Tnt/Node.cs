@@ -120,6 +120,8 @@ namespace Frost.IO.Tnt
 				return ByteNode.ReadPayload;
 			case NodeType.SByte:
 				return SByteNode.ReadPayload;
+			case NodeType.Short:
+				return ShortNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}
