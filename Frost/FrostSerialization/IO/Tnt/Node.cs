@@ -124,6 +124,14 @@ namespace Frost.IO.Tnt
 				return ShortNode.ReadPayload;
 			case NodeType.UShort:
 				return UShortNode.ReadPayload;
+			case NodeType.Int:
+				return IntNode.ReadPayload;
+			case NodeType.UInt:
+				return UIntNode.ReadPayload;
+			case NodeType.Long:
+				return LongNode.ReadPayload;
+			case NodeType.ULong:
+				return ULongNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}
