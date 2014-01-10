@@ -146,6 +146,14 @@ namespace Frost.IO.Tnt
 				return TimeSpanNode.ReadPayload;
 			case NodeType.Blob:
 				return BlobNode.ReadPayload;
+			case NodeType.XY:
+				return XYNode.ReadPayload;
+			case NodeType.XYZ:
+				return XYZNode.ReadPayload;
+			case NodeType.Coordinate2D:
+				return Coordinate2DNode.ReadPayload;
+			case NodeType.Coordinate3D:
+				return Coordinate3DNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}

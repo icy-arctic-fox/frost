@@ -46,6 +46,10 @@
     <Compile Include="IO\Tnt\ByteNode.cs" />
     <Compile Include="IO\Tnt\BooleanNode.cs" />
     <Compile Include="IO\Tnt\BlobNode.cs" />
+    <Compile Include="IO\Tnt\Coordinate2DNode.cs" />
+    <Compile Include="IO\Tnt\Coordinate3DNode.cs" />
+    <Compile Include="IO\Tnt\XYZNode.cs" />
+    <Compile Include="IO\Tnt\XYNode.cs" />
     <Compile Include="IO\Tnt\TimeSpanNode.cs" />
     <Compile Include="IO\Tnt\DateTimeNode.cs" />
     <Compile Include="IO\Tnt\GuidNode.cs" />
