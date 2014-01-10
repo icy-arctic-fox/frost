@@ -36,12 +36,27 @@ namespace Frost.IO.Tnt
 		#endregion
 
 		/// <summary>
+		/// Checks if a string is valid for a node name
+		/// </summary>
+		/// <param name="name">String to check</param>
+		/// <returns>True if the string is valid for a node name</returns>
+		/// <remarks>Valid node names are not null, empty, contain only whitespace, or forward slashes.</remarks>
+		private static bool isValidNodeName (string name)
+		{
+			return !(String.IsNullOrWhiteSpace(name) || name.Contains("/"));
+		}
+
+		/// <summary>
 		/// Creates the base for a new node
 		/// </summary>
 		/// <param name="name">Name of the node</param>
+		/// <exception cref="ArgumentException">Thrown if the name provided for the node is invalid.
+		/// Valid node names are not null, empty, contain only whitespace, or forward slashes.</exception>
 		protected Node (string name)
 		{
-			throw new NotImplementedException();
+			if(!isValidNodeName(name))
+				throw new ArgumentException("Invalid string for node name", "name");
+			_name = name;
 		}
 
 		#region Serialization
@@ -66,7 +81,15 @@ namespace Frost.IO.Tnt
 			if(br == null)
 				throw new ArgumentNullException("br", "The reader used to pull data from the stream can't be null.");
 
-			throw new NotImplementedException();
+			string name;
+			var type = readHeader(br, out name);
+			if(type == NodeType.End)
+				return null; // End node
+			else
+			{// Regular node
+				var reader = getPayloadReader(type);
+				return reader(br, name);
+			}
 		}
 
 		/// <summary>
@@ -77,7 +100,9 @@ namespace Frost.IO.Tnt
 		/// <returns>Type of node read from the stream</returns>
 		private static NodeType readHeader (BinaryReader br, out string name)
 		{
-			throw new NotImplementedException();
+			var type = (NodeType)br.ReadByte();
+			name = (type == NodeType.End) ? null : br.ReadString();
+			return type;
 		}
 
 		/// <summary>
@@ -119,7 +144,8 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer used to put data on the stream</param>
 		private void writeHeader (BinaryWriter bw)
 		{
-			throw new NotImplementedException();
+			bw.Write((byte)Type);
+			bw.Write(_name);
 		}
 
 		/// <summary>
