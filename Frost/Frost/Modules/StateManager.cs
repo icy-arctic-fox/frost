@@ -160,11 +160,7 @@ namespace Frost.Modules
 				updateTiming(updateStopwatch, ref nextUpdateTime);
 				renderTiming(renderStopwatch, ref nextRenderTime);
 
-				// Sleep a bit to reduce CPU usage
-				var min = nextUpdateTime < nextRenderTime ? nextUpdateTime : nextRenderTime;
-				var sleepTime = (int)(min * 1000) / 2; // Half-life sleeping to gradually approach the next time, which helps prevent oversleeping
-				if(sleepTime > 0)
-					Thread.Sleep(sleepTime);
+				// TODO: Do something to reduce high CPU utilization
 			}
 		}
 
@@ -451,11 +447,7 @@ namespace Frost.Modules
 				if(!ThreadSynchronization || waitForRender(timeout))
 					updateTiming(stopwatch, ref nextUpdateTime);
 
-				// Sleep a bit to reduce CPU usage
-				var sleepTime = (int)(nextUpdateTime * 1000) / 2;
-				if(sleepTime < 0)
-					sleepTime = 0;
-				Thread.Sleep(sleepTime);
+				// TODO: Do something to reduce high CPU utilization
 			}
 		}
 
@@ -525,7 +517,7 @@ namespace Frost.Modules
 			// Perform the update
 			_display.Update();
 			_updateRoot.StepState(prevStateIndex, nextStateIndex);
-			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
+//			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 
 			// Release the state
 			releaseUpdateState();
@@ -716,11 +708,7 @@ namespace Frost.Modules
 				if(!ThreadSynchronization || waitForUpdate(timeout))
 					renderTiming(stopwatch, ref nextRenderTime);
 
-				// Sleep to reduce CPU usage
-				var sleepTime = (int)(nextRenderTime * 1000) / 2;
-				if(sleepTime < 0)
-					sleepTime = 0;
-				Thread.Sleep(sleepTime);
+				// TODO: Do something to reduce high CPU utilization
 			}
 		}
 
