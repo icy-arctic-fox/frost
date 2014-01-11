@@ -86,7 +86,7 @@ namespace Frost.IO.Tnt
 		{
 			var type   = (NodeType)br.ReadByte();
 			var count  = br.ReadInt32();
-			var reader = getPayloadReader(type);
+			var reader = GetPayloadReader(type);
 			var list   = new ListNode(type);
 			for(var i = 0; i < count; ++i)
 			{

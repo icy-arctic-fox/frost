@@ -61,7 +61,7 @@ namespace Frost.IO.Tnt
 				return null; // End node
 			else
 			{// Regular node
-				var reader = getPayloadReader(type);
+				var reader = GetPayloadReader(type);
 				return reader(br);
 			}
 		}
@@ -82,7 +82,7 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="type">Node type</param>
 		/// <returns>A node constructor method</returns>
-		protected static NodeConstructor getPayloadReader (NodeType type)
+		protected static NodeConstructor GetPayloadReader (NodeType type)
 		{
 			switch(type)
 			{
