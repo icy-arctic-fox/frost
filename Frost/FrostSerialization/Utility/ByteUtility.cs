@@ -72,5 +72,23 @@ namespace Frost.Utility
 			src.Copy(dest);
 			return dest;
 		}
+
+		/// <summary>
+		/// Reverses an array of bytes.
+		/// A new array is not created, the one provided is reversed in itself.
+		/// </summary>
+		/// <remarks>This can effectively flip the endianness of some types.</remarks>
+		/// <param name="bytes">Array to reverse</param>
+		public static void Reverse (this byte[] bytes)
+		{
+			var end = bytes.Length;
+			var mid = end / 2;
+			for(int i = 0, j = end - 1; i < mid; ++i, --j)
+			{
+				var temp = bytes[i];
+				bytes[i] = bytes[j];
+				bytes[j] = temp;
+			}
+		}
 	}
 }
