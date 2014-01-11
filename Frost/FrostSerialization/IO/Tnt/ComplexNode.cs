@@ -292,13 +292,81 @@ namespace Frost.IO.Tnt
 		/// <exception cref="ArgumentException">Thrown when attempting to set a node to null</exception>
 		public Node this[string key]
 		{
-			get { return _nodes[key]; }
+			get
+			{
+				if(key == null)
+					throw new ArgumentNullException("key", "The name of the node can't be null.");
+				return key.Contains(TraversalPathSeperator) ? traverseGet(key) : _nodes[key];
+			}
 			set
 			{
-				if(value == null)
-					throw new ArgumentException("The new node can't be null.", "value");
-				_nodes[key] = value;
+				if(key == null)
+					throw new ArgumentNullException("key", "The name of the node can't be null.");
+				if(key.Contains(TraversalPathSeperator))
+					traverseSet(key, value);
+				else
+				{
+					if(value == null)
+						throw new ArgumentException("The new node can't be null.", "value");
+					_nodes[key] = value;
+				}
 			}
+		}
+
+		private static readonly char[] _traversalPathSplit = TraversalPathSeperator.ToCharArray();
+
+		/// <summary>
+		/// Retrieves a child node from a traversal path
+		/// </summary>
+		/// <param name="path">Path to the child node</param>
+		/// <returns>The child node</returns>
+		private Node traverseGet (string path)
+		{
+			var parts   = path.Split(_traversalPathSplit, 2);
+			var name    = parts[0];
+			var subPath = parts[1];
+			if(_nodes.ContainsKey(name))
+			{
+				var child = _nodes[name];
+				switch(child.Type)
+				{
+				case NodeType.Complex:
+					return ((ComplexNode)child)[subPath];
+				case NodeType.List:
+					return ((ListNode)child)[subPath];
+				default:
+					throw new InvalidCastException("The node to traverse must be a list or complex node at: " + name);
+				}
+			}
+			throw new KeyNotFoundException("No child node with the name " + name + " exists");
+		}
+
+		/// <summary>
+		/// Sets a child node in a traversal path
+		/// </summary>
+		/// <param name="path">Path to the child node</param>
+		/// <param name="node">The new node to set</param>
+		private void traverseSet (string path, Node node)
+		{
+			var parts   = path.Split(_traversalPathSplit, 2);
+			var name    = parts[0];
+			var subPath = parts[1];
+			if(_nodes.ContainsKey(parts[0]))
+			{
+				var child = _nodes[name];
+				switch(child.Type)
+				{
+				case NodeType.Complex:
+					((ComplexNode)child)[subPath] = node;
+					break;
+				case NodeType.List:
+					((ListNode)child)[subPath] = node;
+					break;
+				default:
+					throw new InvalidCastException("The node to traverse must be a list or complex node at: " + name);
+				}
+			}
+			throw new KeyNotFoundException("No child node with the name " + name + " exists");
 		}
 
 		/// <summary>

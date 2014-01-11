@@ -36,6 +36,29 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
+		/// Accesses a node in the tree by path name.
+		/// The name or index of each node is separated by a /.
+		/// </summary>
+		/// <param name="path">Path to the desired node</param>
+		/// <returns>The node at the end of the path or null if the node doesn't exist</returns>
+		/// <exception cref="InvalidCastException">Thrown if the root node isn't a list or complex node</exception>
+		public Node this[string path]
+		{
+			get
+			{
+				switch(_root.Type)
+				{
+				case NodeType.Complex:
+					return ((ComplexNode)_root)[path];
+				case NodeType.List:
+					return ((ListNode)_root)[path];
+				default:
+					throw new InvalidCastException("The root node to traverse must be a list or complex node.");
+				}
+			}
+		}
+
+		/// <summary>
 		/// Creates a new node container
 		/// </summary>
 		/// <param name="root">Root node</param>

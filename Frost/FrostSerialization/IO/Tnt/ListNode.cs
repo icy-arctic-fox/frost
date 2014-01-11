@@ -263,6 +263,116 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
+		/// Gets or sets the node with the specified index
+		/// </summary>
+		/// <param name="key">The index of the node to get or set</param>
+		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> is null.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the index in <paramref name="key"/> is outside the bounds of the list</exception>
+		/// <exception cref="ArgumentException">Thrown when attempting to set a node to null</exception>
+		public Node this[string key]
+		{
+			get
+			{
+				if(key == null)
+					throw new ArgumentNullException("key", "The index of the node can't be null");
+				if(key.Contains(TraversalPathSeperator))
+					return traverseGet(key);
+				int index;
+				if(Int32.TryParse(key, out index))
+				{
+					if(index < 0 || index >= Count)
+						throw new ArgumentOutOfRangeException("key", "The index of the node to retrieve is out of range");
+					return _nodes[index];
+				}
+				throw new FormatException("Expected a numerical key value");
+			}
+			set
+			{
+				if(key == null)
+					throw new ArgumentNullException("key", "The index of the node can't be null");
+				if(key.Contains(TraversalPathSeperator))
+					traverseSet(key, value);
+				else
+				{
+					if(value == null)
+						throw new ArgumentException("The new node can't be null.", "value");
+					int index;
+					if(Int32.TryParse(key, out index))
+					{
+						if(index < 0 || index >= Count)
+							throw new ArgumentOutOfRangeException("key", "The index of the node to set is out of range");
+						_nodes[index] = value;
+					}
+					throw new FormatException("Expected a numerical key value");
+				}
+			}
+		}
+
+		private static readonly char[] _traversalPathSplit = TraversalPathSeperator.ToCharArray();
+
+		/// <summary>
+		/// Retrieves a child node from a traversal path
+		/// </summary>
+		/// <param name="path">Path to the child node</param>
+		/// <returns>The child node</returns>
+		private Node traverseGet (string path)
+		{
+			var parts   = path.Split(_traversalPathSplit, 2);
+			var name    = parts[0];
+			var subPath = parts[1];
+
+			int index;
+			if(Int32.TryParse(name, out index))
+			{
+				if(index < 0 || index >= Count)
+					throw new IndexOutOfRangeException("The index of the node is out of range");
+				var child = _nodes[index];
+				switch(child.Type)
+				{
+				case NodeType.Complex:
+					return ((ComplexNode)child)[subPath];
+				case NodeType.List:
+					return ((ListNode)child)[subPath];
+				default:
+					throw new InvalidCastException("The node to traverse must be a list or complex node at: " + name);
+				}
+			}
+			throw new FormatException("Expected a numerical key value");
+		}
+
+		/// <summary>
+		/// Sets a child node in a traversal path
+		/// </summary>
+		/// <param name="path">Path to the child node</param>
+		/// <param name="node">The new node to set</param>
+		private void traverseSet (string path, Node node)
+		{
+			var parts   = path.Split(_traversalPathSplit, 2);
+			var name    = parts[0];
+			var subPath = parts[1];
+
+			int index;
+			if(Int32.TryParse(name, out index))
+			{
+				if(index < 0 || index >= Count)
+					throw new IndexOutOfRangeException("The index of the node is out of range");
+				var child = _nodes[index];
+				switch(child.Type)
+				{
+				case NodeType.Complex:
+					((ComplexNode)child)[subPath] = node;
+					break;
+				case NodeType.List:
+					((ListNode)child)[subPath] = node;
+					break;
+				default:
+					throw new InvalidCastException("The node to traverse must be a list or complex node at: " + name);
+				}
+			}
+			throw new FormatException("Expected a numerical key value");
+		}
+
+		/// <summary>
 		/// Appends the contents of the list as a string.
 		/// This method is recursive across node classes and is used to construct a string for complex node structures.
 		/// </summary>

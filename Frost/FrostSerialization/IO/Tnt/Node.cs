@@ -9,6 +9,11 @@ namespace Frost.IO.Tnt
 	/// </summary>
 	public abstract class Node
 	{
+		/// <summary>
+		/// Character that separates node names and indices in paths
+		/// </summary>
+		protected const string TraversalPathSeperator = "/";
+
 		#region Node properties
 
 		/// <summary>
