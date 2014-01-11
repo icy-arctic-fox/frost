@@ -58,11 +58,9 @@ namespace Frost.IO.Tnt
 			var type = readHeader(br);
 			if(type == NodeType.End)
 				return null; // End node
-			else
-			{// Regular node
-				var reader = GetPayloadReader(type);
-				return reader(br);
-			}
+			// else - Regular node
+			var reader = GetPayloadReader(type);
+			return reader(br);
 		}
 
 		/// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Utility;
 
 namespace Frost.IO.Tnt
 {
@@ -63,7 +64,8 @@ namespace Frost.IO.Tnt
 		/// <returns>A new node that is a copy of this instance</returns>
 		public BlobNode CloneNode ()
 		{
-			throw new NotImplementedException();
+			var data = _data.Duplicate();
+			return new BlobNode(data);
 		}
 
 		/// <summary>
