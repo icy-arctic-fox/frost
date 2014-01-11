@@ -102,7 +102,7 @@ namespace Frost.IO.Tnt
 		/// <returns>A new node that is a copy of this instance</returns>
 		public ColorNode CloneNode ()
 		{
-			throw new NotImplementedException();
+			return new ColorNode(Argb);
 		}
 
 		/// <summary>

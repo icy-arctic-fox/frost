@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Frost.IO.Tnt
+﻿namespace Frost.IO.Tnt
 {
 	/// <summary>
 	/// 8-bit signed integer node
@@ -48,7 +46,7 @@ namespace Frost.IO.Tnt
 		/// <returns>A new node that is a copy of this instance</returns>
 		public SByteNode CloneNode ()
 		{
-			throw new NotImplementedException();
+			return new SByteNode(Value);
 		}
 
 		/// <summary>

@@ -48,7 +48,7 @@ namespace Frost.IO.Tnt
 		/// <returns>A new node that is a copy of this instance</returns>
 		public GuidNode CloneNode ()
 		{
-			throw new NotImplementedException();
+			return new GuidNode(Value);
 		}
 
 		/// <summary>

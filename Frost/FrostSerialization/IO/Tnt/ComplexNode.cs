@@ -81,7 +81,10 @@ namespace Frost.IO.Tnt
 		/// <returns>A new node that is a copy of this instance</returns>
 		public ComplexNode CloneNode ()
 		{
-			throw new NotImplementedException();
+			var complex = new ComplexNode();
+			foreach(var entry in _nodes)
+				complex._nodes.Add(entry.Key, (Node)entry.Value.Clone());
+			return complex;
 		}
 
 		/// <summary>

@@ -81,7 +81,10 @@ namespace Frost.IO.Tnt
 		/// <returns>A new node that is a copy of this instance</returns>
 		public ListNode CloneNode ()
 		{
-			throw new NotImplementedException();
+			var list = new ListNode(_elementType);
+			foreach(var node in _nodes)
+				list._nodes.Add((Node)node.Clone());
+			return list;
 		}
 
 		/// <summary>

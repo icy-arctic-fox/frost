@@ -62,7 +62,7 @@ namespace Frost.IO.Tnt
 		/// <returns>A new node that is a copy of this instance</returns>
 		public Coordinate3DNode CloneNode ()
 		{
-			throw new NotImplementedException();
+			return new Coordinate3DNode(X, Y, Z);
 		}
 
 		/// <summary>
