@@ -60,5 +60,17 @@ namespace Frost.Utility
 			Buffer.BlockCopy(src, srcStart, dest, destStart, count);
 #endif
 		}
+
+		/// <summary>
+		/// Creates a copy of an array of bytes
+		/// </summary>
+		/// <param name="src">Original byte array</param>
+		/// <returns>A new byte array containing the same contents as <paramref name="src"/></returns>
+		public static byte[] Duplicate (this byte[] src)
+		{
+			var dest = new byte[src.Length];
+			src.Copy(dest);
+			return dest;
+		}
 	}
 }
