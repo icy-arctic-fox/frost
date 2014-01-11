@@ -36,7 +36,7 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		public override string StringValue
 		{
-			get { return String.Format("{0} items", Count); }
+			get { return String.Format("{0} items of type {1}", Count, _elementType); }
 		}
 		#endregion
 
