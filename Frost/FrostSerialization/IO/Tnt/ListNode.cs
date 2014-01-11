@@ -56,10 +56,23 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="type">Type of each node that will be in the list</param>
 		/// <param name="nodes">Initial collection of nodes</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="nodes"/> is null.
+		/// The initial collection of nodes can't be null.</exception>
+		/// <exception cref="ArgumentException">Thrown if a node inside of <paramref name="nodes"/> is null.</exception>
+		/// <exception cref="ArrayTypeMismatchException">Thrown if a node inside of <paramref name="nodes"/> does not match the type given by <paramref name="type"/></exception>
 		public ListNode (NodeType type, IEnumerable<Node> nodes)
 			: this(type)
 		{
-			throw new NotImplementedException();
+			if(nodes == null)
+				throw new ArgumentNullException("nodes", "The initial collection of nodes can't be null.");
+			foreach(var node in nodes)
+			{
+				if(node == null)
+					throw new ArgumentException("None of the initial nodes can be null.", "nodes");
+				if(node.Type != type)
+					throw new ArrayTypeMismatchException();
+				_nodes.Add(node);
+			}
 		}
 
 		#region Serialization
@@ -71,7 +84,16 @@ namespace Frost.IO.Tnt
 		/// <returns>A constructed list node</returns>
 		internal static ListNode ReadPayload (System.IO.BinaryReader br)
 		{
-			throw new NotImplementedException();
+			var type   = (NodeType)br.ReadByte();
+			var count  = br.ReadInt32();
+			var reader = getPayloadReader(type);
+			var list   = new ListNode(type);
+			for(var i = 0; i < count; ++i)
+			{
+				var node = reader(br);
+				list._nodes.Add(node);
+			}
+			return list;
 		}
 
 		/// <summary>
@@ -80,7 +102,10 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			throw new NotImplementedException();
+			bw.Write((byte)_elementType);
+			bw.Write(_nodes.Count);
+			foreach(var node in _nodes)
+				node.WritePayload(bw);
 		}
 		#endregion
 

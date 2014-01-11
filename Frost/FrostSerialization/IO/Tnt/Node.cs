@@ -42,7 +42,7 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="br">Stream reader to use to pull data from the stream</param>
 		/// <returns>A constructed node</returns>
-		private delegate Node NodeConstructor (BinaryReader br);
+		protected delegate Node NodeConstructor (BinaryReader br);
 
 		/// <summary>
 		/// Reads a node from a stream
@@ -82,7 +82,7 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="type">Node type</param>
 		/// <returns>A node constructor method</returns>
-		private static NodeConstructor getPayloadReader (NodeType type)
+		protected static NodeConstructor getPayloadReader (NodeType type)
 		{
 			switch(type)
 			{
@@ -128,6 +128,8 @@ namespace Frost.IO.Tnt
 				return Coordinate3DNode.ReadPayload;
 			case NodeType.Color:
 				return ColorNode.ReadPayload;
+			case NodeType.List:
+				return ListNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}
