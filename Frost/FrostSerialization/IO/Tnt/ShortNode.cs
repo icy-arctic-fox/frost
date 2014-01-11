@@ -1,4 +1,6 @@
-﻿namespace Frost.IO.Tnt
+﻿using System;
+
+namespace Frost.IO.Tnt
 {
 	/// <summary>
 	/// 16-bit signed integer node
@@ -38,6 +40,24 @@
 		public ShortNode (short value)
 		{
 			Value = value;
+		}
+
+		/// <summary>
+		/// Creates a new node that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new node that is a copy of this instance</returns>
+		public ShortNode CloneNode ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates a new node that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new node that is a copy of this instance</returns>
+		public override object Clone ()
+		{
+			return CloneNode();
 		}
 
 		#region Serialization

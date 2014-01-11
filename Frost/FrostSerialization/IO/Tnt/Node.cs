@@ -7,7 +7,7 @@ namespace Frost.IO.Tnt
 	/// <summary>
 	/// Base class for all node types
 	/// </summary>
-	public abstract class Node
+	public abstract class Node : ICloneable
 	{
 		/// <summary>
 		/// Character that separates node names and indices in paths
@@ -28,7 +28,11 @@ namespace Frost.IO.Tnt
 		public abstract string StringValue { get; }
 		#endregion
 
-		// TODO: Add functionality for cloning nodes
+		/// <summary>
+		/// Creates a new node that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new node that is a copy of this instance</returns>
+		public abstract object Clone ();
 
 		#region Serialization
 

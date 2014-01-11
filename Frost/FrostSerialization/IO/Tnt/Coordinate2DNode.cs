@@ -49,6 +49,24 @@ namespace Frost.IO.Tnt
 			Y = y;
 		}
 
+		/// <summary>
+		/// Creates a new node that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new node that is a copy of this instance</returns>
+		public Coordinate2DNode CloneNode ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates a new node that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new node that is a copy of this instance</returns>
+		public override object Clone ()
+		{
+			return CloneNode();
+		}
+
 		#region Serialization
 
 		/// <summary>

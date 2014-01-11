@@ -96,6 +96,24 @@ namespace Frost.IO.Tnt
 			Argb = (alpha << 24) | (red << 16) | (green << 8) | blue;
 		}
 
+		/// <summary>
+		/// Creates a new node that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new node that is a copy of this instance</returns>
+		public ColorNode CloneNode ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates a new node that is a copy of the current instance
+		/// </summary>
+		/// <returns>A new node that is a copy of this instance</returns>
+		public override object Clone ()
+		{
+			return CloneNode();
+		}
+
 		#region Serialization
 
 		/// <summary>
