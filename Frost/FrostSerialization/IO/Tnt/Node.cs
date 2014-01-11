@@ -130,6 +130,8 @@ namespace Frost.IO.Tnt
 				return ColorNode.ReadPayload;
 			case NodeType.List:
 				return ListNode.ReadPayload;
+			case NodeType.Complex:
+				return ComplexNode.ReadPayload;
 			default:
 				throw new NotSupportedException("Unknown node type " + type);
 			}

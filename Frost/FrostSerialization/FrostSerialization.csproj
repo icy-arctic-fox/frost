@@ -49,6 +49,7 @@
     <Compile Include="IO\Tnt\Coordinate2DNode.cs" />
     <Compile Include="IO\Tnt\Coordinate3DNode.cs" />
     <Compile Include="IO\Tnt\ColorNode.cs" />
+    <Compile Include="IO\Tnt\ComplexNode.cs" />
     <Compile Include="IO\Tnt\ListNode.cs" />
     <Compile Include="IO\Tnt\TimeSpanNode.cs" />
     <Compile Include="IO\Tnt\DateTimeNode.cs" />
