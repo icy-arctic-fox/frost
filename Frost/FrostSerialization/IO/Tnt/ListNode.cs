@@ -263,12 +263,27 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
-		/// Generates a string that contains all of the nodes in the list
+		/// Appends the contents of the list as a string.
+		/// This method is recursive across node classes and is used to construct a string for complex node structures.
 		/// </summary>
-		/// <returns>String representation of the node</returns>
-		public override string ToString ()
+		/// <param name="sb">String builder to append to</param>
+		/// <param name="depth">Current depth (starting at 0)</param>
+		internal override void ToString (System.Text.StringBuilder sb, int depth)
 		{
-			throw new NotImplementedException();
+			sb.Append(IndentCharacter, depth);
+			base.ToString(sb, depth);
+			++depth;
+
+			var digits = Count / 10;
+			var format = "{0," + digits + "} ";
+			var i = 0;
+			foreach(var node in _nodes)
+			{
+				sb.Append(IndentCharacter, depth);
+				sb.AppendFormat(format, i++);
+				node.ToString(sb, depth);
+				sb.Append('\n');
+			}
 		}
 	}
 }

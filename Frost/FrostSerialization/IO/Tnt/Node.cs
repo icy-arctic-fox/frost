@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Frost.IO.Tnt
 {
@@ -160,10 +161,28 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Generates a string representation of the node
 		/// </summary>
-		/// <returns>A string in the form: Type: Value</returns>
+		/// <returns>String structure of the node</returns>
 		public override string ToString ()
 		{
-			return String.Format("{0}: {1}", Type, StringValue);
+			var sb = new StringBuilder();
+			ToString(sb, 0);
+			return sb.ToString().Trim();
+		}
+
+		/// <summary>
+		/// Character used to indicate an increase in depth
+		/// </summary>
+		protected const char IndentCharacter = ' ';
+
+		/// <summary>
+		/// Appends the contents of the node as a string.
+		/// This method is recursive across node classes and is used to construct a string for complex node structures.
+		/// </summary>
+		/// <param name="sb">String builder to append to</param>
+		/// <param name="depth">Current depth (starting at 0)</param>
+		internal virtual void ToString (StringBuilder sb, int depth)
+		{
+			sb.AppendFormat("({0}): {1}", Type, StringValue);
 		}
 	}
 }
