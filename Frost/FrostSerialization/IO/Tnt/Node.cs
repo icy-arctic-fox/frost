@@ -24,17 +24,6 @@ namespace Frost.IO.Tnt
 
 		// TODO: Add functionality for cloning nodes
 
-		/// <summary>
-		/// Checks if a string is valid for a node name
-		/// </summary>
-		/// <param name="name">String to check</param>
-		/// <returns>True if the string is valid for a node name</returns>
-		/// <remarks>Valid node names are not null, empty, contain only whitespace, or forward slashes.</remarks>
-		private static bool isValidNodeName (string name)
-		{
-			return !(String.IsNullOrWhiteSpace(name) || name.Contains("/"));
-		}
-
 		#region Serialization
 
 		/// <summary>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Frost.IO.Tnt
 {
@@ -29,11 +31,47 @@ namespace Frost.IO.Tnt
 		#endregion
 
 		/// <summary>
+		/// Checks if a string is valid for a node name
+		/// </summary>
+		/// <param name="name">String to check</param>
+		/// <returns>True if the string is valid for a node name</returns>
+		/// <remarks>Valid node names are not null, empty, contain only whitespace, or forward slashes.</remarks>
+		private static bool isValidNodeName (string name)
+		{
+			return !(String.IsNullOrWhiteSpace(name) || name.Contains("/"));
+		}
+
+		private readonly Dictionary<string, Node> _nodes = new Dictionary<string, Node>();
+
+		/// <summary>
 		/// Creates a new empty complex node
 		/// </summary>
 		public ComplexNode ()
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new complex node with initial contents
+		/// </summary>
+		/// <param name="nodes">Initial nodes to add</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="nodes"/> is null.
+		/// The initial collection of nodes can't be null.</exception>
+		/// <exception cref="ArgumentException">Thrown if one of the nodes in <paramref name="nodes"/> is null or has an invalid name</exception>
+		public ComplexNode (IEnumerable<KeyValuePair<string, Node>> nodes)
+		{
+			if(nodes == null)
+				throw new ArgumentNullException("nodes", "The collection of initial nodes can't be null.");
+			foreach(var entry in nodes)
+			{
+				var name = entry.Key;
+				var node = entry.Value;
+				if(!isValidNodeName(name))
+					throw new ArgumentException("Invalid node name - " + (name ?? "null"), "nodes");
+				if(node == null)
+					throw new ArgumentException("Cannot add a null node", "nodes");
+				_nodes.Add(name, node);
+			}
 		}
 
 		#region Serialization
@@ -45,7 +83,16 @@ namespace Frost.IO.Tnt
 		/// <returns>A constructed complex node</returns>
 		internal static ComplexNode ReadPayload (System.IO.BinaryReader br)
 		{
-			throw new NotImplementedException();
+			var complex = new ComplexNode();
+			while(true)
+			{
+				var node = ReadFromStream(br);
+				if(node == null)
+					break; // End marker
+				var name = br.ReadString();
+				complex._nodes.Add(name, node);
+			}
+			return complex;
 		}
 
 		/// <summary>
@@ -54,7 +101,14 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			throw new NotImplementedException();
+			foreach(var entry in _nodes)
+			{
+				var name = entry.Key;
+				var node = entry.Value;
+				node.WriteToStream(bw);
+				bw.Write(name);
+			}
+			bw.Write((byte)NodeType.End);
 		}
 		#endregion
 	}
