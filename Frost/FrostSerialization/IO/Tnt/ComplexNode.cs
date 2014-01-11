@@ -7,7 +7,7 @@ namespace Frost.IO.Tnt
 	/// <summary>
 	/// Contains multiple nodes of different types and addresses them by name
 	/// </summary>
-	public class ComplexNode : Node
+	public class ComplexNode : Node, IDictionary<string, Node>
 	{
 		#region Node properties
 
@@ -26,7 +26,7 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		public override string StringValue
 		{
-			get { throw new NotImplementedException(); }
+			get { return String.Format("{0} entries", Count); }
 		}
 		#endregion
 
@@ -111,5 +111,220 @@ namespace Frost.IO.Tnt
 			bw.Write((byte)NodeType.End);
 		}
 		#endregion
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the nodes
+		/// </summary>
+		/// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the nodes</returns>
+		public IEnumerator<KeyValuePair<string, Node>> GetEnumerator ()
+		{
+			return _nodes.GetEnumerator();
+		}
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the nodes
+		/// </summary>
+		/// <returns>An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the nodes</returns>
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return GetEnumerator();
+		}
+
+		/// <summary>
+		/// Adds a node to the collection
+		/// </summary>
+		/// <param name="item">The node to add to the collection</param>
+		/// <exception cref="ArgumentException">Thrown if the name of the node is null</exception>
+		/// <exception cref="ArgumentNullException">Thrown if the node to add is null</exception>
+		public void Add (KeyValuePair<string, Node> item)
+		{
+			Add(item.Key, item.Value);
+		}
+
+		/// <summary>
+		/// Removes all nodes from the collection
+		/// </summary>
+		public void Clear ()
+		{
+			_nodes.Clear();
+		}
+
+		/// <summary>
+		/// Determines whether the collection contains a specific node
+		/// </summary>
+		/// <returns>True if <paramref name="item"/> is found in the collection; otherwise, false</returns>
+		/// <param name="item">The node to locate in the collection</param>
+		/// <exception cref="ArgumentException">Thrown if the name of the node is null</exception>
+		/// <exception cref="ArgumentNullException">Thrown if the node to add is null</exception>
+		public bool Contains (KeyValuePair<string, Node> item)
+		{
+			var name = item.Key;
+			var node = item.Value;
+			if(name == null)
+				throw new ArgumentException("The name of the node can't be null.", "item");
+			if(node == null)
+				throw new ArgumentNullException("item", "The node to add can't be null.");
+			return _nodes.ContainsKey(name) && _nodes[name] == node;
+		}
+
+		/// <summary>
+		/// Copies the nodes to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index
+		/// </summary>
+		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the nodes copied from the collection.
+		/// The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+		/// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins</param>
+		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="array"/> is null</exception>
+		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="arrayIndex"/> is less than 0</exception>
+		/// <exception cref="T:System.ArgumentException">The number of nodes in the source collection is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
+		public void CopyTo (KeyValuePair<string, Node>[] array, int arrayIndex)
+		{
+			if(array == null)
+				throw new ArgumentNullException("array", "The array to copy nodes to can't be null.");
+			if(arrayIndex < 0)
+				throw new ArgumentOutOfRangeException("arrayIndex", "The index to start at in the array can't be less than 0.");
+			if(array.Length - arrayIndex < Count)
+				throw new ArgumentException("Not enough elements in the destination array.", "array");
+
+			var i = 0;
+			foreach(var entry in _nodes)
+				array[arrayIndex + i++] = entry;
+		}
+
+		/// <summary>
+		/// Removes the first occurrence of a specific node from the collection
+		/// </summary>
+		/// <returns>True if <paramref name="item"/> was successfully removed from the collection; otherwise, false.
+		/// This method also returns false if <paramref name="item"/> is not found in the original collection.</returns>
+		/// <param name="item">The node to remove from the collection</param>
+		public bool Remove (KeyValuePair<string, Node> item)
+		{
+			var name = item.Key;
+			var node = item.Value;
+			if(name == null)
+				throw new ArgumentException("The name of the node can't be null.", "item");
+			if(node == null)
+				throw new ArgumentNullException("item", "The node to add can't be null.");
+			if(_nodes.ContainsKey(name) && node == _nodes[name])
+				return _nodes.Remove(name);
+			return false;
+		}
+
+		/// <summary>
+		/// Gets the number of nodes contained in the collection
+		/// </summary>
+		public int Count
+		{
+			get { return _nodes.Count; }
+		}
+
+		/// <summary>
+		/// Indicates whether the node is read-only
+		/// </summary>
+		/// <remarks>This property always returns false.</remarks>
+		public bool IsReadOnly
+		{
+			get { return false; }
+		}
+
+		/// <summary>
+		/// Determines whether the collection contains a node with the specified name
+		/// </summary>
+		/// <returns>True if the collection contains a node with the name; otherwise, false</returns>
+		/// <param name="key">The name to locate in the collection</param>
+		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> is null</exception>
+		public bool ContainsKey (string key)
+		{
+			if(key == null)
+				throw new ArgumentException("The name of the node can't be null.", "key");
+			return _nodes.ContainsKey(key);
+		}
+
+		/// <summary>
+		/// Adds a node with the provided name to the collection
+		/// </summary>
+		/// <param name="key">The name to use for the node to add</param>
+		/// <param name="value">The node to add</param>
+		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="value"/> is null.</exception>
+		/// <exception cref="T:System.ArgumentException">A node with the same name already exists in the collection</exception>
+		public void Add (string key, Node value)
+		{
+			if(key == null)
+				throw new ArgumentException("The name of the node can't be null.", "key");
+			if(value == null)
+				throw new ArgumentNullException("value", "The node to add can't be null.");
+			_nodes.Add(key, value);
+		}
+
+		/// <summary>
+		/// Removes the node with the specified name from the collection
+		/// </summary>
+		/// <returns>True if the node is successfully removed; otherwise, false.
+		/// This method also returns false if <paramref name="key"/> was not found in the original collection.
+		/// </returns>
+		/// <param name="key">The name of the node to remove</param>
+		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> is null</exception>
+		public bool Remove (string key)
+		{
+			if(key == null)
+				throw new ArgumentException("The name of the node can't be null.", "key");
+			return _nodes.Remove(key);
+		}
+
+		/// <summary>
+		/// Gets the node associated with the specified name
+		/// </summary>
+		/// <returns>True if the collection contains a node with the specified name; otherwise, false</returns>
+		/// <param name="key">The name of the node to get</param>
+		/// <param name="value">When this method returns, the node associated with the specified name, if the name is found; otherwise, null</param>
+		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> is null</exception>
+		public bool TryGetValue (string key, out Node value)
+		{
+			return _nodes.TryGetValue(key, out value);
+		}
+
+		/// <summary>
+		/// Gets or sets the node with the specified name
+		/// </summary>
+		/// <param name="key">The name of the node to get or set</param>
+		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> is null.</exception>
+		/// <exception cref="T:System.Collections.Generic.KeyNotFoundException">The property is retrieved and <paramref name="key"/> is not found.</exception>
+		/// <exception cref="ArgumentException">Thrown when attempting to set a node to null</exception>
+		public Node this[string key]
+		{
+			get { return _nodes[key]; }
+			set
+			{
+				if(value == null)
+					throw new ArgumentException("The new node can't be null.", "value");
+				_nodes[key] = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the names of the nodes in the collection
+		/// </summary>
+		/// <returns>A collection containing the names of the nodes</returns>
+		public ICollection<string> Keys
+		{
+			get { return _nodes.Keys; }
+		}
+
+		/// <summary>
+		/// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the nodes in the collection
+		/// </summary>
+		/// <returns>A collection containing the nodes</returns>
+		public ICollection<Node> Values
+		{
+			get { return _nodes.Values; }
+		}
+
+		/// <summary>
+		/// Generates a string that contains the contents of the node
+		/// </summary>
+		/// <returns>A string</returns>
+		public override string ToString ()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
