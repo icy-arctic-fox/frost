@@ -7,7 +7,9 @@ namespace Frost.IO.Tnt
 	/// Wraps a typed-node structure.
 	/// This class is used to serialize and deserialize a node structure.
 	/// </summary>
-	/// <remarks>The node data is serialized in big-endian.</remarks>
+	/// <remarks>The node data is serialized in big-endian.
+	/// When using the serialization and streaming methods that use a <see cref="BinaryReader"/> or <see cref="BinaryWriter"/>,
+	/// please make sure that they are writing in big-endian format.</remarks>
 	public class NodeContainer : ISerializable, IStreamable
 	{
 		/// <summary>
@@ -93,7 +95,7 @@ namespace Frost.IO.Tnt
 				throw new ArgumentNullException("data", "The marshaled data can't be null.");
 
 			using(var ms = new MemoryStream(data))
-			using(var br = new BinaryReader(ms)) // TODO: Use big-endian
+			using(var br = new EndianBinaryReader(ms, Endian.Big))
 			{
 				_ver = br.ReadInt32();
 				if(_ver != TypedNodeVersion)
@@ -110,7 +112,7 @@ namespace Frost.IO.Tnt
 		{
 			using(var ms = new MemoryStream())
 			{
-				using(var bw = new BinaryWriter(ms)) // TODO: Use big-endian
+				using(var bw = new EndianBinaryWriter(ms, Endian.Big))
 					WriteToStream(bw);
 				return ms.ToArray();
 			}
@@ -127,7 +129,7 @@ namespace Frost.IO.Tnt
 		{
 			if(s == null)
 				throw new ArgumentNullException("s", "The stream pull node data from can't be null.");
-			using(var br = new BinaryReader(s)) // TODO: Use big-endian
+			using(var br = new EndianBinaryReader(s, Endian.Big))
 				return ReadFromStream(br);
 		}
 
@@ -160,7 +162,7 @@ namespace Frost.IO.Tnt
 		{
 			if(s == null)
 				throw new ArgumentNullException("s", "The stream to write the container to can't be null.");
-			using(var bw = new BinaryWriter(s)) // TODO: Use big-endian
+			using(var bw = new EndianBinaryWriter(s, Endian.Big))
 				WriteToStream(bw);
 		}
 
