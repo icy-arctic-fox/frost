@@ -16,13 +16,16 @@ namespace Frost.TntEditor
 		public NodeInfo ()
 		{
 			InitializeComponent();
+			typeCombo.Items.Add(String.Empty);
+			for(var type = NodeType.Boolean; type <= NodeType.Complex; ++type)
+				typeCombo.Items.Add(type);
 		}
 
 		/// <summary>
 		/// Sets the node that has information displayed about it
 		/// </summary>
 		/// <param name="treeNode">GUI node to display information for</param>
-		public void SetDisplayNode (TreeNode treeNode)
+		public void SetDisplayNode(TreeNode treeNode)
 		{
 			var node = treeNode.Tag as Node;
 			if(node != null)
@@ -51,19 +54,19 @@ namespace Frost.TntEditor
 			pathText.Text = getBasePath(treeNode);
 		}
 
-		private static string getBaseName (Node node, Node child)
+		private static string getBaseName (Node parent, Node node)
 		{
-			if(node != null)
+			if(parent != null)
 			{
 				string path;
-				switch(node.Type)
+				switch(parent.Type)
 				{
 				case NodeType.List:
-					path = ((ListNode)node).IndexOf(child).ToString(CultureInfo.InvariantCulture);
+					path = ((ListNode)parent).IndexOf(node).ToString(CultureInfo.InvariantCulture);
 					break;
 				case NodeType.Complex:
-					var complex = (ComplexNode)node;
-					path = complex.Where(entry => entry.Value == child).Select(entry => entry.Key).First();
+					var complex = (ComplexNode)parent;
+					path = complex.Where(entry => entry.Value == node).Select(entry => entry.Key).First();
 					break;
 				default: // Shouldn't get here
 					path = null;

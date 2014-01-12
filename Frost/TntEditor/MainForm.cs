@@ -18,6 +18,12 @@ namespace Frost.TntEditor
 
 		private void displaySampleContainer ()
 		{
+			var container = constructSampleContainer();
+			DisplayContainer(container);
+		}
+
+		private static NodeContainer constructSampleContainer ()
+		{
 			var root = new ListNode(NodeType.Complex);
 			for (var i = 0; i < 20; ++i)
 			{
@@ -27,10 +33,15 @@ namespace Frost.TntEditor
 					{"sushi "  + i, new ColorNode(5 * i)},
 					{"wasabi " + i, new XyNode(2 * i, 7 * i)}
 				};
+				var list = new ListNode(NodeType.Guid) {
+					new GuidNode(Guid.NewGuid()),
+					new GuidNode(Guid.NewGuid()),
+					new GuidNode(Guid.NewGuid())
+				};
+				complex.Add("IDs", list);
 				root.Add(complex);
 			}
-			var container = new NodeContainer(root);
-			DisplayContainer(container);
+			return new NodeContainer(root);
 		}
 
 		#region Node type image list
