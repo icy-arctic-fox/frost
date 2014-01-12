@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
+using TntEditor;
 
-namespace TntEditor
+namespace Frost.TntEditor
 {
 	static class Program
 	{
@@ -15,7 +14,7 @@ namespace TntEditor
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Form1());
+			Application.Run(new MainForm());
 		}
 	}
 }
