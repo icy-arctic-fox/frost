@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Frost.IO.Tnt;
 
-namespace TntEditor
+namespace Frost.TntEditor
 {
 	public partial class MainForm : Form
 	{
@@ -26,21 +21,24 @@ namespace TntEditor
 				root.Add(complex);
 			}
 			var container = new NodeContainer(root);
-			displayContainer(container);
+			DisplayContainer(container);
 		}
 
 		/// <summary>
 		/// Displays a node container in the tree pane
 		/// </summary>
 		/// <param name="container">Container to display</param>
-		private void displayContainer (NodeContainer container)
+		public void DisplayContainer (NodeContainer container)
 		{
 			if(container == null)
 				throw new ArgumentNullException("container", "The node container to display can't be null.");
+
 			var treeRoot = constructTreeNode(container);
 			treeView.Nodes.Clear();
 			treeView.Nodes.Add(treeRoot);
 		}
+
+		#region Tree view construction
 
 		/// <summary>
 		/// Creates the top-level container GUI tree node
@@ -124,5 +122,6 @@ namespace TntEditor
 				baseNode.Nodes.Add(treeNode);
 			}
 		}
+		#endregion
 	}
 }

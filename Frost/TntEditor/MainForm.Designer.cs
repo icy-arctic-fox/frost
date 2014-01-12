@@ -1,4 +1,4 @@
-﻿namespace TntEditor
+﻿namespace Frost.TntEditor
 {
 	partial class MainForm
 	{
