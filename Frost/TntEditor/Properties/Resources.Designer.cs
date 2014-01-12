@@ -80,5 +80,40 @@ namespace Frost.TntEditor.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap node_delete_next {
+            get {
+                object obj = ResourceManager.GetObject("node-delete-next", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap node_design {
+            get {
+                object obj = ResourceManager.GetObject("node-design", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap node_insert_previous {
+            get {
+                object obj = ResourceManager.GetObject("node-insert-previous", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap node_select_next {
+            get {
+                object obj = ResourceManager.GetObject("node-select-next", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap node_select_previous {
+            get {
+                object obj = ResourceManager.GetObject("node-select-previous", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

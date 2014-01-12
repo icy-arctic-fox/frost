@@ -97,6 +97,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Custom-Icon-Design-Pretty-Office-5-Content-tree.ico" />
+    <None Include="Images\node-delete-next.png" />
+    <None Include="Images\node-select-previous.png" />
+    <None Include="Images\node-select-next.png" />
+    <None Include="Images\node-insert-previous.png" />
+    <None Include="Images\node-design.png" />
     <Content Include="Images\type0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

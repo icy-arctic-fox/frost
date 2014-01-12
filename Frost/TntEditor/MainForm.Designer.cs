@@ -44,7 +44,13 @@
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.nodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.nodeInfoPanel = new Frost.TntEditor.NodeInfo();
+			this.addNodeToolStripButton = new System.Windows.Forms.ToolStripSplitButton();
+			this.decreaseDepthToolStripButton = new System.Windows.Forms.ToolStripButton();
+			this.moveDownToolStripButton = new System.Windows.Forms.ToolStripButton();
+			this.moveUpToolStripButton = new System.Windows.Forms.ToolStripButton();
+			this.deleteToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.menuStrip.SuspendLayout();
+			this.toolStrip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
@@ -113,6 +119,12 @@
 			// toolStrip
 			// 
 			this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addNodeToolStripButton,
+            this.decreaseDepthToolStripButton,
+            this.moveUpToolStripButton,
+            this.moveDownToolStripButton,
+            this.deleteToolStripButton});
 			this.toolStrip.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(633, 25);
@@ -164,6 +176,53 @@
 			this.nodeInfoPanel.Size = new System.Drawing.Size(210, 281);
 			this.nodeInfoPanel.TabIndex = 0;
 			// 
+			// addNodeToolStripButton
+			// 
+			this.addNodeToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_design;
+			this.addNodeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.addNodeToolStripButton.Name = "addNodeToolStripButton";
+			this.addNodeToolStripButton.Size = new System.Drawing.Size(93, 22);
+			this.addNodeToolStripButton.Text = "Add Node";
+			this.addNodeToolStripButton.ToolTipText = "Add a node to the structure";
+			// 
+			// decreaseDepthToolStripButton
+			// 
+			this.decreaseDepthToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_insert_previous;
+			this.decreaseDepthToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.decreaseDepthToolStripButton.Name = "decreaseDepthToolStripButton";
+			this.decreaseDepthToolStripButton.Size = new System.Drawing.Size(109, 22);
+			this.decreaseDepthToolStripButton.Text = "Decrease Depth";
+			this.decreaseDepthToolStripButton.ToolTipText = "Move the node up to its parent";
+			// 
+			// moveDownToolStripButton
+			// 
+			this.moveDownToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_select_next;
+			this.moveDownToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.moveDownToolStripButton.Name = "moveDownToolStripButton";
+			this.moveDownToolStripButton.Size = new System.Drawing.Size(91, 22);
+			this.moveDownToolStripButton.Text = "Move Down";
+			this.moveDownToolStripButton.ToolTipText = "Move the node down one slot in its container. This does not have an effect on com" +
+    "plex nodes, as they are unordered.";
+			// 
+			// moveUpToolStripButton
+			// 
+			this.moveUpToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_select_previous;
+			this.moveUpToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.moveUpToolStripButton.Name = "moveUpToolStripButton";
+			this.moveUpToolStripButton.Size = new System.Drawing.Size(75, 22);
+			this.moveUpToolStripButton.Text = "Move Up";
+			this.moveUpToolStripButton.ToolTipText = "Move the node up one slot in its container. This does not have an effect on compl" +
+    "ex nodes, as they are unordered.";
+			// 
+			// deleteToolStripButton
+			// 
+			this.deleteToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_delete_next;
+			this.deleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.deleteToolStripButton.Name = "deleteToolStripButton";
+			this.deleteToolStripButton.Size = new System.Drawing.Size(92, 22);
+			this.deleteToolStripButton.Text = "Delete Node";
+			this.deleteToolStripButton.ToolTipText = "Deleted the selected node";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -178,6 +237,8 @@
 			this.Text = "TNT Editor";
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
+			this.toolStrip.ResumeLayout(false);
+			this.toolStrip.PerformLayout();
 			this.splitContainer.Panel1.ResumeLayout(false);
 			this.splitContainer.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
@@ -203,6 +264,11 @@
 		private System.Windows.Forms.SaveFileDialog saveFileDialog;
 		private System.Windows.Forms.ContextMenuStrip nodeContextMenuStrip;
 		private NodeInfo nodeInfoPanel;
+		private System.Windows.Forms.ToolStripSplitButton addNodeToolStripButton;
+		private System.Windows.Forms.ToolStripButton decreaseDepthToolStripButton;
+		private System.Windows.Forms.ToolStripButton moveUpToolStripButton;
+		private System.Windows.Forms.ToolStripButton moveDownToolStripButton;
+		private System.Windows.Forms.ToolStripButton deleteToolStripButton;
 	}
 }
 
