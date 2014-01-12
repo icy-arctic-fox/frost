@@ -11,7 +11,6 @@ namespace Frost.TntEditor
 		public MainForm ()
 		{
 			InitializeComponent();
-			constructImageList();
 
 			treeView.ImageList = _nodeTypeImageList;
 			displaySampleContainer();
@@ -34,9 +33,27 @@ namespace Frost.TntEditor
 			DisplayContainer(container);
 		}
 
-		private readonly ImageList _nodeTypeImageList = new ImageList();
+		#region Node type image list
 
-		private void constructImageList ()
+		/// <summary>
+		/// Constructs the node type image list
+		/// </summary>
+		static MainForm ()
+		{
+			constructImageList();
+		}
+
+		private static readonly ImageList _nodeTypeImageList = new ImageList();
+
+		/// <summary>
+		/// Collection of images for each node type
+		/// </summary>
+		public static ImageList NodeTypeImageList
+		{
+			get { return _nodeTypeImageList; }
+		}
+
+		private static void constructImageList ()
 		{
 			_nodeTypeImageList.ImageSize  = new Size(16, 16);
 			_nodeTypeImageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -48,12 +65,13 @@ namespace Frost.TntEditor
 				_nodeTypeImageList.Images.Add(typeName, image);
 			}
 		}
+		#endregion
 
 		/// <summary>
 		/// Displays a node container in the tree pane
 		/// </summary>
 		/// <param name="container">Container to display</param>
-		public void DisplayContainer(NodeContainer container)
+		public void DisplayContainer (NodeContainer container)
 		{
 			if(container == null)
 				throw new ArgumentNullException("container", "The node container to display can't be null.");
@@ -100,10 +118,10 @@ namespace Frost.TntEditor
 			var text  = (name == null) ? value : String.Format("{0}: {1}", name, value);
 
 			var treeNode = new TreeNode(text, index, index) {
-				ToolTipText = type.ToString(),
-				Tag         = node
+				ContextMenuStrip = nodeContextMenuStrip,
+				ToolTipText      = type.ToString(),
+				Tag              = node
 			};
-			treeNode.ContextMenuStrip = nodeContextMenuStrip;
 
 			// Handle any children
 			switch(type)
@@ -151,5 +169,12 @@ namespace Frost.TntEditor
 			}
 		}
 		#endregion
+
+		private void treeView_NodeMouseClick (object sender, TreeNodeMouseClickEventArgs e)
+		{
+			var node = e.Node.Tag as Node;
+			if(node != null)
+				nodeInfoPanel.SetDisplayNode(e.Node);
+		}
 	}
 }

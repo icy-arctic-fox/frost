@@ -32,18 +32,18 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveAstoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.nodeInfoPanel = new Frost.TntEditor.NodeInfo();
 			this.treeView = new System.Windows.Forms.TreeView();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.nodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.nodeInfoPanel = new Frost.TntEditor.NodeInfo();
-			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -72,6 +72,30 @@
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "File";
+			// 
+			// newToolStripMenuItem
+			// 
+			this.newToolStripMenuItem.Image = global::Frost.TntEditor.Properties.Resources.blue_document;
+			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+			this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+			this.newToolStripMenuItem.Text = "&New";
+			// 
+			// openToolStripMenuItem
+			// 
+			this.openToolStripMenuItem.Image = global::Frost.TntEditor.Properties.Resources.folder_horizontal_open;
+			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+			this.openToolStripMenuItem.Text = "&Open";
+			// 
+			// saveToolStripMenuItem
+			// 
+			this.saveToolStripMenuItem.Image = global::Frost.TntEditor.Properties.Resources.disk_black;
+			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+			this.saveToolStripMenuItem.Text = "&Save";
 			// 
 			// saveAstoolStripMenuItem
 			// 
@@ -112,6 +136,14 @@
 			this.splitContainer1.SplitterDistance = 210;
 			this.splitContainer1.TabIndex = 2;
 			// 
+			// nodeInfoPanel
+			// 
+			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.nodeInfoPanel.Location = new System.Drawing.Point(0, 0);
+			this.nodeInfoPanel.Name = "nodeInfoPanel";
+			this.nodeInfoPanel.Size = new System.Drawing.Size(210, 281);
+			this.nodeInfoPanel.TabIndex = 0;
+			// 
 			// treeView
 			// 
 			this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -119,6 +151,7 @@
 			this.treeView.Name = "treeView";
 			this.treeView.Size = new System.Drawing.Size(419, 281);
 			this.treeView.TabIndex = 0;
+			this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
 			// 
 			// openFileDialog
 			// 
@@ -128,38 +161,6 @@
 			// 
 			this.nodeContextMenuStrip.Name = "nodeContextMenuStrip";
 			this.nodeContextMenuStrip.Size = new System.Drawing.Size(61, 4);
-			// 
-			// nodeInfoPanel
-			// 
-			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.nodeInfoPanel.Location = new System.Drawing.Point(0, 0);
-			this.nodeInfoPanel.Name = "nodeInfoPanel";
-			this.nodeInfoPanel.Size = new System.Drawing.Size(210, 281);
-			this.nodeInfoPanel.TabIndex = 0;
-			// 
-			// newToolStripMenuItem
-			// 
-			this.newToolStripMenuItem.Image = global::Frost.TntEditor.Properties.Resources.blue_document;
-			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-			this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-			this.newToolStripMenuItem.Text = "&New";
-			// 
-			// openToolStripMenuItem
-			// 
-			this.openToolStripMenuItem.Image = global::Frost.TntEditor.Properties.Resources.folder_horizontal_open;
-			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-			this.openToolStripMenuItem.Text = "&Open";
-			// 
-			// saveToolStripMenuItem
-			// 
-			this.saveToolStripMenuItem.Image = global::Frost.TntEditor.Properties.Resources.disk_black;
-			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-			this.saveToolStripMenuItem.Text = "&Save";
 			// 
 			// MainForm
 			// 

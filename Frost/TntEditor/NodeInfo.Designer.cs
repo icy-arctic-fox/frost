@@ -34,11 +34,11 @@
 			this.pathLabel = new System.Windows.Forms.Label();
 			this.typeLabel = new System.Windows.Forms.Label();
 			this.valueLabel = new System.Windows.Forms.Label();
-			this.typePicture = new System.Windows.Forms.PictureBox();
 			this.pathText = new System.Windows.Forms.TextBox();
 			this.nameText = new System.Windows.Forms.TextBox();
 			this.typeCombo = new System.Windows.Forms.ComboBox();
 			this.valueBox = new System.Windows.Forms.TextBox();
+			this.typePicture = new System.Windows.Forms.PictureBox();
 			this.nodeInfoLayoutPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.typePicture)).BeginInit();
 			this.SuspendLayout();
@@ -123,21 +123,13 @@
 			this.valueLabel.TabIndex = 7;
 			this.valueLabel.Text = "Value:";
 			// 
-			// typePicture
-			// 
-			this.typePicture.Anchor = System.Windows.Forms.AnchorStyles.None;
-			this.typePicture.Location = new System.Drawing.Point(48, 57);
-			this.typePicture.Name = "typePicture";
-			this.typePicture.Size = new System.Drawing.Size(16, 16);
-			this.typePicture.TabIndex = 5;
-			this.typePicture.TabStop = false;
-			// 
 			// pathText
 			// 
 			this.nodeInfoLayoutPanel.SetColumnSpan(this.pathText, 2);
 			this.pathText.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pathText.Location = new System.Drawing.Point(47, 29);
 			this.pathText.Name = "pathText";
+			this.pathText.ReadOnly = true;
 			this.pathText.Size = new System.Drawing.Size(256, 20);
 			this.pathText.TabIndex = 6;
 			// 
@@ -167,6 +159,15 @@
 			this.valueBox.Name = "valueBox";
 			this.valueBox.Size = new System.Drawing.Size(256, 20);
 			this.valueBox.TabIndex = 8;
+			// 
+			// typePicture
+			// 
+			this.typePicture.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.typePicture.Location = new System.Drawing.Point(48, 57);
+			this.typePicture.Name = "typePicture";
+			this.typePicture.Size = new System.Drawing.Size(16, 16);
+			this.typePicture.TabIndex = 5;
+			this.typePicture.TabStop = false;
 			// 
 			// NodeInfo
 			// 
