@@ -53,7 +53,7 @@ namespace TntEditor
 				throw new ArgumentNullException("container", "The node container to construct a tree from can't be null.");
 			
 			var text     = String.Format("Node container (version {0})", container.Version);
-			var treeNode = new TreeNode(text, 0, 0);
+			var treeNode = new TreeNode(text, 0, 0) {Tag = container};
 			var rootNode = constructTreeNode(container.Root);
 			treeNode.Nodes.Add(rootNode);
 			return treeNode;
@@ -89,6 +89,7 @@ namespace TntEditor
 				break;
 			}
 
+			treeNode.Tag = node;
 			return treeNode;
 		}
 
