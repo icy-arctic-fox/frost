@@ -70,7 +70,7 @@ namespace Frost.TntEditor
 		/// </summary>
 		/// <param name="container">Node container to pull information from</param>
 		/// <returns>A GUI tree node</returns>
-		private static TreeNode constructTreeNode (NodeContainer container)
+		private TreeNode constructTreeNode (NodeContainer container)
 		{
 			if(container == null)
 				throw new ArgumentNullException("container", "The node container to construct a tree from can't be null.");
@@ -88,7 +88,7 @@ namespace Frost.TntEditor
 		/// <param name="node">Node to pull information from</param>
 		/// <param name="name">Optional name to give the node</param>
 		/// <returns>A GUI tree node</returns>
-		private static TreeNode constructTreeNode (Node node, string name = null)
+		private TreeNode constructTreeNode (Node node, string name = null)
 		{
 			if(node == null)
 				throw new ArgumentNullException("node", "The node to create a tree node from can't be null.");
@@ -103,6 +103,7 @@ namespace Frost.TntEditor
 				ToolTipText = type.ToString(),
 				Tag         = node
 			};
+			treeNode.ContextMenuStrip = nodeContextMenuStrip;
 
 			// Handle any children
 			switch(type)
@@ -123,7 +124,7 @@ namespace Frost.TntEditor
 		/// </summary>
 		/// <param name="baseNode">Tree node to append the list items to</param>
 		/// <param name="list">TNT list node to pull information from</param>
-		private static void constructListTree (TreeNode baseNode, IEnumerable<Node> list)
+		private void constructListTree (TreeNode baseNode, IEnumerable<Node> list)
 		{
 			var i = 0;
 			foreach(var node in list)
@@ -139,7 +140,7 @@ namespace Frost.TntEditor
 		/// </summary>
 		/// <param name="baseNode">Tree node to append the list items to</param>
 		/// <param name="complex">TNT complex node to pull information from</param>
-		private static void constructComplexTree (TreeNode baseNode, IEnumerable<KeyValuePair<string, Node>> complex)
+		private void constructComplexTree (TreeNode baseNode, IEnumerable<KeyValuePair<string, Node>> complex)
 		{
 			foreach(var entry in complex)
 			{
