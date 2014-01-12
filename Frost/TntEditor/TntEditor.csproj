@@ -88,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Custom-Icon-Design-Pretty-Office-5-Content-tree.ico" />
+    <None Include="Images\disk-black.png" />
+    <None Include="Images\folder-horizontal-open.png" />
+    <None Include="Images\blue-document.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -59,5 +59,26 @@ namespace Frost.TntEditor.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap blue_document {
+            get {
+                object obj = ResourceManager.GetObject("blue-document", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap disk_black {
+            get {
+                object obj = ResourceManager.GetObject("disk-black", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap folder_horizontal_open {
+            get {
+                object obj = ResourceManager.GetObject("folder-horizontal-open", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
