@@ -38,7 +38,8 @@ namespace Frost.TntEditor
 
 		private void constructImageList ()
 		{
-			_nodeTypeImageList.ImageSize = new Size(16, 16);
+			_nodeTypeImageList.ImageSize  = new Size(16, 16);
+			_nodeTypeImageList.ColorDepth = ColorDepth.Depth32Bit;
 			for(var type = NodeType.End; type <= NodeType.Complex; ++type)
 			{
 				var filename = "Images/type" + (int)type + ".png";
