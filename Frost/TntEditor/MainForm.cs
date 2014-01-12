@@ -15,9 +15,16 @@ namespace TntEditor
 		public MainForm()
 		{
 			InitializeComponent();
-			var root = new ListNode(NodeType.Int);
+			var root = new ListNode(NodeType.Complex);
 			for(var i = 0; i < 20; ++i)
-				root.Add(new IntNode(i));
+			{
+				var complex = new ComplexNode();
+				complex.Add("foo " + i, new IntNode(5 * i));
+				complex.Add("bar " + i, new BlobNode(new byte[i]));
+				complex.Add("sushi " + i, new ColorNode(5 * i));
+				complex.Add("wasabi " + i, new XyNode(2 * i, 7 * i));
+				root.Add(complex);
+			}
 			var container = new NodeContainer(root);
 			displayContainer(container);
 		}
