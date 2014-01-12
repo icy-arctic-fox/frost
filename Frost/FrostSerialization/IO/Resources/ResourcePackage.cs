@@ -65,6 +65,7 @@ namespace Frost.IO.Resources
 			var blockSize = (fileInfo.KbCount + 1) * 1024;
 
 			// TODO: Implement header info encryption
+			// TODO: Implement info about the package (creator, name, description, mod, etc.)
 
 			var pkg = new ResourcePackage(fileInfo.Version, blockSize, fileInfo.Options, br);
 

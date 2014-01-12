@@ -46,6 +46,7 @@
     <Compile Include="IO\EndianBinaryWriter.cs" />
     <Compile Include="IO\ISerializable.cs" />
     <Compile Include="IO\IStreamable.cs" />
+    <Compile Include="IO\Resources\ResourceInfo.cs" />
     <Compile Include="IO\Resources\ResourcePackage.cs" />
     <Compile Include="IO\Resources\ResourcePackageHeader.cs" />
     <Compile Include="IO\Resources\ResourcePackageOptions.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="IO\Tnt\ComplexNode.cs" />
     <Compile Include="IO\Tnt\ListNode.cs" />
     <Compile Include="IO\Tnt\NodeContainer.cs" />
+    <Compile Include="IO\Tnt\NodeStructure.cs" />
     <Compile Include="IO\Tnt\TimeSpanNode.cs" />
     <Compile Include="IO\Tnt\DateTimeNode.cs" />
     <Compile Include="IO\Tnt\GuidNode.cs" />
