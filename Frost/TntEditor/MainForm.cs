@@ -96,9 +96,12 @@ namespace Frost.TntEditor
 			var type  = node.Type;
 			var index = (int)type;
 			var value = node.StringValue;
-			var text  = (name == null) ? String.Format("({0}): {1}", type, value)
-				: String.Format("{0} ({1}): {2}", name, type, value);
-			var treeNode = new TreeNode(text, index, index);
+			var text  = (name == null) ? value : String.Format("{0}: {1}", name, value);
+
+			var treeNode = new TreeNode(text, index, index) {
+				ToolTipText = type.ToString(),
+				Tag         = node
+			};
 
 			// Handle any children
 			switch(type)
@@ -111,7 +114,6 @@ namespace Frost.TntEditor
 				break;
 			}
 
-			treeNode.Tag = node;
 			return treeNode;
 		}
 
