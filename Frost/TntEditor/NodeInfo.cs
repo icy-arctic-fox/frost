@@ -47,7 +47,31 @@ namespace Frost.TntEditor
 		/// </summary>
 		private void updatePath (TreeNode treeNode)
 		{
+			nameText.Text = (treeNode.Parent == null) ? String.Empty : getBaseName(treeNode.Parent.Tag as Node, treeNode.Tag as Node);
 			pathText.Text = getBasePath(treeNode);
+		}
+
+		private static string getBaseName (Node node, Node child)
+		{
+			if(node != null)
+			{
+				string path;
+				switch(node.Type)
+				{
+				case NodeType.List:
+					path = ((ListNode)node).IndexOf(child).ToString(CultureInfo.InvariantCulture);
+					break;
+				case NodeType.Complex:
+					var complex = (ComplexNode)node;
+					path = complex.Where(entry => entry.Value == child).Select(entry => entry.Key).First();
+					break;
+				default: // Shouldn't get here
+					path = null;
+					break;
+				}
+				return path;
+			}
+			return null;
 		}
 
 		private static string getBasePath (TreeNode treeNode)
@@ -56,26 +80,9 @@ namespace Frost.TntEditor
 			if(node != null && treeNode.Parent != null)
 			{
 				var parent = treeNode.Parent;
-				var parentNode = parent.Tag as Node;
-				if(parentNode != null)
-				{
-					string path;
-					switch(parentNode.Type)
-					{
-					case NodeType.List:
-						path = ((ListNode)parentNode).IndexOf(node).ToString(CultureInfo.InvariantCulture);
-						break;
-					case NodeType.Complex:
-						var complex = (ComplexNode)parentNode;
-						path = complex.Where(entry => entry.Value == node).Select(entry => entry.Key).First();
-						break;
-					default: // Shouldn't get here
-						path = null;
-						break;
-					}
-					var parentPath = getBasePath(parent);
-					return (parentPath == null) ? path : String.Join("/", parentPath, path);
-				}
+				var name   = getBaseName(parent.Tag as Node, node);
+				var path   = getBasePath(parent);
+				return (path == null) ? name : String.Join("/", path, name);
 			}
 			return null;
 		}
