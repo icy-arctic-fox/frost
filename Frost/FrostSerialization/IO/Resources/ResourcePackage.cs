@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Frost.IO.Tnt;
 
 namespace Frost.IO.Resources
 {
@@ -59,11 +60,19 @@ namespace Frost.IO.Resources
 			var fs = new FileStream(path, FileMode.Open);
 			var br = new EndianBinaryReader(fs, Endian.Big);
 
-			// Read the header info
-			var header = readFileInfo(br);
-			var blockSize = (header.KbCount + 1) * 1024;
+			// Read the file header info
+			var fileInfo  = readFileInfo(br);
+			var blockSize = (fileInfo.KbCount + 1) * 1024;
 
-			return new ResourcePackage(header.Version, blockSize, header.Options, br);
+			// TODO: Implement header info encryption
+
+			var pkg = new ResourcePackage(fileInfo.Version, blockSize, fileInfo.Options, br);
+
+			// Read the resource header information (meta-data for resources in the file)
+			var header = NodeContainer.ReadFromStream(br);
+			// TODO: Extract resource information from node data
+
+			return pkg;
 		}
 
 		/// <summary>
