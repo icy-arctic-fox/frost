@@ -51,15 +51,32 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="path">Path to the resource file</param>
 		/// <returns>A reference to a resource package file</returns>
+		/// <exception cref="FileNotFoundException">Thrown if the resource package file wasn't found under <paramref name="path"/></exception>
 		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called</remarks>
 		public static ResourcePackage Load (string path)
 		{
-			throw new NotImplementedException();
+			// Create the file stream
+			var fs = new FileStream(path, FileMode.Open);
+			var br = new EndianBinaryReader(fs, Endian.Big);
+
+			// Read the header info
+			var header = readFileInfo(br);
+			var blockSize = (header.KbCount + 1) * 1024;
+
+			return new ResourcePackage(header.Version, blockSize, header.Options, br);
 		}
 
+		/// <summary>
+		/// Reads resource package header information from the file
+		/// </summary>
+		/// <param name="br">Reader used to get data from the file</param>
+		/// <returns>Raw header information</returns>
 		private static HeaderInfo readFileInfo (BinaryReader br)
 		{
-			throw new NotImplementedException();
+			var ver     = br.ReadByte();
+			var opts    = (ResourcePackageOptions)br.ReadUInt16();
+			var kbCount = br.ReadByte();
+			return new HeaderInfo(ver, opts, kbCount);
 		}
 
 		/// <summary>
@@ -67,7 +84,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		public void Close ()
 		{
-			throw new NotImplementedException();
+			_br.Close();
 		}
 		#endregion
 
@@ -107,6 +124,8 @@ namespace Frost.IO.Resources
 		{
 			if(!_disposed)
 			{
+				if(disposing)
+					_br.Dispose();
 				_disposed = true;
 			}
 		}

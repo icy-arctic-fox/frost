@@ -6,11 +6,11 @@ namespace Frost.IO.Resources
 	/// Flags that indicate options for a resource package file
 	/// </summary>
 	[Flags]
-	public enum ResourcePackageOptions
+	public enum ResourcePackageOptions : ushort
 	{
 		/// <summary>
 		/// The header's contents are encrypted
 		/// </summary>
-		EncryptedHeader = 0x01
+		EncryptedHeader = 0x0001
 	}
 }
