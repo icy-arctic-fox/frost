@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using Frost.IO.Tnt;
 
@@ -7,28 +8,51 @@ namespace Frost.TntEditor
 {
 	public partial class MainForm : Form
 	{
-		public MainForm()
+		public MainForm ()
 		{
 			InitializeComponent();
+			constructImageList();
+
+			treeView.ImageList = _nodeTypeImageList;
+			displaySampleContainer();
+		}
+
+		private void displaySampleContainer ()
+		{
 			var root = new ListNode(NodeType.Complex);
-			for(var i = 0; i < 20; ++i)
+			for (var i = 0; i < 20; ++i)
 			{
-				var complex = new ComplexNode();
-				complex.Add("foo " + i, new IntNode(5 * i));
-				complex.Add("bar " + i, new BlobNode(new byte[i]));
-				complex.Add("sushi " + i, new ColorNode(5 * i));
-				complex.Add("wasabi " + i, new XyNode(2 * i, 7 * i));
+				var complex = new ComplexNode {
+					{"foo "    + i, new IntNode(5 * i)},
+					{"bar "    + i, new BlobNode(new byte[i])},
+					{"sushi "  + i, new ColorNode(5 * i)},
+					{"wasabi " + i, new XyNode(2 * i, 7 * i)}
+				};
 				root.Add(complex);
 			}
 			var container = new NodeContainer(root);
 			DisplayContainer(container);
 		}
 
+		private readonly ImageList _nodeTypeImageList = new ImageList();
+
+		private void constructImageList ()
+		{
+			_nodeTypeImageList.ImageSize = new Size(16, 16);
+			for(var type = NodeType.End; type <= NodeType.Complex; ++type)
+			{
+				var filename = "Images/type" + (int)type + ".png";
+				var typeName = type.ToString();
+				var image    = Image.FromFile(filename);
+				_nodeTypeImageList.Images.Add(typeName, image);
+			}
+		}
+
 		/// <summary>
 		/// Displays a node container in the tree pane
 		/// </summary>
 		/// <param name="container">Container to display</param>
-		public void DisplayContainer (NodeContainer container)
+		public void DisplayContainer(NodeContainer container)
 		{
 			if(container == null)
 				throw new ArgumentNullException("container", "The node container to display can't be null.");
