@@ -47,6 +47,7 @@
     <Compile Include="IO\ISerializable.cs" />
     <Compile Include="IO\IStreamable.cs" />
     <Compile Include="IO\Resources\ResourcePackage.cs" />
+    <Compile Include="IO\Resources\ResourcePackageHeader.cs" />
     <Compile Include="IO\Resources\ResourcePackageOptions.cs" />
     <Compile Include="IO\Tnt\ByteNode.cs" />
     <Compile Include="IO\Tnt\BooleanNode.cs" />
