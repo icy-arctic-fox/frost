@@ -15,7 +15,11 @@ namespace TntEditor
 		public MainForm()
 		{
 			InitializeComponent();
-			displayContainer(new NodeContainer(new ByteNode(1)));
+			var root = new ListNode(NodeType.Int);
+			for(var i = 0; i < 20; ++i)
+				root.Add(new IntNode(i));
+			var container = new NodeContainer(root);
+			displayContainer(container);
 		}
 
 		/// <summary>
@@ -71,14 +75,46 @@ namespace TntEditor
 			switch(type)
 			{
 			case NodeType.List:
-				throw new NotImplementedException();
+				constructListTree(treeNode, (ListNode)node);
 				break;
 			case NodeType.Complex:
-				throw new NotImplementedException();
+				constructComplexTree(treeNode, (ComplexNode)node);
 				break;
 			}
 
 			return treeNode;
+		}
+
+		/// <summary>
+		/// Appends elements of a list node to a GUI tree node
+		/// </summary>
+		/// <param name="baseNode">Tree node to append the list items to</param>
+		/// <param name="list">TNT list node to pull information from</param>
+		private static void constructListTree (TreeNode baseNode, IEnumerable<Node> list)
+		{
+			var i = 0;
+			foreach(var node in list)
+			{
+				var name     = String.Format("[{0}]", i++);
+				var treeNode = constructTreeNode(node, name);
+				baseNode.Nodes.Add(treeNode);
+			}
+		}
+
+		/// <summary>
+		/// Appends elements of a complex node to a GUI tree node
+		/// </summary>
+		/// <param name="baseNode">Tree node to append the list items to</param>
+		/// <param name="complex">TNT complex node to pull information from</param>
+		private static void constructComplexTree (TreeNode baseNode, IEnumerable<KeyValuePair<string, Node>> complex)
+		{
+			foreach(var entry in complex)
+			{
+				var name     = entry.Key;
+				var node     = entry.Value;
+				var treeNode = constructTreeNode(node, name);
+				baseNode.Nodes.Add(treeNode);
+			}
 		}
 	}
 }
