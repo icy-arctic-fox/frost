@@ -48,16 +48,22 @@ namespace Frost.IO.Resources
 		private readonly int _dataOffset;
 
 		/// <summary>
+		/// Underlying stream to access the resource data
+		/// </summary>
+		private readonly Stream _s;
+
+		/// <summary>
 		/// Reader used to pull data from the file
 		/// </summary>
 		private readonly BinaryReader _br;
 
-		private ResourcePackage (byte ver, int blockSize, int dataOffset, ResourcePackageOptions opts, BinaryReader br)
+		private ResourcePackage (byte ver, int blockSize, int dataOffset, ResourcePackageOptions opts, Stream s, BinaryReader br)
 		{
 			_ver        = ver;
 			_blockSize  = blockSize;
 			_dataOffset = dataOffset;
 			_opts       = opts;
+			_s          = s;
 			_br         = br;
 		}
 
@@ -110,7 +116,7 @@ namespace Frost.IO.Resources
 
 			// TODO: Extract resource information from node data
 
-			var pkg = new ResourcePackage(fileInfo.Version, blockSize, blockOffset, fileInfo.Options, br);
+			var pkg = new ResourcePackage(fileInfo.Version, blockSize, blockOffset, fileInfo.Options, fs, br);
 
 			return pkg;
 		}
@@ -131,7 +137,24 @@ namespace Frost.IO.Resources
 
 		#region Access
 
+		/// <summary>
+		/// Seeks to a block in the file
+		/// </summary>
+		/// <param name="block">Block index</param>
+		private void seekBlock(int block)
+		{
+			var offset = block * _blockSize;
+			_s.Seek(offset, SeekOrigin.Begin);
+		}
 
+		/// <summary>
+		/// Seeks to a data block in the file
+		/// </summary>
+		/// <param name="block">Block index</param>
+		private void seekDataBlock(int block)
+		{
+			seekBlock(block + _dataOffset);
+		}
 		#endregion
 
 		/// <summary>
