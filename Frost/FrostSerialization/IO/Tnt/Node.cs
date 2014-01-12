@@ -50,6 +50,7 @@ namespace Frost.IO.Tnt
 		/// <returns>A node read from the stream or null if an "End" node was read</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null.
 		/// The reader used to pull data from the stream can't be null.</exception>
+		/// <exception cref="InvalidDataException">Thrown if the data in the stream is in an unexpected format</exception>
 		internal static Node ReadFromStream (BinaryReader br)
 		{
 			if(br == null)
@@ -59,8 +60,15 @@ namespace Frost.IO.Tnt
 			if(type == NodeType.End)
 				return null; // End node
 			// else - Regular node
-			var reader = GetPayloadReader(type);
-			return reader(br);
+			try
+			{
+				var reader = GetPayloadReader(type);
+				return reader(br);
+			}
+			catch(NotSupportedException e)
+			{
+				throw new InvalidDataException("The data in the stream is in an unrecognized format.", e);
+			}
 		}
 
 		/// <summary>
@@ -79,6 +87,7 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="type">Node type</param>
 		/// <returns>A node constructor method</returns>
+		/// <exception cref="NotSupportedException">Thrown if the type specified by <paramref name="type"/> is not known</exception>
 		protected static NodeConstructor GetPayloadReader (NodeType type)
 		{
 			switch(type)

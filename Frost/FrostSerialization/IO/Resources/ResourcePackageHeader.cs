@@ -43,8 +43,8 @@
 		/// <param name="kbCount">Number of kilobytes contained in each block starting at 0 (0 means 1 KB, 255 means 256 KB)</param>
 		public HeaderInfo (byte ver, ResourcePackageOptions opts, byte kbCount)
 		{
-			_ver = ver;
-			_opts = opts;
+			_ver     = ver;
+			_opts    = opts;
 			_kbCount = kbCount;
 		}
 	}

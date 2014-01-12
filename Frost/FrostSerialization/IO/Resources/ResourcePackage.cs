@@ -14,6 +14,8 @@ namespace Frost.IO.Resources
 	/// </summary>
 	public class ResourcePackage : IDisposable
 	{
+		private const int Kilobyte = 1024;
+
 		private readonly byte _ver;
 
 		/// <summary>
@@ -34,18 +36,33 @@ namespace Frost.IO.Resources
 			get { return _opts; }
 		}
 
+		/// <summary>
+		/// Size of each file block in bytes
+		/// </summary>
 		private readonly int _blockSize;
+
+		/// <summary>
+		/// Offset in the file (measured in blocks) to where the data starts
+		/// </summary>
+		/// <remarks>This is also equal to the number of blocks used by the header.</remarks>
+		private readonly int _dataOffset;
+
+		/// <summary>
+		/// Reader used to pull data from the file
+		/// </summary>
 		private readonly BinaryReader _br;
 
-		private ResourcePackage (byte ver, int blockSize, ResourcePackageOptions opts, BinaryReader br)
+		private ResourcePackage (byte ver, int blockSize, int dataOffset, ResourcePackageOptions opts, BinaryReader br)
 		{
-			_ver       = ver;
-			_blockSize = blockSize;
-			_opts     = opts;
-			_br       = br;
+			_ver        = ver;
+			_blockSize  = blockSize;
+			_dataOffset = dataOffset;
+			_opts       = opts;
+			_br         = br;
 		}
 
 		#region IO
+		#region Load
 
 		/// <summary>
 		/// Opens a resource package file to start pulling resources from it
@@ -53,6 +70,7 @@ namespace Frost.IO.Resources
 		/// <param name="path">Path to the resource file</param>
 		/// <returns>A reference to a resource package file</returns>
 		/// <exception cref="FileNotFoundException">Thrown if the resource package file wasn't found under <paramref name="path"/></exception>
+		/// <exception cref="InvalidDataException">Thrown if the data contained in the resource file is invalid</exception>
 		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called</remarks>
 		public static ResourcePackage Load (string path)
 		{
@@ -62,16 +80,37 @@ namespace Frost.IO.Resources
 
 			// Read the file header info
 			var fileInfo  = readFileInfo(br);
-			var blockSize = (fileInfo.KbCount + 1) * 1024;
+			var blockSize = (fileInfo.KbCount + 1) * Kilobyte; // +1 to make 0 mean 1 KB block size
 
 			// TODO: Implement header info encryption
 			// TODO: Implement info about the package (creator, name, description, mod, etc.)
 
-			var pkg = new ResourcePackage(fileInfo.Version, blockSize, fileInfo.Options, br);
-
 			// Read the resource header information (meta-data for resources in the file)
-			var header = NodeContainer.ReadFromStream(br);
+			NodeContainer header;
+			try
+			{
+				header = NodeContainer.ReadFromStream(br);
+			}
+			catch(FormatException e)
+			{
+				br.Dispose();
+				throw new InvalidDataException("The header data is in an unrecognized format.", e);
+			}
+			catch(InvalidDataException e)
+			{
+				br.Dispose();
+				throw new InvalidDataException("The header data is in an unrecognized format.", e);
+			}
+
+			// Calculate how big the header is (and where the data starts)
+			var headerBytes = fs.Position;
+			var blockOffset = (int)(headerBytes / blockSize);
+			if(headerBytes % blockSize != 0)
+				++blockOffset; // Round up
+
 			// TODO: Extract resource information from node data
+
+			var pkg = new ResourcePackage(fileInfo.Version, blockSize, blockOffset, fileInfo.Options, br);
 
 			return pkg;
 		}
@@ -88,6 +127,12 @@ namespace Frost.IO.Resources
 			var kbCount = br.ReadByte();
 			return new HeaderInfo(ver, opts, kbCount);
 		}
+		#endregion
+
+		#region Access
+
+
+		#endregion
 
 		/// <summary>
 		/// Closes the resource package file
