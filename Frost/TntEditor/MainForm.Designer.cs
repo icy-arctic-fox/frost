@@ -46,12 +46,14 @@
 			this.copyToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.pasteToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.deleteToolStripButton = new System.Windows.Forms.ToolStripButton();
+			this.searchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
+			this.searchToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.nodeInfoPanel = new Frost.TntEditor.NodeInfo();
 			this.treeView = new System.Windows.Forms.TreeView();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.nodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.nodeInfoPanel = new Frost.TntEditor.NodeInfo();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -66,7 +68,7 @@
             this.fileToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(644, 24);
+			this.menuStrip.Size = new System.Drawing.Size(762, 24);
 			this.menuStrip.TabIndex = 0;
 			this.menuStrip.Text = "menuStrip1";
 			// 
@@ -129,10 +131,13 @@
             this.moveDownToolStripButton,
             this.copyToolStripButton,
             this.pasteToolStripButton,
-            this.deleteToolStripButton});
+            this.deleteToolStripButton,
+            this.searchToolStripButton,
+            this.searchToolStripTextBox});
+			this.toolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
 			this.toolStrip.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip.Name = "toolStrip";
-			this.toolStrip.Size = new System.Drawing.Size(644, 25);
+			this.toolStrip.Size = new System.Drawing.Size(762, 25);
 			this.toolStrip.TabIndex = 1;
 			this.toolStrip.Text = "toolStrip";
 			// 
@@ -206,9 +211,29 @@
 			this.deleteToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_delete_next;
 			this.deleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.deleteToolStripButton.Name = "deleteToolStripButton";
-			this.deleteToolStripButton.Size = new System.Drawing.Size(92, 20);
+			this.deleteToolStripButton.Size = new System.Drawing.Size(92, 22);
 			this.deleteToolStripButton.Text = "Delete Node";
 			this.deleteToolStripButton.ToolTipText = "Deleted the selected node";
+			// 
+			// searchToolStripTextBox
+			// 
+			this.searchToolStripTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.searchToolStripTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
+			this.searchToolStripTextBox.Name = "searchToolStripTextBox";
+			this.searchToolStripTextBox.Size = new System.Drawing.Size(100, 25);
+			this.searchToolStripTextBox.Text = "Search";
+			this.searchToolStripTextBox.Leave += new System.EventHandler(this.searchToolStripTextBox_Leave);
+			this.searchToolStripTextBox.Click += new System.EventHandler(this.searchToolStripTextBox_Click);
+			// 
+			// searchToolStripButton
+			// 
+			this.searchToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.searchToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.searchToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_magnifier;
+			this.searchToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.searchToolStripButton.Name = "searchToolStripButton";
+			this.searchToolStripButton.Size = new System.Drawing.Size(23, 22);
+			this.searchToolStripButton.Text = "Search";
 			// 
 			// splitContainer
 			// 
@@ -225,24 +250,16 @@
 			// 
 			this.splitContainer.Panel2.Controls.Add(this.treeView);
 			this.splitContainer.Panel2MinSize = 100;
-			this.splitContainer.Size = new System.Drawing.Size(644, 286);
-			this.splitContainer.SplitterDistance = 213;
+			this.splitContainer.Size = new System.Drawing.Size(762, 348);
+			this.splitContainer.SplitterDistance = 252;
 			this.splitContainer.TabIndex = 2;
-			// 
-			// nodeInfoPanel
-			// 
-			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.nodeInfoPanel.Location = new System.Drawing.Point(0, 0);
-			this.nodeInfoPanel.Name = "nodeInfoPanel";
-			this.nodeInfoPanel.Size = new System.Drawing.Size(213, 286);
-			this.nodeInfoPanel.TabIndex = 0;
 			// 
 			// treeView
 			// 
 			this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeView.Location = new System.Drawing.Point(0, 0);
 			this.treeView.Name = "treeView";
-			this.treeView.Size = new System.Drawing.Size(427, 286);
+			this.treeView.Size = new System.Drawing.Size(506, 348);
 			this.treeView.TabIndex = 0;
 			this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
 			// 
@@ -255,11 +272,19 @@
 			this.nodeContextMenuStrip.Name = "nodeContextMenuStrip";
 			this.nodeContextMenuStrip.Size = new System.Drawing.Size(61, 4);
 			// 
+			// nodeInfoPanel
+			// 
+			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.nodeInfoPanel.Location = new System.Drawing.Point(0, 0);
+			this.nodeInfoPanel.Name = "nodeInfoPanel";
+			this.nodeInfoPanel.Size = new System.Drawing.Size(252, 348);
+			this.nodeInfoPanel.TabIndex = 0;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(644, 335);
+			this.ClientSize = new System.Drawing.Size(762, 397);
 			this.Controls.Add(this.splitContainer);
 			this.Controls.Add(this.toolStrip);
 			this.Controls.Add(this.menuStrip);
@@ -304,6 +329,8 @@
 		private System.Windows.Forms.ContextMenuStrip newNodeContextMenuStrip;
 		private System.Windows.Forms.ToolStripButton copyToolStripButton;
 		private System.Windows.Forms.ToolStripButton pasteToolStripButton;
+		private System.Windows.Forms.ToolStripTextBox searchToolStripTextBox;
+		private System.Windows.Forms.ToolStripButton searchToolStripButton;
 	}
 }
 

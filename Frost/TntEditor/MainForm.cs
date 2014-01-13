@@ -208,5 +208,25 @@ namespace Frost.TntEditor
 		{
 			((ToolStripSplitButton)sender).ShowDropDown();
 		}
+
+		private void searchToolStripTextBox_Click (object sender, EventArgs e)
+		{
+			var textBox = (ToolStripTextBox)sender;
+			if(textBox.ForeColor == SystemColors.GrayText)
+			{// Search text
+				textBox.Text      = String.Empty;
+				textBox.ForeColor = SystemColors.ControlText;
+			}
+		}
+
+		private void searchToolStripTextBox_Leave (object sender, EventArgs e)
+		{
+			var textBox = (ToolStripTextBox)sender;
+			if(String.IsNullOrWhiteSpace(textBox.Text))
+			{// Display search text
+				textBox.ForeColor = SystemColors.GrayText;
+				textBox.Text      = "Search";
+			}
+		}
 	}
 }

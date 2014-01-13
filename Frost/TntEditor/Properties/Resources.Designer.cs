@@ -130,6 +130,13 @@ namespace Frost.TntEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap node_magnifier {
+            get {
+                object obj = ResourceManager.GetObject("node-magnifier", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap node_select {
             get {
                 object obj = ResourceManager.GetObject("node-select", resourceCulture);
