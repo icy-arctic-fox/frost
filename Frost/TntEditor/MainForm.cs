@@ -290,12 +290,35 @@ namespace Frost.TntEditor
 		}
 		#endregion
 
+		private void enableListNodeOptions(bool flag = true)
+		{
+			deleteToolStripButton.Enabled   = flag;
+			deleteToolStripMenuItem.Enabled = flag;
+			enableNodeOptions(flag);
+		}
+
+		private void enableNodeOptions (bool flag = true)
+		{
+			copyToolStripButton.Enabled    = flag;
+			copyToolStripMenuItem.Enabled  = flag;
+			pasteToolStripButton.Enabled   = flag;
+			pasteToolStripMenuItem.Enabled = flag;
+		}
+
 		#region Event listeners
 		private void treeView_NodeMouseClick (object sender, TreeNodeMouseClickEventArgs e)
 		{
 			var node = e.Node.Tag as Node;
 			if(node != null)
+			{
 				nodeInfoPanel.SetDisplayNode(e.Node);
+				if(e.Node.Parent != null && e.Node.Parent.Tag is Node)
+					enableListNodeOptions();
+				else
+					enableNodeOptions();
+			}
+			else
+				enableListNodeOptions(false);
 		}
 
 		private void addNodeToolStripButton_Click (object sender, EventArgs e)
