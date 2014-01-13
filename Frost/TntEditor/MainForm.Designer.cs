@@ -225,6 +225,7 @@
 			this.deleteToolStripButton.Size = new System.Drawing.Size(92, 22);
 			this.deleteToolStripButton.Text = "Delete Node";
 			this.deleteToolStripButton.ToolTipText = "Deleted the selected node";
+			this.deleteToolStripButton.Click += new System.EventHandler(this.deleteButton_Click);
 			// 
 			// searchToolStripTextBox
 			// 
@@ -232,7 +233,7 @@
 			this.searchToolStripTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.searchToolStripTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
 			this.searchToolStripTextBox.Name = "searchToolStripTextBox";
-			this.searchToolStripTextBox.Size = new System.Drawing.Size(100, 23);
+			this.searchToolStripTextBox.Size = new System.Drawing.Size(100, 25);
 			this.searchToolStripTextBox.Text = "Search";
 			this.searchToolStripTextBox.Leave += new System.EventHandler(this.searchToolStripTextBox_Leave);
 			this.searchToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchToolStripTextBox_KeyDown);
@@ -292,7 +293,6 @@
             this.pasteToolStripMenuItem,
             this.deleteToolStripMenuItem});
 			this.nodeContextMenuStrip.Name = "nodeContextMenuStrip";
-			this.nodeContextMenuStrip.OwnerItem = this.editToolStripMenuItem;
 			this.nodeContextMenuStrip.Size = new System.Drawing.Size(211, 180);
 			// 
 			// addToolStripMenuItem
@@ -359,6 +359,7 @@
 			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
 			this.deleteToolStripMenuItem.Text = "Dele&te Node";
 			this.deleteToolStripMenuItem.ToolTipText = "Deleted the selected node";
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteButton_Click);
 			// 
 			// editToolStripMenuItem
 			// 

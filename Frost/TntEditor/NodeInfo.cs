@@ -53,7 +53,7 @@ namespace Frost.TntEditor
 		/// </summary>
 		private void updatePath (TreeNode treeNode)
 		{
-			nameText.Text = (treeNode.Parent == null) ? String.Empty : getNodeName(treeNode.Parent.Tag as Node, treeNode.Tag as Node);
+			nameText.Text = (treeNode.Parent == null) ? String.Empty : GetNodeName(treeNode.Parent.Tag as Node, treeNode.Tag as Node);
 			pathText.Text = getNodePath(treeNode);
 		}
 
@@ -63,7 +63,7 @@ namespace Frost.TntEditor
 		/// <param name="parent">Parent node (if any)</param>
 		/// <param name="node">Node to look for</param>
 		/// <returns>The node's name or index, or null if it doesn't have either</returns>
-		private static string getNodeName (Node parent, Node node)
+		public static string GetNodeName (Node parent, Node node)
 		{
 			if(parent != null)
 			{
@@ -97,7 +97,7 @@ namespace Frost.TntEditor
 			if(node != null && treeNode.Parent != null)
 			{
 				var parent = treeNode.Parent;
-				var name   = getNodeName(parent.Tag as Node, node);
+				var name   = GetNodeName(parent.Tag as Node, node);
 				var path   = getNodePath(parent);
 				return (path == null) ? name : String.Join("/", path, name);
 			}

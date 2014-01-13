@@ -108,6 +108,30 @@ namespace Frost.TntEditor
 			treeView.Nodes.Add(treeRoot);
 		}
 
+		/// <summary>
+		/// Refreshes the numerical indices on the nodes.
+		/// This should be called after adding or deleting a node in a list node
+		/// </summary>
+		/// <param name="treeNode">Node that refers to the list node</param>
+		private void refreshListNumbers (TreeNode treeNode)
+		{
+			var list = treeNode.Tag as ListNode;
+			if(list != null)
+			{
+				var value   = list.StringValue;
+				var parent  = treeNode.Parent;
+				string name = null;
+				if(parent != null)
+					name = NodeInfo.GetNodeName(parent.Tag as Node, list);
+				var text = (name == null) ? value : String.Format("{0}: {1}", name, value);
+				treeNode.Text = text;
+
+				var i = 0;
+				foreach(TreeNode child in treeNode.Nodes)
+					child.Text = String.Format("[{0}]: {1}", i++, ((Node)child.Tag).StringValue);
+			}
+		}
+
 		#region Search
 
 		/// <summary>
@@ -266,6 +290,7 @@ namespace Frost.TntEditor
 		}
 		#endregion
 
+		#region Event listeners
 		private void treeView_NodeMouseClick (object sender, TreeNodeMouseClickEventArgs e)
 		{
 			var node = e.Node.Tag as Node;
@@ -322,5 +347,41 @@ namespace Frost.TntEditor
 				searchToolStripButton_Click(sender, e);
 			}
 		}
+
+		private void deleteButton_Click (object sender, EventArgs e)
+		{
+			var treeNode = treeView.SelectedNode;
+			if(treeNode != null)
+			{
+				var node = treeNode.Tag as Node;
+				if(node != null)
+				{
+					var parent = treeNode.Parent;
+					if(parent != null)
+					{
+						var parentNode = parent.Tag as Node;
+						if(parentNode != null)
+						{
+							switch(parentNode.Type)
+							{
+							case NodeType.List:
+								((ListNode)parentNode).Remove(node);
+								break;
+							case NodeType.Complex:
+								((ComplexNode)parentNode).Remove(node);
+								break;
+							default:
+								throw new ApplicationException("Unexpected parent node type");
+							}
+							treeNode.Remove();
+							if(parentNode.Type == NodeType.List)
+								refreshListNumbers(parent);
+							nodeInfoPanel.SetDisplayNode(treeView.SelectedNode);
+						}
+					}
+				}
+			}
+		}
+		#endregion
 	}
 }
