@@ -108,6 +108,8 @@ namespace Frost.TntEditor
 			treeView.Nodes.Add(treeRoot);
 		}
 
+		#region Search
+
 		/// <summary>
 		/// Finds the next node that matches some text
 		/// </summary>
@@ -119,6 +121,12 @@ namespace Frost.TntEditor
 			return searchBranch(start, text);
 		}
 
+		/// <summary>
+		/// Searches a branch for text
+		/// </summary>
+		/// <param name="treeNode">Starting point of the branch</param>
+		/// <param name="text">Text to look for</param>
+		/// <returns>A node that contains the text or null if the text wasn't found</returns>
 		private static TreeNode searchBranch (TreeNode treeNode, string text)
 		{
 			TreeNode result;
@@ -135,6 +143,12 @@ namespace Frost.TntEditor
 			return null;
 		}
 
+		/// <summary>
+		/// Checks if the current node matches the text
+		/// </summary>
+		/// <param name="treeNode">Node to check</param>
+		/// <param name="text">Text to look for</param>
+		/// <returns>The matching node or null if the text wasn't found</returns>
 		private static TreeNode nodeMatches (TreeNode treeNode, string text)
 		{
 			var node = treeNode.Tag as Node;
@@ -161,6 +175,7 @@ namespace Frost.TntEditor
 			}
 			return null;
 		}
+		#endregion
 
 		#region Tree view construction
 
