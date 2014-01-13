@@ -118,20 +118,26 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="node-insert-child" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\node-insert-child.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="node-select-next" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\node-select-next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="document-node" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\document-node.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="folder-horizontal-open" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\folder-horizontal-open.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="node-select-previous" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\node-select-previous.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="node-design" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\node-design.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="node-select" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\node-select.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="blue-document" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\blue-document.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="node-delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\node-delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="disk-black" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\disk-black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -139,10 +145,16 @@
   <data name="node-delete-next" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\node-delete-next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="node-select-previous" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\node-select-previous.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="node-insert-previous" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\node-insert-previous.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="document-node" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\document-node.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="node-design" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\node-design.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="node-insert-next" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\node-insert-next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

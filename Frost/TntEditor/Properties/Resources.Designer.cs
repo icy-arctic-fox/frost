@@ -88,6 +88,13 @@ namespace Frost.TntEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap node_delete {
+            get {
+                object obj = ResourceManager.GetObject("node-delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap node_delete_next {
             get {
                 object obj = ResourceManager.GetObject("node-delete-next", resourceCulture);
@@ -102,9 +109,30 @@ namespace Frost.TntEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap node_insert_child {
+            get {
+                object obj = ResourceManager.GetObject("node-insert-child", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap node_insert_next {
+            get {
+                object obj = ResourceManager.GetObject("node-insert-next", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap node_insert_previous {
             get {
                 object obj = ResourceManager.GetObject("node-insert-previous", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap node_select {
+            get {
+                object obj = ResourceManager.GetObject("node-select", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
