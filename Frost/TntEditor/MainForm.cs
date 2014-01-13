@@ -435,6 +435,17 @@ namespace Frost.TntEditor
 							treeNode.Remove();
 							if(parentNode.Type == NodeType.List)
 								refreshListNumbers(parent);
+							else if(parentNode.Type == NodeType.Complex)
+							{
+								var grandparent = parent.Parent.Tag as Node;
+								if(grandparent != null)
+								{
+									var name  = NodeInfo.GetNodeName(grandparent, parentNode);
+									var value = parentNode.StringValue;
+									var text  = (name == null) ? value : String.Format(grandparent.Type == NodeType.Complex ? "{0}: {1}" : "[{0}]: {1}", name, value);
+									parent.Text = text;
+								}
+							}
 							nodeInfoPanel.SetDisplayNode(treeView.SelectedNode);
 						}
 					}
