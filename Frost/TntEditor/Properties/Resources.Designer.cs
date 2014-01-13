@@ -74,6 +74,13 @@ namespace Frost.TntEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap document_node {
+            get {
+                object obj = ResourceManager.GetObject("document-node", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap folder_horizontal_open {
             get {
                 object obj = ResourceManager.GetObject("folder-horizontal-open", resourceCulture);

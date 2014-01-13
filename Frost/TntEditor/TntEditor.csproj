@@ -102,6 +102,7 @@
     <None Include="Images\node-select-next.png" />
     <None Include="Images\node-insert-previous.png" />
     <None Include="Images\node-design.png" />
+    <None Include="Images\document-node.png" />
     <Content Include="Images\type0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

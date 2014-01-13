@@ -11,9 +11,25 @@ namespace Frost.TntEditor
 		public MainForm ()
 		{
 			InitializeComponent();
+			constructNewNodeMenu();
 
 			treeView.ImageList = _nodeTypeImageList;
 			displaySampleContainer();
+		}
+		
+		private void constructNewNodeMenu ()
+		{
+			newNodeContextMenuStrip.ImageList = _nodeTypeImageList;
+			for(var type = NodeType.Boolean; type <= NodeType.Complex; ++type)
+			{
+				var index  = (int)type;
+				var button = new ToolStripButton {
+					Tag        = type,
+					Text       = type.ToString(),
+					ImageIndex = index
+				};
+				newNodeContextMenuStrip.Items.Add(button);
+			}
 		}
 
 		private void displaySampleContainer ()
@@ -186,6 +202,11 @@ namespace Frost.TntEditor
 			var node = e.Node.Tag as Node;
 			if(node != null)
 				nodeInfoPanel.SetDisplayNode(e.Node);
+		}
+
+		private void addNodeToolStripButton_Click (object sender, EventArgs e)
+		{
+			((ToolStripSplitButton)sender).ShowDropDown();
 		}
 	}
 }
