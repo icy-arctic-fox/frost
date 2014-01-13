@@ -108,6 +108,60 @@ namespace Frost.TntEditor
 			treeView.Nodes.Add(treeRoot);
 		}
 
+		/// <summary>
+		/// Finds the next node that matches some text
+		/// </summary>
+		/// <param name="text">Text to look for</param>
+		/// <returns>A tree node of the found node, or null if nothing was found</returns>
+		private TreeNode findNextNode (string text)
+		{
+			var start = treeView.SelectedNode ?? treeView.Nodes[0];
+			return searchBranch(start, text);
+		}
+
+		private static TreeNode searchBranch (TreeNode treeNode, string text)
+		{
+			TreeNode result;
+			var curNode = treeNode;
+			while(curNode != null)
+			{
+				if((result = nodeMatches(curNode, text)) != null)
+					return result;
+				curNode = curNode.NextNode;
+			}
+			foreach(TreeNode child in treeNode.Nodes)
+				if((result = searchBranch(child, text)) != null)
+					return result;
+			return null;
+		}
+
+		private static TreeNode nodeMatches (TreeNode treeNode, string text)
+		{
+			var node = treeNode.Tag as Node;
+			if(node != null)
+			{
+				switch(node.Type)
+				{
+				case NodeType.Complex:
+					var complex = (ComplexNode)node;
+					foreach(var entry in complex)
+					{
+						var name = entry.Key;
+						if(name.Contains(text))
+							foreach(TreeNode child in treeNode.Nodes)
+								if(child.Tag == entry.Value)
+									return child;
+					}
+					break;
+				default:
+					if(node.StringValue.Contains(text))
+						return treeNode;
+					break;
+				}
+			}
+			return null;
+		}
+
 		#region Tree view construction
 
 		/// <summary>
@@ -226,6 +280,31 @@ namespace Frost.TntEditor
 			{// Display search text
 				textBox.ForeColor = SystemColors.GrayText;
 				textBox.Text      = "Search";
+			}
+		}
+
+		private void searchToolStripButton_Click(object sender, EventArgs e)
+		{
+			if(searchToolStripTextBox.ForeColor != SystemColors.GrayText)
+			{
+				var text  = searchToolStripTextBox.Text;
+				var found = findNextNode(text);
+				if(found != null)
+				{
+					treeView.SelectedNode = found;
+					nodeInfoPanel.SetDisplayNode(found);
+				}
+				else
+					System.Media.SystemSounds.Beep.Play();
+			}
+		}
+
+		private void searchToolStripTextBox_KeyDown (object sender, KeyEventArgs e)
+		{
+			if(e.KeyCode == Keys.Enter)
+			{
+				e.SuppressKeyPress = true;
+				searchToolStripButton_Click(sender, e);
 			}
 		}
 	}
