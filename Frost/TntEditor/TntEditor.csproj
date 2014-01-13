@@ -37,6 +37,9 @@
     <ApplicationIcon>tag-label.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zlib">
+      <HintPath>..\FrostSerialization\Ionic.Zlib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -105,7 +108,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Custom-Icon-Design-Pretty-Office-5-Content-tree.ico" />
     <Content Include="tag-label.ico" />
     <None Include="Images\node-delete-next.png" />
     <None Include="Images\node-select-previous.png" />

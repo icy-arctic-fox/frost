@@ -140,6 +140,8 @@ namespace Frost.IO.Tnt
 		/// <returns>A constructed node container</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null.
 		/// The reader used to pull data from the stream can't be null.</exception>
+		/// <exception cref="FormatException">Thrown if the data read from the stream uses an unrecognized version</exception>
+		/// <exception cref="InvalidDataException">Thrown if the data read from the stream is in an unrecognized format</exception>
 		public static NodeContainer ReadFromStream (BinaryReader br)
 		{
 			if(br == null)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using Frost.IO.Tnt;
 
@@ -8,7 +9,11 @@ namespace Frost.TntEditor
 {
 	public partial class MainForm : Form
 	{
+		private const string DefaultTitle = "TNT Editor";
+
 		private NodeContainer _activeContainer;
+		private string _activeFilepath;
+		private bool _activeContainerCompressed;
 
 		public MainForm ()
 		{
@@ -310,6 +315,32 @@ namespace Frost.TntEditor
 			pasteToolStripMenuItem.Enabled = flag;
 		}
 
+		private void saveActiveContainer (string filepath, bool compress)
+		{
+			using(var fs = new FileStream(filepath, FileMode.Create))
+			{
+				if(compress)
+					using(var ds = new Ionic.Zlib.DeflateStream(fs, Ionic.Zlib.CompressionMode.Compress))
+						_activeContainer.WriteToStream(ds);
+				else
+					_activeContainer.WriteToStream(fs);
+			}
+			_activeContainerCompressed = compress;
+		}
+
+		private void loadContainer (string filepath, bool compress)
+		{
+			using(var fs = new FileStream(filepath, FileMode.Open))
+			{
+				if(compress)
+					using(var ds = new Ionic.Zlib.DeflateStream(fs, Ionic.Zlib.CompressionMode.Decompress))
+						_activeContainer = NodeContainer.ReadFromStream(ds);
+				else
+					_activeContainer = NodeContainer.ReadFromStream(fs);
+			}
+			_activeContainerCompressed = compress;
+		}
+
 		#region Event listeners
 		private void treeView_NodeMouseClick (object sender, TreeNodeMouseClickEventArgs e)
 		{
@@ -419,8 +450,57 @@ namespace Frost.TntEditor
 					var type = newDialog.RootNodeType;
 					var root = Node.CreateDefaultNode(type);
 					_activeContainer = new NodeContainer(root);
+					Text = DefaultTitle;
 					DisplayContainer(_activeContainer);
 				}
+		}
+
+		private void openToolStripMenuItem_Click (object sender, EventArgs args)
+		{
+			if(openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				var filename   = openFileDialog.SafeFileName;
+				var filepath   = openFileDialog.FileName;
+				var compressed = openFileDialog.FilterIndex == 2;
+
+				try
+				{
+					loadContainer(filepath, compressed);
+					Text = String.Join(" - ", DefaultTitle, filename);
+					DisplayContainer(_activeContainer);
+				}
+				catch(Exception e)
+				{
+					MessageBox.Show("Failed to load TNT file:" + Environment.NewLine + e.Message, "Load failed", MessageBoxButtons.OK,
+									MessageBoxIcon.Error);
+				}
+			}
+		}
+
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (null == _activeFilepath)
+				saveAstoolStripMenuItem_Click(sender, e);
+			else
+				saveActiveContainer(_activeFilepath, _activeContainerCompressed);
+		}
+
+		private void saveAstoolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if(saveFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				var filepath   = saveFileDialog.FileName;
+				var filename   = Path.GetFileName(filepath);
+				var compressed = saveFileDialog.FilterIndex == 2;
+
+				Text = String.Join(" - ", DefaultTitle, filename);
+				saveActiveContainer(filepath, compressed);
+			}
+		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Close();
 		}
 		#endregion
 	}

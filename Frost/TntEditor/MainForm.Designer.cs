@@ -98,6 +98,7 @@
 			this.saveAstoolStripMenuItem.Name = "saveAstoolStripMenuItem";
 			this.saveAstoolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.saveAstoolStripMenuItem.Text = "Save &As...";
+			this.saveAstoolStripMenuItem.Click += new System.EventHandler(this.saveAstoolStripMenuItem_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
@@ -105,6 +106,7 @@
 			this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
 			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.exitToolStripMenuItem.Text = "E&xit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
 			// editToolStripMenuItem
 			// 
@@ -130,7 +132,7 @@
 			// newNodeContextMenuStrip
 			// 
 			this.newNodeContextMenuStrip.Name = "newNodeContextMenuStrip";
-			this.newNodeContextMenuStrip.OwnerItem = this.addToolStripMenuItem;
+			this.newNodeContextMenuStrip.OwnerItem = this.addNodeToolStripButton;
 			this.newNodeContextMenuStrip.ShowImageMargin = false;
 			this.newNodeContextMenuStrip.Size = new System.Drawing.Size(36, 4);
 			// 
@@ -195,7 +197,15 @@
 			// 
 			// openFileDialog
 			// 
-			this.openFileDialog.FileName = "openFileDialog1";
+			this.openFileDialog.DefaultExt = "tnt";
+			this.openFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
+			this.openFileDialog.Title = "Load File";
+			// 
+			// saveFileDialog
+			// 
+			this.saveFileDialog.DefaultExt = "tnt";
+			this.saveFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
+			this.saveFileDialog.Title = "Save File";
 			// 
 			// addNodeToolStripButton
 			// 
@@ -288,6 +298,7 @@
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
 			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.openToolStripMenuItem.Text = "&Open";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
@@ -296,6 +307,7 @@
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
 			this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.saveToolStripMenuItem.Text = "&Save";
+			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// addToolStripMenuItem
 			// 
