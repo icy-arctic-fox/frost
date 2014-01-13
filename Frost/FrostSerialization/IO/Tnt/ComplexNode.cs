@@ -225,9 +225,28 @@ namespace Frost.IO.Tnt
 			if(name == null)
 				throw new ArgumentException("The name of the node can't be null.", "item");
 			if(node == null)
-				throw new ArgumentNullException("item", "The node to add can't be null.");
+				throw new ArgumentNullException("item", "The node to remove can't be null.");
 			if(_nodes.ContainsKey(name) && node == _nodes[name])
 				return _nodes.Remove(name);
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to find and remove a node from the collection
+		/// </summary>
+		/// <returns>True if <paramref name="item"/> was successfully removed from the collection; otherwise, false.
+		/// This method also returns false if <paramref name="item"/> is not found in the original collection.</returns>
+		/// <param name="item">The node to remove from the collection</param>
+		public bool Remove (Node item)
+		{
+			if(item == null)
+				throw new ArgumentNullException("item", "The node to remove can't be null.");
+			var name = (from entry in _nodes where entry.Value == item select entry.Key).FirstOrDefault();
+			if(name != null)
+			{// Found the node
+				_nodes.Remove(name);
+				return true;
+			}
 			return false;
 		}
 
