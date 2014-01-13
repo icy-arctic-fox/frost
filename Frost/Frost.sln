@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost", "Frost\Frost.csproj", "{87399C66-DB86-4BC6-92EA-BF8D1D9DADE7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD} = {B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}
@@ -53,11 +53,13 @@ Global
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}.Release|x86.ActiveCfg = Release|Any CPU
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Debug|Any CPU.Build.0 = Debug|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Debug|x86.ActiveCfg = Debug|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Debug|x86.Build.0 = Debug|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Release|Any CPU.ActiveCfg = Release|x86
+		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Release|Any CPU.Build.0 = Release|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Release|Mixed Platforms.Build.0 = Release|x86
 		{C383E12C-5A23-4531-964E-AD4D200B61E3}.Release|x86.ActiveCfg = Release|x86
