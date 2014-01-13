@@ -29,13 +29,12 @@ namespace Frost.TntEditor
 			newNodeContextMenuStrip.ImageList = _nodeTypeImageList;
 			for(var type = NodeType.Boolean; type <= NodeType.Complex; ++type)
 			{
-				var index  = (int)type;
-				var button = new ToolStripButton {
-					Tag        = type,
-					Text       = type.ToString(),
-					ImageIndex = index
-				};
-				newNodeContextMenuStrip.Items.Add(button);
+				var index = (int)type;
+				var item  = new ToolStripButton();
+				item.Tag        = type;
+				item.Text       = type.ToString();
+				item.ImageIndex = index;
+				newNodeContextMenuStrip.Items.Add(item);
 			}
 		}
 
@@ -49,13 +48,13 @@ namespace Frost.TntEditor
 		private static NodeContainer constructSampleContainer ()
 		{
 			var root = new ListNode(NodeType.Complex);
-			for (var i = 0; i < 20; ++i)
+			for(var i = 0; i < 20; ++i)
 			{
 				var complex = new ComplexNode {
-					{"foo "    + i, new IntNode(5 * i)},
-					{"bar "    + i, new BlobNode(new byte[i])},
-					{"sushi "  + i, new ColorNode(5 * i)},
-					{"wasabi " + i, new XyNode(2 * i, 7 * i)}
+					{"foo",    new IntNode(5 * i)},
+					{"bar",    new BlobNode(new byte[i])},
+					{"sushi",  new ColorNode(5 * i)},
+					{"wasabi", new XyNode(2 * i, 7 * i)}
 				};
 				var list = new ListNode(NodeType.Guid) {
 					new GuidNode(Guid.NewGuid()),
@@ -65,6 +64,10 @@ namespace Frost.TntEditor
 				complex.Add("IDs", list);
 				root.Add(complex);
 			}
+			var all = new ComplexNode();
+			for(var type = NodeType.Boolean; type <= NodeType.Complex; ++type)
+				all.Add(type.ToString(), Node.CreateDefaultNode(type));
+			root.Add(all);
 			return new NodeContainer(root);
 		}
 
@@ -352,14 +355,37 @@ namespace Frost.TntEditor
 					enableListNodeOptions();
 				else
 					enableNodeOptions();
+				switch(node.Type)
+				{
+				case NodeType.List:
+					var list = (ListNode)node;
+					var elementType = list.ElementType;
+					addNodeToolStripButton.Image = _nodeTypeImageList.Images[(int)elementType];
+					addNodeListToolStripButton.Visible = false;
+					addNodeToolStripButton.Enabled = true;
+					addNodeToolStripButton.Visible = true;
+					break;
+				case NodeType.Complex:
+					addNodeListToolStripButton.Enabled = true;
+					addNodeListToolStripButton.Visible = true;
+					addNodeToolStripButton.Visible = false;
+					break;
+				default:
+					addNodeToolStripButton.Image = addNodeListToolStripButton.Image;
+					addNodeListToolStripButton.Visible = false;
+					addNodeToolStripButton.Enabled = false;
+					addNodeToolStripButton.Visible = true;
+					break;
+				}
 			}
 			else
+			{
 				enableListNodeOptions(false);
-		}
-
-		private void addNodeToolStripButton_Click (object sender, EventArgs e)
-		{
-			((ToolStripSplitButton)sender).ShowDropDown();
+				addNodeToolStripButton.Image = addNodeListToolStripButton.Image;
+				addNodeListToolStripButton.Visible = false;
+				addNodeToolStripButton.Enabled = false;
+				addNodeToolStripButton.Visible = true;
+			}
 		}
 
 		private void searchToolStripTextBox_Click (object sender, EventArgs e)
