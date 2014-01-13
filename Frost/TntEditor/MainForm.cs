@@ -345,7 +345,7 @@ namespace Frost.TntEditor
 		}
 
 		#region Event listeners
-		private void treeView_NodeMouseClick (object sender, TreeNodeMouseClickEventArgs e)
+		private void treeView_AfterSelect (object sender, TreeViewEventArgs e)
 		{
 			var node = e.Node.Tag as Node;
 			if(node != null)
