@@ -173,6 +173,68 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer used to put data on the stream</param>
 		internal abstract void WritePayload (BinaryWriter bw);
 		#endregion
+		
+		/// <summary>
+		/// Creates a default node for a type
+		/// </summary>
+		/// <param name="type">Type of node to create</param>
+		/// <returns>A new node</returns>
+		/// <exception cref="NotSupportedException">Thrown if <paramref name="type"/> refers to an unknown node type</exception>
+		/// <remarks>If <paramref name="type"/> is <see cref="NodeType.List"/>, then its element type will be <see cref="NodeType.Complex"/>.</remarks>
+		public static Node CreateDefaultNode (NodeType type)
+		{
+			switch(type)
+			{
+			case NodeType.Boolean:
+				return new BooleanNode(default(bool));
+			case NodeType.Byte:
+				return new ByteNode(default(byte));
+			case NodeType.SByte:
+				return new SByteNode(default(sbyte));
+			case NodeType.Short:
+				return new ShortNode(default(short));
+			case NodeType.UShort:
+				return new UShortNode(default(ushort));
+			case NodeType.Int:
+				return new IntNode(default(int));
+			case NodeType.UInt:
+				return new UIntNode(default(uint));
+			case NodeType.Long:
+				return new LongNode(default(long));
+			case NodeType.ULong:
+				return new ULongNode(default(ulong));
+			case NodeType.Float:
+				return new FloatNode(default(float));
+			case NodeType.Double:
+				return new DoubleNode(default(double));
+			case NodeType.String:
+				return new StringNode(String.Empty);
+			case NodeType.Guid:
+				return new GuidNode(Guid.Empty);
+			case NodeType.DateTime:
+				return new DateTimeNode(DateTime.Now);
+			case NodeType.TimeSpan:
+				return new TimeSpanNode(TimeSpan.Zero);
+			case NodeType.Blob:
+				return new BlobNode(new byte[0]);
+			case NodeType.Xy:
+				return new XyNode(default(int), default(int));
+			case NodeType.Xyz:
+				return new XyzNode(default(int), default(int), default(int));
+			case NodeType.Coordinate2D:
+				return new Coordinate2DNode(default(float), default(float));
+			case NodeType.Coordinate3D:
+				return new Coordinate3DNode(default(float), default(float), default(float));
+			case NodeType.Color:
+				return new ColorNode(default(int));
+			case NodeType.List:
+				return new ListNode(NodeType.Complex);
+			case NodeType.Complex:
+				return new ComplexNode();
+			default:
+				throw new NotSupportedException("Unknown node type");
+			}
+		}
 
 		/// <summary>
 		/// Generates a string representation of the node

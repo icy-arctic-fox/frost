@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Custom-Icon-Design-Pretty-Office-5-Content-tree.ico</ApplicationIcon>
+    <ApplicationIcon>tag-label.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -55,6 +55,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewDialog.Designer.cs">
+      <DependentUpon>NewDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -65,6 +71,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewDialog.resx">
+      <DependentUpon>NewDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeInfo.resx">
       <DependentUpon>NodeInfo.cs</DependentUpon>
@@ -97,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Custom-Icon-Design-Pretty-Office-5-Content-tree.ico" />
+    <Content Include="tag-label.ico" />
     <None Include="Images\node-delete-next.png" />
     <None Include="Images\node-select-previous.png" />
     <None Include="Images\node-select-next.png" />

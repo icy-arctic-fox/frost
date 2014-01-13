@@ -8,6 +8,8 @@ namespace Frost.TntEditor
 {
 	public partial class MainForm : Form
 	{
+		private NodeContainer _activeContainer;
+
 		public MainForm ()
 		{
 			InitializeComponent();
@@ -35,6 +37,7 @@ namespace Frost.TntEditor
 		private void displaySampleContainer ()
 		{
 			var container = constructSampleContainer();
+			_activeContainer = container;
 			DisplayContainer(container);
 		}
 
@@ -106,6 +109,8 @@ namespace Frost.TntEditor
 			var treeRoot = constructTreeNode(container);
 			treeView.Nodes.Clear();
 			treeView.Nodes.Add(treeRoot);
+			treeView.SelectedNode = treeRoot.Nodes[0]; // Root node
+			nodeInfoPanel.SetDisplayNode(treeView.SelectedNode);
 		}
 
 		/// <summary>
@@ -404,6 +409,18 @@ namespace Frost.TntEditor
 					}
 				}
 			}
+		}
+
+		private void newToolStripMenuItem_Click (object sender, EventArgs e)
+		{
+			using(var newDialog = new NewDialog())
+				if(newDialog.ShowDialog() == DialogResult.OK)
+				{
+					var type = newDialog.RootNodeType;
+					var root = Node.CreateDefaultNode(type);
+					_activeContainer = new NodeContainer(root);
+					DisplayContainer(_activeContainer);
+				}
 		}
 		#endregion
 	}
