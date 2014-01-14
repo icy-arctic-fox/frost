@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Frost.IO.Tnt;
 
 namespace Frost.TntEditor
@@ -26,6 +27,14 @@ namespace Frost.TntEditor
 		public NodeInfo Parent
 		{
 			get { return _parent; }
+		}
+
+		/// <summary>
+		/// Parent's node (will be null if there's no parent)
+		/// </summary>
+		public Node ParentNode
+		{
+			get { return (_parent == null) ? null : _parent.Node; }
 		}
 
 		/// <summary>
@@ -79,7 +88,29 @@ namespace Frost.TntEditor
 		/// <returns>The node's name or null if it doesn't have one</returns>
 		private string getNodeName ()
 		{
-			throw new NotImplementedException();
+			if(HasParent)
+			{
+				var parentNode = ParentNode;
+				switch(parentNode.Type)
+				{
+				case NodeType.List: // Looking for an index
+					var listNode = (ListNode)parentNode;
+					var index    = listNode.IndexOf(_node);
+					if(index >= 0) // Found it
+						return index.ToString(CultureInfo.InvariantCulture);
+					break;
+
+				case NodeType.Complex: // Looking for a node in Values that equals ours
+					var complexNode = (ComplexNode)parentNode;
+					foreach(var entry in complexNode)
+						if(entry.Value == _node)
+							return entry.Key; // Found our node
+					break;
+				default:
+					throw new InvalidCastException("Unexpected parent node type");
+				}
+			}
+			return null;
 		}
 
 		/// <summary>
@@ -88,7 +119,14 @@ namespace Frost.TntEditor
 		/// <returns>The node's path or null if the node is the root node</returns>
 		private string getNodePath ()
 		{
-			throw new NotImplementedException();
+			if(IsRootNode)
+				return null;
+			var parentPath = _parent.getNodePath();
+			var name = getNodeName();
+			if(name == null)
+				return null;
+			var path = (parentPath == null) ? name : String.Join("/", parentPath, name);
+			return path;
 		}
 	}
 }
