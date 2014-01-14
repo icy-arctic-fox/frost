@@ -150,6 +150,36 @@ namespace Frost.TntEditor
 		}
 
 		/// <summary>
+		/// Checks if a node can be added to a list based on the selection
+		/// </summary>
+		/// <remarks>A new node can be added to a list if the selected node is a list,
+		/// or if the selected node's parent is a list node.</remarks>
+		public bool CanAddToListNode
+		{
+			get
+			{
+				var info = SelectedNode;
+				if(info != null)
+				{
+					if(info.Node.Type == NodeType.List)
+						return true;
+					var parentNode = info.ParentNode;
+					if(parentNode != null)
+						return parentNode.Type == NodeType.List;
+				}
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Type of nodes accepted by the currently selected list
+		/// </summary>
+		public NodeType SelectedListElementType
+		{
+			get { return CanAddToListNode ? ((ListNode)SelectedNode.ParentNode).ElementType : NodeType.End; }
+		}
+
+		/// <summary>
 		/// Checks if the currently selected node can be moved up
 		/// </summary>
 		/// <remarks>A node can be moved up if it's in a list and not already at the top of the list.</remarks>
@@ -157,17 +187,13 @@ namespace Frost.TntEditor
 		{
 			get
 			{
-				var selected = treeView.SelectedNode;
-				if(selected != null)
+				var info = SelectedNode;
+				if(info != null)
 				{
-					var info = selected.Tag as NodeInfo;
-					if(info != null)
-					{
-						var node = info.Node;
-						var parentNode = info.ParentNode;
-						if(parentNode != null && parentNode.Type == NodeType.List)
-							return ((ListNode)parentNode).IndexOf(node) > 0;
-					}
+					var node = info.Node;
+					var parentNode = info.ParentNode;
+					if(parentNode != null && parentNode.Type == NodeType.List)
+						return ((ListNode)parentNode).IndexOf(node) > 0;
 				}
 				return false;
 			}
@@ -181,19 +207,15 @@ namespace Frost.TntEditor
 		{
 			get
 			{
-				var selected = treeView.SelectedNode;
-				if(selected != null)
+				var info = SelectedNode;
+				if(info != null)
 				{
-					var info = selected.Tag as NodeInfo;
-					if(info != null)
+					var node = info.Node;
+					var parentNode = info.ParentNode;
+					if(parentNode != null && parentNode.Type == NodeType.List)
 					{
-						var node = info.Node;
-						var parentNode = info.ParentNode;
-						if(parentNode != null && parentNode.Type == NodeType.List)
-						{
-							var listNode = (ListNode)parentNode;
-							return listNode.IndexOf(node) < listNode.Count - 1;
-						}
+						var listNode = (ListNode)parentNode;
+						return listNode.IndexOf(node) < listNode.Count - 1;
 					}
 				}
 				return false;
@@ -220,6 +242,36 @@ namespace Frost.TntEditor
 		}
 
 		#region Tree manipulation
+
+		/// <summary>
+		/// Adds a new node under the currently selected list
+		/// </summary>
+		/// <param name="node">Node to add to the list</param>
+		public void AddToListNode (Node node)
+		{
+			if(node.Type == SelectedListElementType)
+			{
+				var treeNode     = treeView.SelectedNode;
+				var info         = (NodeInfo)treeNode.Tag;
+				var selectedNode = info.Node;
+				ListNode listNode;
+
+				if(selectedNode.Type == NodeType.List)
+					listNode = (ListNode)selectedNode; // The selected node is the list
+				else
+				{// The parent node is the list
+					treeNode = treeNode.Parent;
+					info     = (NodeInfo)treeNode.Tag;
+					listNode = (ListNode)info.Node;
+				}
+
+				var count = listNode.Count;
+				var name  = String.Format("[{0}]", count);
+				listNode.Add(node); // Add to the structure
+				var newTreeNode = constructTreeNode(node, info, name);
+				treeNode.Nodes.Add(newTreeNode); // ...and to the tree view
+			}
+		}
 
 		/// <summary>
 		/// Moves the currently selected node up one slot
