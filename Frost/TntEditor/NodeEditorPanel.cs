@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Frost.IO.Tnt;
 
@@ -130,6 +125,47 @@ namespace Frost.TntEditor
 				var childNode = entry.Value;
 				var childTreeNode = constructTreeNode(childNode, info, name);
 				treeNode.Nodes.Add(childTreeNode);
+			}
+		}
+
+		private static void refreshTreeNode (TreeNode treeNode)
+		{
+			var info = treeNode.Tag as NodeInfo;
+			if(info != null)
+			{// Regular node
+				var node   = info.Node;
+				string name = null;
+
+				var parentNode = info.ParentNode;
+				if(parentNode != null)
+				{
+					switch(parentNode.Type)
+					{
+					case NodeType.List:
+						name = String.Format("[{0}]", info.Name);
+						break;
+					case NodeType.Complex:
+						name = info.Name;
+						break;
+					default:
+						throw new InvalidCastException("Unexpected parent node type");
+					}
+				}
+
+				var value = node.StringValue;
+				var text  = (name == null) ? value : String.Format("{0}: {1}", name, value);
+
+				treeNode.Text       = text;
+				treeNode.ImageIndex = (int)node.Type;
+			}
+			else
+			{// Node container
+				var container   = (NodeContainer)treeNode.Tag;
+				var text        = String.Format("Node container (version {0})", container.Version);
+				const int index = (int)NodeType.End;
+
+				treeNode.Text       = text;
+				treeNode.ImageIndex = index;
 			}
 		}
 		#endregion
@@ -270,6 +306,8 @@ namespace Frost.TntEditor
 				listNode.Add(node); // Add to the structure
 				var newTreeNode = constructTreeNode(node, info, name);
 				treeNode.Nodes.Add(newTreeNode); // ...and to the tree view
+
+				refreshTreeNode(treeNode);
 			}
 		}
 
@@ -296,6 +334,10 @@ namespace Frost.TntEditor
 				index = selected.Index;
 				parent.Nodes.RemoveAt(index);
 				parent.Nodes.Insert(index - 1, selected);
+				
+				// Refresh the nodes
+				for(var i = index - 1; i < listNode.Count; ++i)
+					refreshTreeNode(parent.Nodes[i]);
 			}
 		}
 
@@ -322,6 +364,10 @@ namespace Frost.TntEditor
 				index = selected.Index;
 				parent.Nodes.RemoveAt(index);
 				parent.Nodes.Insert(index + 1, selected);
+
+				// Refresh the nodes
+				for(var i = index; i < listNode.Count; ++i)
+					refreshTreeNode(parent.Nodes[i]);
 			}
 		}
 
@@ -350,7 +396,16 @@ namespace Frost.TntEditor
 				}
 
 				// Remove the visual node
+				var index = treeView.SelectedNode.Index;
 				treeView.SelectedNode.Remove();
+
+				// Refresh the nodes
+				if(parentNode.Type == NodeType.List)
+				{
+					var parent = treeView.SelectedNode.Parent;
+					for(var i = index; i < parent.Nodes.Count; ++i)
+						refreshTreeNode(parent.Nodes[i]);
+				}
 			}
 		}
 		#endregion
