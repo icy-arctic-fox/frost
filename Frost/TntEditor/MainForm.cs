@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -20,7 +19,6 @@ namespace Frost.TntEditor
 			InitializeComponent();
 			constructNewNodeMenu();
 
-			treeView.ImageList = _nodeTypeImageList;
 			displaySampleContainer();
 		}
 		
@@ -111,14 +109,7 @@ namespace Frost.TntEditor
 		/// <param name="container">Container to display</param>
 		public void DisplayContainer (NodeContainer container)
 		{
-			if(container == null)
-				throw new ArgumentNullException("container", "The node container to display can't be null.");
-
-			var treeRoot = constructTreeNode(container);
-			treeView.Nodes.Clear();
-			treeView.Nodes.Add(treeRoot);
-			treeView.SelectedNode = treeRoot.Nodes[0]; // Root node
-			nodeInfoPanel.SetDisplayNode(treeView.SelectedNode.Tag as NodeInfo);
+			nodeEditorPanel.NodeContainer = container;
 		}
 
 		/// <summary>
@@ -148,165 +139,6 @@ namespace Frost.TntEditor
 				}
 			}
 		}
-
-		#region Search
-
-		/// <summary>
-		/// Finds the next node that matches some text
-		/// </summary>
-		/// <param name="text">Text to look for</param>
-		/// <returns>A tree node of the found node, or null if nothing was found</returns>
-		private TreeNode findNextNode (string text)
-		{
-			var start = treeView.SelectedNode ?? treeView.Nodes[0];
-			return searchBranch(start, text);
-		}
-
-		/// <summary>
-		/// Searches a branch for text
-		/// </summary>
-		/// <param name="treeNode">Starting point of the branch</param>
-		/// <param name="text">Text to look for</param>
-		/// <returns>A node that contains the text or null if the text wasn't found</returns>
-		private static TreeNode searchBranch (TreeNode treeNode, string text)
-		{
-			TreeNode result;
-			var curNode = treeNode;
-			while(curNode != null)
-			{
-				if((result = nodeMatches(curNode, text)) != null)
-					return result;
-				curNode = curNode.NextNode;
-			}
-			foreach(TreeNode child in treeNode.Nodes)
-				if((result = searchBranch(child, text)) != null)
-					return result;
-			return null;
-		}
-
-		/// <summary>
-		/// Checks if the current node matches the text
-		/// </summary>
-		/// <param name="treeNode">Node to check</param>
-		/// <param name="text">Text to look for</param>
-		/// <returns>The matching node or null if the text wasn't found</returns>
-		private static TreeNode nodeMatches (TreeNode treeNode, string text)
-		{
-			var node = treeNode.Tag as Node;
-			if(node != null)
-			{
-				switch(node.Type)
-				{
-				case NodeType.Complex:
-					var complex = (ComplexNode)node;
-					foreach(var entry in complex)
-					{
-						var name = entry.Key;
-						if(name.Contains(text))
-							foreach(TreeNode child in treeNode.Nodes)
-								if(child.Tag == entry.Value)
-									return child;
-					}
-					break;
-				default:
-					if(node.StringValue.Contains(text))
-						return treeNode;
-					break;
-				}
-			}
-			return null;
-		}
-		#endregion
-
-		#region Tree view construction
-
-		/// <summary>
-		/// Creates the top-level container GUI tree node
-		/// </summary>
-		/// <param name="container">Node container to pull information from</param>
-		/// <returns>A GUI tree node</returns>
-		private TreeNode constructTreeNode (NodeContainer container)
-		{
-			if(container == null)
-				throw new ArgumentNullException("container", "The node container to construct a tree from can't be null.");
-			
-			var text     = String.Format("Node container (version {0})", container.Version);
-			var treeNode = new TreeNode(text, 0, 0) {Tag = container};
-			var rootNode = constructTreeNode(container.Root, null);
-			treeNode.Nodes.Add(rootNode);
-			return treeNode;
-		}
-
-		/// <summary>
-		/// Creates a GUI tree node from a TNT node
-		/// </summary>
-		/// <param name="node">Node to pull information from</param>
-		/// <param name="parent">Information about the parent (if the node has one)</param>
-		/// <returns>A GUI tree node</returns>
-		private TreeNode constructTreeNode (Node node, NodeInfo parent, string name = null)
-		{
-			if(node == null)
-				throw new ArgumentNullException("node", "The node to create a tree node from can't be null.");
-
-			// Construct the node itself
-			var type  = node.Type;
-			var index = (int)type;
-			var value = node.StringValue;
-			var text  = (name == null) ? value : String.Format("{0}: {1}", name, value);
-
-			var info     = new NodeInfo(node, parent);
-			var treeNode = new TreeNode(text, index, index) {
-				ContextMenuStrip = nodeContextMenuStrip,
-				ToolTipText      = type.ToString(),
-				Tag              = info
-			};
-
-			// Handle any children
-			switch(type)
-			{
-			case NodeType.List:
-				constructListTree(treeNode, (ListNode)node, info);
-				break;
-			case NodeType.Complex:
-				constructComplexTree(treeNode, (ComplexNode)node, info);
-				break;
-			}
-
-			return treeNode;
-		}
-
-		/// <summary>
-		/// Appends elements of a list node to a GUI tree node
-		/// </summary>
-		/// <param name="baseNode">Tree node to append the list items to</param>
-		/// <param name="list">TNT list node to pull information from</param>
-		private void constructListTree (TreeNode baseNode, IEnumerable<Node> list, NodeInfo info)
-		{
-			var i = 0;
-			foreach(var node in list)
-			{
-				var name     = String.Format("[{0}]", i++);
-				var treeNode = constructTreeNode(node, info, name);
-				baseNode.Nodes.Add(treeNode);
-			}
-		}
-
-		/// <summary>
-		/// Appends elements of a complex node to a GUI tree node
-		/// </summary>
-		/// <param name="baseNode">Tree node to append the list items to</param>
-		/// <param name="complex">TNT complex node to pull information from</param>
-		private void constructComplexTree (TreeNode baseNode, IEnumerable<KeyValuePair<string, Node>> complex, NodeInfo info)
-		{
-			foreach(var entry in complex)
-			{
-				var name     = entry.Key;
-				var node     = entry.Value;
-				var treeNode = constructTreeNode(node, info, name);
-				baseNode.Nodes.Add(treeNode);
-			}
-		}
-		#endregion
 
 		private void enableListNodeOptions(bool flag = true)
 		{
@@ -419,18 +251,7 @@ namespace Frost.TntEditor
 
 		private void searchToolStripButton_Click(object sender, EventArgs e)
 		{
-			if(searchToolStripTextBox.ForeColor != SystemColors.GrayText)
-			{
-				var text  = searchToolStripTextBox.Text;
-				var found = findNextNode(text);
-				if(found != null)
-				{
-					treeView.SelectedNode = found;
-					nodeInfoPanel.SetDisplayNode(found.Tag as NodeInfo);
-				}
-				else
-					System.Media.SystemSounds.Beep.Play();
-			}
+			throw new NotImplementedException();
 		}
 
 		private void searchToolStripTextBox_KeyDown (object sender, KeyEventArgs e)
@@ -444,50 +265,10 @@ namespace Frost.TntEditor
 
 		private void deleteButton_Click (object sender, EventArgs e)
 		{
-			var treeNode = treeView.SelectedNode;
-			if(treeNode != null)
-			{
-				var node = treeNode.Tag as Node;
-				if(node != null)
-				{
-					var parent = treeNode.Parent;
-					if(parent != null)
-					{
-						var parentNode = parent.Tag as Node;
-						if(parentNode != null)
-						{
-							switch(parentNode.Type)
-							{
-							case NodeType.List:
-								((ListNode)parentNode).Remove(node);
-								break;
-							case NodeType.Complex:
-								((ComplexNode)parentNode).Remove(node);
-								break;
-							default:
-								throw new ApplicationException("Unexpected parent node type");
-							}
-							treeNode.Remove();
-							if(parentNode.Type == NodeType.List)
-								refreshListNumbers(parent);
-							else if(parentNode.Type == NodeType.Complex)
-							{
-								var grandparent = parent.Parent.Tag as NodeInfo;
-								if(grandparent != null)
-								{
-									var name  = grandparent.Name;
-									var value = parentNode.StringValue;
-									var text  = (name == null) ? value : String.Format(grandparent.Node.Type == NodeType.Complex ? "{0}: {1}" : "[{0}]: {1}", name, value);
-									parent.Text = text;
-								}
-							}
-							nodeInfoPanel.SetDisplayNode(treeView.SelectedNode.Tag as NodeInfo);
-						}
-					}
-				}
-			}
+			throw new NotImplementedException();
 		}
 
+		#region File menu
 		private void newToolStripMenuItem_Click (object sender, EventArgs e)
 		{
 			using(var newDialog = new NewContainerDialog())
@@ -548,6 +329,7 @@ namespace Frost.TntEditor
 		{
 			Close();
 		}
+		#endregion
 		#endregion
 	}
 }

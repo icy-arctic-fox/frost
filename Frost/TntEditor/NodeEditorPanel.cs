@@ -39,7 +39,8 @@ namespace Frost.TntEditor
 		{
 			treeView.Nodes.Clear();
 			var rootTreeNode = constructContainerTreeNode(_container);
-
+			var rootNode     = constructTreeNode(_container.Root);
+			rootTreeNode.Nodes.Add(rootNode);
 			treeView.Nodes.Add(rootTreeNode);
 		}
 
@@ -76,9 +77,10 @@ namespace Frost.TntEditor
 			var index = (int)type;
 
 			var treeNode = new TreeNode {
-				Text       = text,
-				ImageIndex = index,
-				Tag        = info
+				Text               = text,
+				ImageIndex         = index,
+				SelectedImageIndex = index,
+				Tag                = info
 			};
 
 			switch(type)
