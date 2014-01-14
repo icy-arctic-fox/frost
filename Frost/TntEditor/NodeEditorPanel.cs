@@ -133,5 +133,72 @@ namespace Frost.TntEditor
 			}
 		}
 		#endregion
+
+		/// <summary>
+		/// Information about the currently selected node
+		/// </summary>
+		/// <remarks>This can be null if the container node or no node is selected.</remarks>
+		internal NodeInfo SelectedNode
+		{
+			get
+			{
+				var selected = treeView.SelectedNode;
+				if(selected != null)
+					return selected.Tag as NodeInfo;
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Checks if the currently selected node can be deleted
+		/// </summary>
+		/// <remarks>The node container and root node can't be deleted.</remarks>
+		public bool CanDeleteSelectedNode
+		{
+			get
+			{
+				var selected = treeView.SelectedNode;
+				if(selected != null)
+				{
+					var info = selected.Tag as NodeInfo;
+					if(info != null)
+						return !info.IsRootNode;
+				}
+				return false;
+			}
+		}
+
+		#region Tree manipulation
+
+		/// <summary>
+		/// Deletes the currently selected node
+		/// </summary>
+		public void DeleteSelectedNode ()
+		{
+			if(CanDeleteSelectedNode)
+			{
+				var info = SelectedNode;
+				var node = info.Node;
+				var parentInfo = info.Parent;
+				var parentNode = parentInfo.Node;
+
+				// Remove the node from the structure
+				switch(parentNode.Type)
+				{
+				case NodeType.List:
+					((ListNode)parentNode).Remove(node);
+					break;
+				case NodeType.Complex:
+					((ComplexNode)parentNode).Remove(node);
+					break;
+				default:
+					throw new InvalidCastException("Unexpected parent node type");
+				}
+
+				// Remove the visual node
+				treeView.SelectedNode.Remove();
+			}
+		}
+		#endregion
 	}
 }
