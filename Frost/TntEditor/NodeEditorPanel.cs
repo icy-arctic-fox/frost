@@ -150,6 +150,57 @@ namespace Frost.TntEditor
 		}
 
 		/// <summary>
+		/// Checks if the currently selected node can be moved up
+		/// </summary>
+		/// <remarks>A node can be moved up if it's in a list and not already at the top of the list.</remarks>
+		public bool CanMoveSelectedNodeUp
+		{
+			get
+			{
+				var selected = treeView.SelectedNode;
+				if(selected != null)
+				{
+					var info = selected.Tag as NodeInfo;
+					if(info != null)
+					{
+						var node = info.Node;
+						var parentNode = info.ParentNode;
+						if(parentNode != null && parentNode.Type == NodeType.List)
+							return ((ListNode)parentNode).IndexOf(node) > 0;
+					}
+				}
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Checks if the currently selected node can be moved down
+		/// </summary>
+		/// <remarks>A node can be moved down if it's in a list and not already at the bottom of the list.</remarks>
+		public bool CanMoveSelectedNodeDown
+		{
+			get
+			{
+				var selected = treeView.SelectedNode;
+				if(selected != null)
+				{
+					var info = selected.Tag as NodeInfo;
+					if(info != null)
+					{
+						var node = info.Node;
+						var parentNode = info.ParentNode;
+						if(parentNode != null && parentNode.Type == NodeType.List)
+						{
+							var listNode = (ListNode)parentNode;
+							return listNode.IndexOf(node) < listNode.Count - 1;
+						}
+					}
+				}
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Checks if the currently selected node can be deleted
 		/// </summary>
 		/// <remarks>The node container and root node can't be deleted.</remarks>
@@ -171,6 +222,58 @@ namespace Frost.TntEditor
 		#region Tree manipulation
 
 		/// <summary>
+		/// Moves the currently selected node up one slot
+		/// </summary>
+		public void MoveSelectedNodeUp ()
+		{
+			if(CanMoveSelectedNodeUp)
+			{
+				var info = SelectedNode;
+				var node = info.Node;
+				var parentNode = info.ParentNode;
+				var listNode   = (ListNode)parentNode;
+
+				// Reinsert at the previous index
+				var index = listNode.IndexOf(node);
+				listNode.RemoveAt(index);
+				listNode.Insert(index - 1, node);
+
+				// Move the visual node up
+				var selected = treeView.SelectedNode;
+				var parent   = selected.Parent;
+				index = selected.Index;
+				parent.Nodes.RemoveAt(index);
+				parent.Nodes.Insert(index - 1, selected);
+			}
+		}
+
+		/// <summary>
+		/// Moves the currently selected node down one slot
+		/// </summary>
+		public void MoveSelectedNodeDown ()
+		{
+			if(CanMoveSelectedNodeDown)
+			{
+				var info = SelectedNode;
+				var node = info.Node;
+				var parentNode = info.ParentNode;
+				var listNode   = (ListNode)parentNode;
+
+				// Reinsert at the next index
+				var index = listNode.IndexOf(node);
+				listNode.RemoveAt(index);
+				listNode.Insert(index + 1, node);
+
+				// Move the visual node down
+				var selected = treeView.SelectedNode;
+				var parent   = selected.Parent;
+				index = selected.Index;
+				parent.Nodes.RemoveAt(index);
+				parent.Nodes.Insert(index + 1, selected);
+			}
+		}
+
+		/// <summary>
 		/// Deletes the currently selected node
 		/// </summary>
 		public void DeleteSelectedNode ()
@@ -179,8 +282,7 @@ namespace Frost.TntEditor
 			{
 				var info = SelectedNode;
 				var node = info.Node;
-				var parentInfo = info.Parent;
-				var parentNode = parentInfo.Node;
+				var parentNode = info.ParentNode;
 
 				// Remove the node from the structure
 				switch(parentNode.Type)
