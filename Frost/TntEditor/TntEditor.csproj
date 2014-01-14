@@ -64,6 +64,7 @@
     <Compile Include="NewContainerDialog.Designer.cs">
       <DependentUpon>NewContainerDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeInfo.cs" />
     <Compile Include="NodeInfoPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
