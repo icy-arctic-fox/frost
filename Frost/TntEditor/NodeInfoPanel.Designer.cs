@@ -1,6 +1,6 @@
 ﻿namespace Frost.TntEditor
 {
-	partial class NodeInfoPanel
+	internal partial class NodeInfoPanel
 	{
 		/// <summary> 
 		/// Required designer variable.

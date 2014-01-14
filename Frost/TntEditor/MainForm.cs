@@ -118,7 +118,7 @@ namespace Frost.TntEditor
 			treeView.Nodes.Clear();
 			treeView.Nodes.Add(treeRoot);
 			treeView.SelectedNode = treeRoot.Nodes[0]; // Root node
-			nodeInfoPanel.SetDisplayNode(treeView.SelectedNode);
+			nodeInfoPanel.SetDisplayNode(treeView.SelectedNode.Tag as NodeInfo);
 		}
 
 		/// <summary>
@@ -128,20 +128,24 @@ namespace Frost.TntEditor
 		/// <param name="treeNode">Node that refers to the list node</param>
 		private void refreshListNumbers (TreeNode treeNode)
 		{
-			var list = treeNode.Tag as ListNode;
-			if(list != null)
+			var info = treeNode.Tag as NodeInfo;
+			if(info != null)
 			{
-				var value   = list.StringValue;
-				var parent  = treeNode.Parent;
-				string name = null;
-				if(parent != null)
-					name = NodeInfoPanel.GetNodeName(parent.Tag as Node, list);
-				var text = (name == null) ? value : String.Format("{0}: {1}", name, value);
-				treeNode.Text = text;
+				var list = info.Node as ListNode;
+				if(list != null)
+				{
+					var value      = list.StringValue;
+					var parentInfo = info.Parent;
+					string name    = null;
+					if(parentInfo != null)
+						name = parentInfo.Name;
+					var text = (name == null) ? value : String.Format("{0}: {1}", name, value);
+					treeNode.Text = text;
 
-				var i = 0;
-				foreach(TreeNode child in treeNode.Nodes)
-					child.Text = String.Format("[{0}]: {1}", i++, ((Node)child.Tag).StringValue);
+					var i = 0;
+					foreach(TreeNode child in treeNode.Nodes)
+						child.Text = String.Format("[{0}]: {1}", i++, ((Node)child.Tag).StringValue);
+				}
 			}
 		}
 
@@ -228,7 +232,7 @@ namespace Frost.TntEditor
 			
 			var text     = String.Format("Node container (version {0})", container.Version);
 			var treeNode = new TreeNode(text, 0, 0) {Tag = container};
-			var rootNode = constructTreeNode(container.Root);
+			var rootNode = constructTreeNode(container.Root, null);
 			treeNode.Nodes.Add(rootNode);
 			return treeNode;
 		}
@@ -237,9 +241,9 @@ namespace Frost.TntEditor
 		/// Creates a GUI tree node from a TNT node
 		/// </summary>
 		/// <param name="node">Node to pull information from</param>
-		/// <param name="name">Optional name to give the node</param>
+		/// <param name="parent">Information about the parent (if the node has one)</param>
 		/// <returns>A GUI tree node</returns>
-		private TreeNode constructTreeNode (Node node, string name = null)
+		private TreeNode constructTreeNode (Node node, NodeInfo parent, string name = null)
 		{
 			if(node == null)
 				throw new ArgumentNullException("node", "The node to create a tree node from can't be null.");
@@ -250,20 +254,21 @@ namespace Frost.TntEditor
 			var value = node.StringValue;
 			var text  = (name == null) ? value : String.Format("{0}: {1}", name, value);
 
+			var info     = new NodeInfo(node, parent);
 			var treeNode = new TreeNode(text, index, index) {
 				ContextMenuStrip = nodeContextMenuStrip,
 				ToolTipText      = type.ToString(),
-				Tag              = node
+				Tag              = info
 			};
 
 			// Handle any children
 			switch(type)
 			{
 			case NodeType.List:
-				constructListTree(treeNode, (ListNode)node);
+				constructListTree(treeNode, (ListNode)node, info);
 				break;
 			case NodeType.Complex:
-				constructComplexTree(treeNode, (ComplexNode)node);
+				constructComplexTree(treeNode, (ComplexNode)node, info);
 				break;
 			}
 
@@ -275,13 +280,13 @@ namespace Frost.TntEditor
 		/// </summary>
 		/// <param name="baseNode">Tree node to append the list items to</param>
 		/// <param name="list">TNT list node to pull information from</param>
-		private void constructListTree (TreeNode baseNode, IEnumerable<Node> list)
+		private void constructListTree (TreeNode baseNode, IEnumerable<Node> list, NodeInfo info)
 		{
 			var i = 0;
 			foreach(var node in list)
 			{
 				var name     = String.Format("[{0}]", i++);
-				var treeNode = constructTreeNode(node, name);
+				var treeNode = constructTreeNode(node, info, name);
 				baseNode.Nodes.Add(treeNode);
 			}
 		}
@@ -291,13 +296,13 @@ namespace Frost.TntEditor
 		/// </summary>
 		/// <param name="baseNode">Tree node to append the list items to</param>
 		/// <param name="complex">TNT complex node to pull information from</param>
-		private void constructComplexTree (TreeNode baseNode, IEnumerable<KeyValuePair<string, Node>> complex)
+		private void constructComplexTree (TreeNode baseNode, IEnumerable<KeyValuePair<string, Node>> complex, NodeInfo info)
 		{
 			foreach(var entry in complex)
 			{
 				var name     = entry.Key;
 				var node     = entry.Value;
-				var treeNode = constructTreeNode(node, name);
+				var treeNode = constructTreeNode(node, info, name);
 				baseNode.Nodes.Add(treeNode);
 			}
 		}
@@ -347,44 +352,48 @@ namespace Frost.TntEditor
 		#region Event listeners
 		private void treeView_AfterSelect (object sender, TreeViewEventArgs e)
 		{
-			var node = e.Node.Tag as Node;
-			if(node != null)
+			var info = e.Node.Tag as NodeInfo;
+			if(info != null)
 			{
-				nodeInfoPanel.SetDisplayNode(e.Node);
-				if(e.Node.Parent != null && e.Node.Parent.Tag is Node)
-					enableListNodeOptions();
-				else
-					enableNodeOptions();
-				switch(node.Type)
+				var node = info.Node;
+				if(node != null)
 				{
-				case NodeType.List:
-					var list = (ListNode)node;
-					var elementType = list.ElementType;
-					addNodeToolStripButton.Image = _nodeTypeImageList.Images[(int)elementType];
-					addNodeListToolStripButton.Visible = false;
-					addNodeToolStripButton.Enabled = true;
-					addNodeToolStripButton.Visible = true;
-					break;
-				case NodeType.Complex:
-					addNodeListToolStripButton.Enabled = true;
-					addNodeListToolStripButton.Visible = true;
-					addNodeToolStripButton.Visible = false;
-					break;
-				default:
+					nodeInfoPanel.SetDisplayNode(info);
+					if(e.Node.Parent != null && e.Node.Parent.Tag is NodeInfo)
+						enableListNodeOptions();
+					else
+						enableNodeOptions();
+					switch(node.Type)
+					{
+					case NodeType.List:
+						var list = (ListNode)node;
+						var elementType = list.ElementType;
+						addNodeToolStripButton.Image = _nodeTypeImageList.Images[(int)elementType];
+						addNodeListToolStripButton.Visible = false;
+						addNodeToolStripButton.Enabled = true;
+						addNodeToolStripButton.Visible = true;
+						break;
+					case NodeType.Complex:
+						addNodeListToolStripButton.Enabled = true;
+						addNodeListToolStripButton.Visible = true;
+						addNodeToolStripButton.Visible = false;
+						break;
+					default:
+						addNodeToolStripButton.Image = addNodeListToolStripButton.Image;
+						addNodeListToolStripButton.Visible = false;
+						addNodeToolStripButton.Enabled = false;
+						addNodeToolStripButton.Visible = true;
+						break;
+					}
+				}
+				else
+				{
+					enableListNodeOptions(false);
 					addNodeToolStripButton.Image = addNodeListToolStripButton.Image;
 					addNodeListToolStripButton.Visible = false;
 					addNodeToolStripButton.Enabled = false;
 					addNodeToolStripButton.Visible = true;
-					break;
 				}
-			}
-			else
-			{
-				enableListNodeOptions(false);
-				addNodeToolStripButton.Image = addNodeListToolStripButton.Image;
-				addNodeListToolStripButton.Visible = false;
-				addNodeToolStripButton.Enabled = false;
-				addNodeToolStripButton.Visible = true;
 			}
 		}
 
@@ -417,7 +426,7 @@ namespace Frost.TntEditor
 				if(found != null)
 				{
 					treeView.SelectedNode = found;
-					nodeInfoPanel.SetDisplayNode(found);
+					nodeInfoPanel.SetDisplayNode(found.Tag as NodeInfo);
 				}
 				else
 					System.Media.SystemSounds.Beep.Play();
@@ -463,16 +472,16 @@ namespace Frost.TntEditor
 								refreshListNumbers(parent);
 							else if(parentNode.Type == NodeType.Complex)
 							{
-								var grandparent = parent.Parent.Tag as Node;
+								var grandparent = parent.Parent.Tag as NodeInfo;
 								if(grandparent != null)
 								{
-									var name  = NodeInfoPanel.GetNodeName(grandparent, parentNode);
+									var name  = grandparent.Name;
 									var value = parentNode.StringValue;
-									var text  = (name == null) ? value : String.Format(grandparent.Type == NodeType.Complex ? "{0}: {1}" : "[{0}]: {1}", name, value);
+									var text  = (name == null) ? value : String.Format(grandparent.Node.Type == NodeType.Complex ? "{0}: {1}" : "[{0}]: {1}", name, value);
 									parent.Text = text;
 								}
 							}
-							nodeInfoPanel.SetDisplayNode(treeView.SelectedNode);
+							nodeInfoPanel.SetDisplayNode(treeView.SelectedNode.Tag as NodeInfo);
 						}
 					}
 				}
