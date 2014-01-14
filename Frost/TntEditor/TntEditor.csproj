@@ -64,6 +64,12 @@
     <Compile Include="NewContainerDialog.Designer.cs">
       <DependentUpon>NewContainerDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeEditorPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeEditorPanel.Designer.cs">
+      <DependentUpon>NodeEditorPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeInfo.cs" />
     <Compile Include="NodeInfoPanel.cs">
       <SubType>UserControl</SubType>
@@ -78,6 +84,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NewContainerDialog.resx">
       <DependentUpon>NewContainerDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeEditorPanel.resx">
+      <DependentUpon>NodeEditorPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeInfoPanel.resx">
       <DependentUpon>NodeInfoPanel.cs</DependentUpon>
