@@ -1,6 +1,6 @@
 ﻿namespace Frost.TntEditor
 {
-	partial class NewDialog
+	partial class NewContainerDialog
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewDialog));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewContainerDialog));
 			this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.versionLabel = new System.Windows.Forms.Label();
 			this.typeLabel = new System.Windows.Forms.Label();

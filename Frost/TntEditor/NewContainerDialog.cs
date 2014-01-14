@@ -10,7 +10,7 @@ using Frost.IO.Tnt;
 
 namespace Frost.TntEditor
 {
-	public partial class NewDialog : Form
+	public partial class NewContainerDialog : Form
 	{
 		/// <summary>
 		/// Selected container version
@@ -22,7 +22,7 @@ namespace Frost.TntEditor
 		/// </summary>
 		public NodeType RootNodeType { get; private set; }
 
-		public NewDialog()
+		public NewContainerDialog()
 		{
 			// Initial values
 			ContainerVersion = 1;

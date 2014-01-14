@@ -58,28 +58,28 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewDialog.cs">
+    <Compile Include="NewContainerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewDialog.Designer.cs">
-      <DependentUpon>NewDialog.cs</DependentUpon>
+    <Compile Include="NewContainerDialog.Designer.cs">
+      <DependentUpon>NewContainerDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="NodeInfo.cs">
+    <Compile Include="NodeInfoPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NodeInfo.Designer.cs">
-      <DependentUpon>NodeInfo.cs</DependentUpon>
+    <Compile Include="NodeInfoPanel.Designer.cs">
+      <DependentUpon>NodeInfoPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewDialog.resx">
-      <DependentUpon>NewDialog.cs</DependentUpon>
+    <EmbeddedResource Include="NewContainerDialog.resx">
+      <DependentUpon>NewContainerDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NodeInfo.resx">
-      <DependentUpon>NodeInfo.cs</DependentUpon>
+    <EmbeddedResource Include="NodeInfoPanel.resx">
+      <DependentUpon>NodeInfoPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

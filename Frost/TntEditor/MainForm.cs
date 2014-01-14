@@ -135,7 +135,7 @@ namespace Frost.TntEditor
 				var parent  = treeNode.Parent;
 				string name = null;
 				if(parent != null)
-					name = NodeInfo.GetNodeName(parent.Tag as Node, list);
+					name = NodeInfoPanel.GetNodeName(parent.Tag as Node, list);
 				var text = (name == null) ? value : String.Format("{0}: {1}", name, value);
 				treeNode.Text = text;
 
@@ -466,7 +466,7 @@ namespace Frost.TntEditor
 								var grandparent = parent.Parent.Tag as Node;
 								if(grandparent != null)
 								{
-									var name  = NodeInfo.GetNodeName(grandparent, parentNode);
+									var name  = NodeInfoPanel.GetNodeName(grandparent, parentNode);
 									var value = parentNode.StringValue;
 									var text  = (name == null) ? value : String.Format(grandparent.Type == NodeType.Complex ? "{0}: {1}" : "[{0}]: {1}", name, value);
 									parent.Text = text;
@@ -481,7 +481,7 @@ namespace Frost.TntEditor
 
 		private void newToolStripMenuItem_Click (object sender, EventArgs e)
 		{
-			using(var newDialog = new NewDialog())
+			using(var newDialog = new NewContainerDialog())
 				if(newDialog.ShowDialog() == DialogResult.OK)
 				{
 					var type = newDialog.RootNodeType;

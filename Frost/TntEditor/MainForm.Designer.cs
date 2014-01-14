@@ -57,7 +57,7 @@
 			this.searchToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.searchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.nodeInfoPanel = new Frost.TntEditor.NodeInfo();
+			this.nodeInfoPanel = new Frost.TntEditor.NodeInfoPanel();
 			this.treeView = new System.Windows.Forms.TreeView();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -431,7 +431,7 @@
 		private System.Windows.Forms.OpenFileDialog openFileDialog;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog;
 		private System.Windows.Forms.ContextMenuStrip nodeContextMenuStrip;
-		private NodeInfo nodeInfoPanel;
+		private NodeInfoPanel nodeInfoPanel;
 		private System.Windows.Forms.ToolStripDropDownButton addNodeListToolStripButton;
 		private System.Windows.Forms.ToolStripButton moveUpToolStripButton;
 		private System.Windows.Forms.ToolStripButton moveDownToolStripButton;

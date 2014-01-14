@@ -11,9 +11,9 @@ using Frost.IO.Tnt;
 
 namespace Frost.TntEditor
 {
-	public partial class NodeInfo : UserControl
+	public partial class NodeInfoPanel : UserControl
 	{
-		public NodeInfo ()
+		public NodeInfoPanel ()
 		{
 			InitializeComponent();
 			typeCombo.Items.Add(String.Empty);
