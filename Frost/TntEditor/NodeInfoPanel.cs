@@ -38,6 +38,9 @@ namespace Frost.TntEditor
 			var index     = (int)type;
 			typeCombo.SelectedIndex = index;
 			valueBox.Text = info.Node.StringValue;
+
+			var parentNode    = info.ParentNode;
+			nameText.ReadOnly = (parentNode == null || parentNode.Type != NodeType.Complex);
 		}
 
 		/// <summary>
@@ -49,6 +52,8 @@ namespace Frost.TntEditor
 			pathText.Text = String.Empty;
 			typeCombo.SelectedIndex = 0;
 			valueBox.Text = String.Empty;
+
+			nameText.ReadOnly = true;
 		}
 
 		#region Event listeners
