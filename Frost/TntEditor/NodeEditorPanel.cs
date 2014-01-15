@@ -210,6 +210,28 @@ namespace Frost.TntEditor
 		}
 
 		/// <summary>
+		/// Checks if a node can be added to a complex based on the selection
+		/// </summary>
+		/// <remarks>A new node can be added to a complex if the selected node is a complex,
+		/// or if the selected node's parent is a complex node.</remarks>
+		public bool CanAddToComplexNode
+		{
+			get
+			{
+				var info = SelectedNode;
+				if(info != null)
+				{
+					if(info.Node.Type == NodeType.Complex)
+						return true;
+					var parentNode = info.ParentNode;
+					if(parentNode != null)
+						return parentNode.Type == NodeType.Complex;
+				}
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Type of nodes accepted by the currently selected list
 		/// </summary>
 		public NodeType SelectedListElementType
@@ -306,6 +328,37 @@ namespace Frost.TntEditor
 				var count = listNode.Count;
 				var name  = String.Format("[{0}]", count);
 				listNode.Add(node); // Add to the structure
+				var newTreeNode = constructTreeNode(node, info, name);
+				treeNode.Nodes.Add(newTreeNode); // ...and to the tree view
+
+				refreshTreeNode(treeNode);
+			}
+		}
+
+		/// <summary>
+		/// Adds a new node under the currently selected complex
+		/// </summary>
+		/// <param name="name">Name of the node to add</param>
+		/// <param name="node">Node to add to the complex</param>
+		public void AddToComplexNode (string name, Node node)
+		{
+			if(CanAddToComplexNode)
+			{
+				var treeNode     = treeView.SelectedNode;
+				var info         = (NodeInfo)treeNode.Tag;
+				var selectedNode = info.Node;
+				ComplexNode complexNode;
+
+				if(selectedNode.Type == NodeType.Complex)
+					complexNode = (ComplexNode)selectedNode; // The selected node is the complex
+				else
+				{// The parent node is the complex
+					treeNode    = treeNode.Parent;
+					info        = (NodeInfo)treeNode.Tag;
+					complexNode = (ComplexNode)info.Node;
+				}
+
+				complexNode.Add(name, node); // Add to the structure
 				var newTreeNode = constructTreeNode(node, info, name);
 				treeNode.Nodes.Add(newTreeNode); // ...and to the tree view
 
@@ -411,5 +464,16 @@ namespace Frost.TntEditor
 			}
 		}
 		#endregion
+
+		/// <summary>
+		/// Triggered when the selected node changes
+		/// </summary>
+		public event EventHandler<TreeViewEventArgs> SelectedNodeChanged;
+
+		private void treeView_AfterSelect (object sender, TreeViewEventArgs e)
+		{
+			if(null != SelectedNodeChanged)
+				SelectedNodeChanged(this, e);
+		}
 	}
 }

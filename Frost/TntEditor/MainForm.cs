@@ -18,7 +18,7 @@ namespace Frost.TntEditor
 		{
 			InitializeComponent();
 			constructNewNodeMenu();
-
+			nodeEditorPanel.SelectedNodeChanged += nodeEditorPanel_SelectedNodeChanged;
 			displaySampleContainer();
 		}
 		
@@ -182,51 +182,12 @@ namespace Frost.TntEditor
 		}
 
 		#region Event listeners
-		private void treeView_AfterSelect (object sender, TreeViewEventArgs e)
+
+		void nodeEditorPanel_SelectedNodeChanged (object sender, TreeViewEventArgs e)
 		{
-			var info = e.Node.Tag as NodeInfo;
-			if(info != null)
-			{
-				var node = info.Node;
-				if(node != null)
-				{
-					nodeInfoPanel.SetDisplayNode(info);
-					if(e.Node.Parent != null && e.Node.Parent.Tag is NodeInfo)
-						enableListNodeOptions();
-					else
-						enableNodeOptions();
-					switch(node.Type)
-					{
-					case NodeType.List:
-						var list = (ListNode)node;
-						var elementType = list.ElementType;
-						addNodeToolStripButton.Image = _nodeTypeImageList.Images[(int)elementType];
-						addNodeListToolStripButton.Visible = false;
-						addNodeToolStripButton.Enabled = true;
-						addNodeToolStripButton.Visible = true;
-						break;
-					case NodeType.Complex:
-						addNodeListToolStripButton.Enabled = true;
-						addNodeListToolStripButton.Visible = true;
-						addNodeToolStripButton.Visible = false;
-						break;
-					default:
-						addNodeToolStripButton.Image = addNodeListToolStripButton.Image;
-						addNodeListToolStripButton.Visible = false;
-						addNodeToolStripButton.Enabled = false;
-						addNodeToolStripButton.Visible = true;
-						break;
-					}
-				}
-				else
-				{
-					enableListNodeOptions(false);
-					addNodeToolStripButton.Image = addNodeListToolStripButton.Image;
-					addNodeListToolStripButton.Visible = false;
-					addNodeToolStripButton.Enabled = false;
-					addNodeToolStripButton.Visible = true;
-				}
-			}
+			var canDelete = nodeEditorPanel.CanDeleteSelectedNode;
+			deleteToolStripButton.Enabled   = canDelete;
+			deleteToolStripMenuItem.Enabled = canDelete;
 		}
 
 		private void searchToolStripTextBox_Click (object sender, EventArgs e)
@@ -265,7 +226,7 @@ namespace Frost.TntEditor
 
 		private void deleteButton_Click (object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			nodeEditorPanel.DeleteSelectedNode();
 		}
 
 		#region File menu
