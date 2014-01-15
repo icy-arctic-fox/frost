@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Frost.IO.Tnt;
+using Frost.TntEditor.NodeValueControls;
 
 namespace Frost.TntEditor
 {
@@ -37,10 +38,13 @@ namespace Frost.TntEditor
 			var type      = info.Node.Type;
 			var index     = (int)type;
 			typeCombo.SelectedIndex = index;
-			valueBox.Text = info.Node.StringValue;
 
 			var parentNode    = info.ParentNode;
 			nameText.ReadOnly = (parentNode == null || parentNode.Type != NodeType.Complex);
+
+			var node = info.Node;
+			if(_nodeEditorControl != null)
+				_nodeEditorControl.FromNode(node);
 		}
 
 		/// <summary>
@@ -51,9 +55,37 @@ namespace Frost.TntEditor
 			nameText.Text = String.Empty;
 			pathText.Text = String.Empty;
 			typeCombo.SelectedIndex = 0;
-			valueBox.Text = String.Empty;
 
 			nameText.ReadOnly = true;
+		}
+
+		private INodeEditorControl _nodeEditorControl;
+
+		/// <summary>
+		/// Changes the control used to display and edit the node's value
+		/// </summary>
+		/// <param name="type">Node type to display a control for</param>
+		private void changeValueEditor (NodeType type)
+		{
+			if(_nodeEditorControl != null)
+				nodeInfoLayoutPanel.Controls.Remove((Control)_nodeEditorControl);
+
+			switch(type)
+			{
+			case NodeType.Boolean:
+				_nodeEditorControl = new BooleanNodeValueControl();
+				break;
+			default:
+				_nodeEditorControl = null;
+				break;
+			}
+
+			if(_nodeEditorControl != null)
+			{
+				var control = (Control)_nodeEditorControl;
+				nodeInfoLayoutPanel.Controls.Add(control, 0, 3);
+				nodeInfoLayoutPanel.SetColumnSpan(control, 3);
+			}
 		}
 
 		#region Event listeners
@@ -73,6 +105,7 @@ namespace Frost.TntEditor
 				applyButton.Enabled = true;
 			}
 			typePicture.Image = img;
+			changeValueEditor((NodeType)index);
 		}
 		#endregion
 	}

@@ -35,12 +35,10 @@
 			this.nameLabel = new System.Windows.Forms.Label();
 			this.pathLabel = new System.Windows.Forms.Label();
 			this.typeLabel = new System.Windows.Forms.Label();
-			this.valueLabel = new System.Windows.Forms.Label();
 			this.typePicture = new System.Windows.Forms.PictureBox();
 			this.pathText = new System.Windows.Forms.TextBox();
 			this.nameText = new System.Windows.Forms.TextBox();
 			this.typeCombo = new System.Windows.Forms.ComboBox();
-			this.valueBox = new System.Windows.Forms.TextBox();
 			this.nodeTypeImageList = new System.Windows.Forms.ImageList(this.components);
 			this.nodeInfoLayoutPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.typePicture)).BeginInit();
@@ -56,12 +54,10 @@
 			this.nodeInfoLayoutPanel.Controls.Add(this.nameLabel, 0, 0);
 			this.nodeInfoLayoutPanel.Controls.Add(this.pathLabel, 0, 1);
 			this.nodeInfoLayoutPanel.Controls.Add(this.typeLabel, 0, 2);
-			this.nodeInfoLayoutPanel.Controls.Add(this.valueLabel, 0, 3);
 			this.nodeInfoLayoutPanel.Controls.Add(this.typePicture, 1, 2);
 			this.nodeInfoLayoutPanel.Controls.Add(this.pathText, 1, 1);
 			this.nodeInfoLayoutPanel.Controls.Add(this.nameText, 1, 0);
 			this.nodeInfoLayoutPanel.Controls.Add(this.typeCombo, 2, 2);
-			this.nodeInfoLayoutPanel.Controls.Add(this.valueBox, 1, 3);
 			this.nodeInfoLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.nodeInfoLayoutPanel.Location = new System.Drawing.Point(0, 0);
 			this.nodeInfoLayoutPanel.Name = "nodeInfoLayoutPanel";
@@ -116,16 +112,6 @@
 			this.typeLabel.TabIndex = 3;
 			this.typeLabel.Text = "Type:";
 			// 
-			// valueLabel
-			// 
-			this.valueLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.valueLabel.AutoSize = true;
-			this.valueLabel.Location = new System.Drawing.Point(3, 85);
-			this.valueLabel.Name = "valueLabel";
-			this.valueLabel.Size = new System.Drawing.Size(37, 13);
-			this.valueLabel.TabIndex = 7;
-			this.valueLabel.Text = "Value:";
-			// 
 			// typePicture
 			// 
 			this.typePicture.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -164,15 +150,6 @@
 			this.typeCombo.Size = new System.Drawing.Size(96, 21);
 			this.typeCombo.TabIndex = 8;
 			this.typeCombo.SelectedIndexChanged += new System.EventHandler(this.typeCombo_SelectedIndexChanged);
-			// 
-			// valueBox
-			// 
-			this.valueBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.nodeInfoLayoutPanel.SetColumnSpan(this.valueBox, 2);
-			this.valueBox.Location = new System.Drawing.Point(47, 82);
-			this.valueBox.Name = "valueBox";
-			this.valueBox.Size = new System.Drawing.Size(120, 20);
-			this.valueBox.TabIndex = 8;
 			// 
 			// nodeTypeImageList
 			// 
@@ -224,12 +201,10 @@
 		private System.Windows.Forms.Label nameLabel;
 		private System.Windows.Forms.Label pathLabel;
 		private System.Windows.Forms.Label typeLabel;
-		private System.Windows.Forms.Label valueLabel;
 		private System.Windows.Forms.PictureBox typePicture;
 		private System.Windows.Forms.TextBox pathText;
 		private System.Windows.Forms.TextBox nameText;
 		private System.Windows.Forms.ComboBox typeCombo;
-		private System.Windows.Forms.TextBox valueBox;
 		private System.Windows.Forms.ImageList nodeTypeImageList;
 	}
 }
