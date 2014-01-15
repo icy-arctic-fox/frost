@@ -229,6 +229,13 @@ namespace Frost.TntEditor
 			}
 		}
 
+		private void addNodeButton_Click (object sender, EventArgs e)
+		{
+			var type = nodeEditorPanel.SelectedListElementType;
+			var node = Node.CreateDefaultNode(type);
+			nodeEditorPanel.AddToListNode(node);
+		}
+
 		private void moveUpButton_Click (object sender, EventArgs e)
 		{
 			nodeEditorPanel.MoveSelectedNodeUp();
@@ -249,7 +256,7 @@ namespace Frost.TntEditor
 			var textBox = (ToolStripTextBox)sender;
 			if(textBox.ForeColor == SystemColors.GrayText)
 			{// Search text
-				textBox.Text = String.Empty;
+				textBox.Text      = String.Empty;
 				textBox.ForeColor = SystemColors.ControlText;
 			}
 		}
@@ -260,7 +267,7 @@ namespace Frost.TntEditor
 			if(String.IsNullOrWhiteSpace(textBox.Text))
 			{// Display search text
 				textBox.ForeColor = SystemColors.GrayText;
-				textBox.Text = "Search";
+				textBox.Text      = "Search";
 			}
 		}
 

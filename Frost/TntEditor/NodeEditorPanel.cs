@@ -345,6 +345,7 @@ namespace Frost.TntEditor
 				var newTreeNode = constructTreeNode(node, info, name);
 				treeNode.Nodes.Add(newTreeNode); // ...and to the tree view
 
+				treeView.SelectedNode = newTreeNode;
 				refreshTreeNode(treeNode);
 			}
 		}
@@ -376,6 +377,7 @@ namespace Frost.TntEditor
 				var newTreeNode = constructTreeNode(node, info, name);
 				treeNode.Nodes.Add(newTreeNode); // ...and to the tree view
 
+				treeView.SelectedNode = newTreeNode;
 				refreshTreeNode(treeNode);
 			}
 		}
