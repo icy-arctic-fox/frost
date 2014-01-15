@@ -64,7 +64,7 @@ namespace Frost.TntEditor
 			}
 			else
 			{// Type specified
-				img = MainForm.NodeTypeImageList.Images[index];
+				img = nodeTypeImageList.Images[index];
 				applyButton.Enabled = true;
 			}
 			typePicture.Image = img;

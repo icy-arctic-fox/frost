@@ -42,12 +42,12 @@
 			this.addNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.addNodeMultiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newNodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.addNodeMultiToolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addNodeMultiToolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.addNodeToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.moveUpToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -58,10 +58,12 @@
 			this.searchToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.searchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.nodeInfoPanel = new Frost.TntEditor.NodeInfoPanel();
 			this.nodeEditorPanel = new Frost.TntEditor.NodeEditorPanel();
+			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+			this.newNodeSubContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.nodeTypeImageList = new System.Windows.Forms.ImageList(this.components);
 			this.menuStrip.SuspendLayout();
 			this.nodeContextMenuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
@@ -156,6 +158,7 @@
             this.pasteToolStripMenuItem,
             this.deleteToolStripMenuItem});
 			this.nodeContextMenuStrip.Name = "nodeContextMenuStrip";
+			this.nodeContextMenuStrip.OwnerItem = this.editToolStripMenuItem;
 			this.nodeContextMenuStrip.Size = new System.Drawing.Size(204, 158);
 			// 
 			// addNodeToolStripMenuItem
@@ -182,17 +185,8 @@
 			// newNodeContextMenuStrip
 			// 
 			this.newNodeContextMenuStrip.Name = "newNodeContextMenuStrip";
+			this.newNodeContextMenuStrip.OwnerItem = this.addNodeMultiToolStripButton;
 			this.newNodeContextMenuStrip.Size = new System.Drawing.Size(61, 4);
-			// 
-			// addNodeMultiToolStripButton
-			// 
-			this.addNodeMultiToolStripButton.DropDown = this.newNodeContextMenuStrip;
-			this.addNodeMultiToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_design;
-			this.addNodeMultiToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.addNodeMultiToolStripButton.Name = "addNodeMultiToolStripButton";
-			this.addNodeMultiToolStripButton.Size = new System.Drawing.Size(90, 22);
-			this.addNodeMultiToolStripButton.Text = "Add Node";
-			this.addNodeMultiToolStripButton.ToolTipText = "Add a node to the structure";
 			// 
 			// moveUpToolStripMenuItem
 			// 
@@ -248,6 +242,16 @@
 			this.deleteToolStripMenuItem.Text = "Dele&te Node";
 			this.deleteToolStripMenuItem.ToolTipText = "Deleted the selected node";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteButton_Click);
+			// 
+			// addNodeMultiToolStripButton
+			// 
+			this.addNodeMultiToolStripButton.DropDown = this.newNodeContextMenuStrip;
+			this.addNodeMultiToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_design;
+			this.addNodeMultiToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.addNodeMultiToolStripButton.Name = "addNodeMultiToolStripButton";
+			this.addNodeMultiToolStripButton.Size = new System.Drawing.Size(90, 22);
+			this.addNodeMultiToolStripButton.Text = "Add Node";
+			this.addNodeMultiToolStripButton.ToolTipText = "Add a node to the structure";
 			// 
 			// toolStrip
 			// 
@@ -376,18 +380,6 @@
 			this.splitContainer.SplitterDistance = 252;
 			this.splitContainer.TabIndex = 2;
 			// 
-			// openFileDialog
-			// 
-			this.openFileDialog.DefaultExt = "tnt";
-			this.openFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
-			this.openFileDialog.Title = "Load File";
-			// 
-			// saveFileDialog
-			// 
-			this.saveFileDialog.DefaultExt = "tnt";
-			this.saveFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
-			this.saveFileDialog.Title = "Save File";
-			// 
 			// nodeInfoPanel
 			// 
 			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -405,6 +397,52 @@
 			this.nodeEditorPanel.NodeContextMenuStrip = null;
 			this.nodeEditorPanel.Size = new System.Drawing.Size(506, 348);
 			this.nodeEditorPanel.TabIndex = 0;
+			// 
+			// openFileDialog
+			// 
+			this.openFileDialog.DefaultExt = "tnt";
+			this.openFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
+			this.openFileDialog.Title = "Load File";
+			// 
+			// saveFileDialog
+			// 
+			this.saveFileDialog.DefaultExt = "tnt";
+			this.saveFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
+			this.saveFileDialog.Title = "Save File";
+			// 
+			// newNodeSubContextMenuStrip
+			// 
+			this.newNodeSubContextMenuStrip.Name = "newNodeContextMenuStrip";
+			this.newNodeSubContextMenuStrip.Size = new System.Drawing.Size(61, 4);
+			// 
+			// nodeTypeImageList
+			// 
+			this.nodeTypeImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("nodeTypeImageList.ImageStream")));
+			this.nodeTypeImageList.TransparentColor = System.Drawing.Color.Transparent;
+			this.nodeTypeImageList.Images.SetKeyName(0, "type0.png");
+			this.nodeTypeImageList.Images.SetKeyName(1, "type1.png");
+			this.nodeTypeImageList.Images.SetKeyName(2, "type2.png");
+			this.nodeTypeImageList.Images.SetKeyName(3, "type3.png");
+			this.nodeTypeImageList.Images.SetKeyName(4, "type4.png");
+			this.nodeTypeImageList.Images.SetKeyName(5, "type5.png");
+			this.nodeTypeImageList.Images.SetKeyName(6, "type6.png");
+			this.nodeTypeImageList.Images.SetKeyName(7, "type7.png");
+			this.nodeTypeImageList.Images.SetKeyName(8, "type8.png");
+			this.nodeTypeImageList.Images.SetKeyName(9, "type9.png");
+			this.nodeTypeImageList.Images.SetKeyName(10, "type10.png");
+			this.nodeTypeImageList.Images.SetKeyName(11, "type11.png");
+			this.nodeTypeImageList.Images.SetKeyName(12, "type12.png");
+			this.nodeTypeImageList.Images.SetKeyName(13, "type13.png");
+			this.nodeTypeImageList.Images.SetKeyName(14, "type14.png");
+			this.nodeTypeImageList.Images.SetKeyName(15, "type15.png");
+			this.nodeTypeImageList.Images.SetKeyName(16, "type16.png");
+			this.nodeTypeImageList.Images.SetKeyName(17, "type17.png");
+			this.nodeTypeImageList.Images.SetKeyName(18, "type18.png");
+			this.nodeTypeImageList.Images.SetKeyName(19, "type19.png");
+			this.nodeTypeImageList.Images.SetKeyName(20, "type20.png");
+			this.nodeTypeImageList.Images.SetKeyName(21, "type21.png");
+			this.nodeTypeImageList.Images.SetKeyName(22, "type22.png");
+			this.nodeTypeImageList.Images.SetKeyName(23, "type23.png");
 			// 
 			// MainForm
 			// 
@@ -466,6 +504,8 @@
 		private System.Windows.Forms.ToolStripButton addNodeToolStripButton;
 		private NodeEditorPanel nodeEditorPanel;
 		private System.Windows.Forms.ToolStripMenuItem addNodeToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip newNodeSubContextMenuStrip;
+		private System.Windows.Forms.ImageList nodeTypeImageList;
 	}
 }
 

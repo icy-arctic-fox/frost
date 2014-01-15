@@ -25,7 +25,9 @@ namespace Frost.TntEditor
 		
 		private void constructNewNodeMenu ()
 		{
-			newNodeContextMenuStrip.ImageList = _nodeTypeImageList;
+			newNodeContextMenuStrip.ImageList    = nodeTypeImageList;
+			newNodeSubContextMenuStrip.ImageList = nodeTypeImageList;
+
 			for(var type = NodeType.Boolean; type <= NodeType.Complex; ++type)
 			{
 				var index = (int)type;
@@ -35,7 +37,17 @@ namespace Frost.TntEditor
 					ImageIndex = index
 				};
 				newNodeContextMenuStrip.Items.Add(item);
+
+				item = new ToolStripMenuItem {
+					Tag        = type,
+					Text       = type.ToString(),
+					ImageIndex = index
+				};
+				newNodeSubContextMenuStrip.Items.Add(item);
 			}
+
+			// Add sub-menu under the List node type
+			((ToolStripMenuItem)newNodeContextMenuStrip.Items[(int)(NodeType.List) - 1]).DropDown = newNodeSubContextMenuStrip;
 		}
 
 		private void displaySampleContainer ()
@@ -70,40 +82,6 @@ namespace Frost.TntEditor
 			root.Add(all);
 			return new NodeContainer(root);
 		}
-
-		#region Node type image list
-
-		/// <summary>
-		/// Constructs the node type image list
-		/// </summary>
-		static MainForm ()
-		{
-			constructImageList();
-		}
-
-		private static readonly ImageList _nodeTypeImageList = new ImageList();
-
-		/// <summary>
-		/// Collection of images for each node type
-		/// </summary>
-		public static ImageList NodeTypeImageList
-		{
-			get { return _nodeTypeImageList; }
-		}
-
-		private static void constructImageList ()
-		{
-			_nodeTypeImageList.ImageSize  = new Size(16, 16);
-			_nodeTypeImageList.ColorDepth = ColorDepth.Depth32Bit;
-			for(var type = NodeType.End; type <= NodeType.Complex; ++type)
-			{
-				var filename = "Images/type" + (int)type + ".png";
-				var typeName = type.ToString();
-				var image    = Image.FromFile(filename);
-				_nodeTypeImageList.Images.Add(typeName, image);
-			}
-		}
-		#endregion
 
 		/// <summary>
 		/// Displays a node container in the tree pane
@@ -216,7 +194,7 @@ namespace Frost.TntEditor
 			else
 			{
 				var canAddToList = nodeEditorPanel.CanAddToListNode;
-				var img = canAddToList ? NodeTypeImageList.Images[(int)nodeEditorPanel.SelectedListElementType] : addNodeMultiToolStripButton.Image;
+				var img = canAddToList ? nodeTypeImageList.Images[(int)nodeEditorPanel.SelectedListElementType] : addNodeMultiToolStripButton.Image;
 
 				addNodeMultiToolStripButton.Visible   = false;
 				addNodeMultiToolStripButton.Enabled   = false;
