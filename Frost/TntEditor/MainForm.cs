@@ -196,6 +196,34 @@ namespace Frost.TntEditor
 			var canMoveDown = nodeEditorPanel.CanMoveSelectedNodeDown;
 			moveDownToolStripButton.Enabled   = canMoveDown;
 			moveDownToolStripMenuItem.Enabled = canMoveDown;
+
+			var canAddToComplex = nodeEditorPanel.CanAddToComplexNode;
+			if(canAddToComplex)
+			{
+				addNodeMultiToolStripButton.Visible   = true;
+				addNodeMultiToolStripButton.Enabled   = true;
+				addNodeMultiToolStripMenuItem.Visible = true;
+				addNodeMultiToolStripMenuItem.Enabled = true;
+				addNodeToolStripButton.Visible        = false;
+				addNodeToolStripButton.Enabled        = false;
+				addNodeToolStripMenuItem.Visible      = false;
+				addNodeToolStripMenuItem.Enabled      = false;
+			}
+			else
+			{
+				addNodeMultiToolStripButton.Visible   = false;
+				addNodeMultiToolStripButton.Enabled   = false;
+				addNodeMultiToolStripMenuItem.Visible = false;
+				addNodeMultiToolStripMenuItem.Enabled = false;
+				var canAddToList = nodeEditorPanel.CanAddToListNode;
+				var img = canAddToList ? NodeTypeImageList.Images[(int)nodeEditorPanel.SelectedListElementType] : addNodeMultiToolStripButton.Image;
+				addNodeToolStripButton.Visible   = true;
+				addNodeToolStripButton.Enabled   = canAddToList;
+				addNodeToolStripButton.Image     = img;
+				addNodeToolStripMenuItem.Visible = true;
+				addNodeToolStripMenuItem.Enabled = canAddToList;
+				addNodeToolStripMenuItem.Image   = img;
+			}
 		}
 
 		private void moveUpButton_Click (object sender, EventArgs e)

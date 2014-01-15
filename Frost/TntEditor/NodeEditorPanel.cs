@@ -222,8 +222,13 @@ namespace Frost.TntEditor
 				var info = SelectedNode;
 				if(info != null)
 				{
-					if(info.Node.Type == NodeType.Complex)
+					switch(info.Node.Type)
+					{
+					case NodeType.Complex:
 						return true;
+					case NodeType.List:
+						return false;
+					}
 					var parentNode = info.ParentNode;
 					if(parentNode != null)
 						return parentNode.Type == NodeType.Complex;
@@ -237,7 +242,15 @@ namespace Frost.TntEditor
 		/// </summary>
 		public NodeType SelectedListElementType
 		{
-			get { return CanAddToListNode ? ((ListNode)SelectedNode.ParentNode).ElementType : NodeType.End; }
+			get
+			{
+				if(CanAddToListNode)
+				{
+					var selected = SelectedNode;
+					return (selected.Node.Type == NodeType.List) ? ((ListNode)selected.Node).ElementType : selected.Node.Type;
+				}
+				return NodeType.End;
+			}
 		}
 
 		/// <summary>
