@@ -36,6 +36,7 @@ namespace Frost.TntEditor
 					Text       = type.ToString(),
 					ImageIndex = index
 				};
+				item.Click += addNodeToComplexNode_Click;
 				newNodeContextMenuStrip.Items.Add(item);
 
 				item = new ToolStripMenuItem {
@@ -43,6 +44,7 @@ namespace Frost.TntEditor
 					Text       = type.ToString(),
 					ImageIndex = index
 				};
+				item.Click += addListNodeToComplexNode_Click;
 				newNodeSubContextMenuStrip.Items.Add(item);
 			}
 
@@ -207,6 +209,40 @@ namespace Frost.TntEditor
 				addNodeToolStripMenuItem.Enabled      = canAddToList;
 				addNodeToolStripMenuItem.Image        = img;
 			}
+		}
+
+		private static string findUntakenName (ComplexNode complex)
+		{
+			var name = "New Node";
+			if(complex.ContainsKey(name))
+			{// Find a name that isn't taken
+				var i = 2;
+				for(; complex.ContainsKey(String.Format("{0} {1}", name, i)); ++i) { }
+				name = String.Format("{0} {1}", name, i);
+			}
+			return name;
+		}
+
+		private void addNodeToComplexNode_Click (object sender, EventArgs e)
+		{
+			var item     = (ToolStripMenuItem)sender;
+			var type     = (NodeType)item.Tag;
+			var node     = Node.CreateDefaultNode(type);
+			var selected = nodeEditorPanel.SelectedNode;
+			var complex  = (ComplexNode)((selected.Node.Type == NodeType.Complex) ? selected.Node : selected.Parent.Node);
+			var name     = findUntakenName(complex);
+			nodeEditorPanel.AddToComplexNode(name, node);
+		}
+
+		private void addListNodeToComplexNode_Click (object sender, EventArgs e)
+		{
+			var item     = (ToolStripMenuItem)sender;
+			var type     = (NodeType)item.Tag;
+			var node     = new ListNode(type);
+			var selected = nodeEditorPanel.SelectedNode;
+			var complex  = (ComplexNode)((selected.Node.Type == NodeType.Complex) ? selected.Node : selected.Parent.Node);
+			var name     = findUntakenName(complex);
+			nodeEditorPanel.AddToComplexNode(name, node);
 		}
 
 		private void addNodeButton_Click (object sender, EventArgs e)
