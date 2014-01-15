@@ -44,6 +44,7 @@
 			this.treeView.SelectedImageIndex = 0;
 			this.treeView.Size = new System.Drawing.Size(318, 247);
 			this.treeView.TabIndex = 0;
+			this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
 			// 
 			// nodeTypeImageList
 			// 

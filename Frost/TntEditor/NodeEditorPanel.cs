@@ -42,6 +42,7 @@ namespace Frost.TntEditor
 			var rootNode     = constructTreeNode(_container.Root);
 			rootTreeNode.Nodes.Add(rootNode);
 			treeView.Nodes.Add(rootTreeNode);
+			treeView.SelectedNode = rootNode;
 		}
 
 		/// <summary>
@@ -389,6 +390,7 @@ namespace Frost.TntEditor
 				index = selected.Index;
 				parent.Nodes.RemoveAt(index);
 				parent.Nodes.Insert(index - 1, selected);
+				treeView.SelectedNode = selected;
 				
 				// Refresh the nodes
 				for(var i = index - 1; i < listNode.Count; ++i)
@@ -419,6 +421,7 @@ namespace Frost.TntEditor
 				index = selected.Index;
 				parent.Nodes.RemoveAt(index);
 				parent.Nodes.Insert(index + 1, selected);
+				treeView.SelectedNode = selected;
 
 				// Refresh the nodes
 				for(var i = index; i < listNode.Count; ++i)

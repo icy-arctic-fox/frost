@@ -188,6 +188,29 @@ namespace Frost.TntEditor
 			var canDelete = nodeEditorPanel.CanDeleteSelectedNode;
 			deleteToolStripButton.Enabled   = canDelete;
 			deleteToolStripMenuItem.Enabled = canDelete;
+
+			var canMoveUp = nodeEditorPanel.CanMoveSelectedNodeUp;
+			moveUpToolStripButton.Enabled   = canMoveUp;
+			moveUpToolStripMenuItem.Enabled = canMoveUp;
+
+			var canMoveDown = nodeEditorPanel.CanMoveSelectedNodeDown;
+			moveDownToolStripButton.Enabled   = canMoveDown;
+			moveDownToolStripMenuItem.Enabled = canMoveDown;
+		}
+
+		private void moveUpButton_Click (object sender, EventArgs e)
+		{
+			nodeEditorPanel.MoveSelectedNodeUp();
+		}
+
+		private void moveDownButton_Click (object sender, EventArgs e)
+		{
+			nodeEditorPanel.MoveSelectedNodeDown();
+		}
+
+		private void deleteButton_Click (object sender, EventArgs e)
+		{
+			nodeEditorPanel.DeleteSelectedNode();
 		}
 
 		private void searchToolStripTextBox_Click (object sender, EventArgs e)
@@ -195,7 +218,7 @@ namespace Frost.TntEditor
 			var textBox = (ToolStripTextBox)sender;
 			if(textBox.ForeColor == SystemColors.GrayText)
 			{// Search text
-				textBox.Text      = String.Empty;
+				textBox.Text = String.Empty;
 				textBox.ForeColor = SystemColors.ControlText;
 			}
 		}
@@ -206,11 +229,11 @@ namespace Frost.TntEditor
 			if(String.IsNullOrWhiteSpace(textBox.Text))
 			{// Display search text
 				textBox.ForeColor = SystemColors.GrayText;
-				textBox.Text      = "Search";
+				textBox.Text = "Search";
 			}
 		}
 
-		private void searchToolStripButton_Click(object sender, EventArgs e)
+		private void searchToolStripButton_Click (object sender, EventArgs e)
 		{
 			throw new NotImplementedException();
 		}
@@ -222,11 +245,6 @@ namespace Frost.TntEditor
 				e.SuppressKeyPress = true;
 				searchToolStripButton_Click(sender, e);
 			}
-		}
-
-		private void deleteButton_Click (object sender, EventArgs e)
-		{
-			nodeEditorPanel.DeleteSelectedNode();
 		}
 
 		#region File menu

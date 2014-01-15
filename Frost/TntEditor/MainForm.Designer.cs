@@ -41,12 +41,12 @@
 			this.nodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newNodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.addNodeListToolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addNodeListToolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.addNodeToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.moveUpToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -57,10 +57,10 @@
 			this.searchToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.searchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.nodeInfoPanel = new Frost.TntEditor.NodeInfoPanel();
 			this.nodeEditorPanel = new Frost.TntEditor.NodeEditorPanel();
+			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.menuStrip.SuspendLayout();
 			this.nodeContextMenuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
@@ -154,8 +154,7 @@
             this.pasteToolStripMenuItem,
             this.deleteToolStripMenuItem});
 			this.nodeContextMenuStrip.Name = "nodeContextMenuStrip";
-			this.nodeContextMenuStrip.OwnerItem = this.editToolStripMenuItem;
-			this.nodeContextMenuStrip.Size = new System.Drawing.Size(204, 136);
+			this.nodeContextMenuStrip.Size = new System.Drawing.Size(204, 158);
 			// 
 			// addToolStripMenuItem
 			// 
@@ -174,16 +173,6 @@
 			this.newNodeContextMenuStrip.ShowImageMargin = false;
 			this.newNodeContextMenuStrip.Size = new System.Drawing.Size(36, 4);
 			// 
-			// addNodeListToolStripButton
-			// 
-			this.addNodeListToolStripButton.DropDown = this.newNodeContextMenuStrip;
-			this.addNodeListToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_design;
-			this.addNodeListToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.addNodeListToolStripButton.Name = "addNodeListToolStripButton";
-			this.addNodeListToolStripButton.Size = new System.Drawing.Size(90, 22);
-			this.addNodeListToolStripButton.Text = "Add Node";
-			this.addNodeListToolStripButton.ToolTipText = "Add a node to the structure";
-			// 
 			// moveUpToolStripMenuItem
 			// 
 			this.moveUpToolStripMenuItem.Enabled = false;
@@ -194,6 +183,7 @@
 			this.moveUpToolStripMenuItem.Text = "Move &Up";
 			this.moveUpToolStripMenuItem.ToolTipText = "Move the node up one slot in its container. This does not have an effect on compl" +
     "ex nodes, as they are unordered.";
+			this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpButton_Click);
 			// 
 			// moveDownToolStripMenuItem
 			// 
@@ -205,6 +195,7 @@
 			this.moveDownToolStripMenuItem.Text = "Move &Down";
 			this.moveDownToolStripMenuItem.ToolTipText = "Move the node down one slot in its container. This does not have an effect on com" +
     "plex nodes, as they are unordered.";
+			this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownButton_Click);
 			// 
 			// copyToolStripMenuItem
 			// 
@@ -236,6 +227,16 @@
 			this.deleteToolStripMenuItem.Text = "Dele&te Node";
 			this.deleteToolStripMenuItem.ToolTipText = "Deleted the selected node";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteButton_Click);
+			// 
+			// addNodeListToolStripButton
+			// 
+			this.addNodeListToolStripButton.DropDown = this.newNodeContextMenuStrip;
+			this.addNodeListToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_design;
+			this.addNodeListToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.addNodeListToolStripButton.Name = "addNodeListToolStripButton";
+			this.addNodeListToolStripButton.Size = new System.Drawing.Size(90, 22);
+			this.addNodeListToolStripButton.Text = "Add Node";
+			this.addNodeListToolStripButton.ToolTipText = "Add a node to the structure";
 			// 
 			// toolStrip
 			// 
@@ -276,6 +277,7 @@
 			this.moveUpToolStripButton.Text = "Move Up";
 			this.moveUpToolStripButton.ToolTipText = "Move the node up one slot in its container. This does not have an effect on compl" +
     "ex nodes, as they are unordered.";
+			this.moveUpToolStripButton.Click += new System.EventHandler(this.moveUpButton_Click);
 			// 
 			// moveDownToolStripButton
 			// 
@@ -287,6 +289,7 @@
 			this.moveDownToolStripButton.Text = "Move Down";
 			this.moveDownToolStripButton.ToolTipText = "Move the node down one slot in its container. This does not have an effect on com" +
     "plex nodes, as they are unordered.";
+			this.moveDownToolStripButton.Click += new System.EventHandler(this.moveDownButton_Click);
 			// 
 			// copyToolStripButton
 			// 
@@ -361,18 +364,6 @@
 			this.splitContainer.SplitterDistance = 252;
 			this.splitContainer.TabIndex = 2;
 			// 
-			// openFileDialog
-			// 
-			this.openFileDialog.DefaultExt = "tnt";
-			this.openFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
-			this.openFileDialog.Title = "Load File";
-			// 
-			// saveFileDialog
-			// 
-			this.saveFileDialog.DefaultExt = "tnt";
-			this.saveFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
-			this.saveFileDialog.Title = "Save File";
-			// 
 			// nodeInfoPanel
 			// 
 			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -389,6 +380,18 @@
 			this.nodeEditorPanel.NodeContainer = null;
 			this.nodeEditorPanel.Size = new System.Drawing.Size(506, 348);
 			this.nodeEditorPanel.TabIndex = 0;
+			// 
+			// openFileDialog
+			// 
+			this.openFileDialog.DefaultExt = "tnt";
+			this.openFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
+			this.openFileDialog.Title = "Load File";
+			// 
+			// saveFileDialog
+			// 
+			this.saveFileDialog.DefaultExt = "tnt";
+			this.saveFileDialog.Filter = "TNT Files|*.*|Compressed TNT Files|*.*";
+			this.saveFileDialog.Title = "Save File";
 			// 
 			// MainForm
 			// 
