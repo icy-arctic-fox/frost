@@ -185,6 +185,8 @@ namespace Frost.TntEditor
 
 		void nodeEditorPanel_SelectedNodeChanged (object sender, TreeViewEventArgs e)
 		{
+			nodeInfoPanel.SetDisplayNode(nodeEditorPanel.SelectedNode);
+
 			var canDelete = nodeEditorPanel.CanDeleteSelectedNode;
 			deleteToolStripButton.Enabled   = canDelete;
 			deleteToolStripMenuItem.Enabled = canDelete;
@@ -211,18 +213,19 @@ namespace Frost.TntEditor
 			}
 			else
 			{
+				var canAddToList = nodeEditorPanel.CanAddToListNode;
+				var img = canAddToList ? NodeTypeImageList.Images[(int)nodeEditorPanel.SelectedListElementType] : addNodeMultiToolStripButton.Image;
+
 				addNodeMultiToolStripButton.Visible   = false;
 				addNodeMultiToolStripButton.Enabled   = false;
 				addNodeMultiToolStripMenuItem.Visible = false;
 				addNodeMultiToolStripMenuItem.Enabled = false;
-				var canAddToList = nodeEditorPanel.CanAddToListNode;
-				var img = canAddToList ? NodeTypeImageList.Images[(int)nodeEditorPanel.SelectedListElementType] : addNodeMultiToolStripButton.Image;
-				addNodeToolStripButton.Visible   = true;
-				addNodeToolStripButton.Enabled   = canAddToList;
-				addNodeToolStripButton.Image     = img;
-				addNodeToolStripMenuItem.Visible = true;
-				addNodeToolStripMenuItem.Enabled = canAddToList;
-				addNodeToolStripMenuItem.Image   = img;
+				addNodeToolStripButton.Visible        = true;
+				addNodeToolStripButton.Enabled        = canAddToList;
+				addNodeToolStripButton.Image          = img;
+				addNodeToolStripMenuItem.Visible      = true;
+				addNodeToolStripMenuItem.Enabled      = canAddToList;
+				addNodeToolStripMenuItem.Image        = img;
 			}
 		}
 
