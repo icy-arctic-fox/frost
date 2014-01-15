@@ -25,6 +25,15 @@ namespace Frost.TntEditor
 			}
 		}
 
+		/// <summary>
+		/// Context menu strip displayed for each node when right-clicked
+		/// </summary>
+		public ContextMenuStrip NodeContextMenuStrip
+		{
+			get { return treeView.ContextMenuStrip; }
+			set { treeView.ContextMenuStrip = value; }
+		}
+
 		public NodeEditorPanel ()
 		{
 			InitializeComponent();

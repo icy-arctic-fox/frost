@@ -18,6 +18,7 @@ namespace Frost.TntEditor
 		{
 			InitializeComponent();
 			constructNewNodeMenu();
+			nodeEditorPanel.ContextMenuStrip = nodeContextMenuStrip;
 			nodeEditorPanel.SelectedNodeChanged += nodeEditorPanel_SelectedNodeChanged;
 			displaySampleContainer();
 		}
@@ -28,10 +29,11 @@ namespace Frost.TntEditor
 			for(var type = NodeType.Boolean; type <= NodeType.Complex; ++type)
 			{
 				var index = (int)type;
-				var item  = new ToolStripButton();
-				item.Tag        = type;
-				item.Text       = type.ToString();
-				item.ImageIndex = index;
+				var item  = new ToolStripMenuItem {
+					Tag        = type,
+					Text       = type.ToString(),
+					ImageIndex = index
+				};
 				newNodeContextMenuStrip.Items.Add(item);
 			}
 		}
