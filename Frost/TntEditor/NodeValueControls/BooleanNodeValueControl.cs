@@ -22,7 +22,7 @@ namespace Frost.TntEditor.NodeValueControls
 		/// <summary>
 		/// Gets a new node that contains the value given in the control
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A node with the entered value</returns>
 		public Node AsNode ()
 		{
 			return new BooleanNode(Value);

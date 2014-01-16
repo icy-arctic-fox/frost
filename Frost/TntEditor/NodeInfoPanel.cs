@@ -75,6 +75,16 @@ namespace Frost.TntEditor
 			case NodeType.Boolean:
 				_nodeEditorControl = new BooleanNodeValueControl();
 				break;
+			case NodeType.Byte:
+			case NodeType.SByte:
+			case NodeType.Short:
+			case NodeType.UShort:
+			case NodeType.Int:
+			case NodeType.UInt:
+			case NodeType.Long:
+			case NodeType.ULong:
+				_nodeEditorControl = new IntegerNodeValueControl();
+				break;
 			default:
 				_nodeEditorControl = null;
 				break;
@@ -87,6 +97,11 @@ namespace Frost.TntEditor
 				nodeInfoLayoutPanel.SetColumnSpan(control, 3);
 			}
 		}
+
+		/// <summary>
+		/// Triggered when a node has been modified
+		/// </summary>
+		public event EventHandler<NodeUpdateEventArgs> NodeModified;
 
 		#region Event listeners
 		private void typeCombo_SelectedIndexChanged (object sender, EventArgs e)
@@ -107,6 +122,49 @@ namespace Frost.TntEditor
 			typePicture.Image = img;
 			changeValueEditor((NodeType)index);
 		}
+
+		private void applyButton_Click (object sender, EventArgs e)
+		{
+			if(NodeModified != null)
+			{
+				var name = nameText.Text;
+				var node = _nodeEditorControl.AsNode();
+				var args = new NodeUpdateEventArgs(name, node);
+				NodeModified(this, args);
+			}
+		}
 		#endregion
+
+		/// <summary>
+		/// Information about a node change
+		/// </summary>
+		internal class NodeUpdateEventArgs : EventArgs
+		{
+			private readonly string _name;
+
+			/// <summary>
+			/// New node name (for nodes nested under complex nodes)
+			/// </summary>
+			public string Name
+			{
+				get { return _name; }
+			}
+
+			private readonly Node _node;
+
+			/// <summary>
+			/// New node values
+			/// </summary>
+			public Node Node
+			{
+				get { return _node; }
+			}
+
+			public NodeUpdateEventArgs (string name, Node node)
+			{
+				_name = name;
+				_node = node;
+			}
+		}
 	}
 }

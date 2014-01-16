@@ -363,6 +363,11 @@ namespace Frost.TntEditor
 			Close();
 		}
 		#endregion
+
+		private void nodeInfoPanel_NodeModified (object sender, NodeInfoPanel.NodeUpdateEventArgs e)
+		{
+			nodeEditorPanel.UpdateSelectedNode(e.Name, e.Node);
+		}
 		#endregion
 	}
 }

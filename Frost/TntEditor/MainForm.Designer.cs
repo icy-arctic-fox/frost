@@ -58,12 +58,12 @@
 			this.searchToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.searchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.nodeInfoPanel = new Frost.TntEditor.NodeInfoPanel();
-			this.nodeEditorPanel = new Frost.TntEditor.NodeEditorPanel();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.newNodeSubContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.nodeTypeImageList = new System.Windows.Forms.ImageList(this.components);
+			this.nodeInfoPanel = new Frost.TntEditor.NodeInfoPanel();
+			this.nodeEditorPanel = new Frost.TntEditor.NodeEditorPanel();
 			this.menuStrip.SuspendLayout();
 			this.nodeContextMenuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
@@ -380,24 +380,6 @@
 			this.splitContainer.SplitterDistance = 252;
 			this.splitContainer.TabIndex = 2;
 			// 
-			// nodeInfoPanel
-			// 
-			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.nodeInfoPanel.Location = new System.Drawing.Point(0, 0);
-			this.nodeInfoPanel.Name = "nodeInfoPanel";
-			this.nodeInfoPanel.Size = new System.Drawing.Size(252, 348);
-			this.nodeInfoPanel.TabIndex = 0;
-			// 
-			// nodeEditorPanel
-			// 
-			this.nodeEditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.nodeEditorPanel.Location = new System.Drawing.Point(0, 0);
-			this.nodeEditorPanel.Name = "nodeEditorPanel";
-			this.nodeEditorPanel.NodeContainer = null;
-			this.nodeEditorPanel.NodeContextMenuStrip = null;
-			this.nodeEditorPanel.Size = new System.Drawing.Size(506, 348);
-			this.nodeEditorPanel.TabIndex = 0;
-			// 
 			// openFileDialog
 			// 
 			this.openFileDialog.DefaultExt = "tnt";
@@ -443,6 +425,25 @@
 			this.nodeTypeImageList.Images.SetKeyName(21, "type21.png");
 			this.nodeTypeImageList.Images.SetKeyName(22, "type22.png");
 			this.nodeTypeImageList.Images.SetKeyName(23, "type23.png");
+			// 
+			// nodeInfoPanel
+			// 
+			this.nodeInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.nodeInfoPanel.Location = new System.Drawing.Point(0, 0);
+			this.nodeInfoPanel.Name = "nodeInfoPanel";
+			this.nodeInfoPanel.Size = new System.Drawing.Size(252, 348);
+			this.nodeInfoPanel.TabIndex = 0;
+			this.nodeInfoPanel.NodeModified += new System.EventHandler<Frost.TntEditor.NodeInfoPanel.NodeUpdateEventArgs>(this.nodeInfoPanel_NodeModified);
+			// 
+			// nodeEditorPanel
+			// 
+			this.nodeEditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.nodeEditorPanel.Location = new System.Drawing.Point(0, 0);
+			this.nodeEditorPanel.Name = "nodeEditorPanel";
+			this.nodeEditorPanel.NodeContainer = null;
+			this.nodeEditorPanel.NodeContextMenuStrip = null;
+			this.nodeEditorPanel.Size = new System.Drawing.Size(506, 348);
+			this.nodeEditorPanel.TabIndex = 0;
 			// 
 			// MainForm
 			// 

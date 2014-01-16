@@ -490,6 +490,43 @@ namespace Frost.TntEditor
 				}
 			}
 		}
+
+		/// <summary>
+		/// Updates the name and value of the selected node
+		/// </summary>
+		/// <param name="name">New name of the node</param>
+		/// <param name="node">New node to put in place of the selected node</param>
+		public void UpdateSelectedNode (string name, Node node)
+		{
+			var prevInfo   = SelectedNode;
+			var prevNode   = prevInfo.Node;
+			var parentInfo = prevInfo.Parent;
+			var parentNode = prevInfo.ParentNode;
+			if(parentNode != null)
+			{// Update the parent's reference to the child
+				switch(parentNode.Type)
+				{
+				case NodeType.List:
+					// Remove underlying node
+					var list  = (ListNode)parentNode;
+					var index = list.IndexOf(prevNode);
+					list.RemoveAt(index);
+					list.Insert(index, node);
+
+					// Remove visual node
+					var parentTreeNode = treeView.SelectedNode.Parent;
+					var treeNode       = constructTreeNode(node, parentInfo, String.Format("[{0}]", name));
+					index = parentTreeNode.Nodes.IndexOf(treeView.SelectedNode);
+					parentTreeNode.Nodes.RemoveAt(index);
+					parentTreeNode.Nodes.Insert(index, treeNode);
+					treeView.SelectedNode = treeNode;
+					break;
+				case NodeType.Complex:
+					throw new NotImplementedException();
+				}
+			}
+			// TODO: else - top-level (root) node
+		}
 		#endregion
 
 		/// <summary>
