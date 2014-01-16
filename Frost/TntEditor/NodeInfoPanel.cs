@@ -106,6 +106,14 @@ namespace Frost.TntEditor
 		public event EventHandler<NodeUpdateEventArgs> NodeModified;
 
 		#region Event listeners
+		private void nameText_KeyDown (object sender, KeyEventArgs e)
+		{
+			if(e.KeyCode == Keys.Divide || e.KeyData == Keys.OemQuestion) // Don't allow slashes in node names
+				e.SuppressKeyPress = true;
+			else if(e.KeyCode == Keys.Enter) // "Press" apply when hitting the enter key
+				applyButton_Click(sender, e);
+		}
+
 		private void typeCombo_SelectedIndexChanged (object sender, EventArgs e)
 		{
 			var combo = (ComboBox)sender;

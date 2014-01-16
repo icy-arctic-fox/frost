@@ -140,6 +140,7 @@
 			this.nameText.Name = "nameText";
 			this.nameText.Size = new System.Drawing.Size(120, 20);
 			this.nameText.TabIndex = 7;
+			this.nameText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameText_KeyDown);
 			// 
 			// typeCombo
 			// 
