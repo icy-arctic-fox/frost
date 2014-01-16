@@ -520,6 +520,8 @@ namespace Frost.TntEditor
 					parentTreeNode.Nodes.RemoveAt(index);
 					parentTreeNode.Nodes.Insert(index, treeNode);
 					treeView.SelectedNode = treeNode;
+
+					treeView_AfterSelect(this, new TreeViewEventArgs(treeNode));
 					break;
 				case NodeType.Complex:
 					throw new NotImplementedException();

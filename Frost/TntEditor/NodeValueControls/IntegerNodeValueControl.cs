@@ -48,49 +48,59 @@ namespace Frost.TntEditor.NodeValueControls
 		/// <param name="node">Node to pull values from</param>
 		public void FromNode (Node node)
 		{
-			decimal min, max;
+			decimal min, max, value;
 			switch(node.Type)
 			{
 			case NodeType.Byte:
-				min = Byte.MinValue;
-				max = Byte.MaxValue;
+				min   = Byte.MinValue;
+				max   = Byte.MaxValue;
+				value = ((ByteNode)node).Value;
 				break;
 			case NodeType.SByte:
-				min = SByte.MinValue;
-				max = SByte.MaxValue;
+				min   = SByte.MinValue;
+				max   = SByte.MaxValue;
+				value = ((SByteNode)node).Value;
 				break;
 			case NodeType.Short:
-				min = Int16.MinValue;
-				max = Int16.MaxValue;
+				min   = Int16.MinValue;
+				max   = Int16.MaxValue;
+				value = ((ShortNode)node).Value;
 				break;
 			case NodeType.UShort:
-				min = UInt16.MinValue;
-				max = UInt16.MaxValue;
+				min   = UInt16.MinValue;
+				max   = UInt16.MaxValue;
+				value = ((UShortNode)node).Value;
 				break;
 			case NodeType.Int:
-				min = Int32.MinValue;
-				max = Int32.MaxValue;
+				min   = Int32.MinValue;
+				max   = Int32.MaxValue;
+				value = ((IntNode)node).Value;
 				break;
 			case NodeType.UInt:
-				min = UInt32.MinValue;
-				max = UInt32.MaxValue;
+				min   = UInt32.MinValue;
+				max   = UInt32.MaxValue;
+				value = ((UIntNode)node).Value;
 				break;
 			case NodeType.Long:
-				min = Int64.MinValue;
-				max = Int64.MaxValue;
+				min   = Int64.MinValue;
+				max   = Int64.MaxValue;
+				value = ((LongNode)node).Value;
 				break;
 			case NodeType.ULong:
-				min = UInt64.MinValue;
-				max = UInt64.MaxValue;
+				min   = UInt64.MinValue;
+				max   = UInt64.MaxValue;
+				value = ((ULongNode)node).Value;
 				break;
 			default:
-				min = 0;
-				max = 100;
+				min   = 0;
+				max   = 100;
+				value = 0;
 				break;
 			}
 
 			numericUpDown.Minimum = min;
 			numericUpDown.Maximum = max;
+			numericUpDown.Value   = value;
 			_type = node.Type;
 		}
 	}
