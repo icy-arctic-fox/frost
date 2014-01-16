@@ -84,6 +84,12 @@
     <Compile Include="NodeInfoPanel.Designer.cs">
       <DependentUpon>NodeInfoPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeValueControls\FloatNodeValueControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeValueControls\FloatNodeValueControl.Designer.cs">
+      <DependentUpon>FloatNodeValueControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeValueControls\IntegerNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -106,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NodeInfoPanel.resx">
       <DependentUpon>NodeInfoPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeValueControls\FloatNodeValueControl.resx">
+      <DependentUpon>FloatNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\IntegerNodeValueControl.resx">
       <DependentUpon>IntegerNodeValueControl.cs</DependentUpon>
