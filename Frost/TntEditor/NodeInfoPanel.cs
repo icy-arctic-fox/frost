@@ -41,6 +41,7 @@ namespace Frost.TntEditor
 
 			var parentNode    = info.ParentNode;
 			nameText.ReadOnly = (parentNode == null || parentNode.Type != NodeType.Complex);
+			typeCombo.Enabled = (parentNode == null || parentNode.Type != NodeType.List);
 
 			var node = info.Node;
 			if(_nodeEditorControl != null)
@@ -55,6 +56,7 @@ namespace Frost.TntEditor
 			nameText.Text = String.Empty;
 			pathText.Text = String.Empty;
 			typeCombo.SelectedIndex = 0;
+			typeCombo.Enabled = false;
 
 			nameText.ReadOnly = true;
 		}
