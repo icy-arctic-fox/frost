@@ -504,28 +504,35 @@ namespace Frost.TntEditor
 			var parentNode = prevInfo.ParentNode;
 			if(parentNode != null)
 			{// Update the parent's reference to the child
+				int index;
+
+				// Replace underlying node
 				switch(parentNode.Type)
 				{
 				case NodeType.List:
-					// Remove underlying node
-					var list  = (ListNode)parentNode;
-					var index = list.IndexOf(prevNode);
+					var list = (ListNode)parentNode;
+					index    = list.IndexOf(prevNode);
 					list.RemoveAt(index);
 					list.Insert(index, node);
-
-					// Remove visual node
-					var parentTreeNode = treeView.SelectedNode.Parent;
-					var treeNode       = constructTreeNode(node, parentInfo, String.Format("[{0}]", name));
-					index = parentTreeNode.Nodes.IndexOf(treeView.SelectedNode);
-					parentTreeNode.Nodes.RemoveAt(index);
-					parentTreeNode.Nodes.Insert(index, treeNode);
-					treeView.SelectedNode = treeNode;
-
-					treeView_AfterSelect(this, new TreeViewEventArgs(treeNode));
+					name = String.Format("[{0}]", name);
 					break;
 				case NodeType.Complex:
-					throw new NotImplementedException();
+					var complex = (ComplexNode)parentNode;
+					complex.Remove(prevNode);
+					complex.Add(name, node);
+					break;
+				default:
+					throw new InvalidCastException("Unrecognized parent node type");
 				}
+
+				// Replace visual node
+				var parentTreeNode = treeView.SelectedNode.Parent;
+				var treeNode       = constructTreeNode(node, parentInfo, name);
+				index = parentTreeNode.Nodes.IndexOf(treeView.SelectedNode);
+				parentTreeNode.Nodes.RemoveAt(index);
+				parentTreeNode.Nodes.Insert(index, treeNode);
+				treeView.SelectedNode = treeNode;
+				treeView_AfterSelect(this, new TreeViewEventArgs(treeNode));
 			}
 			// TODO: else - top-level (root) node
 		}
