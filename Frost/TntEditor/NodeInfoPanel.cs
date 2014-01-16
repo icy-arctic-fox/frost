@@ -85,13 +85,16 @@ namespace Frost.TntEditor
 			case NodeType.UInt:
 			case NodeType.Long:
 			case NodeType.ULong:
-				var intNodeValueControl = new IntegerNodeValueControl {NodeType = type};
+				var intNodeValueControl = new IntegerNodeValueControl { NodeType = type };
 				_nodeEditorControl      = intNodeValueControl;
 				break;
 			case NodeType.Float:
 			case NodeType.Double:
 				var floatNodeValueControl = new FloatNodeValueControl { NodeType = type };
 				_nodeEditorControl        = floatNodeValueControl;
+				break;
+			case NodeType.String:
+				_nodeEditorControl = new StringNodeValueControl();
 				break;
 			default:
 				_nodeEditorControl = null;
@@ -100,7 +103,8 @@ namespace Frost.TntEditor
 
 			if(_nodeEditorControl != null)
 			{
-				var control = (Control)_nodeEditorControl;
+				var control  = (Control)_nodeEditorControl;
+				control.Dock = DockStyle.Fill;
 				nodeInfoLayoutPanel.Controls.Add(control, 0, 3);
 				nodeInfoLayoutPanel.SetColumnSpan(control, 3);
 			}

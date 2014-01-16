@@ -1,6 +1,6 @@
 ﻿namespace Frost.TntEditor.NodeValueControls
 {
-	partial class IntegerNodeValueControl
+	partial class StringNodeValueControl
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -30,9 +30,8 @@
 		{
 			this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.valueLabel = new System.Windows.Forms.Label();
-			this.numericUpDown = new System.Windows.Forms.NumericUpDown();
+			this.textBox = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel
@@ -40,15 +39,16 @@
 			this.tableLayoutPanel.ColumnCount = 2;
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel.Controls.Add(this.textBox, 1, 0);
 			this.tableLayoutPanel.Controls.Add(this.valueLabel, 0, 0);
-			this.tableLayoutPanel.Controls.Add(this.numericUpDown, 1, 0);
-			this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel.Name = "tableLayoutPanel";
-			this.tableLayoutPanel.RowCount = 1;
+			this.tableLayoutPanel.RowCount = 2;
+			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel.Size = new System.Drawing.Size(295, 28);
+			this.tableLayoutPanel.Size = new System.Drawing.Size(295, 54);
 			this.tableLayoutPanel.TabIndex = 1;
 			// 
 			// valueLabel
@@ -61,25 +61,31 @@
 			this.valueLabel.TabIndex = 1;
 			this.valueLabel.Text = "Value:";
 			// 
-			// numericUpDown
+			// textBox
 			// 
-			this.numericUpDown.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.numericUpDown.Location = new System.Drawing.Point(46, 3);
-			this.numericUpDown.Name = "numericUpDown";
-			this.numericUpDown.Size = new System.Drawing.Size(246, 20);
-			this.numericUpDown.TabIndex = 2;
+			this.textBox.AcceptsReturn = true;
+			this.textBox.AcceptsTab = true;
+			this.textBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox.Location = new System.Drawing.Point(46, 3);
+			this.textBox.Multiline = true;
+			this.textBox.Name = "textBox";
+			this.tableLayoutPanel.SetRowSpan(this.textBox, 2);
+			this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBox.Size = new System.Drawing.Size(246, 48);
+			this.textBox.TabIndex = 2;
 			// 
-			// IntegerNodeValueControl
+			// StringNodeValueControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoSize = true;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "IntegerNodeValueControl";
-			this.Size = new System.Drawing.Size(295, 28);
+			this.MinimumSize = new System.Drawing.Size(100, 28);
+			this.Name = "StringNodeValueControl";
+			this.Size = new System.Drawing.Size(295, 54);
 			this.tableLayoutPanel.ResumeLayout(false);
 			this.tableLayoutPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -88,6 +94,6 @@
 
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
 		private System.Windows.Forms.Label valueLabel;
-		private System.Windows.Forms.NumericUpDown numericUpDown;
+		private System.Windows.Forms.TextBox textBox;
 	}
 }
