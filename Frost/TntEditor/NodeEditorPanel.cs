@@ -502,6 +502,9 @@ namespace Frost.TntEditor
 			var prevNode   = prevInfo.Node;
 			var parentInfo = prevInfo.Parent;
 			var parentNode = prevInfo.ParentNode;
+			if(node == null)
+				node = prevNode;
+
 			if(parentNode != null)
 			{// Update the parent's reference to the child
 				int index;
@@ -511,7 +514,7 @@ namespace Frost.TntEditor
 				{
 				case NodeType.List:
 					var list = (ListNode)parentNode;
-					index    = list.IndexOf(prevNode);
+					index = list.IndexOf(prevNode);
 					list.RemoveAt(index);
 					list.Insert(index, node);
 					name = String.Format("[{0}]", name);
@@ -534,7 +537,11 @@ namespace Frost.TntEditor
 				treeView.SelectedNode = treeNode;
 				treeView_AfterSelect(this, new TreeViewEventArgs(treeNode));
 			}
-			// TODO: else - top-level (root) node
+			else
+			{// Top-level (root) node
+				_container = new NodeContainer(node);
+				reconstructTreeView();
+			}
 		}
 		#endregion
 

@@ -148,10 +148,17 @@ namespace Frost.TntEditor
 			if(NodeModified != null)
 			{
 				var name = nameText.Text;
-				var node = _nodeEditorControl.AsNode();
+				var node = getNodeFromEditor();
 				var args = new NodeUpdateEventArgs(name, node);
 				NodeModified(this, args);
 			}
+		}
+
+		private Node getNodeFromEditor ()
+		{
+			if(_nodeEditorControl == null) // Complex nodes don't have an editor control
+				return (NodeType)typeCombo.SelectedIndex == NodeType.Complex ? new ComplexNode() : null;
+			return _nodeEditorControl.AsNode();
 		}
 		#endregion
 
