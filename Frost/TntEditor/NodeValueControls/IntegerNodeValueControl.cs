@@ -14,6 +14,15 @@ namespace Frost.TntEditor.NodeValueControls
 		private NodeType _type;
 
 		/// <summary>
+		/// Type of node that will be produced by <see cref="AsNode"/>
+		/// </summary>
+		public NodeType NodeType
+		{
+			get { return _type; }
+			set { _type = value; }
+		}
+
+		/// <summary>
 		/// Gets a new node that contains the value given in the control
 		/// </summary>
 		/// <returns>A node with the entered value</returns>

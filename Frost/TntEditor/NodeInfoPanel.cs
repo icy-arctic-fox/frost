@@ -86,6 +86,7 @@ namespace Frost.TntEditor
 			case NodeType.Long:
 			case NodeType.ULong:
 				_nodeEditorControl = new IntegerNodeValueControl();
+				((IntegerNodeValueControl)_nodeEditorControl).NodeType = type;
 				break;
 			default:
 				_nodeEditorControl = null;
