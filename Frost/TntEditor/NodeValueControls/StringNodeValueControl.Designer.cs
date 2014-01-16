@@ -48,7 +48,7 @@
 			this.tableLayoutPanel.RowCount = 2;
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel.Size = new System.Drawing.Size(295, 54);
+			this.tableLayoutPanel.Size = new System.Drawing.Size(295, 68);
 			this.tableLayoutPanel.TabIndex = 1;
 			// 
 			// valueLabel
@@ -71,19 +71,18 @@
 			this.textBox.Name = "textBox";
 			this.tableLayoutPanel.SetRowSpan(this.textBox, 2);
 			this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBox.Size = new System.Drawing.Size(246, 48);
+			this.textBox.Size = new System.Drawing.Size(246, 62);
 			this.textBox.TabIndex = 2;
 			// 
 			// StringNodeValueControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.AutoSize = true;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Margin = new System.Windows.Forms.Padding(0);
 			this.MinimumSize = new System.Drawing.Size(100, 28);
 			this.Name = "StringNodeValueControl";
-			this.Size = new System.Drawing.Size(295, 54);
+			this.Size = new System.Drawing.Size(295, 68);
 			this.tableLayoutPanel.ResumeLayout(false);
 			this.tableLayoutPanel.PerformLayout();
 			this.ResumeLayout(false);
