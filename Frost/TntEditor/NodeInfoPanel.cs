@@ -105,6 +105,12 @@ namespace Frost.TntEditor
 			case NodeType.Xy:
 				_nodeEditorControl = new XyNodeValueControl();
 				break;
+			case NodeType.Xyz:
+				_nodeEditorControl = new XyzNodeValueControl();
+				break;
+			case NodeType.Coordinate2D:
+				_nodeEditorControl = new Coordinate2DNodeValueControl();
+				break;
 			default:
 				_nodeEditorControl = null;
 				break;
