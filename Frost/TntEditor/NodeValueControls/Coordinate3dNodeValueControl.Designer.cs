@@ -33,8 +33,8 @@
 			this.xLabel = new System.Windows.Forms.Label();
 			this.xTextBox = new System.Windows.Forms.TextBox();
 			this.yLabel = new System.Windows.Forms.Label();
-			this.zLabel = new System.Windows.Forms.Label();
 			this.zTextBox = new System.Windows.Forms.TextBox();
+			this.zLabel = new System.Windows.Forms.Label();
 			this.tableLayoutPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -96,6 +96,14 @@
 			this.yLabel.TabIndex = 3;
 			this.yLabel.Text = "Y:";
 			// 
+			// zTextBox
+			// 
+			this.zTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.zTextBox.Location = new System.Drawing.Point(26, 55);
+			this.zTextBox.Name = "zTextBox";
+			this.zTextBox.Size = new System.Drawing.Size(266, 20);
+			this.zTextBox.TabIndex = 6;
+			// 
 			// zLabel
 			// 
 			this.zLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -105,14 +113,6 @@
 			this.zLabel.Size = new System.Drawing.Size(17, 13);
 			this.zLabel.TabIndex = 5;
 			this.zLabel.Text = "Z:";
-			// 
-			// zTextBox
-			// 
-			this.zTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.zTextBox.Location = new System.Drawing.Point(26, 55);
-			this.zTextBox.Name = "zTextBox";
-			this.zTextBox.Size = new System.Drawing.Size(266, 20);
-			this.zTextBox.TabIndex = 6;
 			// 
 			// Coordinate3DNodeValueControl
 			// 

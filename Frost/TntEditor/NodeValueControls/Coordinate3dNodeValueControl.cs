@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 using Frost.IO.Tnt;
 
@@ -34,9 +35,9 @@ namespace Frost.TntEditor.NodeValueControls
 		public void FromNode (Node node)
 		{
 			var coord = (Coordinate3DNode)node;
-			xTextBox.Text = coord.X.ToString();
-			yTextBox.Text = coord.Y.ToString();
-			zTextBox.Text = coord.Z.ToString();
+			xTextBox.Text = coord.X.ToString(CultureInfo.InvariantCulture);
+			yTextBox.Text = coord.Y.ToString(CultureInfo.InvariantCulture);
+			zTextBox.Text = coord.Z.ToString(CultureInfo.InvariantCulture);
 		}
 	}
 }
