@@ -111,6 +111,9 @@ namespace Frost.TntEditor
 			case NodeType.Coordinate2D:
 				_nodeEditorControl = new Coordinate2DNodeValueControl();
 				break;
+			case NodeType.Coordinate3D:
+				_nodeEditorControl = new Coordinate3DNodeValueControl();
+				break;
 			default:
 				_nodeEditorControl = null;
 				break;

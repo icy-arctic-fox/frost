@@ -90,6 +90,12 @@
     <Compile Include="NodeValueControls\Coordinate2dNodeValueControl.Designer.cs">
       <DependentUpon>Coordinate2dNodeValueControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeValueControls\Coordinate3dNodeValueControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeValueControls\Coordinate3dNodeValueControl.Designer.cs">
+      <DependentUpon>Coordinate3dNodeValueControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeValueControls\XyzNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -151,6 +157,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\Coordinate2dNodeValueControl.resx">
       <DependentUpon>Coordinate2dNodeValueControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeValueControls\Coordinate3dNodeValueControl.resx">
+      <DependentUpon>Coordinate3dNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\XyzNodeValueControl.resx">
       <DependentUpon>XyzNodeValueControl.cs</DependentUpon>
