@@ -99,6 +99,9 @@ namespace Frost.TntEditor
 			case NodeType.Guid:
 				_nodeEditorControl = new GuidNodeValueControl();
 				break;
+			case NodeType.DateTime:
+				_nodeEditorControl = new DateTimeNodeValueControl();
+				break;
 			default:
 				_nodeEditorControl = null;
 				break;
