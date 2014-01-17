@@ -84,6 +84,12 @@
     <Compile Include="NodeInfoPanel.Designer.cs">
       <DependentUpon>NodeInfoPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeValueControls\GuidNodeValueControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeValueControls\GuidNodeValueControl.Designer.cs">
+      <DependentUpon>GuidNodeValueControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeValueControls\StringNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -118,6 +124,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NodeInfoPanel.resx">
       <DependentUpon>NodeInfoPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeValueControls\GuidNodeValueControl.resx">
+      <DependentUpon>GuidNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\StringNodeValueControl.resx">
       <DependentUpon>StringNodeValueControl.cs</DependentUpon>

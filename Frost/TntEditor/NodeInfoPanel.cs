@@ -96,6 +96,9 @@ namespace Frost.TntEditor
 			case NodeType.String:
 				_nodeEditorControl = new StringNodeValueControl();
 				break;
+			case NodeType.Guid:
+				_nodeEditorControl = new GuidNodeValueControl();
+				break;
 			default:
 				_nodeEditorControl = null;
 				break;
