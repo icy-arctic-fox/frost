@@ -69,8 +69,8 @@ namespace Frost.IO.Tnt
 		/// <returns>A constructed date and time node</returns>
 		internal static DateTimeNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var ticks = br.ReadInt64();
-			var dt    = new DateTime(ticks);
+			var data = br.ReadInt64();
+			var dt   = DateTime.FromBinary(data);
 			return new DateTimeNode(dt);
 		}
 
@@ -80,7 +80,7 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(Value.Ticks);
+			bw.Write(Value.ToBinary());
 		}
 		#endregion
 	}
