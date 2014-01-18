@@ -7,7 +7,7 @@ namespace Frost.IO.Tnt
 	/// </summary>
 	public static class NodeStructure
 	{
-		#region Required node values
+		#region Required node types
 		// These methods throw exceptions if the node isn't what was expected.
 
 		/// <summary>
@@ -49,6 +49,289 @@ namespace Frost.IO.Tnt
 		{
 			ExpectNodeType(node, NodeType.SByte);
 			return ((SByteNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a short node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ShortNode"/></exception>
+		public static short ExceptShortNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Short);
+			return ((ShortNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is an unsigned short node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="UShortNode"/></exception>
+		public static ushort ExceptUShortNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.UShort);
+			return ((UShortNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is an integer node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="IntNode"/></exception>
+		public static int ExceptIntNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Int);
+			return ((IntNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is an unsigned integer node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="UIntNode"/></exception>
+		public static uint ExceptUIntNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.UInt);
+			return ((UIntNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a long node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="LongNode"/></exception>
+		public static long ExceptLongNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Long);
+			return ((LongNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is an unsigned long node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ULongNode"/></exception>
+		public static ulong ExceptULongNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.ULong);
+			return ((ULongNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a float node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="FloatNode"/></exception>
+		public static float ExceptFloatNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Float);
+			return ((FloatNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a double node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="DoubleNode"/></exception>
+		public static double ExceptDoubleNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Double);
+			return ((DoubleNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a string node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="StringNode"/></exception>
+		public static string ExceptStringNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.String);
+			return ((StringNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a Guid node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="GuidNode"/></exception>
+		public static Guid ExceptGuidNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Guid);
+			return ((GuidNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a date and time node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="DateTimeNode"/></exception>
+		public static DateTime ExceptDateTimeNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.DateTime);
+			return ((DateTimeNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a time span node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="TimeSpanNode"/></exception>
+		public static TimeSpan ExceptTimeSpanNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.TimeSpan);
+			return ((TimeSpanNode)node).Value;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a blob node and retrieves its data
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's data</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="BlobNode"/></exception>
+		public static byte[] ExceptBlobNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Blob);
+			return ((BlobNode)node).Data;
+		}
+
+		/// <summary>
+		/// Ensures that a node is an XY node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <param name="x">The node's x-value</param>
+		/// <param name="y">The node's y-value</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="XyNode"/></exception>
+		public static void ExceptXyNode (this Node node, out int x, out int y)
+		{
+			ExpectNodeType(node, NodeType.Xy);
+			var xy = (XyNode)node;
+			x = xy.X;
+			y = xy.Y;
+		}
+
+		/// <summary>
+		/// Ensures that a node is an XYZ node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <param name="x">The node's x-value</param>
+		/// <param name="y">The node's y-value</param>
+		/// <param name="z">The node's z-value</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="XyzNode"/></exception>
+		public static void ExceptXyzNode (this Node node, out int x, out int y, out int z)
+		{
+			ExpectNodeType(node, NodeType.Xyz);
+			var xyz = (XyzNode)node;
+			x = xyz.X;
+			y = xyz.Y;
+			z = xyz.Z;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a 2D coordinate node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <param name="x">The node's x-coordinate</param>
+		/// <param name="y">The node's y-coordinate</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Coordinate2DNode"/></exception>
+		public static void ExceptCoordinate2DNode (this Node node, out float x, out float y)
+		{
+			ExpectNodeType(node, NodeType.Coordinate2D);
+			var coord = (Coordinate2DNode)node;
+			x = coord.X;
+			y = coord.Y;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a 3D coordinate node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's value</returns>
+		/// <param name="x">The node's x-coordinate</param>
+		/// <param name="y">The node's y-coordinate</param>
+		/// <param name="z">The node's z-coordinate</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Coordinate3DNode"/></exception>
+		public static void ExceptCoordinate2DNode (this Node node, out float x, out float y, out float z)
+		{
+			ExpectNodeType(node, NodeType.Coordinate3D);
+			var coord = (Coordinate3DNode)node;
+			x = coord.X;
+			y = coord.Y;
+			z = coord.Z;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a color node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The node's ARGB value</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ColorNode"/></exception>
+		public static int ExceptColorNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Color);
+			return ((ColorNode)node).Argb;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a list node with expected elements and returns the list
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <param name="type">Expected list element type</param>
+		/// <returns>The list node</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ListNode"/>
+		/// or the type of elements in the list don't match <paramref name="type"/></exception>
+		public static ListNode ExceptListNode (this Node node, NodeType type)
+		{
+			ExpectNodeType(node, NodeType.List);
+			var list = (ListNode)node;
+			if(list.ElementType != type)
+				throw new InvalidCastException("The elements in the list node are not of the expected type.");
+			return list;
+		}
+
+		/// <summary>
+		/// Ensures that a node is a complex node and retrieves its value
+		/// </summary>
+		/// <param name="node">Node to verify</param>
+		/// <returns>The complex node</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ComplexNode"/></exception>
+		public static ComplexNode ExceptComplexNode (this Node node)
+		{
+			ExpectNodeType(node, NodeType.Complex);
+			return (ComplexNode)node;
 		}
 		#endregion
 	}
