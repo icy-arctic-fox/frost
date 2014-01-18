@@ -42,12 +42,12 @@ namespace Frost.IO.Resources
 			get { return _offset; }
 		}
 
-		private readonly long _size;
+		private readonly int _size;
 
 		/// <summary>
-		/// Size of the resource (uncompressed and unencrypted) in bytes
+		/// Size of the resource (compressed and encrypted) in bytes
 		/// </summary>
-		public long Size
+		public int Size
 		{
 			get { return _size; }
 		}
@@ -66,7 +66,7 @@ namespace Frost.IO.Resources
 		/// The name of the resource can't be null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> or <paramref name="size"/> are negative.
 		/// The block offset and resource size can't be negative.</exception>
-		public ResourcePackageEntry (Guid id, string name, int offset, long size)
+		public ResourcePackageEntry (Guid id, string name, int offset, int size)
 		{
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");

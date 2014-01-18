@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Frost.IO.Tnt;
+using Frost.Utility;
+using Ionic.Zlib;
 
 namespace Frost.IO.Resources
 {
@@ -143,6 +143,7 @@ namespace Frost.IO.Resources
 		/// <param name="pkg">Package to add resource entries to</param>
 		private static void extractHeaderEntries (NodeContainer header, ResourcePackage pkg)
 		{
+			// TODO: Catch and rethrow exceptions
 			var root = header.Root.ExceptComplexNode();
 			// TODO: Capture package name, creator, and description
 			var entries = root.ExpectListNode("entries", NodeType.Complex);
@@ -151,7 +152,7 @@ namespace Frost.IO.Resources
 				var id     = node.ExpectGuidNode("id");
 				var name   = node.ExpectStringNode("name");
 				var offset = node.ExpectIntNode("offset");
-				var size   = node.ExpectLongNode("size");
+				var size   = node.ExpectIntNode("size");
 				var entry  = new ResourcePackageEntry(id, name, offset, size);
 				pkg._entries.Add(name, entry);
 			}
@@ -159,6 +160,68 @@ namespace Frost.IO.Resources
 		#endregion
 
 		#region Access
+
+		/// <summary>
+		/// Gets a resource from the package by its name
+		/// </summary>
+		/// <param name="name">Name of the resource to retrieve</param>
+		/// <returns>The data for the resource or null if no resource by the name <paramref name="name"/> exists</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		public byte[] GetResource (string name)
+		{
+			if(name == null)
+				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
+
+			ResourcePackageEntry entry;
+			if(_entries.TryGetValue(name, out entry)) // TODO: Add locking
+			{// Resource exists
+				seekDataBlock(entry.BlockOffset);
+				return readData(entry.Size);
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Reads data from the current position in the package
+		/// </summary>
+		/// <param name="length">Amount of data to read</param>
+		/// <returns>Raw data read from the package (decompressed and decrypted)</returns>
+		private byte[] readData (int length)
+		{
+			const int bufferSize = 1024;
+
+			// Read in the compressed data
+			var compressedData = _br.ReadBytes(length);
+
+			// Decompress the data
+			// TODO: Handle encryption
+			var blocks = new Queue<byte[]>();
+			byte[] buffer;
+			using(var ms = new MemoryStream(compressedData))
+			using(var ds = new DeflateStream(ms, CompressionMode.Decompress))
+			{
+				int bytesRead;
+				do
+				{// Continue reading data
+					buffer    = new byte[bufferSize];
+					bytesRead = ds.Read(buffer, 0, bufferSize);
+					blocks.Enqueue(buffer);
+				} while(bytesRead >= bufferSize);
+			}
+
+			// Assemble the data into a single array
+			var size = (blocks.Count - 1) * bufferSize + buffer.Length;
+			var data = new byte[size];
+			var pos  = 0;
+			while(blocks.Count > 0)
+			{
+				var block     = blocks.Dequeue();
+				var blockSize = block.Length;
+				block.Copy(data, 0, pos, blockSize);
+				pos += blockSize;
+			}
+			return data;
+		}
 
 		/// <summary>
 		/// Seeks to a block in the file
@@ -174,7 +237,7 @@ namespace Frost.IO.Resources
 		/// Seeks to a data block in the file
 		/// </summary>
 		/// <param name="block">Block index</param>
-		private void seekDataBlock(int block)
+		private void seekDataBlock (int block)
 		{
 			seekBlock(block + _dataOffset);
 		}
