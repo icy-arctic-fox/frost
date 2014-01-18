@@ -19,7 +19,7 @@ namespace Frost.TntEditor
 			constructNewNodeMenu();
 			nodeEditorPanel.ContextMenuStrip = nodeContextMenuStrip;
 			nodeEditorPanel.SelectedNodeChanged += nodeEditorPanel_SelectedNodeChanged;
-			displaySampleContainer();
+			displayInitialContainer();
 		}
 		
 		private void constructNewNodeMenu ()
@@ -51,35 +51,15 @@ namespace Frost.TntEditor
 			((ToolStripMenuItem)newNodeContextMenuStrip.Items[(int)(NodeType.List) - 1]).DropDown = newNodeSubContextMenuStrip;
 		}
 
-		private void displaySampleContainer ()
+		private void displayInitialContainer ()
 		{
-			var container = constructSampleContainer();
+			var container = constructInitialContainer();
 			DisplayContainer(container);
 		}
 
-		private static NodeContainer constructSampleContainer ()
+		private static NodeContainer constructInitialContainer ()
 		{
-			var root = new ListNode(NodeType.Complex);
-			for(var i = 0; i < 20; ++i)
-			{
-				var complex = new ComplexNode {
-					{"foo",    new IntNode(5 * i)},
-					{"bar",    new BlobNode(new byte[i])},
-					{"sushi",  new ColorNode(5 * i)},
-					{"wasabi", new XyNode(2 * i, 7 * i)}
-				};
-				var list = new ListNode(NodeType.Guid) {
-					new GuidNode(Guid.NewGuid()),
-					new GuidNode(Guid.NewGuid()),
-					new GuidNode(Guid.NewGuid())
-				};
-				complex.Add("IDs", list);
-				root.Add(complex);
-			}
-			var all = new ComplexNode();
-			for(var type = NodeType.Boolean; type <= NodeType.Complex; ++type)
-				all.Add(type.ToString(), Node.CreateDefaultNode(type));
-			root.Add(all);
+			var root = new ComplexNode();
 			return new NodeContainer(root);
 		}
 
