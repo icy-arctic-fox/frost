@@ -64,6 +64,15 @@ namespace Frost.TntEditor
 		}
 
 		/// <summary>
+		/// Loads a container file
+		/// </summary>
+		/// <param name="filepath">File path to the container to load</param>
+		public void LoadFile (string filepath)
+		{
+			loadContainer(filepath, false);
+		}
+
+		/// <summary>
 		/// Displays a node container in the tree pane
 		/// </summary>
 		/// <param name="container">Container to display</param>
