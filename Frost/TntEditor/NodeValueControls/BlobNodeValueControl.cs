@@ -67,5 +67,21 @@ namespace Frost.TntEditor.NodeValueControls
 				updateSizeLabel();
 			}
 		}
+
+		private void exportButton_Click (object sender, EventArgs args)
+		{
+			if(saveFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				try
+				{
+					File.WriteAllBytes(saveFileDialog.FileName, _data);
+				}
+				catch(Exception e)
+				{
+					MessageBox.Show("An error occurred while writing the file." + Environment.NewLine + e.Message, "File Export Error",
+					                MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+		}
 	}
 }
