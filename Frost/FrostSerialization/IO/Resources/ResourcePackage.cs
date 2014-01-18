@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Frost.IO.Tnt;
 using Frost.Utility;
 using Ionic.Zlib;
@@ -188,7 +189,7 @@ namespace Frost.IO.Resources
 		/// <returns>Raw data read from the package (decompressed and decrypted)</returns>
 		private byte[] readData (int length)
 		{
-			const int bufferSize = 1024;
+			const int bufferSize = 4 * Kilobyte;
 
 			// Read in the compressed data
 			var compressedData = _br.ReadBytes(length);
@@ -205,12 +206,14 @@ namespace Frost.IO.Resources
 				{// Continue reading data
 					buffer    = new byte[bufferSize];
 					bytesRead = ds.Read(buffer, 0, bufferSize);
+					if(bytesRead < bufferSize) // Reduce the buffer size
+						buffer = buffer.Duplicate(0, bytesRead);
 					blocks.Enqueue(buffer);
 				} while(bytesRead >= bufferSize);
 			}
 
 			// Assemble the data into a single array
-			var size = (blocks.Count - 1) * bufferSize + buffer.Length;
+			var size = blocks.Sum(block => block.Length);
 			var data = new byte[size];
 			var pos  = 0;
 			while(blocks.Count > 0)
