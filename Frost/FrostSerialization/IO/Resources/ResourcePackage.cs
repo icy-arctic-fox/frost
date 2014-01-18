@@ -144,18 +144,24 @@ namespace Frost.IO.Resources
 		/// <param name="pkg">Package to add resource entries to</param>
 		private static void extractHeaderEntries (NodeContainer header, ResourcePackage pkg)
 		{
-			// TODO: Catch and rethrow exceptions
-			var root = header.Root.ExceptComplexNode();
-			// TODO: Capture package name, creator, and description
-			var entries = root.ExpectListNode("entries", NodeType.Complex);
-			foreach(ComplexNode node in entries)
+			try
 			{
-				var id     = node.ExpectGuidNode("id");
-				var name   = node.ExpectStringNode("name");
-				var offset = node.ExpectIntNode("offset");
-				var size   = node.ExpectIntNode("size");
-				var entry  = new ResourcePackageEntry(id, name, offset, size);
-				pkg._entries.Add(name, entry);
+				var root = header.Root.ExceptComplexNode();
+				// TODO: Capture package name, creator, and description
+				var entries = root.ExpectListNode("entries", NodeType.Complex);
+				foreach(ComplexNode node in entries)
+				{
+					var id     = node.ExpectGuidNode("id");
+					var name   = node.ExpectStringNode("name");
+					var offset = node.ExpectIntNode("offset");
+					var size   = node.ExpectIntNode("size");
+					var entry  = new ResourcePackageEntry(id, name, offset, size);
+					pkg._entries.Add(name, entry);
+				}
+			}
+			catch(Exception e)
+			{
+				throw new InvalidDataException("An error occurred while processing the package header", e);
 			}
 		}
 		#endregion
@@ -197,15 +203,14 @@ namespace Frost.IO.Resources
 			// Decompress the data
 			// TODO: Handle encryption
 			var blocks = new Queue<byte[]>();
-			byte[] buffer;
 			using(var ms = new MemoryStream(compressedData))
 			using(var ds = new DeflateStream(ms, CompressionMode.Decompress))
 			{
 				int bytesRead;
 				do
 				{// Continue reading data
-					buffer    = new byte[bufferSize];
-					bytesRead = ds.Read(buffer, 0, bufferSize);
+					var buffer = new byte[bufferSize];
+					bytesRead  = ds.Read(buffer, 0, bufferSize);
 					if(bytesRead < bufferSize) // Reduce the buffer size
 						buffer = buffer.Duplicate(0, bytesRead);
 					blocks.Enqueue(buffer);
