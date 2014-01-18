@@ -67,6 +67,10 @@ namespace Frost.IO.Resources
 			_br         = br;
 		}
 
+		#region Entries
+		private readonly Dictionary<string, ResourcePackageEntry> _entries = new Dictionary<string, ResourcePackageEntry>();
+		#endregion
+
 		#region IO
 		#region Load
 
@@ -114,10 +118,8 @@ namespace Frost.IO.Resources
 			if(headerBytes % blockSize != 0)
 				++blockOffset; // Round up
 
-			// TODO: Extract resource information from node data
-
 			var pkg = new ResourcePackage(fileInfo.Version, blockSize, blockOffset, fileInfo.Options, fs, br);
-
+			extractHeaderEntries(header, pkg);
 			return pkg;
 		}
 
@@ -132,6 +134,27 @@ namespace Frost.IO.Resources
 			var opts    = (ResourcePackageOptions)br.ReadUInt16();
 			var kbCount = br.ReadByte();
 			return new HeaderInfo(ver, opts, kbCount);
+		}
+
+		/// <summary>
+		/// Extracts resource entries from the header and adds them to the package's records
+		/// </summary>
+		/// <param name="header">Header to extract entries from</param>
+		/// <param name="pkg">Package to add resource entries to</param>
+		private static void extractHeaderEntries (NodeContainer header, ResourcePackage pkg)
+		{
+			var root = header.Root.ExceptComplexNode();
+			// TODO: Capture package name, creator, and description
+			var entries = root.ExpectListNode("entries", NodeType.Complex);
+			foreach(ComplexNode node in entries)
+			{
+				var id     = node.ExpectGuidNode("id");
+				var name   = node.ExpectStringNode("name");
+				var offset = node.ExpectIntNode("offset");
+				var size   = node.ExpectLongNode("size");
+				var entry  = new ResourcePackageEntry(id, name, offset, size);
+				pkg._entries.Add(name, entry);
+			}
 		}
 		#endregion
 

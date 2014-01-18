@@ -52,6 +52,9 @@ namespace Frost.IO.Resources
 			get { return _size; }
 		}
 
+		// TODO: Add optional property for checksum (sha256)
+		// TODO: Add optional property for encryption key
+
 		/// <summary>
 		/// Creates information about a resource package entry
 		/// </summary>
