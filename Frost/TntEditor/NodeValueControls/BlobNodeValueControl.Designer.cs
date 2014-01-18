@@ -32,8 +32,8 @@
 			this.sizeLabel = new System.Windows.Forms.Label();
 			this.bytesLabel = new System.Windows.Forms.Label();
 			this.importButton = new System.Windows.Forms.Button();
-			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.exportButton = new System.Windows.Forms.Button();
+			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.tableLayoutPanel.SuspendLayout();
 			this.SuspendLayout();
@@ -74,34 +74,38 @@
 			this.bytesLabel.AutoSize = true;
 			this.bytesLabel.Location = new System.Drawing.Point(39, 7);
 			this.bytesLabel.Name = "bytesLabel";
-			this.bytesLabel.Size = new System.Drawing.Size(48, 13);
+			this.bytesLabel.Size = new System.Drawing.Size(41, 13);
 			this.bytesLabel.TabIndex = 2;
-			this.bytesLabel.Text = "__ Bytes";
+			this.bytesLabel.Text = "0 bytes";
 			// 
 			// importButton
 			// 
 			this.importButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
-			this.importButton.Location = new System.Drawing.Point(136, 3);
+			this.importButton.AutoSize = true;
+			this.importButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.importButton.Location = new System.Drawing.Point(175, 3);
 			this.importButton.Name = "importButton";
-			this.importButton.Size = new System.Drawing.Size(75, 22);
+			this.importButton.Size = new System.Drawing.Size(55, 22);
 			this.importButton.TabIndex = 3;
 			this.importButton.Text = "Import...";
 			this.importButton.UseVisualStyleBackColor = true;
 			this.importButton.Click += new System.EventHandler(this.importButton_Click);
 			// 
-			// openFileDialog
-			// 
-			this.openFileDialog.Title = "Import File";
-			// 
 			// exportButton
 			// 
-			this.exportButton.Location = new System.Drawing.Point(217, 3);
+			this.exportButton.AutoSize = true;
+			this.exportButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.exportButton.Location = new System.Drawing.Point(236, 3);
 			this.exportButton.Name = "exportButton";
-			this.exportButton.Size = new System.Drawing.Size(75, 22);
+			this.exportButton.Size = new System.Drawing.Size(56, 22);
 			this.exportButton.TabIndex = 4;
 			this.exportButton.Text = "Export...";
 			this.exportButton.UseVisualStyleBackColor = true;
 			this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
+			// 
+			// openFileDialog
+			// 
+			this.openFileDialog.Title = "Import File";
 			// 
 			// saveFileDialog
 			// 
