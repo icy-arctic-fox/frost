@@ -10,7 +10,6 @@ namespace Frost.TntEditor
 	{
 		private const string DefaultTitle = "TNT Editor";
 
-		private NodeContainer _activeContainer;
 		private string _activeFilepath;
 		private bool _activeContainerCompressed;
 
@@ -55,7 +54,6 @@ namespace Frost.TntEditor
 		private void displaySampleContainer ()
 		{
 			var container = constructSampleContainer();
-			_activeContainer = container;
 			DisplayContainer(container);
 		}
 
@@ -94,72 +92,37 @@ namespace Frost.TntEditor
 			nodeEditorPanel.NodeContainer = container;
 		}
 
-		/// <summary>
-		/// Refreshes the numerical indices on the nodes.
-		/// This should be called after adding or deleting a node in a list node
-		/// </summary>
-		/// <param name="treeNode">Node that refers to the list node</param>
-		private void refreshListNumbers (TreeNode treeNode)
-		{
-			var info = treeNode.Tag as NodeInfo;
-			if(info != null)
-			{
-				var list = info.Node as ListNode;
-				if(list != null)
-				{
-					var value      = list.StringValue;
-					var parentInfo = info.Parent;
-					string name    = null;
-					if(parentInfo != null)
-						name = parentInfo.Name;
-					var text = (name == null) ? value : String.Format("{0}: {1}", name, value);
-					treeNode.Text = text;
-
-					var i = 0;
-					foreach(TreeNode child in treeNode.Nodes)
-						child.Text = String.Format("[{0}]: {1}", i++, ((Node)child.Tag).StringValue);
-				}
-			}
-		}
-
-		private void enableListNodeOptions(bool flag = true)
-		{
-			deleteToolStripButton.Enabled   = flag;
-			deleteToolStripMenuItem.Enabled = flag;
-			enableNodeOptions(flag);
-		}
-
-		private void enableNodeOptions (bool flag = true)
-		{
-			copyToolStripButton.Enabled    = flag;
-			copyToolStripMenuItem.Enabled  = flag;
-			pasteToolStripButton.Enabled   = flag;
-			pasteToolStripMenuItem.Enabled = flag;
-		}
-
 		private void saveActiveContainer (string filepath, bool compress)
 		{
+			saveFileDialog.FileName = filepath;
+			openFileDialog.FileName = filepath;
 			using(var fs = new FileStream(filepath, FileMode.Create))
 			{
 				if(compress)
 					using(var ds = new Ionic.Zlib.DeflateStream(fs, Ionic.Zlib.CompressionMode.Compress))
-						_activeContainer.WriteToStream(ds);
+						nodeEditorPanel.NodeContainer.WriteToStream(ds);
 				else
-					_activeContainer.WriteToStream(fs);
+					nodeEditorPanel.NodeContainer.WriteToStream(fs);
 			}
+			_activeFilepath = filepath;
 			_activeContainerCompressed = compress;
 		}
 
 		private void loadContainer (string filepath, bool compress)
 		{
+			saveFileDialog.FileName = filepath;
+			openFileDialog.FileName = filepath;
 			using(var fs = new FileStream(filepath, FileMode.Open))
 			{
+				NodeContainer container;
 				if(compress)
 					using(var ds = new Ionic.Zlib.DeflateStream(fs, Ionic.Zlib.CompressionMode.Decompress))
-						_activeContainer = NodeContainer.ReadFromStream(ds);
+						container = NodeContainer.ReadFromStream(ds);
 				else
-					_activeContainer = NodeContainer.ReadFromStream(fs);
+					container = NodeContainer.ReadFromStream(fs);
+				nodeEditorPanel.NodeContainer = container;
 			}
+			_activeFilepath = filepath;
 			_activeContainerCompressed = compress;
 		}
 
@@ -309,9 +272,9 @@ namespace Frost.TntEditor
 				{
 					var type = newDialog.RootNodeType;
 					var root = Node.CreateDefaultNode(type);
-					_activeContainer = new NodeContainer(root);
+					var container = new NodeContainer(root);
 					Text = DefaultTitle;
-					DisplayContainer(_activeContainer);
+					DisplayContainer(container);
 				}
 		}
 
@@ -327,7 +290,6 @@ namespace Frost.TntEditor
 				{
 					loadContainer(filepath, compressed);
 					Text = String.Join(" - ", DefaultTitle, filename);
-					DisplayContainer(_activeContainer);
 				}
 				catch(Exception e)
 				{
@@ -339,7 +301,7 @@ namespace Frost.TntEditor
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (null == _activeFilepath)
+			if(null == _activeFilepath)
 				saveAstoolStripMenuItem_Click(sender, e);
 			else
 				saveActiveContainer(_activeFilepath, _activeContainerCompressed);
