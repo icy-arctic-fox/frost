@@ -105,6 +105,9 @@ namespace Frost.TntEditor
 			case NodeType.TimeSpan:
 				_nodeEditorControl = new TimeSpanNodeValueControl();
 				break;
+			case NodeType.Blob:
+				_nodeEditorControl = new BlobNodeValueControl();
+				break;
 			case NodeType.Xy:
 				_nodeEditorControl = new XyNodeValueControl();
 				break;
