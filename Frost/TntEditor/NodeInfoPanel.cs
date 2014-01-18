@@ -117,6 +117,9 @@ namespace Frost.TntEditor
 			case NodeType.Color:
 				_nodeEditorControl = new ColorNodeValueControl();
 				break;
+			case NodeType.List:
+				_nodeEditorControl = new ListNodeValueControl();
+				break;
 			default:
 				_nodeEditorControl = null;
 				break;

@@ -42,12 +42,12 @@
 			this.addNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.addNodeMultiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newNodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.addNodeMultiToolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.addNodeMultiToolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.addNodeToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.moveUpToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -185,8 +185,18 @@
 			// newNodeContextMenuStrip
 			// 
 			this.newNodeContextMenuStrip.Name = "newNodeContextMenuStrip";
-			this.newNodeContextMenuStrip.OwnerItem = this.addNodeMultiToolStripButton;
+			this.newNodeContextMenuStrip.OwnerItem = this.addNodeMultiToolStripMenuItem;
 			this.newNodeContextMenuStrip.Size = new System.Drawing.Size(61, 4);
+			// 
+			// addNodeMultiToolStripButton
+			// 
+			this.addNodeMultiToolStripButton.DropDown = this.newNodeContextMenuStrip;
+			this.addNodeMultiToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_design;
+			this.addNodeMultiToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.addNodeMultiToolStripButton.Name = "addNodeMultiToolStripButton";
+			this.addNodeMultiToolStripButton.Size = new System.Drawing.Size(90, 22);
+			this.addNodeMultiToolStripButton.Text = "Add Node";
+			this.addNodeMultiToolStripButton.ToolTipText = "Add a node to the structure";
 			// 
 			// moveUpToolStripMenuItem
 			// 
@@ -242,16 +252,6 @@
 			this.deleteToolStripMenuItem.Text = "Dele&te Node";
 			this.deleteToolStripMenuItem.ToolTipText = "Deleted the selected node";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteButton_Click);
-			// 
-			// addNodeMultiToolStripButton
-			// 
-			this.addNodeMultiToolStripButton.DropDown = this.newNodeContextMenuStrip;
-			this.addNodeMultiToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_design;
-			this.addNodeMultiToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.addNodeMultiToolStripButton.Name = "addNodeMultiToolStripButton";
-			this.addNodeMultiToolStripButton.Size = new System.Drawing.Size(90, 22);
-			this.addNodeMultiToolStripButton.Text = "Add Node";
-			this.addNodeMultiToolStripButton.ToolTipText = "Add a node to the structure";
 			// 
 			// toolStrip
 			// 
@@ -342,6 +342,7 @@
 			// 
 			this.searchToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.searchToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.searchToolStripButton.Enabled = false;
 			this.searchToolStripButton.Image = global::Frost.TntEditor.Properties.Resources.node_magnifier;
 			this.searchToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.searchToolStripButton.Name = "searchToolStripButton";
@@ -355,7 +356,7 @@
 			this.searchToolStripTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.searchToolStripTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
 			this.searchToolStripTextBox.Name = "searchToolStripTextBox";
-			this.searchToolStripTextBox.Size = new System.Drawing.Size(100, 25);
+			this.searchToolStripTextBox.Size = new System.Drawing.Size(100, 23);
 			this.searchToolStripTextBox.Text = "Search";
 			this.searchToolStripTextBox.Leave += new System.EventHandler(this.searchToolStripTextBox_Leave);
 			this.searchToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchToolStripTextBox_KeyDown);
