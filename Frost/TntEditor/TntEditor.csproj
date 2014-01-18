@@ -102,6 +102,12 @@
     <Compile Include="NodeValueControls\ColorNodeValueControl.Designer.cs">
       <DependentUpon>ColorNodeValueControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeValueControls\TimeSpanNodeValueControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeValueControls\TimeSpanNodeValueControl.Designer.cs">
+      <DependentUpon>TimeSpanNodeValueControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeValueControls\ListNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -175,6 +181,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\ColorNodeValueControl.resx">
       <DependentUpon>ColorNodeValueControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeValueControls\TimeSpanNodeValueControl.resx">
+      <DependentUpon>TimeSpanNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\ListNodeValueControl.resx">
       <DependentUpon>ListNodeValueControl.cs</DependentUpon>
