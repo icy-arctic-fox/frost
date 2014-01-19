@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Frost.IO.Tnt;
-using Frost.Utility;
 using Ionic.Zlib;
 
 namespace Frost.IO.Resources
@@ -47,7 +46,7 @@ namespace Frost.IO.Resources
 		#region Resource management
 
 		private int _curOffset; // Current block offset in the file
-		private readonly Dictionary<string, byte[]> _packedResources = new Dictionary<string, byte[]>();
+		private readonly List<byte[]> _packedResources = new List<byte[]>();
 
 		/// <summary>
 		/// Packs data so that it is in the form that will be written to the package
@@ -78,7 +77,7 @@ namespace Frost.IO.Resources
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
 			if(data == null)
 				throw new ArgumentNullException("data", "The raw data for the resource can't be null.");
-			if(_packedResources.ContainsKey(name)) // TODO: Lock properly
+			if(Entries.ContainsKey(name)) // TODO: Lock properly
 				throw new ArgumentException("A resource by the same name already exists.", "name");
 
 			var packedData = packData(data);
@@ -89,7 +88,7 @@ namespace Frost.IO.Resources
 			var offset  = _curOffset;
 			_curOffset += blockCount;
 			var entry = new ResourcePackageEntry(id, name, offset, packedData.Length);
-			_packedResources.Add(name, packedData);
+			_packedResources.Add(packedData);
 			Entries.Add(name, entry);
 		}
 		#endregion
@@ -153,12 +152,34 @@ namespace Frost.IO.Resources
 		}
 
 		/// <summary>
+		/// Writes a single resource out to the package
+		/// </summary>
+		/// <param name="resource">Packed resource data</param>
+		private void writeResource (byte[] resource)
+		{
+			var startPos = FileStream.Position;
+			_bw.Write(resource, 0, resource.Length);
+			var endPos = FileStream.Position;
+			var size = endPos - startPos;
+			var blockCount = size / BlockSize;
+			if(size % BlockSize != 0)
+			{// Need to pad the current block
+				++blockCount;
+				var totalSize = blockCount * BlockSize;
+				var padSize   = (int)(totalSize - size);
+				var padding   = new byte[padSize]; // TODO: Fill this with random garbage if the resource is encrypted
+				_bw.Write(padding, 0, padSize);
+			}
+		}
+
+		/// <summary>
 		/// Writes out all of the resources to the package file
 		/// </summary>
 		public void Flush ()
 		{
 			writeHeader();
-			throw new NotImplementedException();
+			foreach(var resource in _packedResources)
+				writeResource(resource);
 		}
 		#endregion
 
