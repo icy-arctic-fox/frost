@@ -7,7 +7,7 @@ namespace Frost.ResourcePackager
 {
 	class Program
 	{
-		private static bool _verbose;
+		private static bool _verbose, _stripExt;
 
 		static int Main (string[] args)
 		{
@@ -18,13 +18,27 @@ namespace Frost.ResourcePackager
 			else
 			{
 				var index = 0;
+				bool matched;
 
-				// Parse options
-				if(args[index] == "-v")
-				{// Turn on verbosity
-					_verbose = true;
-					++index;
-				}
+				do
+				{
+					matched = false;
+
+					// Parse options
+					if(args[index] == "-v")
+					{ // Turn on verbosity
+						_verbose = true;
+						++index;
+						matched = true;
+					}
+
+					if(args[index] == "-s")
+					{ // Strip file extensions
+						_stripExt = true;
+						++index;
+						matched = true;
+					}
+				} while(matched); 
 
 				// Parse actions
 				var action    = args[index++].ToLower();
@@ -88,6 +102,7 @@ namespace Frost.ResourcePackager
 
 			Console.WriteLine("Available options:");
 			Console.WriteLine("   -v - Enable verbose output");
+			Console.WriteLine("   -s - Strip file extensions");
 
 			Console.WriteLine("Available actions:");
 			Console.WriteLine("   c or create  - Create a new resource package");
@@ -173,7 +188,7 @@ namespace Frost.ResourcePackager
 		{
 			foreach(var file in Directory.EnumerateFiles(dirPath))
 			{// Iterate through the files
-				var name  = prefix + Path.GetFileNameWithoutExtension(file);
+				var name  = prefix + (_stripExt ? Path.GetFileNameWithoutExtension(file) : Path.GetFileName(file));
 				var entry = new KeyValuePair<string, string>(name, file);
 				entries.Add(entry);
 			}
@@ -228,13 +243,16 @@ namespace Frost.ResourcePackager
 					foreach(var resource in reader.Resources)
 						if(resource.Name.StartsWith(prefix))
 						{// Resource matches
-							var file   = Path.Combine(dir, resource.Name.Replace('/', Path.DirectorySeparatorChar));
+							var resPath = resource.Name.Replace('/', Path.DirectorySeparatorChar);
+							var file    = Path.Combine(dir, resPath);
+							var subDir  = Path.GetDirectoryName(file) ?? ".";
+							if(_stripExt)
+								file = Path.Combine(dir, subDir, Path.GetFileNameWithoutExtension(file) ?? file);
 							if(_verbose)
 								Console.WriteLine("{0} => {1}", resource.Name, file);
 
-							var data   = reader.GetResource(resource.Name);
-							var subDir = Path.GetDirectoryName(file);
-							if(subDir != null && !Directory.Exists(subDir))
+							var data = reader.GetResource(resource.Name);
+							if(!Directory.Exists(subDir))
 							{
 								if(_verbose)
 									Console.WriteLine("Creating directory {0}", subDir);
