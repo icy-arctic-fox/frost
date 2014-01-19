@@ -82,6 +82,13 @@ namespace Frost.IO.Resources
 			_size   = size;
 		}
 
+		#region Node marshal
+
+		private const string IdNodeName     = "id";
+		private const string NameNodeName   = "name";
+		private const string OffsetNodeName = "offset";
+		private const string SizeNodeName   = "size";
+
 		/// <summary>
 		/// Creates information about a resource package entry by extracting it from a node.
 		/// The node passed as <paramref name="node"/> should be the same format as a node returned by <see cref="ToNode"/>.
@@ -90,10 +97,10 @@ namespace Frost.IO.Resources
 		public ResourcePackageEntry (Node node)
 		{
 			var root = node.ExpectComplexNode();
-			_id      = root.ExpectGuidNode("id");
-			_name    = root.ExpectStringNode("name");
-			_offset  = root.ExpectIntNode("offset");
-			_size    = root.ExpectIntNode("size");
+			_id      = root.ExpectGuidNode(IdNodeName);
+			_name    = root.ExpectStringNode(NameNodeName);
+			_offset  = root.ExpectIntNode(OffsetNodeName);
+			_size    = root.ExpectIntNode(SizeNodeName);
 		}
 
 		/// <summary>
@@ -103,11 +110,12 @@ namespace Frost.IO.Resources
 		public Node ToNode ()
 		{
 			return new ComplexNode {
-				{"id", new GuidNode(_id)},
-				{"name", new StringNode(_name)},
-				{"offset", new IntNode(_offset)},
-				{"size", new IntNode(_size)}
+				{IdNodeName,     new GuidNode(_id)},
+				{NameNodeName,   new StringNode(_name)},
+				{OffsetNodeName, new IntNode(_offset)},
+				{SizeNodeName,   new IntNode(_size)}
 			};
 		}
+		#endregion
 	}
 }
