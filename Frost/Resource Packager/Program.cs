@@ -18,29 +18,34 @@ namespace Frost.ResourcePackager
 				var action   = args[0].ToLower();
 				var filepath = args[1];
 				var list     = new List<KeyValuePair<string, string>>();
-				for(var i = 2; i < args.Length; i += 2)
+				if(args.Length % 2 != 0)
+					Console.WriteLine("Uneven number of arguments, list arguments as: resource, filename...");
+				else
 				{
-					var name  = args[i];
-					var file  = args[i + 1];
-					var entry = new KeyValuePair<string, string>(name, file);
-					list.Add(entry);
-				}
+					for(var i = 2; i < args.Length; i += 2)
+					{
+						var name  = args[i];
+						var file  = args[i + 1];
+						var entry = new KeyValuePair<string, string>(name, file);
+						list.Add(entry);
+					}
 
-				switch(action)
-				{
-				case "c":
-				case "create":
-					returnCode = createResourcePackageFile(filepath, list);
-					break;
-				case "x":
-				case "extract":
-					returnCode = extractResourcePackageFile(filepath, list);
-					break;
-				default:
-					Console.Error.WriteLine("Unknown action '{0}'", action);
-					printUsage();
-					returnCode = ReturnCode.BadUsage;
-					break;
+					switch(action)
+					{
+					case "c":
+					case "create":
+						returnCode = createResourcePackageFile(filepath, list);
+						break;
+					case "x":
+					case "extract":
+						returnCode = extractResourcePackageFile(filepath, list);
+						break;
+					default:
+						Console.Error.WriteLine("Unknown action '{0}'", action);
+						printUsage();
+						returnCode = ReturnCode.BadUsage;
+						break;
+					}
 				}
 			}
 
