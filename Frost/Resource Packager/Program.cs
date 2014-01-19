@@ -18,12 +18,15 @@ namespace Frost.ResourcePackager
 			else
 			{
 				var index = 0;
+
+				// Parse options
 				if(args[index] == "-v")
 				{// Turn on verbosity
 					_verbose = true;
 					++index;
 				}
 
+				// Parse actions
 				var action    = args[index++].ToLower();
 				var filepath  = args[index++];
 				var list      = new List<KeyValuePair<string, string>>();
@@ -58,6 +61,10 @@ namespace Frost.ResourcePackager
 					case "unpack":
 						returnCode = unpackDirectoryContents(filepath, list);
 						break;
+					case "l":
+					case "list":
+						returnCode = listResourcePackageContents(filepath);
+						break;
 					default:
 						Console.Error.WriteLine("Unknown action '{0}'", action);
 						printUsage();
@@ -91,6 +98,7 @@ namespace Frost.ResourcePackager
 			Console.WriteLine("                  [resource] now becomes a prefix for resource names in the corresponding directory [filename].");
 			Console.WriteLine("   u or unpack  - Extracts resources from an existing package that match one or more prefixes.");
 			Console.WriteLine("                  [resource] now becomes a prefix for resource names to extract into a corresponding directory [filename].");
+			Console.WriteLine("   l or list    - Lists all of the resources contained in the package file.");
 			Console.WriteLine();
 
 			Console.WriteLine("For [resource, filename]...");
@@ -236,6 +244,39 @@ namespace Frost.ResourcePackager
 						}
 				}
 			return ReturnCode.Ok;
+		}
+
+		/// <summary>
+		/// Lists all of the resources contained in the package
+		/// </summary>
+		/// <param name="filepath">Path to the resource package to read from</param>
+		/// <returns>A program return code</returns>
+		private static ReturnCode listResourcePackageContents (string filepath)
+		{
+			using(var reader = new ResourcePackageReader(filepath))
+				foreach(var resource in reader.Resources)
+					Console.WriteLine("{0} {1,9} {2}", resource.Id, formatSize(resource.Size), resource.Name);
+			return ReturnCode.Ok;
+		}
+
+		private static readonly string[] _units = new[] {"b ", "KB", "MB", "GB"};
+
+		/// <summary>
+		/// Formats a number of bytes as a human readable string
+		/// </summary>
+		/// <param name="bytes">Size in bytes</param>
+		/// <returns>Formatted size as a string</returns>
+		private static string formatSize (long bytes)
+		{
+			var index = 0;
+			var size  = (double)bytes;
+			while(size > 1000d)
+			{
+				size /= 1024d;
+				++index;
+			}
+			var unit = _units[index];
+			return String.Format("{0:F} {1}", size, unit);
 		}
 	}
 }
