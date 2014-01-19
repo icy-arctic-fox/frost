@@ -101,7 +101,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ShortNode"/></exception>
-		public static short ExceptShortNode (this Node node)
+		public static short ExpectShortNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Short);
 			return ((ShortNode)node).Value;
@@ -114,7 +114,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="UShortNode"/></exception>
-		public static ushort ExceptUShortNode (this Node node)
+		public static ushort ExpectUShortNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.UShort);
 			return ((UShortNode)node).Value;
@@ -127,7 +127,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="IntNode"/></exception>
-		public static int ExceptIntNode (this Node node)
+		public static int ExpectIntNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Int);
 			return ((IntNode)node).Value;
@@ -140,7 +140,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="UIntNode"/></exception>
-		public static uint ExceptUIntNode (this Node node)
+		public static uint ExpectUIntNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.UInt);
 			return ((UIntNode)node).Value;
@@ -153,7 +153,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="LongNode"/></exception>
-		public static long ExceptLongNode (this Node node)
+		public static long ExpectLongNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Long);
 			return ((LongNode)node).Value;
@@ -166,7 +166,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ULongNode"/></exception>
-		public static ulong ExceptULongNode (this Node node)
+		public static ulong ExpectULongNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.ULong);
 			return ((ULongNode)node).Value;
@@ -179,7 +179,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="FloatNode"/></exception>
-		public static float ExceptFloatNode (this Node node)
+		public static float ExpectFloatNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Float);
 			return ((FloatNode)node).Value;
@@ -192,7 +192,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="DoubleNode"/></exception>
-		public static double ExceptDoubleNode (this Node node)
+		public static double ExpectDoubleNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Double);
 			return ((DoubleNode)node).Value;
@@ -205,7 +205,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="StringNode"/></exception>
-		public static string ExceptStringNode (this Node node)
+		public static string ExpectStringNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.String);
 			return ((StringNode)node).Value;
@@ -218,7 +218,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="GuidNode"/></exception>
-		public static Guid ExceptGuidNode (this Node node)
+		public static Guid ExpectGuidNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Guid);
 			return ((GuidNode)node).Value;
@@ -231,7 +231,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="DateTimeNode"/></exception>
-		public static DateTime ExceptDateTimeNode (this Node node)
+		public static DateTime ExpectDateTimeNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.DateTime);
 			return ((DateTimeNode)node).Value;
@@ -244,7 +244,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="TimeSpanNode"/></exception>
-		public static TimeSpan ExceptTimeSpanNode (this Node node)
+		public static TimeSpan ExpectTimeSpanNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.TimeSpan);
 			return ((TimeSpanNode)node).Value;
@@ -257,7 +257,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's data</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="BlobNode"/></exception>
-		public static byte[] ExceptBlobNode (this Node node)
+		public static byte[] ExpectBlobNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Blob);
 			return ((BlobNode)node).Data;
@@ -271,7 +271,7 @@ namespace Frost.IO.Tnt
 		/// <param name="y">The node's y-value</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="XyNode"/></exception>
-		public static void ExceptXyNode (this Node node, out int x, out int y)
+		public static void ExpectXyNode (this Node node, out int x, out int y)
 		{
 			ExpectNodeType(node, NodeType.Xy);
 			var xy = (XyNode)node;
@@ -289,7 +289,7 @@ namespace Frost.IO.Tnt
 		/// <param name="z">The node's z-value</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="XyzNode"/></exception>
-		public static void ExceptXyzNode (this Node node, out int x, out int y, out int z)
+		public static void ExpectXyzNode (this Node node, out int x, out int y, out int z)
 		{
 			ExpectNodeType(node, NodeType.Xyz);
 			var xyz = (XyzNode)node;
@@ -306,7 +306,7 @@ namespace Frost.IO.Tnt
 		/// <param name="y">The node's y-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Coordinate2DNode"/></exception>
-		public static void ExceptCoordinate2DNode (this Node node, out float x, out float y)
+		public static void ExpectCoordinate2DNode (this Node node, out float x, out float y)
 		{
 			ExpectNodeType(node, NodeType.Coordinate2D);
 			var coord = (Coordinate2DNode)node;
@@ -324,7 +324,7 @@ namespace Frost.IO.Tnt
 		/// <param name="z">The node's z-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Coordinate3DNode"/></exception>
-		public static void ExceptCoordinate2DNode (this Node node, out float x, out float y, out float z)
+		public static void ExpectCoordinate2DNode (this Node node, out float x, out float y, out float z)
 		{
 			ExpectNodeType(node, NodeType.Coordinate3D);
 			var coord = (Coordinate3DNode)node;
@@ -340,7 +340,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The node's ARGB value</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ColorNode"/></exception>
-		public static int ExceptColorNode (this Node node)
+		public static int ExpectColorNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Color);
 			return ((ColorNode)node).Argb;
@@ -355,7 +355,7 @@ namespace Frost.IO.Tnt
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ListNode"/>
 		/// or the type of elements in the list don't match <paramref name="type"/></exception>
-		public static ListNode ExceptListNode (this Node node, NodeType type)
+		public static ListNode ExpectListNode (this Node node, NodeType type)
 		{
 			ExpectNodeType(node, NodeType.List);
 			var list = (ListNode)node;
@@ -371,7 +371,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The complex node</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="ComplexNode"/></exception>
-		public static ComplexNode ExceptComplexNode (this Node node)
+		public static ComplexNode ExpectComplexNode (this Node node)
 		{
 			ExpectNodeType(node, NodeType.Complex);
 			return (ComplexNode)node;

@@ -89,7 +89,7 @@ namespace Frost.IO.Resources
 		{
 			try
 			{
-				var root = header.Root.ExceptComplexNode();
+				var root = header.Root.ExpectComplexNode();
 				// TODO: Capture package name, creator, and description
 				var entries = root.ExpectListNode("entries", NodeType.Complex);
 				foreach(var node in entries)

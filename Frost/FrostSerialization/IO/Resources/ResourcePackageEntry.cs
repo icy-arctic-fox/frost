@@ -89,7 +89,7 @@ namespace Frost.IO.Resources
 		/// <param name="node">Node that contains information about the resource package entry</param>
 		public ResourcePackageEntry (Node node)
 		{
-			var root = node.ExceptComplexNode();
+			var root = node.ExpectComplexNode();
 			_id      = root.ExpectGuidNode("id");
 			_name    = root.ExpectStringNode("name");
 			_offset  = root.ExpectIntNode("offset");
