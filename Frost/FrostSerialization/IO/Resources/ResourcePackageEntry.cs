@@ -33,12 +33,12 @@ namespace Frost.IO.Resources
 			get { return _name; }
 		}
 
-		private readonly int _offset;
+		private readonly long _offset;
 
 		/// <summary>
-		/// Block offset in the data section that contains the start of the resource data
+		/// Offset in bytes from the package header to where the packed resource data starts
 		/// </summary>
-		public int BlockOffset
+		public long Offset
 		{
 			get { return _offset; }
 		}
@@ -46,7 +46,7 @@ namespace Frost.IO.Resources
 		private readonly int _size;
 
 		/// <summary>
-		/// Size of the resource (compressed and encrypted) in bytes
+		/// Size of the packed resource data in bytes
 		/// </summary>
 		public int Size
 		{
@@ -67,7 +67,7 @@ namespace Frost.IO.Resources
 		/// The name of the resource can't be null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> or <paramref name="size"/> are negative.
 		/// The block offset and resource size can't be negative.</exception>
-		public ResourcePackageEntry (Guid id, string name, int offset, int size)
+		public ResourcePackageEntry (Guid id, string name, long offset, int size)
 		{
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
@@ -99,7 +99,7 @@ namespace Frost.IO.Resources
 			var root = node.ExpectComplexNode();
 			_id      = root.ExpectGuidNode(IdNodeName);
 			_name    = root.ExpectStringNode(NameNodeName);
-			_offset  = root.ExpectIntNode(OffsetNodeName);
+			_offset  = root.ExpectLongNode(OffsetNodeName);
 			_size    = root.ExpectIntNode(SizeNodeName);
 		}
 
@@ -112,7 +112,7 @@ namespace Frost.IO.Resources
 			return new ComplexNode {
 				{IdNodeName,     new GuidNode(_id)},
 				{NameNodeName,   new StringNode(_name)},
-				{OffsetNodeName, new IntNode(_offset)},
+				{OffsetNodeName, new LongNode(_offset)},
 				{SizeNodeName,   new IntNode(_size)}
 			};
 		}

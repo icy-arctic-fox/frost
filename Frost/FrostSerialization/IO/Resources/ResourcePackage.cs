@@ -24,15 +24,10 @@ namespace Frost.IO.Resources
 		public ResourcePackageOptions Options { get; protected set; }
 
 		/// <summary>
-		/// Size of each file block in bytes
+		/// Offset in the file (measured in bytes) to where the data starts
 		/// </summary>
-		public int BlockSize { get; protected set; }
-
-		/// <summary>
-		/// Offset in the file (measured in blocks) to where the data starts
-		/// </summary>
-		/// <remarks>This is also equal to the number of blocks used by the header.</remarks>
-		public int DataOffset { get; protected set; }
+		/// <remarks>This is also equal to the number of bytes used by the header.</remarks>
+		public long DataOffset { get; protected set; }
 
 		/// <summary>
 		/// Underlying stream to access the resource data
@@ -45,27 +40,6 @@ namespace Frost.IO.Resources
 		protected readonly Dictionary<string, ResourcePackageEntry> Entries = new Dictionary<string, ResourcePackageEntry>();
 
 		#region IO
-		#region Access
-
-		/// <summary>
-		/// Seeks to a block in the file
-		/// </summary>
-		/// <param name="block">Block index</param>
-		protected void SeekBlock (int block)
-		{
-			var offset = block * BlockSize;
-			FileStream.Seek(offset, SeekOrigin.Begin);
-		}
-
-		/// <summary>
-		/// Seeks to a data block in the file
-		/// </summary>
-		/// <param name="block">Block index</param>
-		protected void SeekDataBlock (int block)
-		{
-			SeekBlock(block + DataOffset);
-		}
-		#endregion
 
 		/// <summary>
 		/// Closes the resource package file.

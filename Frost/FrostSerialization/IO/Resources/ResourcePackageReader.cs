@@ -30,7 +30,8 @@ namespace Frost.IO.Resources
 
 			// Read the file header info
 			var fileInfo = readFileInfo(_br);
-			BlockSize = (fileInfo.KbCount + 1) * Kilobyte; // +1 to make 0 mean 1 KB block size
+			Version = fileInfo.Version;
+			Options = fileInfo.Options;
 
 			// TODO: Implement header info encryption
 
@@ -52,10 +53,7 @@ namespace Frost.IO.Resources
 			}
 
 			// Calculate how big the header is (and where the data starts)
-			var headerBytes = FileStream.Position;
-			DataOffset      = (int)(headerBytes / BlockSize);
-			if(headerBytes % BlockSize != 0)
-				++DataOffset; // Round up
+			DataOffset = FileStream.Position;
 
 			// Pull entry information from the header
 			extractHeaderEntries(header);
@@ -71,10 +69,10 @@ namespace Frost.IO.Resources
 		/// <returns>Raw header information</returns>
 		private static HeaderInfo readFileInfo (BinaryReader br)
 		{
-			var ver     = br.ReadByte();
-			var opts    = (ResourcePackageOptions)br.ReadUInt16();
-			var kbCount = br.ReadByte();
-			return new HeaderInfo(ver, opts, kbCount);
+			var ver  = br.ReadByte();
+			var opts = (ResourcePackageOptions)br.ReadUInt16();
+			br.ReadByte(); // Unused
+			return new HeaderInfo(ver, opts);
 		}
 
 		/// <summary>
@@ -118,7 +116,7 @@ namespace Frost.IO.Resources
 			ResourcePackageEntry entry;
 			if(Entries.TryGetValue(name, out entry)) // TODO: Add locking
 			{// Resource exists
-				SeekDataBlock(entry.BlockOffset);
+				FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
 				return readData(entry.Size);
 			}
 			return null;

@@ -20,10 +20,10 @@ There are two parts of the resource package file header: the file info and the r
 
 The file info section of the header consists of 8 bytes.
 Those bytes represent the following values:
-* byte 1 - File version number (1 to 255)
+* byte 1    - File version number (1 to 255)
 * bytes 2-3 - File options (see below)
-* byte 4 - File block size (0 to 255)
-* bytes 5-8 Size (in bytes) of the following resource info
+* byte 4    - Unused byte
+* bytes 5-8 - Size (in bytes) of the following resource info
 
 #### Files Options ####
 
@@ -47,7 +47,7 @@ The structure of the TNT container should be:
 --- (List of Complex) entries: Resources in the package file
 ---- (GUID)   id:     Globally unique identifier of the resource (should be unique across all known resources, even if they have the same name)
 ---- (String) name:   Name of the resource (must be unique in the current package file)
----- (Int)    offset: Index of the block where the resource data starts offset from the header block (first resource after the header has an offset of 0)
+---- (Long)   offset: Index of the byte where the resource data starts offset from the header (first resource after the header has an offset of 0)
 ---- (Int)    size:   Size in bytes of the packed resource (compressed and encrypted)
 These are just the minimum expected nodes, additional nodes can be added with no effect.
 

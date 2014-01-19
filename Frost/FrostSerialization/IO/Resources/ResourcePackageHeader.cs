@@ -25,27 +25,15 @@
 			get { return _opts; }
 		}
 
-		private readonly byte _kbCount;
-
-		/// <summary>
-		/// Number of kilobytes contained in each block starting at 0 (0 means 1 KB, 255 means 256 KB)
-		/// </summary>
-		public byte KbCount
-		{
-			get { return _kbCount; }
-		}
-
 		/// <summary>
 		/// Creates new header information
 		/// </summary>
 		/// <param name="ver">Version number</param>
 		/// <param name="opts">Options for the resource package</param>
-		/// <param name="kbCount">Number of kilobytes contained in each block starting at 0 (0 means 1 KB, 255 means 256 KB)</param>
-		public HeaderInfo (byte ver, ResourcePackageOptions opts, byte kbCount)
+		public HeaderInfo (byte ver, ResourcePackageOptions opts)
 		{
-			_ver     = ver;
-			_opts    = opts;
-			_kbCount = kbCount;
+			_ver  = ver;
+			_opts = opts;
 		}
 	}
 }
