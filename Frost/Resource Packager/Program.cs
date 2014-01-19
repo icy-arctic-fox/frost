@@ -57,7 +57,21 @@ namespace Frost.ResourcePackager
 		/// </summary>
 		private static void printUsage ()
 		{
-			throw new NotImplementedException();
+			Console.WriteLine("frp is a program for creating and extracting Frost Resource Packages (.frp files) for the Frost game engine.");
+			Console.WriteLine("Usage: frp <action> <frp file> [resource, filename]...");
+			Console.WriteLine();
+
+			Console.WriteLine("Available actions are:");
+			Console.WriteLine("   c or create  - Create a new resource package");
+			Console.WriteLine("                  This will pack the file from [filename] and name it [resource] in the resource package.");
+			Console.WriteLine("   e or extract - Extract resources from an existing package");
+			Console.WriteLine("                  This will extract a resourced named [resource] from the package and store it in [filename].");
+			Console.WriteLine();
+
+			Console.WriteLine("For [resource, filename]...");
+			Console.WriteLine("provide a resource name (as it would appear in the resource file)");
+			Console.WriteLine("and a path to a file to pack or extract to.");
+			Console.WriteLine("[resource, filename] can be repeated multiple times for each resource to add or extract.");
 		}
 
 		/// <summary>
