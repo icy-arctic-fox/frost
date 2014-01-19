@@ -189,7 +189,7 @@ namespace Frost.ResourcePackager
 		{
 			foreach(var entry in dirs)
 			{
-				var prefix = entry.Key + "/";
+				var prefix = String.IsNullOrWhiteSpace(entry.Key) ? String.Empty : entry.Key + "/";
 				var dir    = entry.Value;
 				if(Directory.Exists(dir))
 				{
