@@ -50,7 +50,6 @@
     <Compile Include="IO\EndianBinaryWriter.cs" />
     <Compile Include="IO\ISerializable.cs" />
     <Compile Include="IO\IStreamable.cs" />
-    <Compile Include="IO\Resources\ResourceInfo.cs" />
     <Compile Include="IO\Resources\ResourcePackage.cs" />
     <Compile Include="IO\Resources\ResourcePackageReader.cs" />
     <Compile Include="IO\Resources\ResourcePackageEntry.cs" />
