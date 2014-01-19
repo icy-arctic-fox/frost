@@ -1,4 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Frost.IO.Tnt;
+using Frost.Utility;
+using Ionic.Zlib;
 
 namespace Frost.IO.Resources
 {
@@ -39,6 +44,56 @@ namespace Frost.IO.Resources
 			// The header is created when Write() is called
 		}
 
+		#region Resource management
+
+		private int _curOffset; // Current block offset in the file
+		private readonly Dictionary<string, byte[]> _packedResources = new Dictionary<string, byte[]>();
+
+		/// <summary>
+		/// Packs data so that it is in the form that will be written to the package
+		/// </summary>
+		/// <param name="data">Unpacked data</param>
+		/// <returns>Packed data</returns>
+		private static byte[] packData (byte[] data)
+		{
+			using(var ms = new MemoryStream())
+			{
+				using(var ds = new DeflateStream(ms, CompressionMode.Compress))
+					ds.Write(data, 0, data.Length);
+				return ms.ToArray();
+			}
+		}
+
+		/// <summary>
+		/// Adds a resource to the package
+		/// </summary>
+		/// <param name="id">Globally unique ID of the resource</param>
+		/// <param name="name">Name of the resource</param>
+		/// <param name="data">Data contained in the resource</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="data"/> are null</exception>
+		/// <exception cref="ArgumentException">Thrown if a resource by the name <paramref name="name"/> has already been added</exception>
+		public void Add (Guid id, string name, byte[] data) // TODO: Add encryption and other options
+		{
+			if(name == null)
+				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+			if(data == null)
+				throw new ArgumentNullException("data", "The raw data for the resource can't be null.");
+			if(_packedResources.ContainsKey(name)) // TODO: Lock properly
+				throw new ArgumentException("A resource by the same name already exists.", "name");
+
+			var packedData = packData(data);
+			var size = packedData.Length;
+			var blockCount = size / BlockSize;
+			if(blockCount % BlockSize != 0)
+				++blockCount; // Round up
+			var offset  = _curOffset;
+			_curOffset += blockCount;
+			var entry = new ResourcePackageEntry(id, name, offset, packedData.Length);
+			_packedResources.Add(name, packedData);
+			Entries.Add(name, entry);
+		}
+		#endregion
+
 		#region IO
 		#region Save
 
@@ -53,9 +108,58 @@ namespace Frost.IO.Resources
 			bw.Write((ushort)info.Options);
 			bw.Write(info.KbCount);
 		}
-		#endregion
 
-		#region Access
+		/// <summary>
+		/// Constructs the node container that contains information about all of the resource entries in the package
+		/// </summary>
+		/// <param name="entries">Information about resources in the package</param>
+		/// <returns>A node container that contains the resource information</returns>
+		private static NodeContainer constructEntriesHeader (IEnumerable<ResourcePackageEntry> entries)
+		{
+			var root = new ComplexNode();
+			// TODO: Add package file name, description, and creator fields
+			var list = new ListNode(NodeType.Complex);
+			foreach(var entry in entries)
+				list.Add(entry.ToNode());
+			root.Add("entries", list);
+			return new NodeContainer(root);
+		}
+
+		/// <summary>
+		/// Writes the header of the package which contains information about all of the resources
+		/// </summary>
+		private void writeHeader ()
+		{
+			// Write the file header first
+			SeekBlock(0); // Go to the start of the file
+			var info = new HeaderInfo(CurrentVersion, Options, ((byte)((BlockSize / Kilobyte) - 1)));
+			writeFileInfo(_bw, info);
+
+			// Write the resource entries
+			var container = constructEntriesHeader(Entries.Values);
+			container.WriteToStream(_bw); // TODO: Handle encryption of the header
+
+			// Update the data offset and pad the block
+			var headerSize = (int)FileStream.Position;
+			var blockCount = headerSize / BlockSize;
+			if(headerSize % BlockSize != 0)
+			{// Need to pad the current block
+				++blockCount;
+				var totalSize = blockCount * BlockSize;
+				var padSize   = totalSize - headerSize;
+				var padding   = new byte[padSize]; // TODO: Fill this with random garbage if the header is encrypted
+				_bw.Write(padding, 0, padSize);
+			}
+		}
+
+		/// <summary>
+		/// Writes out all of the resources to the package file
+		/// </summary>
+		public void Flush ()
+		{
+			writeHeader();
+			throw new NotImplementedException();
+		}
 		#endregion
 
 		/// <summary>
@@ -64,6 +168,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		public override void Close ()
 		{
+			Flush();
 			_bw.Close();
 		}
 		#endregion
@@ -77,7 +182,7 @@ namespace Frost.IO.Resources
 			if(!Disposed)
 			{
 				Disposed = true;
-				_bw.Dispose();
+				Close();
 			}
 		}
 	}
