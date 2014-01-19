@@ -56,3 +56,4 @@ Resources
 
 All resources stored in package files are compressed using Zlib deflate.
 The location of where a resource starts and its packed size are given in the resource info part of the file header.
+Currently, the maximum allowed size for a resource (uncompressed and unencrypted) is 2 GB (Int32.MaxValue).
