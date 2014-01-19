@@ -44,6 +44,10 @@ namespace Frost.ResourcePackager
 					case "pack":
 						returnCode = packDirectoryContents(filepath, list);
 						break;
+					case "u":
+					case "unpack":
+						returnCode = unpackDirectoryContents(filepath, list);
+						break;
 					default:
 						Console.Error.WriteLine("Unknown action '{0}'", action);
 						printUsage();
@@ -71,7 +75,9 @@ namespace Frost.ResourcePackager
 			Console.WriteLine("   e or extract - Extract resources from an existing package");
 			Console.WriteLine("                  This will extract a resourced named [resource] from the package and store it in [filename].");
 			Console.WriteLine("   p or pack    - Creates a new resource package from all of the files in a directory.");
-			Console.WriteLine("                  [resource] now becomes a prefix for resource names in the corresponding directory.");
+			Console.WriteLine("                  [resource] now becomes a prefix for resource names in the corresponding directory [filename].");
+			Console.WriteLine("   u or unpack  - Extracts resources from an existing package that match one or more prefixes.");
+			Console.WriteLine("                  [resource] now becomes a prefix for resource names to extract into a corresponding directory [filename].");
 			Console.WriteLine();
 
 			Console.WriteLine("For [resource, filename]...");
@@ -130,7 +136,7 @@ namespace Frost.ResourcePackager
 		/// <param name="entries">List to append found files to</param>
 		/// <param name="dirPath">Directory path to look in</param>
 		/// <param name="prefix">Prefix to give the resource names</param>
-		private static void discoverFiles (List<KeyValuePair<string, string>> entries, string dirPath, string prefix)
+		private static void discoverFiles (ICollection<KeyValuePair<string, string>> entries, string dirPath, string prefix)
 		{
 			foreach(var file in Directory.EnumerateFiles(dirPath))
 			{// Iterate through the files
@@ -169,6 +175,34 @@ namespace Frost.ResourcePackager
 				Console.Error.WriteLine("Source directory '{0}' doesn't exist", dir);
 				return ReturnCode.MissingSource;
 			}
+			return ReturnCode.Ok;
+		}
+
+		/// <summary>
+		/// Unpacks selected resources prefixed with a value from the package and stores them into directories
+		/// </summary>
+		/// <param name="filepath">Path to the resource package to extract from</param>
+		/// <param name="dirs">Directories and prefixes to unpack.
+		/// The layout is: "name prefix" => "directory path"</param>
+		/// <returns>A program return code</returns>
+		private static ReturnCode unpackDirectoryContents (string filepath, IEnumerable<KeyValuePair<string, string>> dirs)
+		{
+			using(var reader = new ResourcePackageReader(filepath))
+				foreach(var entry in dirs)
+				{
+					var prefix = String.IsNullOrWhiteSpace(entry.Key) ? String.Empty : entry.Key + "/";
+					var dir    = entry.Value;
+					foreach(var resource in reader.Resources)
+						if(resource.Name.StartsWith(prefix))
+						{// Resource matches
+							var file   = Path.Combine(dir, resource.Name.Replace('/', Path.DirectorySeparatorChar));
+							var data   = reader.GetResource(resource.Name);
+							var subDir = Path.GetDirectoryName(file);
+							if(subDir != null && !Directory.Exists(subDir))
+								Directory.CreateDirectory(subDir);
+							File.WriteAllBytes(file, data);
+						}
+				}
 			return ReturnCode.Ok;
 		}
 	}
