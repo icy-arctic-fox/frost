@@ -5,7 +5,9 @@ using System.IO;
 namespace Frost.IO.Resources
 {
 	/// <summary>
-	/// Basic functionality for processing resource packages
+	/// Basic functionality for processing resource packages.
+	/// Resource packages can contain many resources of any type.
+	/// Resources contained in the package files can also be encrypted and compressed.
 	/// </summary>
 	public abstract class ResourcePackage : IDisposable
 	{

@@ -9,9 +9,7 @@ using Ionic.Zlib;
 namespace Frost.IO.Resources
 {
 	/// <summary>
-	/// Provides access to existing resource package files.
-	/// Resource packages can contain many resources of any type.
-	/// Resources contained in the package files can also be encrypted and compressed.
+	/// Provides access to existing resource package files
 	/// </summary>
 	public class ResourcePackageReader : ResourcePackage
 	{
@@ -26,7 +24,7 @@ namespace Frost.IO.Resources
 		/// <param name="filepath">Path to the resource file</param>
 		/// <exception cref="FileNotFoundException">Thrown if the resource package file wasn't found under <paramref name="filepath"/></exception>
 		/// <exception cref="InvalidDataException">Thrown if the data contained in the resource file is invalid</exception>
-		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called</remarks>
+		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called.</remarks>
 		public ResourcePackageReader (string filepath)
 		{
 			// Create the file stream
