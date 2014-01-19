@@ -103,6 +103,7 @@ namespace Frost.ResourcePackager
 			Console.WriteLine("Available options:");
 			Console.WriteLine("   -v - Enable verbose output");
 			Console.WriteLine("   -s - Strip file extensions");
+			Console.WriteLine();
 
 			Console.WriteLine("Available actions:");
 			Console.WriteLine("   c or create  - Create a new resource package");
