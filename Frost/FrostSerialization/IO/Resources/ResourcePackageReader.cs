@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Frost.IO.Tnt;
-using Frost.Utility;
 using Ionic.Zlib;
 
 namespace Frost.IO.Resources
@@ -137,37 +134,23 @@ namespace Frost.IO.Resources
 			const int bufferSize = 4 * Kilobyte;
 
 			// Read in the compressed data
-			var compressedData = _br.ReadBytes(length);
+			var packedData = _br.ReadBytes(length);
 
 			// Decompress the data
 			// TODO: Handle encryption
-			var blocks = new Queue<byte[]>();
-			using(var ms = new MemoryStream(compressedData))
+			using(var ms = new MemoryStream(packedData))
 			using(var ds = new DeflateStream(ms, CompressionMode.Decompress))
+			using(var rs = new MemoryStream(bufferSize))
 			{
 				int bytesRead;
 				do
 				{// Continue reading data
 					var buffer = new byte[bufferSize];
 					bytesRead  = ds.Read(buffer, 0, bufferSize);
-					if(bytesRead < bufferSize) // Reduce the buffer size
-						buffer = buffer.Duplicate(0, bytesRead);
-					blocks.Enqueue(buffer);
+					rs.Write(buffer, 0, bytesRead);
 				} while(bytesRead >= bufferSize);
+				return rs.ToArray();
 			}
-
-			// Assemble the data into a single array
-			var size = blocks.Sum(block => block.Length);
-			var data = new byte[size];
-			var pos  = 0;
-			while(blocks.Count > 0)
-			{
-				var block     = blocks.Dequeue();
-				var blockSize = block.Length;
-				block.Copy(data, 0, pos, blockSize);
-				pos += blockSize;
-			}
-			return data;
 		}
 		#endregion
 
