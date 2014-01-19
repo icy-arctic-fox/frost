@@ -175,7 +175,8 @@ namespace Frost.IO.Resources
 			if(!Disposed)
 			{
 				Disposed = true;
-				Close();
+				if(disposing)
+					Close();
 			}
 		}
 	}
