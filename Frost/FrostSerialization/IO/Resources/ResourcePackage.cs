@@ -34,10 +34,29 @@ namespace Frost.IO.Resources
 		/// </summary>
 		protected Stream FileStream;
 
+		#region Entries
+
 		/// <summary>
 		/// Mapping of resource names to information about a resource in the package
 		/// </summary>
 		protected readonly Dictionary<string, ResourcePackageEntry> Entries = new Dictionary<string, ResourcePackageEntry>();
+
+		/// <summary>
+		/// Collection of all resources in the package
+		/// </summary>
+		public IEnumerable<ResourcePackageEntry> Resources
+		{
+			get { return Entries.Values; }
+		}
+
+		/// <summary>
+		/// Number of resources contained in the package
+		/// </summary>
+		public int Count
+		{
+			get { return Entries.Count; }
+		}
+		#endregion
 
 		#region IO
 
