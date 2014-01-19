@@ -7,6 +7,8 @@ namespace Frost.ResourcePackager
 {
 	class Program
 	{
+		private static bool _verbose;
+
 		static int Main (string[] args)
 		{
 			var returnCode = ReturnCode.Ok;
@@ -15,14 +17,22 @@ namespace Frost.ResourcePackager
 				printUsage();
 			else
 			{
-				var action   = args[0].ToLower();
-				var filepath = args[1];
-				var list     = new List<KeyValuePair<string, string>>();
-				if(args.Length % 2 != 0)
+				var index = 0;
+				if(args[index] == "-v")
+				{// Turn on verbosity
+					_verbose = true;
+					++index;
+				}
+
+				var action    = args[index++].ToLower();
+				var filepath  = args[index++];
+				var list      = new List<KeyValuePair<string, string>>();
+				var remaining = args.Length - index;
+				if(remaining % 2 != 0)
 					Console.WriteLine("Uneven number of arguments, list arguments as: resource, filename...");
 				else
 				{
-					for(var i = 2; i < args.Length; i += 2)
+					for(var i = index; i < args.Length; i += 2)
 					{
 						var name  = args[i];
 						var file  = args[i + 1];
@@ -66,10 +76,13 @@ namespace Frost.ResourcePackager
 		private static void printUsage ()
 		{
 			Console.WriteLine("frp is a program for creating and extracting Frost Resource Packages (.frp files) for the Frost game engine.");
-			Console.WriteLine("Usage: frp <action> <frp file> [resource, filename]...");
+			Console.WriteLine("Usage: frp [options] <action> <frp file> [resource, filename]...");
 			Console.WriteLine();
 
-			Console.WriteLine("Available actions are:");
+			Console.WriteLine("Available options:");
+			Console.WriteLine("   -v - Enable verbose output");
+
+			Console.WriteLine("Available actions:");
 			Console.WriteLine("   c or create  - Create a new resource package");
 			Console.WriteLine("                  This will pack the file from [filename] and name it [resource] in the resource package.");
 			Console.WriteLine("   e or extract - Extract resources from an existing package");
@@ -96,14 +109,22 @@ namespace Frost.ResourcePackager
 		private static ReturnCode createResourcePackageFile (string filepath, IEnumerable<KeyValuePair<string, string>> contents)
 		{
 			using(var writer = new ResourcePackageWriter(filepath))
+			{
 				foreach(var entry in contents)
 				{
 					var id   = Guid.NewGuid();
 					var name = entry.Key;
 					var file = entry.Value;
+
+					if(_verbose)
+						Console.WriteLine("{0} => {1}", file, name);
+
 					var data = File.ReadAllBytes(file); // TODO: Make this better by using streams
 					writer.Add(id, name, data); // TODO: Catch duplicate resource names
 				}
+				if(_verbose)
+					Console.WriteLine("Writing contents to file...");
+			}
 			return 0;
 		}
 
@@ -121,6 +142,10 @@ namespace Frost.ResourcePackager
 				{
 					var name = entry.Key;
 					var file = entry.Value;
+
+					if(_verbose)
+						Console.WriteLine("{0} => {1}", name, file);
+
 					var data = reader.GetResource(name);
 					if(data != null)
 						File.WriteAllBytes(file, data);
@@ -196,10 +221,17 @@ namespace Frost.ResourcePackager
 						if(resource.Name.StartsWith(prefix))
 						{// Resource matches
 							var file   = Path.Combine(dir, resource.Name.Replace('/', Path.DirectorySeparatorChar));
+							if(_verbose)
+								Console.WriteLine("{0} => {1}", resource.Name, file);
+
 							var data   = reader.GetResource(resource.Name);
 							var subDir = Path.GetDirectoryName(file);
 							if(subDir != null && !Directory.Exists(subDir))
+							{
+								if(_verbose)
+									Console.WriteLine("Creating directory {0}", subDir);
 								Directory.CreateDirectory(subDir);
+							}
 							File.WriteAllBytes(file, data);
 						}
 				}
