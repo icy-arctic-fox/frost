@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.IO.Tnt;
 
 namespace Frost.IO.Resources
 {
@@ -6,7 +7,7 @@ namespace Frost.IO.Resources
 	/// Information about an entry in a resource package.
 	/// This information is contained in the header of a resource package.
 	/// </summary>
-	public class ResourcePackageEntry
+	public class ResourcePackageEntry : INodeMarshal
 	{
 		private readonly Guid _id;
 		
@@ -79,6 +80,25 @@ namespace Frost.IO.Resources
 			_name   = name;
 			_offset = offset;
 			_size   = size;
+		}
+
+		/// <summary>
+		/// Creates information about a resource package entry by extracting it from a node.
+		/// The node passed as <paramref name="node"/> should be the same format as a node returned by <see cref="ToNode"/>.
+		/// </summary>
+		/// <param name="node">Node that contains information about the resource package entry</param>
+		public ResourcePackageEntry (Node node)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Packs information about the resource into a node
+		/// </summary>
+		/// <returns>A node containing information about the resource</returns>
+		public Node ToNode ()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

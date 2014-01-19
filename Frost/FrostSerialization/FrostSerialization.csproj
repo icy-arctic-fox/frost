@@ -63,6 +63,7 @@
     <Compile Include="IO\Tnt\Coordinate3DNode.cs" />
     <Compile Include="IO\Tnt\ColorNode.cs" />
     <Compile Include="IO\Tnt\ComplexNode.cs" />
+    <Compile Include="IO\Tnt\INodeMarshal.cs" />
     <Compile Include="IO\Tnt\ListNode.cs" />
     <Compile Include="IO\Tnt\NodeContainer.cs" />
     <Compile Include="IO\Tnt\NodeStructure.cs" />
