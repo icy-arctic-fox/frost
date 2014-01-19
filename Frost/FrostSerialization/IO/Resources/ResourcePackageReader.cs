@@ -13,7 +13,7 @@ namespace Frost.IO.Resources
 	/// Resource packages can contain many resources of any type.
 	/// Resources contained in the package files can also be encrypted and compressed.
 	/// </summary>
-	public class ResourcePackage : IDisposable
+	public class ResourcePackageReader : IDisposable
 	{
 		private const int Kilobyte = 1024;
 
@@ -58,7 +58,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		private readonly BinaryReader _br;
 
-		private ResourcePackage (byte ver, int blockSize, int dataOffset, ResourcePackageOptions opts, Stream s, BinaryReader br)
+		private ResourcePackageReader (byte ver, int blockSize, int dataOffset, ResourcePackageOptions opts, Stream s, BinaryReader br)
 		{
 			_ver        = ver;
 			_blockSize  = blockSize;
@@ -83,7 +83,7 @@ namespace Frost.IO.Resources
 		/// <exception cref="FileNotFoundException">Thrown if the resource package file wasn't found under <paramref name="path"/></exception>
 		/// <exception cref="InvalidDataException">Thrown if the data contained in the resource file is invalid</exception>
 		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called</remarks>
-		public static ResourcePackage Load (string path)
+		public static ResourcePackageReader Load (string path)
 		{
 			// Create the file stream
 			var fs = new FileStream(path, FileMode.Open);
@@ -119,7 +119,7 @@ namespace Frost.IO.Resources
 			if(headerBytes % blockSize != 0)
 				++blockOffset; // Round up
 
-			var pkg = new ResourcePackage(fileInfo.Version, blockSize, blockOffset, fileInfo.Options, fs, br);
+			var pkg = new ResourcePackageReader(fileInfo.Version, blockSize, blockOffset, fileInfo.Options, fs, br);
 			extractHeaderEntries(header, pkg);
 			return pkg;
 		}
@@ -142,7 +142,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="header">Header to extract entries from</param>
 		/// <param name="pkg">Package to add resource entries to</param>
-		private static void extractHeaderEntries (NodeContainer header, ResourcePackage pkg)
+		private static void extractHeaderEntries (NodeContainer header, ResourcePackageReader pkg)
 		{
 			try
 			{
@@ -265,7 +265,7 @@ namespace Frost.IO.Resources
 		private volatile bool _disposed;
 
 		/// <summary>
-		/// Indicates whether the resource package has been disposed
+		/// Indicates whether the resource package reader has been disposed
 		/// </summary>
 		public bool Disposed
 		{
@@ -273,7 +273,7 @@ namespace Frost.IO.Resources
 		}
 
 		/// <summary>
-		/// Disposes of the resource package by closing the file and freeing resources
+		/// Disposes of the resource package reader by closing the file and freeing resources
 		/// </summary>
 		public void Dispose ()
 		{
@@ -281,15 +281,15 @@ namespace Frost.IO.Resources
 		}
 
 		/// <summary>
-		/// Destructor - disposes of the resource package
+		/// Destructor - disposes of the resource package reader
 		/// </summary>
-		~ResourcePackage ()
+		~ResourcePackageReader ()
 		{
 			Dispose(false);
 		}
 
 		/// <summary>
-		/// Disposes of the resource package
+		/// Disposes of the resource package reader
 		/// </summary>
 		/// <param name="disposing">True if inner-resources should be disposed of (<see cref="Dispose"/> was called)</param>
 		protected virtual void Dispose (bool disposing)
