@@ -89,7 +89,11 @@ namespace Frost.IO.Resources
 		/// <param name="node">Node that contains information about the resource package entry</param>
 		public ResourcePackageEntry (Node node)
 		{
-			throw new NotImplementedException();
+			var root = node.ExceptComplexNode();
+			_id      = root.ExpectGuidNode("id");
+			_name    = root.ExpectStringNode("name");
+			_offset  = root.ExpectIntNode("offset");
+			_size    = root.ExpectIntNode("size");
 		}
 
 		/// <summary>
@@ -98,7 +102,12 @@ namespace Frost.IO.Resources
 		/// <returns>A node containing information about the resource</returns>
 		public Node ToNode ()
 		{
-			throw new NotImplementedException();
+			return new ComplexNode {
+				{"id", new GuidNode(_id)},
+				{"name", new StringNode(_name)},
+				{"offset", new IntNode(_offset)},
+				{"size", new IntNode(_size)}
+			};
 		}
 	}
 }

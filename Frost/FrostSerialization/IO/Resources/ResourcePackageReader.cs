@@ -92,14 +92,10 @@ namespace Frost.IO.Resources
 				var root = header.Root.ExceptComplexNode();
 				// TODO: Capture package name, creator, and description
 				var entries = root.ExpectListNode("entries", NodeType.Complex);
-				foreach(ComplexNode node in entries)
+				foreach(var node in entries)
 				{
-					var id     = node.ExpectGuidNode("id");
-					var name   = node.ExpectStringNode("name");
-					var offset = node.ExpectIntNode("offset");
-					var size   = node.ExpectIntNode("size");
-					var entry  = new ResourcePackageEntry(id, name, offset, size);
-					Entries.Add(name, entry);
+					var entry = new ResourcePackageEntry(node);
+					Entries.Add(entry.Name, entry);
 				}
 			}
 			catch(Exception e)
