@@ -55,6 +55,7 @@
     <Compile Include="IO\Resources\ResourcePackageEntry.cs" />
     <Compile Include="IO\Resources\ResourcePackageHeader.cs" />
     <Compile Include="IO\Resources\ResourcePackageOptions.cs" />
+    <Compile Include="IO\Resources\ResourcePackageWriter.cs" />
     <Compile Include="IO\Tnt\ByteNode.cs" />
     <Compile Include="IO\Tnt\BooleanNode.cs" />
     <Compile Include="IO\Tnt\BlobNode.cs" />
