@@ -14,7 +14,7 @@ namespace Frost.Utility
 	/// <remarks>This class uses the Low Inter-reference Recency Set cache technique.
 	/// A description of this algorithm can be found here: http://en.wikipedia.org/wiki/LIRS_caching_algorithm
 	/// Items that are no longer cached will be disposed (have Dispose() called on them) if the disposed flag is set.</remarks>
-	public class Cache<TKey, TValue> : IDictionary<TKey, TValue> where TValue : class, IDisposable
+	public class Cache<TKey, TValue> : IDictionary<TKey, TValue> where TValue : class
 	{
 		#region Preset Constants
 		/// <summary>
@@ -710,7 +710,11 @@ namespace Frost.Utility
 				_parent._cacheEntries.Remove(_key);
 				markNonResident();
 				if(_parent._disposeEntries)
-					Value.Dispose();
+				{
+					var disposable = Value as IDisposable;
+					if(disposable != null)
+						disposable.Dispose();
+				}
 				Value = null;
 			}
 
