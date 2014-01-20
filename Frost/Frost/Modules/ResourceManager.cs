@@ -215,6 +215,62 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
+		/// Describes a method that transforms a resource from its raw form to a usable format
+		/// </summary>
+		/// <typeparam name="TResource">Type of resource that is produced</typeparam>
+		/// <param name="info">Information about the resource</param>
+		/// <param name="s">Stream that can be used to pull resource data from</param>
+		/// <returns>A transformed resource</returns>
+		public delegate TResource ResourceStreamTranformation<out TResource> (ResourcePackageEntry info, Stream s) where TResource : class;
+
+		/// <summary>
+		/// Attempts to find and retrieve a resource by a given name.
+		/// If the resource has been loaded before and is still in the cache,
+		/// the previous resource will be retrieved.
+		/// </summary>
+		/// <param name="name">Name of the requested resource</param>
+		/// <param name="transform">Method used to transform raw resource data into a usable form</param>
+		/// <param name="allowMod">When true, allows overwritten (modded) resources to be retrieved</param>
+		/// <returns>Transformed resource or null if the resource wasn't found</returns>
+		/// <remarks>This method will cache the transformed resource before it is returned.
+		/// Caution, a modified resource that has been cached will stay modified the next time it is referenced.
+		/// To prevent this from happening, treat resources as read-only.</remarks>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="transform"/> are null</exception>
+		public TResource GetResource<TResource> (string name, ResourceStreamTranformation<TResource> transform, bool allowMod = true) where TResource : class
+		{
+			if(name == null)
+				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+			if(transform == null)
+				throw new ArgumentNullException("transform", "The transformation method can't be null.");
+
+			lock(_locker)
+			{
+				// Find a package reader that provides the resource
+				ResourcePackageReader reader;
+				if(!allowMod && _originalResources.ContainsKey(name)) // Don't allow mods and use the original resource
+					reader = _originalResources[name];
+				else if(_knownResources.ContainsKey(name))
+					reader = _knownResources[name];
+				else // Couldn't find the resource
+					return null;
+
+				// Get the ID of the resource
+				ResourcePackageEntry info;
+				Guid id;
+				if(reader.TryGetResourceInfo(name, out info))
+					id = info.Id;
+				else
+					return null;
+
+				// Get the cached resource or executes the transformation method to generate it
+				return (TResource)_cachedResources.GetItem(id, resId => {
+					var s = reader.GetResourceStream(id);
+					return transform(info, s);
+				});
+			}
+		}
+
+		/// <summary>
 		/// List of the resource packages being used
 		/// </summary>
 		public IPackageInfo[] Packages
