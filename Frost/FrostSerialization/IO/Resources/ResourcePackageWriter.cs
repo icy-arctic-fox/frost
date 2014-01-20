@@ -182,6 +182,7 @@ namespace Frost.IO.Resources
 			{
 				writeHeader();
 				writeResources();
+				Size = FileStream.Position;
 			}
 		}
 		#endregion

@@ -32,6 +32,7 @@ namespace Frost.IO.Resources
 			var fileInfo = readFileInfo(_br);
 			Version = fileInfo.Version;
 			Options = fileInfo.Options;
+			Size    = new FileInfo(filepath).Length;
 
 			// TODO: Implement header info encryption
 

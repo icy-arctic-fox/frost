@@ -9,7 +9,7 @@ namespace Frost.IO.Resources
 	/// Resource packages can contain many resources of any type.
 	/// Resources contained in the package files can also be encrypted and compressed.
 	/// </summary>
-	public abstract class ResourcePackage : IDisposable
+	public abstract class ResourcePackage : IPackageInfo, IDisposable
 	{
 		protected const int Kilobyte = 1024;
 
@@ -43,6 +43,11 @@ namespace Frost.IO.Resources
 		/// Brief description of the contents of the resource package
 		/// </summary>
 		public string Description { get; protected set; }
+
+		/// <summary>
+		/// Size of the resource package in bytes
+		/// </summary>
+		public long Size { get; protected set; }
 
 		/// <summary>
 		/// Underlying stream to access the resource data
