@@ -240,9 +240,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FrostSerialization\FrostSerialization.csproj">
+    <ProjectReference Include="..\FrostSerialization\Frost Serialization.csproj">
       <Project>{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}</Project>
-      <Name>FrostSerialization</Name>
+      <Name>Frost Serialization</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

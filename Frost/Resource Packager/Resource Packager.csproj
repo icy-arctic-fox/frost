@@ -61,9 +61,9 @@
     <Compile Include="ReturnCode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FrostSerialization\FrostSerialization.csproj">
+    <ProjectReference Include="..\FrostSerialization\Frost Serialization.csproj">
       <Project>{b64f778c-0fff-4ce1-9bd7-996ce85d0abd}</Project>
-      <Name>FrostSerialization</Name>
+      <Name>Frost Serialization</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
