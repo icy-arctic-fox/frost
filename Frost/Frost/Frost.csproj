@@ -61,6 +61,7 @@
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="ICancellable.cs" />
+    <Compile Include="Modules\ResourceManager.cs" />
     <Compile Include="Modules\State\IDrawableNode.cs">
       <SubType>Code</SubType>
     </Compile>
