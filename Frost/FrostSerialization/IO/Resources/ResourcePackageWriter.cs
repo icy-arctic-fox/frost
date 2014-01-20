@@ -76,17 +76,21 @@ namespace Frost.IO.Resources
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
 			if(data == null)
 				throw new ArgumentNullException("data", "The raw data for the resource can't be null.");
-			if(Entries.ContainsKey(name)) // TODO: Lock properly
-				throw new ArgumentException("A resource by the same name already exists.", "name");
 
 			var packedData = packData(data);
 			var size    = packedData.Length;
-			var offset  = _curOffset;
-			_curOffset += size;
 
-			var entry = new ResourcePackageEntry(id, name, offset, packedData.Length);
-			Entries.Add(name, entry);
-			_packedResources.Add(packedData);
+			lock(Entries)
+			{
+				if(Entries.ContainsKey(name))
+					throw new ArgumentException("A resource by the same name already exists.", "name");
+				var offset  = _curOffset;
+				_curOffset += size;
+
+				var entry = new ResourcePackageEntry(id, name, offset, packedData.Length);
+				Entries.Add(name, entry);
+				_packedResources.Add(packedData);
+			}
 		}
 		#endregion
 
@@ -150,8 +154,11 @@ namespace Frost.IO.Resources
 		/// </summary>
 		public void Flush ()
 		{
-			writeHeader();
-			writeResources();
+			lock(Entries)
+			{
+				writeHeader();
+				writeResources();
+			}
 		}
 		#endregion
 

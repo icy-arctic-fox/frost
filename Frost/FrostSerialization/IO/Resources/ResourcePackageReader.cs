@@ -114,11 +114,12 @@ namespace Frost.IO.Resources
 				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
 
 			ResourcePackageEntry entry;
-			if(Entries.TryGetValue(name, out entry)) // TODO: Add locking
-			{// Resource exists
-				FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
-				return readData(entry.Size);
-			}
+			lock(Entries)
+				if(Entries.TryGetValue(name, out entry))
+				{// Resource exists
+					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
+					return readData(entry.Size);
+				}
 			return null;
 		}
 

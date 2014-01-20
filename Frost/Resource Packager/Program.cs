@@ -149,7 +149,7 @@ namespace Frost.ResourcePackager
 				if(_verbose)
 					Console.WriteLine("Writing contents to file...");
 			}
-			return 0;
+			return ReturnCode.Ok;
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace Frost.ResourcePackager
 					else
 						Console.Error.WriteLine("Resource '{0}' doesn't exist", name);
 				}
-			return 0;
+			return ReturnCode.Ok;
 		}
 
 		/// <summary>
