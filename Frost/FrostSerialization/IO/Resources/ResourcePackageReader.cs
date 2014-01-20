@@ -39,7 +39,7 @@ namespace Frost.IO.Resources
 			NodeContainer header;
 			try
 			{
-				header = NodeContainer.ReadFromStream(_br);
+				header = readHeader(_br);
 			}
 			catch(FormatException e)
 			{
@@ -73,6 +73,20 @@ namespace Frost.IO.Resources
 			var opts = (ResourcePackageOptions)br.ReadUInt16();
 			br.ReadByte(); // Unused
 			return new HeaderInfo(ver, opts);
+		}
+
+		/// <summary>
+		/// Reads the header entries from the package header
+		/// </summary>
+		/// <param name="br">Reader used to get data from the file</param>
+		/// <returns>Header data</returns>
+		private static NodeContainer readHeader (BinaryReader br)
+		{
+			var headerSize = br.ReadInt32();
+			var headerData = br.ReadBytes(headerSize);
+			using(var ms = new MemoryStream(headerData))
+			using(var ds = new DeflateStream(ms, CompressionMode.Decompress))
+				return NodeContainer.ReadFromStream(ds);
 		}
 
 		/// <summary>

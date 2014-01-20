@@ -137,7 +137,15 @@ namespace Frost.IO.Resources
 
 			// Write the resource entries
 			var container = constructEntriesHeader(Entries.Values);
-			container.WriteToStream(_bw); // TODO: Handle encryption of the header
+			byte[] headerData;
+			using(var ms = new MemoryStream())
+			{
+				using(var ds = new DeflateStream(ms, CompressionMode.Compress))
+					container.WriteToStream(ds); // TODO: Handle encryption of the header
+				headerData = ms.ToArray();
+			}
+			_bw.Write(headerData.Length);
+			_bw.Write(headerData, 0, headerData.Length);
 		}
 
 		/// <summary>
