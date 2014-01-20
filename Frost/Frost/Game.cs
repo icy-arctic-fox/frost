@@ -13,6 +13,8 @@ namespace Frost
 
 		protected readonly StateManager Manager;
 
+		protected readonly ResourceManager Resources;
+
 		public Game ()
 		{
 			throw new NotImplementedException();
