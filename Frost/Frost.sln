@@ -6,11 +6,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost", "Frost\Frost.csproj
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD} = {B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrostTest", "FrostTest\FrostTest.csproj", "{3493C997-A583-4BBC-BC09-168424667811}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost Test", "FrostTest\Frost Test.csproj", "{3493C997-A583-4BBC-BC09-168424667811}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost Serialization", "FrostSerialization\Frost Serialization.csproj", "{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TntEditor", "TntEditor\TntEditor.csproj", "{C383E12C-5A23-4531-964E-AD4D200B61E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tnt Editor", "TntEditor\Tnt Editor.csproj", "{C383E12C-5A23-4531-964E-AD4D200B61E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource Packager", "Resource Packager\Resource Packager.csproj", "{4CC925FC-3B83-4BA4-874A-8D64CDD9987A}"
 EndProject
