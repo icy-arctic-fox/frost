@@ -28,18 +28,47 @@ namespace Frost.Modules
 		/// Adds a resource package that can be referenced to retrieve resources
 		/// </summary>
 		/// <param name="filepath">Path to the resource package file</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="filepath"/> is null</exception>
 		public void AddResourcePackage (string filepath)
 		{
-			throw new NotImplementedException();
+			if(filepath == null)
+				throw new ArgumentNullException("filepath", "The path to the resource package file can't be null.");
+
+			var package = new ResourcePackageReader(filepath);
+			AddResourcePackage(package);
 		}
 
 		/// <summary>
 		/// Adds a resource package that can be referenced to retrieve resources
 		/// </summary>
 		/// <param name="package">Resource package</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="package"/> is null</exception>
 		public void AddResourcePackage (ResourcePackageReader package)
 		{
-			throw new NotImplementedException();
+			if(package == null)
+				throw new ArgumentNullException("package", "The package to pull resources from can't be null.");
+
+			lock(_readers)
+				if(!_readers.Contains(package))
+				{
+					_readers.Add(package);
+					indexResourcePackage(package);
+				}
+		}
+
+		/// <summary>
+		/// Stores the names of each resource in the package and a reference back to the reader
+		/// </summary>
+		/// <param name="package">Package to index</param>
+		private void indexResourcePackage (ResourcePackageReader package)
+		{
+			foreach(var resource in package.Resources)
+			{
+				var name = resource.Name;
+				if(_knownResources.ContainsKey(name) && !_originalResources.ContainsKey(name))
+					_originalResources.Add(name, _knownResources[name]); // Store original resource
+				_knownResources[name] = package;
+			}
 		}
 
 		/// <summary>
@@ -47,10 +76,30 @@ namespace Frost.Modules
 		/// </summary>
 		/// <param name="name">Name of the requested resource</param>
 		/// <param name="allowMod">When true, allows overwritten (modded) resources to be retrieved</param>
-		/// <returns>Raw data for the resource</returns>
+		/// <returns>Raw data for the resource or null if the resource doesn't exist</returns>
 		public byte[] GetResource (string name, bool allowMod = true)
 		{
-			throw new NotImplementedException();
+			if(!allowMod && _originalResources.ContainsKey(name))
+			{// Don't allow mods and use the original resource
+				var reader = _originalResources[name];
+				return reader.GetResource(name);
+			}
+			return _knownResources.ContainsKey(name) ? _knownResources[name].GetResource(name) : null;
+		}
+
+		/// <summary>
+		/// List of the resource packages being used
+		/// </summary>
+		public IPackageInfo[] Packages
+		{
+			get
+			{
+				var info = new IPackageInfo[_readers.Count];
+				var i = 0;
+				foreach(var reader in _readers)
+					info[i++] = reader;
+				return info;
+			}
 		}
 	}
 }
