@@ -208,7 +208,7 @@ namespace Frost.Modules
 
 				// Get the cached resource or executes the transformation method to generate it
 				return (TResource)_cachedResources.GetItem(id, resId => {
-					var data = reader.GetResource(id);
+					var data = reader.GetResource(resId);
 					return transform(info, data);
 				});
 			}
@@ -264,7 +264,7 @@ namespace Frost.Modules
 
 				// Get the cached resource or executes the transformation method to generate it
 				return (TResource)_cachedResources.GetItem(id, resId => {
-					var s = reader.GetResourceStream(id);
+					var s = reader.GetResourceStream(resId);
 					return transform(info, s);
 				});
 			}

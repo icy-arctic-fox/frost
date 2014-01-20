@@ -58,6 +58,7 @@
     <Compile Include="Display\IDisplay.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\ResourceLoader.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="ICancellable.cs" />
