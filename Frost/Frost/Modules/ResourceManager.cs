@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Frost.IO.Resources;
 
 namespace Frost.Modules
@@ -23,6 +24,20 @@ namespace Frost.Modules
 		private readonly Dictionary<string, ResourcePackageReader>
 			_knownResources    = new Dictionary<string, ResourcePackageReader>(),
 			_originalResources = new Dictionary<string, ResourcePackageReader>();
+
+		/// <summary>
+		/// Adds all resource package files contained in a directory
+		/// </summary>
+		/// <param name="path">Path to the directory containing the resources</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="path"/> is null</exception>
+		public void AddResourceDirectory (string path)
+		{
+			if(path == null)
+				throw new ArgumentNullException("path", "The path to the resource directory can't be null.");
+
+			foreach(var filepath in Directory.EnumerateFiles(path, "*.frp", SearchOption.AllDirectories))
+				AddResourcePackage(filepath);
+		}
 
 		/// <summary>
 		/// Adds a resource package that can be referenced to retrieve resources
@@ -77,14 +92,21 @@ namespace Frost.Modules
 		/// <param name="name">Name of the requested resource</param>
 		/// <param name="allowMod">When true, allows overwritten (modded) resources to be retrieved</param>
 		/// <returns>Raw data for the resource or null if the resource doesn't exist</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
 		public byte[] GetResource (string name, bool allowMod = true)
 		{
-			if(!allowMod && _originalResources.ContainsKey(name))
-			{// Don't allow mods and use the original resource
-				var reader = _originalResources[name];
-				return reader.GetResource(name);
+			if(name == null)
+				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+
+			lock(_readers)
+			{
+				if(!allowMod && _originalResources.ContainsKey(name))
+				{ // Don't allow mods and use the original resource
+					var reader = _originalResources[name];
+					return reader.GetResource(name);
+				}
+				return _knownResources.ContainsKey(name) ? _knownResources[name].GetResource(name) : null;
 			}
-			return _knownResources.ContainsKey(name) ? _knownResources[name].GetResource(name) : null;
 		}
 
 		/// <summary>
@@ -94,11 +116,14 @@ namespace Frost.Modules
 		{
 			get
 			{
-				var info = new IPackageInfo[_readers.Count];
-				var i = 0;
-				foreach(var reader in _readers)
-					info[i++] = reader;
-				return info;
+				lock(_readers)
+				{
+					var info = new IPackageInfo[_readers.Count];
+					var i = 0;
+					foreach(var reader in _readers)
+						info[i++] = reader;
+					return info;
+				}
 			}
 		}
 	}
