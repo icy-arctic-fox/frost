@@ -8,6 +8,7 @@ namespace Frost.ResourcePackager
 	class Program
 	{
 		private static bool _verbose, _stripExt;
+		private static string _name, _creator, _description;
 
 		static int Main (string[] args)
 		{
@@ -26,16 +27,37 @@ namespace Frost.ResourcePackager
 
 					// Parse options
 					if(args[index] == "-v")
-					{ // Turn on verbosity
+					{// Turn on verbosity
 						_verbose = true;
 						++index;
 						matched = true;
 					}
 
-					if(args[index] == "-s")
-					{ // Strip file extensions
+					else if(args[index] == "-s")
+					{// Strip file extensions
 						_stripExt = true;
 						++index;
+						matched = true;
+					}
+
+					else if(args[index] == "-n" && args.Length > index + 1)
+					{// Set package name
+						_name = args[index + 1];
+						index += 2;
+						matched = true;
+					}
+
+					else if(args[index] == "-c" && args.Length > index + 1)
+					{// Set package creator
+						_creator = args[index + 1];
+						index += 2;
+						matched = true;
+					}
+
+					else if(args[index] == "-d" && args.Length > index + 1)
+					{// Set package description
+						_description = args[index + 1];
+						index += 2;
 						matched = true;
 					}
 				} while(matched); 
@@ -105,8 +127,11 @@ namespace Frost.ResourcePackager
 			Console.WriteLine();
 
 			Console.WriteLine("Available options:");
-			Console.WriteLine("   -v - Enable verbose output");
-			Console.WriteLine("   -s - Strip file extensions");
+			Console.WriteLine("   -v      - Enable verbose output");
+			Console.WriteLine("   -s      - Strip file extensions");
+			Console.WriteLine("   -n TEXT - Set the name of the resource package");
+			Console.WriteLine("   -c TEXT - Set the creator of the resource package");
+			Console.WriteLine("   -d TEXT - Set the description of the resource package");
 			Console.WriteLine();
 
 			Console.WriteLine("Available actions:");
@@ -137,7 +162,7 @@ namespace Frost.ResourcePackager
 		/// <returns>A program return code</returns>
 		private static ReturnCode createResourcePackageFile (string filepath, IEnumerable<KeyValuePair<string, string>> contents)
 		{
-			using(var writer = new ResourcePackageWriter(filepath))
+			using(var writer = new ResourcePackageWriter(filepath, ResourcePackageOptions.None, _name, _creator, _description))
 			{
 				foreach(var entry in contents)
 				{
