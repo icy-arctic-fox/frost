@@ -49,6 +49,7 @@ namespace Frost.Modules
 		/// <param name="path">Path to the directory containing the resources</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="path"/> is null</exception>
 		/// <exception cref="ApplicationException">Thrown if a resource was found with an ID that conflicts with an existing resource</exception>
+		/// <exception cref="DirectoryNotFoundException">Thrown if the path to the resource directory doesn't exist</exception>
 		public void AddResourceDirectory (string path)
 		{
 			if(path == null)

@@ -57,8 +57,10 @@ namespace Frost
 
 			// Set up resource management
 			Resources = new ResourceManager();
-			Resources.AddResourceDirectory(Configuration.ResourcePath);
-			Resources.AddResourceDirectory(Configuration.ModsPath);
+			if(Directory.Exists(Configuration.ResourcePath))
+				Resources.AddResourceDirectory(Configuration.ResourcePath);
+			if(Directory.Exists(Configuration.ModsPath))
+				Resources.AddResourceDirectory(Configuration.ModsPath);
 
 			// Create the window
 			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle); // TODO: Pass title to constructor
@@ -116,6 +118,11 @@ namespace Frost
 
 			// Give up, there's no configuration. Create a new one.
 			config = new GameConfiguration();
+
+			// Save the new configuration
+			configPath = Path.Combine(appDataPath, ShortGameName);
+			if(!Directory.Exists(configPath))
+				Directory.CreateDirectory(configPath);
 			config.Save(appConfigPath);
 			return config;
 		}
