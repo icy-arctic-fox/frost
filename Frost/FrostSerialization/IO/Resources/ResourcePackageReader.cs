@@ -162,9 +162,47 @@ namespace Frost.IO.Resources
 		}
 
 		/// <summary>
+		/// Gets a stream for a resource from a package by its name
+		/// </summary>
+		/// <param name="name">Name of the resource to retrieve</param>
+		/// <returns>A stream that can be used to pull resource data or null if the resource doesn't exist</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		public Stream GetResourceStream (string name)
+		{
+			if(name == null)
+				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
+
+			ResourcePackageEntry entry;
+			lock(Locker)
+				if(TryGetResourceInfo(name, out entry))
+				{// Resource exists
+					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
+					return getDataStream(entry.Size);
+				}
+			return null;
+		}
+
+		/// <summary>
+		/// Gets a stream for a resource from a package by its ID
+		/// </summary>
+		/// <param name="id">Unique ID of the resource to retrieve</param>
+		/// <returns>A stream that can be used to pull resource data or null if the resource doesn't exist</returns>
+		public Stream GetResourceStream (Guid id)
+		{
+			ResourcePackageEntry entry;
+			lock(Locker)
+				if(TryGetResourceInfo(id, out entry))
+				{// Resource exists
+					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
+					return getDataStream(entry.Size);
+				}
+			return null;
+		}
+
+		/// <summary>
 		/// Reads data from the current position in the package
 		/// </summary>
-		/// <param name="length">Amount of data to read</param>
+		/// <param name="length">Amount of packed data to read</param>
 		/// <returns>Raw data read from the package (decompressed and decrypted)</returns>
 		private byte[] readData (int length)
 		{
@@ -188,6 +226,22 @@ namespace Frost.IO.Resources
 				} while(bytesRead >= bufferSize);
 				return rs.ToArray();
 			}
+		}
+
+		/// <summary>
+		/// Reads data from the current position in the package and creates a stream from it
+		/// </summary>
+		/// <param name="length">Amount of packed data to read</param>
+		/// <returns>Raw data read</returns>
+		private Stream getDataStream (int length)
+		{
+			// Read in the compressed data
+			var packedData = _br.ReadBytes(length);
+
+			// Create a stream used to decompress the data
+			// TODO: Handle encryption
+			var ms = new MemoryStream(packedData);
+			return new DeflateStream(ms, CompressionMode.Decompress);
 		}
 		#endregion
 
