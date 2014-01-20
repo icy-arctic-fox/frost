@@ -111,7 +111,7 @@ namespace Frost.IO.Resources
 				foreach(var node in entries)
 				{
 					var entry = new ResourcePackageEntry(node);
-					Entries.Add(entry.Name, entry);
+					AddResource(entry);
 				}
 			}
 			catch(Exception e)
@@ -135,8 +135,8 @@ namespace Frost.IO.Resources
 				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
 
 			ResourcePackageEntry entry;
-			lock(Entries)
-				if(Entries.TryGetValue(name, out entry))
+			lock(Locker)
+				if(TryGetResource(name, out entry))
 				{// Resource exists
 					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
 					return readData(entry.Size);

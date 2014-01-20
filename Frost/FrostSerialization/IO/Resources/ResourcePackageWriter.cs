@@ -77,7 +77,7 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource</param>
 		/// <param name="data">Data contained in the resource</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="data"/> are null</exception>
-		/// <exception cref="ArgumentException">Thrown if a resource by the name <paramref name="name"/> has already been added</exception>
+		/// <exception cref="ArgumentException">Thrown if a resource by the <paramref name="name"/> or <paramref name="id"/> has already been added</exception>
 		public void Add (Guid id, string name, byte[] data) // TODO: Add encryption and other options
 		{
 			if(name == null)
@@ -86,18 +86,14 @@ namespace Frost.IO.Resources
 				throw new ArgumentNullException("data", "The raw data for the resource can't be null.");
 
 			var packedData = packData(data);
-			var size    = packedData.Length;
+			var size       = packedData.Length;
 
-			lock(Entries)
+			lock(Locker)
 			{
-				if(Entries.ContainsKey(name))
-					throw new ArgumentException("A resource by the same name already exists.", "name");
-				var offset  = _curOffset;
-				_curOffset += size;
-
-				var entry = new ResourcePackageEntry(id, name, offset, packedData.Length);
-				Entries.Add(name, entry);
+				var entry = new ResourcePackageEntry(id, name, _curOffset, packedData.Length);
+				AddResource(entry);
 				_packedResources.Add(packedData);
+				_curOffset += size;
 			}
 		}
 		#endregion
@@ -152,7 +148,7 @@ namespace Frost.IO.Resources
 			writeFileInfo(_bw, info);
 
 			// Write the resource entries
-			var container = constructHeaderContainer(Entries.Values, Name, Creator, Description);
+			var container = constructHeaderContainer(Resources, Name, Creator, Description);
 			byte[] headerData;
 			using(var ms = new MemoryStream())
 			{
@@ -178,7 +174,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		public void Flush ()
 		{
-			lock(Entries)
+			lock(Locker)
 			{
 				writeHeader();
 				writeResources();

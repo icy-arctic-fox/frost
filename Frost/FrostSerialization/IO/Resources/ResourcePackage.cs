@@ -57,16 +57,82 @@ namespace Frost.IO.Resources
 		#region Entries
 
 		/// <summary>
+		/// Used to lock access to the package entries
+		/// </summary>
+		protected readonly object Locker = new object();
+
+		/// <summary>
 		/// Mapping of resource names to information about a resource in the package
 		/// </summary>
-		protected readonly Dictionary<string, ResourcePackageEntry> Entries = new Dictionary<string, ResourcePackageEntry>();
+		private readonly Dictionary<string, ResourcePackageEntry> _entries = new Dictionary<string, ResourcePackageEntry>();
+
+		/// <summary>
+		/// Taken resource IDs
+		/// </summary>
+		private readonly HashSet<Guid> _ids = new HashSet<Guid>();
+
+		/// <summary>
+		/// Checks if the package contains a resource
+		/// </summary>
+		/// <param name="name">Name of the resource</param>
+		/// <returns>True if the resource exists or false if it doesn't</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		public bool ContainsResource (string name)
+		{
+			if(name == null)
+				throw new ArgumentNullException("name", "The name of the resource to check for can't be null.");
+
+			lock(Locker)
+				return _entries.ContainsKey(name);
+		}
+
+		/// <summary>
+		/// Adds information about an entry in the package
+		/// </summary>
+		/// <param name="entry">Resource information</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="entry"/> is null</exception>
+		/// <exception cref="ArgumentException">Thrown if an entry with the same name or ID already exists</exception>
+		protected void AddResource (ResourcePackageEntry entry)
+		{
+			if(entry == null)
+				throw new ArgumentNullException("entry", "The new resource entry can't be null.");
+
+			lock(Locker)
+			{
+				try
+				{
+					_entries.Add(entry.Name, entry);
+				}
+				catch(ArgumentException)
+				{
+					throw new ArgumentException("An entry with the same name already exists.");
+				}
+				if(!_ids.Add(entry.Id))
+					throw new ArgumentException("An entry with the same ID already exists.");
+			}
+		}
+
+		/// <summary>
+		/// Attempts to retrieve information about a resource
+		/// </summary>
+		/// <param name="name">Name of the resource to retrieve information for</param>
+		/// <param name="entry">Information about the entry</param>
+		/// <returns>True if the resource exists</returns>
+		protected bool TryGetResource (string name, out ResourcePackageEntry entry)
+		{
+			if(name == null)
+				throw new ArgumentNullException("name", "The name of the resource to retrieve for can't be null.");
+
+			lock(Locker)
+				return _entries.TryGetValue(name, out entry);
+		}
 
 		/// <summary>
 		/// Collection of all resources in the package
 		/// </summary>
 		public IEnumerable<ResourcePackageEntry> Resources
 		{
-			get { return Entries.Values; }
+			get { return _entries.Values; }
 		}
 
 		/// <summary>
@@ -74,7 +140,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		public int Count
 		{
-			get { return Entries.Count; }
+			get { return _entries.Count; }
 		}
 		#endregion
 
