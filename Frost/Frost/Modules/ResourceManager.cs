@@ -9,8 +9,10 @@ namespace Frost.Modules
 	/// <summary>
 	/// Responsible for tracking all available resources and caching commonly used resources
 	/// </summary>
-	public class ResourceManager
+	public class ResourceManager : IDisposable
 	{
+		private readonly object _locker = new object();
+
 		/// <summary>
 		/// Collection of all known package readers
 		/// </summary>
@@ -94,7 +96,7 @@ namespace Frost.Modules
 			if(package == null)
 				throw new ArgumentNullException("package", "The package to pull resources from can't be null.");
 
-			lock(_readers)
+			lock(_locker)
 				if(!_readers.Contains(package))
 				{
 					_readers.Add(package);
@@ -145,7 +147,7 @@ namespace Frost.Modules
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
 
-			lock(_readers)
+			lock(_locker)
 			{
 				if(!allowMod && _originalResources.ContainsKey(name))
 				{// Don't allow mods and use the original resource
@@ -185,7 +187,7 @@ namespace Frost.Modules
 			if(transform == null)
 				throw new ArgumentNullException("transform", "The transformation method can't be null.");
 
-			lock(_readers)
+			lock(_locker)
 			{
 				// Find a package reader that provides the resource
 				ResourcePackageReader reader;
@@ -219,7 +221,7 @@ namespace Frost.Modules
 		{
 			get
 			{
-				lock(_readers)
+				lock(_locker)
 				{
 					var info = new IPackageInfo[_readers.Count];
 					var i = 0;
@@ -229,5 +231,55 @@ namespace Frost.Modules
 				}
 			}
 		}
+
+		#region Disposable
+		private volatile bool _disposed;
+
+		/// <summary>
+		/// Indicates whether the resource manager has been disposed
+		/// </summary>
+		public bool Disposed
+		{
+			get { return _disposed; }
+		}
+
+		/// <summary>
+		/// Disposes of the resource manager by releasing everything from the cache and references to all resources
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Destructor - disposes of the resource manager
+		/// </summary>
+		~ResourceManager ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the resource manager
+		/// </summary>
+		/// <param name="disposing">True if inner-resources should be disposed of (<see cref="Dispose"/> was called)</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(!_disposed)
+			{
+				_disposed = true;
+				if(disposing)
+				{
+					lock(_locker)
+					{
+						_cachedResources.Clear();
+						_ids.Clear();
+						_knownResources.Clear();
+						_originalResources.Clear();
+					}
+				}
+			}
+		}
+		#endregion
 	}
 }
