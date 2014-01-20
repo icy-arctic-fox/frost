@@ -26,6 +26,11 @@ namespace Frost
 		/// Provides access to all of the resources available for the game
 		/// </summary>
 		protected readonly ResourceManager Resources;
+
+		/// <summary>
+		/// Configuration information for the game core
+		/// </summary>
+		protected readonly GameConfiguration Configuration;
 		#endregion
 
 		/// <summary>
@@ -47,14 +52,34 @@ namespace Frost
 		/// </summary>
 		protected Game ()
 		{
-			throw new NotImplementedException();
+			// Load the core configuration
+			Configuration = findConfiguration();
+
+			// Set up resource management
+			Resources = new ResourceManager();
+			Resources.AddResourceDirectory(Configuration.ResourcePath);
+			Resources.AddResourceDirectory(Configuration.ModsPath);
+
+			// Create the window
+			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle); // TODO: Pass title to constructor
+
+			// Create the state manager
+			Manager = new StateManager(Window, null, null); // TODO: Somehow get the nodes from type params?
+		}
+
+		/// <summary>
+		/// Starts the game
+		/// </summary>
+		public void Run ()
+		{
+			Manager.Run(); // TODO: Add state manager options to configuration
 		}
 
 		#region Game configuration
 
 		private const string ConfigurationFileName = "game.config";
 
-		private bool tryLoadConfiguration (string path, out GameConfiguration config)
+		private static bool tryLoadConfiguration (string path, out GameConfiguration config)
 		{
 			if(File.Exists(path))
 			{
