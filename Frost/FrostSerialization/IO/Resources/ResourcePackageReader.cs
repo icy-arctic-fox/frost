@@ -40,6 +40,12 @@ namespace Frost.IO.Resources
 			try
 			{
 				header = readHeader(_br);
+
+				// Store information about the resource package
+				var root = header.Root.ExpectComplexNode();
+				Name        = root.ExpectStringNode("name");
+				Creator     = root.ExpectStringNode("creator");
+				Description = root.ExpectStringNode("description");
 			}
 			catch(FormatException e)
 			{

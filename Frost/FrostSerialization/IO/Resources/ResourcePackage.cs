@@ -30,6 +30,21 @@ namespace Frost.IO.Resources
 		public long DataOffset { get; protected set; }
 
 		/// <summary>
+		/// Name of the resource package
+		/// </summary>
+		public string Name { get; protected set; }
+
+		/// <summary>
+		/// Information about the creator of the resource package
+		/// </summary>
+		public string Creator { get; protected set; }
+
+		/// <summary>
+		/// Brief description of the contents of the resource package
+		/// </summary>
+		public string Description { get; protected set; }
+
+		/// <summary>
 		/// Underlying stream to access the resource data
 		/// </summary>
 		protected Stream FileStream;

@@ -26,12 +26,20 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="filepath">Path to the resource file</param>
 		/// <param name="opts">Options for the resource package file</param>
+		/// <param name="name">Name of the resource package</param>
+		/// <param name="creator">Information about the creator of the package</param>
+		/// <param name="description">Brief description of what the resource package is for</param>
 		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called.</remarks>
-		public ResourcePackageWriter (string filepath, ResourcePackageOptions opts = ResourcePackageOptions.None)
+		public ResourcePackageWriter (string filepath, ResourcePackageOptions opts = ResourcePackageOptions.None,
+			string name = null, string creator = null, string description = null)
 		{
 			// Create the file stream
 			FileStream = new FileStream(filepath, FileMode.Create);
 			_bw        = new EndianBinaryWriter(FileStream, Endian.Big);
+
+			Name        = name        ?? Path.GetFileNameWithoutExtension(filepath) ?? filepath;
+			Creator     = creator     ?? Environment.UserName;
+			Description = description ?? String.Empty;
 
 			// Write the file header info
 			var info = new HeaderInfo(CurrentVersion, opts);
@@ -113,15 +121,23 @@ namespace Frost.IO.Resources
 		/// Constructs the node container that contains information about all of the resource entries in the package
 		/// </summary>
 		/// <param name="entries">Information about resources in the package</param>
+		/// <param name="name">Name of the resource package</param>
+		/// <param name="creator">Information about the creator of the resource package</param>
+		/// <param name="description">Brief description of the contents of the resource package</param>
 		/// <returns>A node container that contains the resource information</returns>
-		private static NodeContainer constructEntriesHeader (IEnumerable<ResourcePackageEntry> entries)
+		private static NodeContainer constructHeaderContainer (IEnumerable<ResourcePackageEntry> entries, string name, string creator, string description)
 		{
-			var root = new ComplexNode();
-			// TODO: Add package file name, description, and creator fields
+			var root = new ComplexNode {
+				{"name",        new StringNode(name)},
+				{"creator",     new StringNode(creator)},
+				{"description", new StringNode(description)}
+			};
+
 			var list = new ListNode(NodeType.Complex);
 			foreach(var entry in entries)
 				list.Add(entry.ToNode());
 			root.Add("entries", list);
+
 			return new NodeContainer(root);
 		}
 
@@ -136,7 +152,7 @@ namespace Frost.IO.Resources
 			writeFileInfo(_bw, info);
 
 			// Write the resource entries
-			var container = constructEntriesHeader(Entries.Values);
+			var container = constructHeaderContainer(Entries.Values, Name, Creator, Description);
 			byte[] headerData;
 			using(var ms = new MemoryStream())
 			{
