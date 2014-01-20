@@ -79,6 +79,10 @@ namespace Frost.ResourcePackager
 					case "list":
 						returnCode = listResourcePackageContents(filepath);
 						break;
+					case "i":
+					case "info":
+						returnCode = displayPackageInfo(filepath);
+						break;
 					default:
 						Console.Error.WriteLine("Unknown action '{0}'", action);
 						printUsage();
@@ -115,6 +119,7 @@ namespace Frost.ResourcePackager
 			Console.WriteLine("   u or unpack  - Extracts resources from an existing package that match one or more prefixes.");
 			Console.WriteLine("                  [resource] now becomes a prefix for resource names to extract into a corresponding directory [filename].");
 			Console.WriteLine("   l or list    - Lists all of the resources contained in the package file.");
+			Console.WriteLine("   i or info    - Displays meta-information about the resource package.");
 			Console.WriteLine();
 
 			Console.WriteLine("For [resource, filename]...");
@@ -296,6 +301,22 @@ namespace Frost.ResourcePackager
 			}
 			var unit = _units[index];
 			return String.Format("{0:F} {1}", size, unit);
+		}
+
+		/// <summary>
+		/// Displays information about the package
+		/// </summary>
+		/// <param name="filepath">Path to the resource package to read from</param>
+		/// <returns>A program return code</returns>
+		private static ReturnCode displayPackageInfo (string filepath)
+		{
+			using(var reader = new ResourcePackageReader(filepath))
+			{
+				Console.WriteLine("Name:        {0}", reader.Name);
+				Console.WriteLine("Creator:     {0}", reader.Creator);
+				Console.WriteLine("Description: {0}", reader.Description);
+			}
+			return ReturnCode.Ok;
 		}
 	}
 }
