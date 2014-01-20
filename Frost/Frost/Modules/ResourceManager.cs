@@ -157,7 +157,7 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
-		/// Describes a method that transforms a resource from its raw form to a usable resource
+		/// Describes a method that transforms a resource from its raw form to a usable format
 		/// </summary>
 		/// <typeparam name="TResource">Type of resource that is produced</typeparam>
 		/// <param name="info">Information about the resource</param>
@@ -166,13 +166,17 @@ namespace Frost.Modules
 		public delegate TResource ResourceTranformation<out TResource> (ResourcePackageEntry info, byte[] data) where TResource : class;
 
 		/// <summary>
-		/// Attempts to find and retrieve a resource by a given name
+		/// Attempts to find and retrieve a resource by a given name.
+		/// If the resource has been loaded before and is still in the cache,
+		/// the previous resource will be retrieved.
 		/// </summary>
 		/// <param name="name">Name of the requested resource</param>
 		/// <param name="transform">Method used to transform raw resource data into a usable form</param>
 		/// <param name="allowMod">When true, allows overwritten (modded) resources to be retrieved</param>
 		/// <returns>Transformed resource or null if the resource wasn't found</returns>
-		/// <remarks>This method will cache the transformed resource.</remarks>
+		/// <remarks>This method will cache the transformed resource before it is returned.
+		/// Caution, a modified resource that has been cached will stay modified the next time it is referenced.
+		/// To prevent this from happening, treat resources as read-only.</remarks>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="transform"/> are null</exception>
 		public TResource GetResource<TResource> (string name, ResourceTranformation<TResource> transform, bool allowMod = true) where TResource : class
 		{
