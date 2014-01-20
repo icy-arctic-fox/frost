@@ -36,6 +36,9 @@ namespace Frost.Modules
 		/// <summary>
 		/// Tracks resources that have been transformed so there isn't a need to process the load and transformation again
 		/// </summary>
+		/// <remarks><see cref="Guid"/>s are used here because all resources are required to have a unique ID.
+		/// Using the resource ID prevents confusion between which resource transformation was cached;
+		/// the modded resource, or the original resource.</remarks>
 		private readonly Cache<Guid, object> _cachedResources = new Cache<Guid, object>();
 
 		/// <summary>
@@ -160,7 +163,7 @@ namespace Frost.Modules
 		/// <param name="info">Information about the resource</param>
 		/// <param name="data">Raw data representing the resource</param>
 		/// <returns>A transformed resource</returns>
-		public delegate TResource ResourceTranformation<out TResource> (ResourcePackageEntry info, byte[] data);
+		public delegate TResource ResourceTranformation<out TResource> (ResourcePackageEntry info, byte[] data) where TResource : class;
 
 		/// <summary>
 		/// Attempts to find and retrieve a resource by a given name
@@ -168,17 +171,41 @@ namespace Frost.Modules
 		/// <param name="name">Name of the requested resource</param>
 		/// <param name="transform">Method used to transform raw resource data into a usable form</param>
 		/// <param name="allowMod">When true, allows overwritten (modded) resources to be retrieved</param>
-		/// <returns>Transformed resource</returns>
+		/// <returns>Transformed resource or null if the resource wasn't found</returns>
 		/// <remarks>This method will cache the transformed resource.</remarks>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="transform"/> are null</exception>
-		public TResource GetResource<TResource> (string name, ResourceTranformation<TResource> transform, bool allowMod = true)
+		public TResource GetResource<TResource> (string name, ResourceTranformation<TResource> transform, bool allowMod = true) where TResource : class
 		{
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
 			if(transform == null)
 				throw new ArgumentNullException("transform", "The transformation method can't be null.");
 
-			throw new NotImplementedException();
+			lock(_readers)
+			{
+				// Find a package reader that provides the resource
+				ResourcePackageReader reader;
+				if(!allowMod && _originalResources.ContainsKey(name)) // Don't allow mods and use the original resource
+					reader = _originalResources[name];
+				else if(_knownResources.ContainsKey(name))
+					reader = _knownResources[name];
+				else // Couldn't find the resource
+					return null;
+
+				// Get the ID of the resource
+				ResourcePackageEntry info;
+				Guid id;
+				if(reader.TryGetResourceInfo(name, out info))
+					id = info.Id;
+				else
+					return null;
+
+				// Get the cached resource or executes the transformation method to generate it
+				return (TResource)_cachedResources.GetItem(id, resId => {
+					var data = reader.GetResource(id);
+					return transform(info, data);
+				});
+			}
 		}
 
 		/// <summary>
