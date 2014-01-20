@@ -136,7 +136,24 @@ namespace Frost.IO.Resources
 
 			ResourcePackageEntry entry;
 			lock(Locker)
-				if(TryGetResource(name, out entry))
+				if(TryGetResourceInfo(name, out entry))
+				{// Resource exists
+					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
+					return readData(entry.Size);
+				}
+			return null;
+		}
+
+		/// <summary>
+		/// Gets a resource from the package by its ID
+		/// </summary>
+		/// <param name="id">Unique ID of the resource to retrieve</param>
+		/// <returns>The data for the resource or null if no resource by the ID <paramref name="id"/> exists</returns>
+		public byte[] GetResource (Guid id)
+		{
+			ResourcePackageEntry entry;
+			lock(Locker)
+				if(TryGetResourceInfo(id, out entry))
 				{// Resource exists
 					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
 					return readData(entry.Size);

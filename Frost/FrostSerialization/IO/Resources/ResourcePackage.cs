@@ -87,6 +87,17 @@ namespace Frost.IO.Resources
 		}
 
 		/// <summary>
+		/// Checks if the package contains a resource
+		/// </summary>
+		/// <param name="id">Globally unique ID of the resource</param>
+		/// <returns>True if the resource exists or false if it doesn't</returns>
+		public bool ContainsResource (Guid id)
+		{
+			lock(Locker)
+				return _ids.Contains(id);
+		}
+
+		/// <summary>
 		/// Adds information about an entry in the package
 		/// </summary>
 		/// <param name="entry">Resource information</param>
@@ -118,13 +129,33 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource to retrieve information for</param>
 		/// <param name="entry">Information about the entry</param>
 		/// <returns>True if the resource exists</returns>
-		protected bool TryGetResource (string name, out ResourcePackageEntry entry)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		public bool TryGetResourceInfo (string name, out ResourcePackageEntry entry)
 		{
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource to retrieve for can't be null.");
 
 			lock(Locker)
 				return _entries.TryGetValue(name, out entry);
+		}
+
+		/// <summary>
+		/// Attempts to retrieve information about a resource
+		/// </summary>
+		/// <param name="id">ID of the resource to retrieve information for</param>
+		/// <param name="entry">Information about the entry</param>
+		/// <returns>True if the resource exists</returns>
+		public bool TryGetResourceInfo (Guid id, out ResourcePackageEntry entry)
+		{
+			lock(Locker)
+				foreach(var resource in _entries.Values)
+					if(resource.Id == id)
+					{
+						entry = resource;
+						return true;
+					}
+			entry = null;
+			return false;
 		}
 
 		/// <summary>
