@@ -9,6 +9,7 @@ namespace Test_Game
 	{
 		static void Main (string[] args)
 		{
+			new TestGame().Run();
 		}
 	}
 }
