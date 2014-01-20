@@ -1,12 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost", "Frost\Frost.csproj", "{87399C66-DB86-4BC6-92EA-BF8D1D9DADE7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD} = {B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost Test", "FrostTest\Frost Test.csproj", "{3493C997-A583-4BBC-BC09-168424667811}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost Serialization", "FrostSerialization\Frost Serialization.csproj", "{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}"
 EndProject
@@ -39,16 +37,6 @@ Global
 		{87399C66-DB86-4BC6-92EA-BF8D1D9DADE7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{87399C66-DB86-4BC6-92EA-BF8D1D9DADE7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{87399C66-DB86-4BC6-92EA-BF8D1D9DADE7}.Release|x86.ActiveCfg = Release|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{3493C997-A583-4BBC-BC09-168424667811}.Release|x86.ActiveCfg = Release|Any CPU
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
