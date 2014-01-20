@@ -34,5 +34,15 @@ namespace Frost.Graphics
 		{
 			_texture = new SFML.Graphics.Texture(s);
 		}
+
+		/// <summary>
+		/// Creates a new blank texture
+		/// </summary>
+		/// <param name="width">Width of the texture in pixels</param>
+		/// <param name="height">Height of the texture in pixels</param>
+		public Texture (uint width, uint height)
+		{
+			_texture = new SFML.Graphics.Texture(width, height);
+		}
 	}
 }
