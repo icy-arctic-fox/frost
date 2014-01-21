@@ -1,6 +1,7 @@
 ﻿using System;
 using SFML.Graphics;
 using SFML.Window;
+using Frost.Utility;
 
 namespace Frost.Display
 {
@@ -31,7 +32,7 @@ namespace Frost.Display
 		/// Underlying implementation of the window.
 		/// This references the SFML window object that displays and controls the window functionality.
 		/// </summary>
-		protected readonly RenderWindow _window;
+		private readonly RenderWindow _window;
 
 		/// <summary>
 		/// Creates a new window to display graphics
@@ -52,7 +53,72 @@ namespace Frost.Display
 		{
 			_title  = title ?? String.Empty;
 			_window = new RenderWindow(new VideoMode(width, height), _title);
+
+			// Listen for window events
+			_window.Closed += _window_Closed;
 		}
+
+		#region Events
+		#region Closing
+
+		/// <summary>
+		/// Triggered when the user clicks the close button on the window
+		/// </summary>
+		public event EventHandler<WindowClosingEventArgs> Closing;
+
+		/// <summary>
+		/// Called when the user clicks the close button on the window
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		/// <remarks>Canceling this event through <paramref name="args"/> will prevent the window from closing.
+		/// Not canceling the event will close the window.
+		/// This method invokes the <see cref="Closing"/> event.</remarks>
+		protected void OnWindowClosing (WindowClosingEventArgs args)
+		{
+			Closing.NotifySubscribers(this, args);
+			if(!args.IsCanceled)
+				OnWindowClose(args);
+		}
+
+		/// <summary>
+		/// Triggered when the user clicks the close button on the window
+		/// </summary>
+		/// <param name="sender">Window implementation</param>
+		/// <param name="e">Event arguments</param>
+		void _window_Closed (object sender, EventArgs e)
+		{
+			var args = new WindowClosingEventArgs();
+			OnWindowClosing(args);
+		}
+		#endregion
+
+		#region Closed
+
+		/// <summary>
+		/// Checks if the window is open
+		/// </summary>
+		public bool IsOpen
+		{
+			get { return _window.IsOpen(); }
+		}
+
+		/// <summary>
+		/// Triggered when the window closes
+		/// </summary>
+		public event EventHandler<EventArgs> Closed;
+
+		/// <summary>
+		/// Called when the window closes
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		/// <remarks>This method invokes the <see cref="Closed"/> event.</remarks>
+		protected void OnWindowClose (EventArgs args)
+		{
+			_window.Close();
+			Closed.NotifySubscribers(this, args);
+		}
+		#endregion
+		#endregion
 
 		#region Size and location
 
