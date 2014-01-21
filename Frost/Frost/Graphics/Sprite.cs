@@ -1,5 +1,4 @@
-﻿using System;
-using Frost.Display;
+﻿using Frost.Display;
 using Frost.Modules.State;
 
 namespace Frost.Graphics
@@ -40,6 +39,9 @@ namespace Frost.Graphics
 		/// </summary>
 		private float _x, _y;
 
+		/// <summary>
+		/// X-coordinate of the sprite
+		/// </summary>
 		public float X
 		{
 			get { return _x; }
@@ -50,6 +52,9 @@ namespace Frost.Graphics
 			}
 		}
 
+		/// <summary>
+		/// Y-coordinate of the sprite
+		/// </summary>
 		public float Y
 		{
 			get { return _y; }
@@ -82,6 +87,11 @@ namespace Frost.Graphics
 		/// </summary>
 		private bool _dirty;
 
+		/// <summary>
+		/// Updates the state of the sprite
+		/// </summary>
+		/// <param name="prev">Index of the previous state</param>
+		/// <param name="next">Index of the state to update</param>
 		public void StepState (int prev, int next)
 		{
 			if(_dirty)
@@ -96,6 +106,11 @@ namespace Frost.Graphics
 				_states[next] = _states[prev];
 		}
 
+		/// <summary>
+		/// Draws a sprite's state to a display
+		/// </summary>
+		/// <param name="display">Display to draw to</param>
+		/// <param name="state">Index of the state to draw</param>
 		public void DrawState (IDisplay display, int state)
 		{
 			display.Draw(_sprite, _states[state]);
