@@ -48,6 +48,11 @@ namespace Frost
 		public abstract string ShortGameName { get; }
 
 		/// <summary>
+		/// Number of game updates processed per second
+		/// </summary>
+		protected abstract double UpdateRate { get; }
+
+		/// <summary>
 		/// Creates the underlying game
 		/// </summary>
 		protected Game ()
@@ -66,7 +71,7 @@ namespace Frost
 			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle); // TODO: Pass title to constructor
 
 			// Create the state manager
-			Manager = new StateManager(Window, null, null); // TODO: Somehow get the nodes from type params?
+			Manager = new StateManager(Window, null, null, UpdateRate, Configuration.FrameRate); // TODO: Somehow get the nodes from type params?
 		}
 
 		/// <summary>

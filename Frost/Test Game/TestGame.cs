@@ -27,5 +27,13 @@ namespace Test_Game
 		{
 			get { return "testgame"; }
 		}
+
+		/// <summary>
+		/// Number of game updates processed per second
+		/// </summary>
+		protected override double UpdateRate
+		{
+			get { return 60d; }
+		}
 	}
 }

@@ -12,6 +12,21 @@ namespace Frost
 		#region Defaults
 
 		/// <summary>
+		/// Default number of frames to render per second
+		/// </summary>
+		public const double DefaultRenderRate = 60d;
+
+		/// <summary>
+		/// Indicates whether threaded rendering is enabled by default
+		/// </summary>
+		public const bool DefaultThreadedRender = false;
+
+		/// <summary>
+		/// Indicates whether the game logic and render threads should be synchronized by default
+		/// </summary>
+		public const bool DefaultSyncRenderThread = true;
+
+		/// <summary>
 		/// Default path to the resources directory
 		/// </summary>
 		public const string DefaultResourcePath = "resources";
@@ -29,6 +44,10 @@ namespace Frost
 		{
 			WindowWidth  = Display.Window.DefaultWidth;
 			WindowHeight = Display.Window.DefaultHeight;
+
+			FrameRate        = DefaultRenderRate;
+			ThreadedRender   = DefaultThreadedRender;
+			SyncRenderThread = DefaultSyncRenderThread;
 		}
 
 		/// <summary>
@@ -40,6 +59,10 @@ namespace Frost
 		{
 			WindowWidth  = width;
 			WindowHeight = height;
+
+			FrameRate        = DefaultRenderRate;
+			ThreadedRender   = DefaultThreadedRender;
+			SyncRenderThread = DefaultSyncRenderThread;
 		}
 
 		#region Json
@@ -73,6 +96,25 @@ namespace Frost
 		/// </summary>
 		[JsonProperty("windowHeight")]
 		public uint WindowHeight { get; set; }
+
+		/// <summary>
+		/// Number of frames rendered per second (0 for unbounded)
+		/// </summary>
+		[JsonProperty("frameRate")]
+		public double FrameRate { get; set; }
+
+		/// <summary>
+		/// Indicates whether a separate thread from the game logic thread is used for rendering
+		/// </summary>
+		[JsonProperty("threadedRender")]
+		public bool ThreadedRender { get; set; }
+
+		/// <summary>
+		/// Indicates whether the render and game logic thread are synchronized.
+		/// This option is only beneficial when <see cref="ThreadedRender"/> is enabled when both threads should be running at the same frequency.
+		/// </summary>
+		[JsonProperty("syncRenderThread")]
+		public bool SyncRenderThread { get; set; }
 
 		private string _resourcePath = DefaultResourcePath;
 
