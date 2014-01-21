@@ -31,7 +31,7 @@ namespace Frost.Display
 		/// Underlying implementation of the window.
 		/// This references the SFML window object that displays and controls the window functionality.
 		/// </summary>
-		protected readonly RenderWindow Implementation;
+		protected readonly RenderWindow _window;
 
 		/// <summary>
 		/// Creates a new window to display graphics
@@ -50,8 +50,8 @@ namespace Frost.Display
 		/// <param name="title">Text displayed in the title bar</param>
 		public Window (uint width, uint height, string title)
 		{
-			_title = title ?? String.Empty;
-			Implementation = new RenderWindow(new VideoMode(width, height), _title);
+			_title  = title ?? String.Empty;
+			_window = new RenderWindow(new VideoMode(width, height), _title);
 		}
 
 		#region Size and location
@@ -63,7 +63,7 @@ namespace Frost.Display
 		/// <param name="height">New height in pixels</param>
 		public void SetSize (uint width, uint height)
 		{
-			Implementation.Size = new Vector2u(width, height);
+			_window.Size = new Vector2u(width, height);
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace Frost.Display
 		/// </summary>
 		public uint Width
 		{
-			get { return Implementation.Size.X; }
+			get { return _window.Size.X; }
 			set { SetSize(value, Height); }
 		}
 
@@ -80,7 +80,7 @@ namespace Frost.Display
 		/// </summary>
 		public uint Height
 		{
-			get { return Implementation.Size.Y; }
+			get { return _window.Size.Y; }
 			set { SetSize(Width, value); }
 		}
 
@@ -91,7 +91,7 @@ namespace Frost.Display
 		/// <param name="y">New y-coordinate</param>
 		public void SetPosition (int x, int y)
 		{
-			Implementation.Position = new Vector2i(x, y);
+			_window.Position = new Vector2i(x, y);
 		}
 
 		/// <summary>
@@ -99,7 +99,7 @@ namespace Frost.Display
 		/// </summary>
 		public int X
 		{
-			get { return Implementation.Position.X; }
+			get { return _window.Position.X; }
 			set { SetPosition(value, Y); }
 		}
 
@@ -108,7 +108,7 @@ namespace Frost.Display
 		/// </summary>
 		public int Y
 		{
-			get { return Implementation.Position.Y; }
+			get { return _window.Position.Y; }
 			set { SetPosition(X, value); }
 		}
 		#endregion
@@ -128,7 +128,7 @@ namespace Frost.Display
 			set
 			{
 				_title = value ?? String.Empty;
-				Implementation.SetTitle(_title);
+				_window.SetTitle(_title);
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace Frost.Display
 			set
 			{
 				_visible = value;
-				Implementation.SetVisible(_visible);
+				_window.SetVisible(_visible);
 			}
 		}
 
@@ -181,18 +181,18 @@ namespace Frost.Display
 			set
 			{
 				_vsync = value;
-				Implementation.SetVerticalSyncEnabled(value);
+				_window.SetVerticalSyncEnabled(value);
 			}
 		}
 
 		public void Draw (Sprite sprite)
 		{
-			Implementation.Draw(sprite);
+			_window.Draw(sprite);
 		}
 
 		public void Draw (Sprite sprite, RenderStates states)
 		{
-			Implementation.Draw(sprite, states);
+			_window.Draw(sprite, states);
 		}
 
 		/// <summary>
@@ -206,7 +206,7 @@ namespace Frost.Display
 		/// <returns>True if the current thread is now active for rendering, false if another thread is already rendering.</returns>
 		public bool SetActive (bool flag = true)
 		{
-			return Implementation.SetActive(flag);
+			return _window.SetActive(flag);
 		}
 
 		/// <summary>
@@ -214,7 +214,7 @@ namespace Frost.Display
 		/// </summary>
 		public void Update ()
 		{
-			Implementation.DispatchEvents();
+			_window.DispatchEvents();
 		}
 
 		/// <summary>
@@ -222,7 +222,7 @@ namespace Frost.Display
 		/// </summary>
 		public void EnterFrame ()
 		{
-			Implementation.Clear(_backColor);
+			_window.Clear(_backColor);
 		}
 
 		/// <summary>
@@ -230,7 +230,7 @@ namespace Frost.Display
 		/// </summary>
 		public void ExitFrame ()
 		{
-			Implementation.Display();
+			_window.Display();
 		}
 		#endregion
 
@@ -251,8 +251,8 @@ namespace Frost.Display
 			if(!Disposed)
 			{// Window hasn't been disposed of yet
 				Disposed = true;
-				Implementation.Close();
-				Implementation.Dispose();
+				_window.Close();
+				_window.Dispose();
 			}
 		}
 		#endregion
