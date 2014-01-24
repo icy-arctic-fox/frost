@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using Frost.Display;
-using Frost.Logic;
-using Frost.Modules;
 
 namespace Frost
 {
@@ -16,12 +14,12 @@ namespace Frost
 		/// <summary>
 		/// Window used to display graphics
 		/// </summary>
-		protected readonly Window Window;
+		protected Window Window;
 
 		/// <summary>
 		/// Manages the state and speed of the game
 		/// </summary>
-		protected readonly StateManager Manager;
+		protected GameRunner Runner;
 
 		/// <summary>
 		/// Provides access to all of the resources available for the game
@@ -31,8 +29,13 @@ namespace Frost
 		/// <summary>
 		/// Configuration information for the game core
 		/// </summary>
-		protected readonly GameConfiguration Configuration;
+		protected GameConfiguration Configuration;
 		#endregion
+
+		/// <summary>
+		/// Indicates whether the game has been initialized
+		/// </summary>
+		public bool Initialized { get; private set; }
 
 		/// <summary>
 		/// Visible name of the game
@@ -58,11 +61,23 @@ namespace Frost
 		/// </summary>
 		protected Game ()
 		{
+			Resources = new ResourceManager();
+		}
+
+		/// <summary>
+		/// Initializes the core game components
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the game has already been initialized</exception>
+		/// <seealso cref="Initialized"/>
+		public virtual void Initialize ()
+		{
+			if(Initialized)
+				throw new InvalidOperationException("The game has already been initialized.");
+
 			// Load the core configuration
 			Configuration = findConfiguration();
 
 			// Set up resource management
-			Resources = new ResourceManager();
 			if(Directory.Exists(Configuration.ResourcePath))
 				Resources.AddResourceDirectory(Configuration.ResourcePath);
 			if(Directory.Exists(Configuration.ModsPath))
@@ -72,20 +87,43 @@ namespace Frost
 			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle); // TODO: Pass title to constructor
 
 			// TODO: Create scene manager
+
+			Initialized = true;
 		}
 
 		/// <summary>
 		/// Starts the game
 		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the game hasn't been initialized</exception>
+		/// <seealso cref="Initialize"/>
 		public void Run ()
 		{
+			if(!Initialized)
+				throw new InvalidOperationException("The game has not been initialized yet.");
 			// TODO
+		}
+
+		/// <summary>
+		/// Shuts down and cleans up the core game components
+		/// </summary>
+		public virtual void Shutdown ()
+		{
+			if(Initialized)
+			{
+				// TODO
+			}
 		}
 
 		#region Game configuration
 
 		private const string ConfigurationFileName = "game.config";
 
+		/// <summary>
+		/// Tries to load a configuration at a location
+		/// </summary>
+		/// <param name="path">Path to the game configuration file</param>
+		/// <param name="config">Loaded game configuration</param>
+		/// <returns>True if the configuration was found and loaded</returns>
 		private static bool tryLoadConfiguration (string path, out GameConfiguration config)
 		{
 			if(File.Exists(path))
@@ -102,6 +140,10 @@ namespace Frost
 			return false;
 		}
 
+		/// <summary>
+		/// Finds or creates the configuration for the core game
+		/// </summary>
+		/// <returns></returns>
 		private GameConfiguration findConfiguration ()
 		{
 			GameConfiguration config;
