@@ -62,6 +62,7 @@
     <Compile Include="Display\WindowClosingEventArgs.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameConfiguration.cs" />
+    <Compile Include="GameRunner.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\IDisplayContainer.cs" />
     <Compile Include="Graphics\RenderLayer.cs" />
