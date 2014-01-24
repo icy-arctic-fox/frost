@@ -4,7 +4,7 @@ using System.IO;
 using Frost.IO.Resources;
 using Frost.Utility;
 
-namespace Frost.Modules
+namespace Frost
 {
 	/// <summary>
 	/// Responsible for tracking all available resources and caching commonly used resources
