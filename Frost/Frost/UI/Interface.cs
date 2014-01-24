@@ -8,14 +8,14 @@ namespace Frost.UI
 	/// <summary>
 	/// Top-level interface overlay
 	/// </summary>
-	public class Interface : IStepableNode, IRenderable
+	public class Interface : IStepable, IRenderable
 	{
 		/// <summary>
 		/// Updates the state of the interface
 		/// </summary>
 		/// <param name="prev">Index of the previous state</param>
 		/// <param name="next">Index of the next state to update</param>
-		public void StepState (int prev, int next)
+		public void Step (int prev, int next)
 		{
 			throw new NotImplementedException();
 		}

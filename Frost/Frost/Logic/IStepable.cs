@@ -1,9 +1,9 @@
 ﻿namespace Frost.Logic
 {
 	/// <summary>
-	/// A node that can update the state of a component step by step
+	/// An object that can update the state of a component step by step
 	/// </summary>
-	public interface IStepableNode
+	public interface IStepable
 	{
 		/// <summary>
 		/// Updates the state of the component by a single step
@@ -13,6 +13,6 @@
 		/// <remarks>The only game state that should be modified during this process is the state indicated by <paramref name="next"/>.
 		/// The state indicated by <paramref name="prev"/> can be used for reference (if needed), but should not be modified.
 		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
-		void StepState (int prev, int next);
+		void Step (int prev, int next);
 	}
 }

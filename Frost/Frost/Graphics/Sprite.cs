@@ -6,7 +6,7 @@ namespace Frost.Graphics
 	/// <summary>
 	/// Most basic type used to display a 2D graphic on the screen
 	/// </summary>
-	public class Sprite : IStepableNode, IRenderable
+	public class Sprite : IStepable, IRenderable
 	{
 		/// <summary>
 		/// Underlying SFML implementation of the sprite
@@ -92,7 +92,7 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="prev">Index of the previous state</param>
 		/// <param name="next">Index of the state to update</param>
-		public void StepState (int prev, int next)
+		public void Step (int prev, int next)
 		{
 			if(_dirty)
 			{// Apply transformations to the next state

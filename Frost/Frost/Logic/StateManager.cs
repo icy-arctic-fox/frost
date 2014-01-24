@@ -29,7 +29,7 @@ namespace Frost.Logic
 		/// <summary>
 		/// Root node for updating the game state
 		/// </summary>
-		private readonly IStepableNode _updateRoot;
+		private readonly IStepable _updateRoot;
 
 		/// <summary>
 		/// Root node for drawing the game state
@@ -44,7 +44,7 @@ namespace Frost.Logic
 		/// <param name="renderRoot">Root node for rendering the game state</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
-		public StateManager (IDisplay display, IStepableNode updateRoot, IRenderable renderRoot)
+		public StateManager (IDisplay display, IStepable updateRoot, IRenderable renderRoot)
 			: this(display, updateRoot, renderRoot, DefaultTargetUpdateRate, DefaultTargetRenderRate)
 		{
 			// ...
@@ -59,7 +59,7 @@ namespace Frost.Logic
 		/// <param name="rate">Targeted number of frames to update and render per second - use 0 to represent no limit</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
-		public StateManager (IDisplay display, IStepableNode updateRoot, IRenderable renderRoot, double rate)
+		public StateManager (IDisplay display, IStepable updateRoot, IRenderable renderRoot, double rate)
 			: this(display, updateRoot, renderRoot, rate, rate)
 		{
 			// ...
@@ -75,7 +75,7 @@ namespace Frost.Logic
 		/// <param name="renderRate">Targeted number of frames to render per second - use 0 to represent no limit</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
-		public StateManager (IDisplay display, IStepableNode updateRoot, IRenderable renderRoot, double updateRate, double renderRate)
+		public StateManager (IDisplay display, IStepable updateRoot, IRenderable renderRoot, double updateRate, double renderRate)
 		{
 #if DEBUG
 			if(display == null)
@@ -516,7 +516,7 @@ namespace Frost.Logic
 
 			// Perform the update
 			_display.Update();
-			_updateRoot.StepState(prevStateIndex, nextStateIndex);
+			_updateRoot.Step(prevStateIndex, nextStateIndex);
 //			((Window)_display).Title = ToString() + " - " + StateString; // TODO: Remove this
 
 			// Release the state

@@ -74,7 +74,7 @@
     <Compile Include="Graphics\IRenderable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Logic\IStepableNode.cs" />
+    <Compile Include="Logic\IStepable.cs" />
     <Compile Include="Logic\StateManager.cs" />
     <Compile Include="Logic\StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
