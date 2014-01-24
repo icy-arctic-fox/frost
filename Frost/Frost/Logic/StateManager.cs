@@ -34,7 +34,7 @@ namespace Frost.Logic
 		/// <summary>
 		/// Root node for drawing the game state
 		/// </summary>
-		private readonly IDrawableNode _renderRoot;
+		private readonly IRenderable _renderRoot;
 
 		/// <summary>
 		/// Creates a new state manager with the update and render root nodes
@@ -44,7 +44,7 @@ namespace Frost.Logic
 		/// <param name="renderRoot">Root node for rendering the game state</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
-		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot)
+		public StateManager (IDisplay display, IStepableNode updateRoot, IRenderable renderRoot)
 			: this(display, updateRoot, renderRoot, DefaultTargetUpdateRate, DefaultTargetRenderRate)
 		{
 			// ...
@@ -59,7 +59,7 @@ namespace Frost.Logic
 		/// <param name="rate">Targeted number of frames to update and render per second - use 0 to represent no limit</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
-		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot, double rate)
+		public StateManager (IDisplay display, IStepableNode updateRoot, IRenderable renderRoot, double rate)
 			: this(display, updateRoot, renderRoot, rate, rate)
 		{
 			// ...
@@ -75,7 +75,7 @@ namespace Frost.Logic
 		/// <param name="renderRate">Targeted number of frames to render per second - use 0 to represent no limit</param>
 		/// <remarks>Generally, <paramref name="updateRoot"/> and <paramref name="renderRoot"/> are the same object.
 		/// They can be different for more complex situations.</remarks>
-		public StateManager (IDisplay display, IStepableNode updateRoot, IDrawableNode renderRoot, double updateRate, double renderRate)
+		public StateManager (IDisplay display, IStepableNode updateRoot, IRenderable renderRoot, double updateRate, double renderRate)
 		{
 #if DEBUG
 			if(display == null)
@@ -762,7 +762,7 @@ namespace Frost.Logic
 			if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
 			{// Render the frame
 				_display.EnterFrame();
-				_renderRoot.DrawState(_display, nextStateIndex);
+				_renderRoot.Draw(_display, nextStateIndex);
 				_display.ExitFrame();
 
 				if(prevStateIndex == nextStateIndex)

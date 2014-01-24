@@ -5,7 +5,7 @@ using Frost.Display;
 
 namespace Frost.Graphics
 {
-	public class RenderLayer : IDisplayContainer<IDrawableNode>
+	public class RenderLayer : IDisplayContainer<IRenderable>
 	{
 		/// <summary>
 		/// Draws the state of a component
@@ -14,7 +14,7 @@ namespace Frost.Graphics
 		/// <param name="state">Index of the state to draw</param>
 		/// <remarks>None of the game states should be modified by this process - including the state indicated by <paramref name="state"/>.
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
-		public void DrawState (IDisplay display, int state)
+		public void Draw (IDisplay display, int state)
 		{
 			throw new NotImplementedException();
 		}
@@ -25,7 +25,7 @@ namespace Frost.Graphics
 		/// <returns>
 		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
 		/// </returns>
-		public IEnumerator<IDrawableNode> GetEnumerator ()
+		public IEnumerator<IRenderable> GetEnumerator ()
 		{
 			throw new NotImplementedException();
 		}
@@ -45,7 +45,7 @@ namespace Frost.Graphics
 		/// Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
 		/// </summary>
 		/// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
-		public void Add (IDrawableNode item)
+		public void Add (IRenderable item)
 		{
 			throw new NotImplementedException();
 		}
@@ -66,7 +66,7 @@ namespace Frost.Graphics
 		/// true if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false.
 		/// </returns>
 		/// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-		public bool Contains (IDrawableNode item)
+		public bool Contains (IRenderable item)
 		{
 			throw new NotImplementedException();
 		}
@@ -74,8 +74,8 @@ namespace Frost.Graphics
 		/// <summary>
 		/// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
 		/// </summary>
-		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.-or-Type <paramref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.</exception>
-		public void CopyTo (IDrawableNode[] array, int arrayIndex)
+		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.-or-Type <paramref name="TRenderable"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.</exception>
+		public void CopyTo (IRenderable[] array, int arrayIndex)
 		{
 			throw new NotImplementedException();
 		}
@@ -87,7 +87,7 @@ namespace Frost.Graphics
 		/// true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
 		/// </returns>
 		/// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
-		public bool Remove (IDrawableNode item)
+		public bool Remove (IRenderable item)
 		{
 			throw new NotImplementedException();
 		}

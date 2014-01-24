@@ -6,7 +6,7 @@ namespace Frost.Graphics
 	/// <summary>
 	/// Most basic type used to display a 2D graphic on the screen
 	/// </summary>
-	public class Sprite : IStepableNode, IDrawableNode
+	public class Sprite : IStepableNode, IRenderable
 	{
 		/// <summary>
 		/// Underlying SFML implementation of the sprite
@@ -111,7 +111,7 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="display">Display to draw to</param>
 		/// <param name="state">Index of the state to draw</param>
-		public void DrawState (IDisplay display, int state)
+		public void Draw (IDisplay display, int state)
 		{
 			display.Draw(_sprite, _states[state]);
 		}

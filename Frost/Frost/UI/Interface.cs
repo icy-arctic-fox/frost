@@ -8,7 +8,7 @@ namespace Frost.UI
 	/// <summary>
 	/// Top-level interface overlay
 	/// </summary>
-	public class Interface : IStepableNode, IDrawableNode
+	public class Interface : IStepableNode, IRenderable
 	{
 		/// <summary>
 		/// Updates the state of the interface
@@ -25,7 +25,7 @@ namespace Frost.UI
 		/// </summary>
 		/// <param name="display">Display to draw the interface on</param>
 		/// <param name="state">Index of the state to draw</param>
-		public void DrawState (IDisplay display, int state)
+		public void Draw (IDisplay display, int state)
 		{
 			throw new NotImplementedException();
 		}
