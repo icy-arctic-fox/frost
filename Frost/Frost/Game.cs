@@ -15,22 +15,22 @@ namespace Frost
 		/// <summary>
 		/// Window used to display graphics
 		/// </summary>
-		protected Window Window;
+		public Window Window { get; private set; }
 
 		/// <summary>
 		/// Manages the state and speed of the game
 		/// </summary>
-		protected GameRunner Runner;
+		public GameRunner Runner { get; private set; }
 
 		/// <summary>
 		/// Provides access to all of the resources available for the game
 		/// </summary>
-		protected readonly ResourceManager Resources;
+		public ResourceManager Resources { get; private set; }
 
 		/// <summary>
 		/// Configuration information for the game core
 		/// </summary>
-		protected GameConfiguration Configuration;
+		public GameConfiguration Configuration { get; private set; }
 		#endregion
 
 		/// <summary>
