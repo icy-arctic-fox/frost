@@ -120,13 +120,40 @@ namespace Frost
 		{
 			if(Initialized)
 			{
-				// TODO
+				if(Configuration.Dirty)
+				{// Save the modified configuration
+					var gameDataDir = GameDataPath;
+					if(!Directory.Exists(gameDataDir))
+						Directory.CreateDirectory(gameDataDir);
+					Configuration.Save(GameConfigurationPath);
+				}
 			}
 		}
 
 		#region Game configuration
 
 		private const string ConfigurationFileName = "game.config";
+
+		/// <summary>
+		/// Full path to the user's application data directory
+		/// </summary>
+		private static readonly string _applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+		/// <summary>
+		/// Full path to the directory that contains the user's data for the game
+		/// </summary>
+		public string GameDataPath 
+		{
+			get { return Path.Combine(_applicationDataPath, ShortGameName); }
+		}
+
+		/// <summary>
+		/// Full path to the file that contains the game's configuration
+		/// </summary>
+		public string GameConfigurationPath
+		{
+			get { return Path.Combine(_applicationDataPath, ShortGameName, ConfigurationFileName); }
+		}
 
 		/// <summary>
 		/// Tries to load a configuration at a location
@@ -174,14 +201,7 @@ namespace Frost
 			// TODO
 
 			// Give up, there's no configuration. Create a new one.
-			config = new GameConfiguration();
-
-			// Save the new configuration
-			configPath = Path.Combine(appDataPath, ShortGameName);
-			if(!Directory.Exists(configPath))
-				Directory.CreateDirectory(configPath);
-			config.Save(appConfigPath);
-			return config;
+			return new GameConfiguration();
 		}
 		#endregion
 	}
