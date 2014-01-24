@@ -78,7 +78,7 @@ namespace Frost.Logic
 		/// <summary>
 		/// Leaves the current scene and goes back to the previous one
 		/// </summary>
-		/// <remarks>The current executing scene will finish its <see cref="Update"/> or <see cref="Draw"/>.</remarks>
+		/// <remarks>The current executing scene will finish its <see cref="Update"/> or <see cref="Render"/>.</remarks>
 		public void ExitScene ()
 		{
 			throw new NotImplementedException();
@@ -103,6 +103,17 @@ namespace Frost.Logic
 		}
 
 		/// <summary>
+		/// Total number of frames that were drawn multiple times.
+		/// This represents the frames that were actually rendered more than once.
+		/// </summary>
+		public long RenderedDuplicateFrames { get; private set; }
+
+		/// <summary>
+		/// Indicates whether duplicate frames should be rendered (when game updates are behind display updates)
+		/// </summary>
+		public bool RenderDuplicateFrames { get; set; }
+
+		/// <summary>
 		/// Renders the active scene
 		/// </summary>
 		public void Render ()
@@ -111,14 +122,14 @@ namespace Frost.Logic
 			int prevStateIndex;
 			var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
 
-			if(/* TODO: RenderDuplicateFrames || */ prevStateIndex != nextStateIndex)
+			if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
 			{// Render the frame
 				_display.EnterFrame();
 				CurrentScene.Draw(_display, nextStateIndex);
 				_display.ExitFrame();
 
-/* TODO:				if(prevStateIndex == nextStateIndex)
-					++RenderedDuplicateFrames; */
+				if(prevStateIndex == nextStateIndex)
+					++RenderedDuplicateFrames;
 			}
 
 			// Release the state

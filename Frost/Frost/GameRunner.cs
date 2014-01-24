@@ -328,17 +328,6 @@ namespace Frost
 		#region Render
 
 		/// <summary>
-		/// Total number of frames that were drawn multiple times.
-		/// This represents the frames that were actually rendered more than once.
-		/// </summary>
-		public long RenderedDuplicateFrames { get; private set; }
-
-		/// <summary>
-		/// Indicates whether duplicate frames should be rendered (when game updates are behind display updates)
-		/// </summary>
-		public bool RenderDuplicateFrames { get; set; }
-
-		/// <summary>
 		/// Default targeted number of drawn frames per second
 		/// </summary>
 		public const double DefaultTargetRenderRate = 60d;
@@ -528,7 +517,7 @@ namespace Frost
 			sb.Append(" u/s ");
 			sb.Append(String.Format("{0:0.00}", RenderRate));
 			sb.Append(" f/s (");
-			sb.Append(RenderedDuplicateFrames);
+			sb.Append(_scenes.RenderedDuplicateFrames);
 			sb.Append('/');
 			sb.Append(sm.DuplicatedFrames);
 			sb.Append(" dups, ");
