@@ -1,5 +1,4 @@
-﻿using System;
-using Frost;
+﻿using Frost;
 using Frost.Display;
 using Frost.Graphics;
 using Frost.Logic;
@@ -11,7 +10,7 @@ namespace Test_Game
 		/// <summary>
 		/// Creates the base of the scene
 		/// </summary>
-		public BallScene (Game game)
+		public BallScene ()
 		{
 			var texture = new Texture("ball-6x6.png");
 			var ball = new Ball(texture);
@@ -22,7 +21,6 @@ namespace Test_Game
 		private class Ball : IStepable, IRenderable
 		{
 			private readonly Sprite _sprite;
-			private float _x;
 
 			public Ball (Texture texture)
 			{

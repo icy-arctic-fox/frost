@@ -39,7 +39,7 @@ namespace Test_Game
 		/// <returns>A scene</returns>
 		protected override Scene CreateInitialScene ()
 		{
-			return new BallScene(this);
+			return new BallScene();
 		}
 	}
 }
