@@ -46,6 +46,31 @@ namespace Frost.Logic
 		}
 
 		/// <summary>
+		/// Leaves the current scene and goes back to the previous one
+		/// </summary>
+		/// <remarks>The current executing scene will finish its <see cref="Update"/> or <see cref="Draw"/>.</remarks>
+		public void ExitScene ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Updates the active scene
+		/// </summary>
+		public void Update ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Draws the active scene
+		/// </summary>
+		public void Draw ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// An entry in the stack
 		/// </summary>
 		private struct SceneStackEntry
