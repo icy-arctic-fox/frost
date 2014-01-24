@@ -39,6 +39,38 @@
 		}
 
 		/// <summary>
+		/// Maximum value of all measurements
+		/// </summary>
+		public double Maximum
+		{
+			get
+			{
+				var max = _measurements[0];
+				lock(_measurements)
+					for(var i = 1; i < Count; ++i)
+						if(_measurements[i] > max)
+							max = _measurements[i];
+				return max;
+			}
+		}
+
+		/// <summary>
+		/// Minimum value of all measurements
+		/// </summary>
+		public double Minimum
+		{
+			get
+			{
+				var min = _measurements[0];
+				lock(_measurements)
+					for(var i = 1; i < Count; ++i)
+						if(_measurements[i] < min)
+							min = _measurements[i];
+				return min;
+			}
+		}
+
+		/// <summary>
 		/// Adds a measurement to the counter
 		/// </summary>
 		/// <param name="measurement">Measurement value</param>
