@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Test_Game
+﻿namespace Test_Game
 {
 	class Program
 	{
 		static void Main (string[] args)
 		{
-			new TestGame().Run();
+			var game = new TestGame();
+			game.Initialize();
+			game.Run();
+			game.Shutdown();
 		}
 	}
 }
