@@ -1,4 +1,4 @@
-﻿namespace Frost.Modules.State
+﻿namespace Frost
 {
 	/// <summary>
 	/// A node that can update the state of a component step by step

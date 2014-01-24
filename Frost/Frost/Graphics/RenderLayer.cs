@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Frost.Display;
-using Frost.Modules.State;
 
 namespace Frost.Graphics
 {

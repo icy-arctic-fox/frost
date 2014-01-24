@@ -1,5 +1,4 @@
 ﻿using Frost.Display;
-using Frost.Modules.State;
 
 namespace Frost.Graphics
 {

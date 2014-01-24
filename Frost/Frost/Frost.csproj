@@ -71,12 +71,12 @@
     <Compile Include="ICancellable.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="ResourceManager.cs" />
-    <Compile Include="Modules\State\IDrawableNode.cs">
+    <Compile Include="Graphics\IDrawableNode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Modules\State\IStepableNode.cs" />
+    <Compile Include="IStepableNode.cs" />
     <Compile Include="StateManager.cs" />
-    <Compile Include="Modules\State\StateSet.cs" />
+    <Compile Include="StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Interface.cs" />
     <Compile Include="Utility\SampleCounter.cs" />

@@ -1,6 +1,6 @@
 ﻿using System;
 using Frost.Display;
-using Frost.Modules.State;
+using Frost.Graphics;
 
 namespace Frost.UI
 {

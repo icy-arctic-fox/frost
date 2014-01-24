@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using Frost.Display;
-using Frost.Modules.State;
+using Frost.Graphics;
 using Frost.Utility;
 
 namespace Frost

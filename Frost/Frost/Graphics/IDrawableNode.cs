@@ -1,6 +1,6 @@
 ﻿using Frost.Display;
 
-namespace Frost.Modules.State
+namespace Frost.Graphics
 {
 	/// <summary>
 	/// A node that can draw the state of a component

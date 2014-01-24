@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Frost.Modules.State;
 
 namespace Frost.Graphics
 {
