@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Frost.Display;
+using Frost.Logic;
 
 namespace Frost
 {
@@ -65,6 +66,12 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Creates the initial scene displayed in the game
+		/// </summary>
+		/// <returns>A scene</returns>
+		protected abstract Scene CreateInitialScene ();
+
+		/// <summary>
 		/// Initializes the core game components
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown if the game has already been initialized</exception>
@@ -84,9 +91,11 @@ namespace Frost
 				Resources.AddResourceDirectory(Configuration.ModsPath);
 
 			// Create the window
-			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle); // TODO: Pass title to constructor
+			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle);
 
-			// TODO: Create scene manager
+			// Create the runner
+			var initialScene = CreateInitialScene();
+			Runner = new GameRunner(Window, initialScene) {ThreadSynchronization = Configuration.SyncRenderThread};
 
 			Initialized = true;
 		}
@@ -94,13 +103,14 @@ namespace Frost
 		/// <summary>
 		/// Starts the game
 		/// </summary>
+		/// <remarks>This method will not return until the game has finished.</remarks>
 		/// <exception cref="InvalidOperationException">Thrown if the game hasn't been initialized</exception>
 		/// <seealso cref="Initialize"/>
 		public void Run ()
 		{
 			if(!Initialized)
 				throw new InvalidOperationException("The game has not been initialized yet.");
-			// TODO
+			Runner.Run(UpdateRate, Configuration.FrameRate, Configuration.ThreadedRender);
 		}
 
 		/// <summary>

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Frost;
+﻿using Frost;
+using Frost.Logic;
 
 namespace Test_Game
 {
@@ -34,6 +31,15 @@ namespace Test_Game
 		protected override double UpdateRate
 		{
 			get { return 60d; }
+		}
+
+		/// <summary>
+		/// Creates the initial scene
+		/// </summary>
+		/// <returns>A scene</returns>
+		protected override Scene CreateInitialScene ()
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }
