@@ -85,8 +85,8 @@ namespace Frost.Logic
 
 			var entry = new SceneStackEntry(scene);
 #if DEBUG
-			entry.Manager.UpdateThreadId = UpdateThreadId;
-			entry.Manager.RenderThreadId = RenderThreadId;
+			entry.Manager.UpdateThreadId = _updateThreadId;
+			entry.Manager.RenderThreadId = _renderThreadId;
 #endif
 
 			lock(_locker)
@@ -117,10 +117,20 @@ namespace Frost.Logic
 		#region Update and render
 
 #if DEBUG
+		private volatile int _updateThreadId;
+
 		/// <summary>
 		/// ID of the thread that is allowed to update
 		/// </summary>
-		internal int UpdateThreadId { private get; set; }
+		internal int UpdateThreadId
+		{
+			set
+			{
+				foreach(var entry in _sceneStack)
+					entry.Manager.UpdateThreadId = value;
+				_updateThreadId = value;
+			}
+		}
 #endif
 
 		/// <summary>
@@ -146,10 +156,20 @@ namespace Frost.Logic
 		}
 
 #if DEBUG
+		private volatile int _renderThreadId;
+
 		/// <summary>
 		/// ID of the thread that is allowed to render
 		/// </summary>
-		internal int RenderThreadId { private get; set; }
+		internal int RenderThreadId
+		{
+			set
+			{
+				foreach(var entry in _sceneStack)
+					entry.Manager.RenderThreadId = value;
+				_renderThreadId = value;
+			}
+		}
 #endif
 
 		/// <summary>
