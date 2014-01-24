@@ -243,8 +243,8 @@ namespace Frost
 		/// <summary>
 		/// Tracks the average time interval taken
 		/// </summary>
-		private readonly AverageCounter _updateCounter = new AverageCounter(MeasurementCount),
-			_renderCounter = new AverageCounter(MeasurementCount);
+		private readonly SampleCounter _updateCounter = new SampleCounter(MeasurementCount),
+			_renderCounter = new SampleCounter(MeasurementCount);
 
 		#region Update
 

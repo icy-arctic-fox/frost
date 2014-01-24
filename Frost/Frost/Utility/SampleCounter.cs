@@ -1,19 +1,19 @@
 ﻿namespace Frost.Utility
 {
 	/// <summary>
-	/// Calculates the average of multiple values.
+	/// Calculates the minimum, maximum, and average of multiple values.
 	/// This counter tracks a maximum number of entries and wraps around - creating a running average.
 	/// </summary>
-	public class AverageCounter
+	public class SampleCounter
 	{
 		private readonly double[] _measurements;
 		private int _pos;
 
 		/// <summary>
-		/// Creates a new average counter
+		/// Creates a new sample counter
 		/// </summary>
 		/// <param name="count">Maximum number of measurements to keep</param>
-		public AverageCounter (int count)
+		public SampleCounter (int count)
 		{
 			_measurements = new double[count];
 		}
