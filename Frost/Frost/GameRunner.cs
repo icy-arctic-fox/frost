@@ -76,18 +76,34 @@ namespace Frost
 			_renderCounter = new SampleCounter(MeasurementCount);
 
 		/// <summary>
-		/// Starts the state manager.
+		/// Starts the game runner.
 		/// This call blocks until told to exit by the <see cref="Stop"/> method.
 		/// </summary>
+		/// <param name="rate">Target number of updated and rendered frames per second</param>
+		/// <param name="multiThreaded">Indicates whether frame processing should be multi-threaded</param>
+		public void Run (double rate, bool multiThreaded = true)
+		{
+			Run(rate, rate, multiThreaded);
+		}
+
+		/// <summary>
+		/// Starts the game runner.
+		/// This call blocks until told to exit by the <see cref="Stop"/> method.
+		/// </summary>
+		/// <param name="updateRate">Target number of updates per second - use 0 for no limit</param>
+		/// <param name="renderRate">Target number of rendered frames per second - use 0 for no limit</param>
 		/// <param name="multiThreaded">Indicates whether frame processing should be multi-threaded</param>
 		/// <exception cref="InvalidOperationException">Thrown if the state manager is already running</exception>
 		/// <exception cref="ObjectDisposedException">Thrown if the state manager has already been disposed</exception>
-		public void Run (bool multiThreaded = true)
+		public void Run (double updateRate = DefaultTargetUpdateRate, double renderRate = DefaultTargetRenderRate, bool multiThreaded = true)
 		{
 			if(Disposed)
 				throw new ObjectDisposedException(GetType().FullName);
 			if(_running)
-				throw new InvalidOperationException("The state manager is already running.");
+				throw new InvalidOperationException("The game is already running.");
+
+			_targetUpdateInterval = (updateRate <= 0d) ? 0d : 1d / updateRate;
+			_targetRenderInterval = (renderRate <= 0d) ? 0d : 1d / renderRate;
 
 			_running = true;
 			if(multiThreaded)
@@ -147,8 +163,8 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Stops the state manager.
-		/// This will cause the <see cref="Run"/> method to return.
+		/// Stops the game.
+		/// This will cause the Run() method to return.
 		/// </summary>
 		public void Stop ()
 		{
@@ -255,7 +271,7 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Handles timing for the update phase and only calls <see cref="update"/> if it's time.
+		/// Handles timing for the update phase and only updates if it's time.
 		/// This method returns without updating if it's not time to perform an update step.
 		/// </summary>
 		/// <param name="stopwatch">Stopwatch used to calculate when updates should occur</param>
@@ -417,7 +433,7 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Handles timing for the render phase and only calls <see cref="render"/> if it's time.
+		/// Handles timing for the render phase and only draws if it's time.
 		/// This method returns without drawing if it's not time to perform a render.
 		/// </summary>
 		/// <param name="stopwatch">Stopwatch used to </param>
