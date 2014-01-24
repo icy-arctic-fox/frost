@@ -74,9 +74,9 @@
     <Compile Include="Graphics\IDrawableNode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IStepableNode.cs" />
-    <Compile Include="StateManager.cs" />
-    <Compile Include="StateSet.cs" />
+    <Compile Include="Logic\IStepableNode.cs" />
+    <Compile Include="Logic\StateManager.cs" />
+    <Compile Include="Logic\StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Interface.cs" />
     <Compile Include="Utility\SampleCounter.cs" />

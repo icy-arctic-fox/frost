@@ -5,7 +5,7 @@ using Frost.Display;
 using Frost.Graphics;
 using Frost.Utility;
 
-namespace Frost
+namespace Frost.Logic
 {
 	/// <summary>
 	/// Tracks the frames to be updated and rendered.

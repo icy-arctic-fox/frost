@@ -1,4 +1,5 @@
 ﻿using Frost.Display;
+using Frost.Logic;
 
 namespace Frost.Graphics
 {

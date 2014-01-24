@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Frost
+namespace Frost.Logic
 {
 	/// <summary>
 	/// Collection of state data.
