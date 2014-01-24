@@ -22,6 +22,7 @@ namespace Test_Game
 		private class Ball : IStepable, IRenderable
 		{
 			private readonly Sprite _sprite;
+			private float _x;
 
 			public Ball (Texture texture)
 			{
@@ -38,7 +39,11 @@ namespace Test_Game
 			/// Modifying any other game state info during this process would corrupt the game state.</remarks>
 			public void Step (int prev, int next)
 			{
-				throw new NotImplementedException();
+				if(_sprite.X > 500f)
+					_sprite.X = 0f;
+				else
+					_sprite.X += 3f;
+				_sprite.Step(prev, next);
 			}
 
 			/// <summary>
@@ -50,7 +55,7 @@ namespace Test_Game
 			/// Modifying the game state info during this process would corrupt the game state.</remarks>
 			public void Draw (IDisplay display, int state)
 			{
-				throw new NotImplementedException();
+				_sprite.Draw(display, state);
 			}
 		}
 	}
