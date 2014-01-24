@@ -147,7 +147,6 @@ namespace Frost.Logic
 			// Perform the update
 			_display.Update();
 			CurrentScene.Step(prevStateIndex, nextStateIndex);
-			((Window)_display).Title = String.Join(" - ", ToString(), StateManager); // TODO: Remove this
 
 			// Release the state
 			StateManager.ReleaseUpdateState();

@@ -296,6 +296,7 @@ namespace Frost
 				IsRunningSlow = (nextUpdateTime <= 0d && !UnboundedUpdateRate);
 
 				// Perform the update
+				((Window)_display).Title = ToString(); // TODO: Remove this
 				if(!_scenes.Update())
 					_running = false; // All scenes exited
 
