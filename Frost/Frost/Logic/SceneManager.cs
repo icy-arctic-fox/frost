@@ -68,6 +68,11 @@ namespace Frost.Logic
 				throw new ArgumentNullException("scene", "The scene to enter can't be null.");
 
 			var entry = new SceneStackEntry(scene);
+#if DEBUG
+			entry.Manager.UpdateThreadId = UpdateThreadId;
+			entry.Manager.RenderThreadId = RenderThreadId;
+#endif
+
 			lock(_locker)
 			{
 				_sceneStack.Push(entry);
@@ -83,6 +88,13 @@ namespace Frost.Logic
 		{
 			throw new NotImplementedException();
 		}
+
+#if DEBUG
+		/// <summary>
+		/// ID of the thread that is allowed to update
+		/// </summary>
+		internal int UpdateThreadId { private get; set; }
+#endif
 
 		/// <summary>
 		/// Updates the active scene
@@ -101,6 +113,13 @@ namespace Frost.Logic
 			// Release the state
 			StateManager.ReleaseUpdateState();
 		}
+
+#if DEBUG
+		/// <summary>
+		/// ID of the thread that is allowed to render
+		/// </summary>
+		internal int RenderThreadId { private get; set; }
+#endif
 
 		/// <summary>
 		/// Total number of frames that were drawn multiple times.

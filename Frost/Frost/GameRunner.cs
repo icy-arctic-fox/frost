@@ -118,11 +118,9 @@ namespace Frost
 		private void singleThreadedGameLoop ()
 		{
 #if DEBUG
-			// TODO: Handle switching to a new scene
-			var sm  = _scenes.StateManager;
 			var tid = Thread.CurrentThread.ManagedThreadId;
-			sm.UpdateThreadId = tid;
-			sm.RenderThreadId = tid;
+			_scenes.UpdateThreadId = tid;
+			_scenes.RenderThreadId = tid;
 #endif
 
 			// Allocate these on the stack for faster access
@@ -251,7 +249,7 @@ namespace Frost
 		private void doUpdateLoop ()
 		{
 #if DEBUG
-			_scenes.StateManager.UpdateThreadId = Thread.CurrentThread.ManagedThreadId; // TODO: Handle switching to a new scene
+			_scenes.UpdateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 			var timeout = TimeSpan.FromSeconds(MaxUpdateInterval);
 
@@ -401,7 +399,7 @@ namespace Frost
 		private void doRenderLoop ()
 		{
 #if DEBUG
-			_scenes.StateManager.RenderThreadId = Thread.CurrentThread.ManagedThreadId; // TODO: Handle switching to a new scene
+			_scenes.RenderThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the render thread. It may be active on another thread.");

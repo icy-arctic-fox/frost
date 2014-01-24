@@ -227,7 +227,6 @@ namespace Frost.Logic
 		internal void ReleaseRenderState ()
 		{
 #if DEBUG
-
 			if(Thread.CurrentThread.ManagedThreadId != RenderThreadId)
 				throw new AccessViolationException("Only the render thread may release a render state.");
 #endif
