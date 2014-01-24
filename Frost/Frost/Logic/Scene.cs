@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Frost.Display;
 using Frost.Graphics;
 
@@ -12,8 +9,22 @@ namespace Frost.Logic
 	/// </summary>
 	public abstract class Scene : IStepable, IRenderable
 	{
-		private readonly IStepable _update;
-		private readonly IRenderable _render;
+		/// <summary>
+		/// Describes a method that updates the state of the game
+		/// </summary>
+		/// <param name="prev">Index of the previous state that was updated</param>
+		/// <param name="next">Index of the next state that should be updated</param>
+		private delegate void UpdateMethod (int prev, int next);
+
+		/// <summary>
+		/// Describes a method that draws a state to a display
+		/// </summary>
+		/// <param name="display">Display to draw the state onto</param>
+		/// <param name="state">Index of the state to draw</param>
+		private delegate void DrawMethod (IDisplay display, int state);
+
+		private readonly UpdateMethod _update;
+		private readonly DrawMethod _render;
 
 		/// <summary>
 		/// Creates the base of the scene
@@ -27,8 +38,8 @@ namespace Frost.Logic
 			if(render == null)
 				throw new ArgumentNullException("render", "The scene render object can't be null.");
 
-			_update = update;
-			_render = render;
+			_update = update.Step;
+			_render = render.Draw;
 		}
 
 		/// <summary>
@@ -41,7 +52,7 @@ namespace Frost.Logic
 		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
 		public void Step (int prev, int next)
 		{
-			_update.Step(prev, next);
+			_update(prev, next);
 		}
 
 		/// <summary>
@@ -53,7 +64,7 @@ namespace Frost.Logic
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
 		public void Draw (IDisplay display, int state)
 		{
-			_render.Draw(display, state);
+			_render(display, state);
 		}
 	}
 }
