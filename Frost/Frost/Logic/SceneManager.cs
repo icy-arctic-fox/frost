@@ -18,26 +18,40 @@ namespace Frost.Logic
 		private readonly IDisplay _display;
 
 		/// <summary>
-		/// Scene currently being processed
+		/// Checks if there are any scenes being processed
+		/// </summary>
+		public bool ScenesRemaining
+		{
+			get
+			{
+				lock(_locker)
+					return _sceneStack.Count > 0;
+			}
+		}
+
+		/// <summary>
+		/// Scene currently being processed.
+		/// If there isn't a scene, then null is returned.
 		/// </summary>
 		public Scene CurrentScene
 		{
 			get
 			{
 				lock(_locker)
-					return _curScene.Scene;
+					return (_sceneStack.Count <= 0) ? null : _curScene.Scene;
 			}
 		}
 
 		/// <summary>
-		/// State manager for the current scene
+		/// State manager for the current scene.
+		/// If there isn't a scene, then null is returned.
 		/// </summary>
 		internal StateManager StateManager
 		{
 			get
 			{
 				lock(_locker)
-					return _curScene.Manager;
+					return (_sceneStack.Count <= 0) ? null : _curScene.Manager;
 			}
 		}
 
@@ -57,6 +71,8 @@ namespace Frost.Logic
 			_display = display;
 			EnterScene(initialScene);
 		}
+
+		#region Scene management
 
 		/// <summary>
 		/// Enters a new scene
@@ -83,11 +99,22 @@ namespace Frost.Logic
 		/// <summary>
 		/// Leaves the current scene and goes back to the previous one
 		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if there are no more scenes to process</exception>
 		/// <remarks>The current executing scene will finish its <see cref="Update"/> or <see cref="Render"/>.</remarks>
 		public void ExitScene ()
 		{
-			throw new NotImplementedException();
+			lock(_locker)
+			{
+				if(_sceneStack.Count <= 0)
+					throw new InvalidOperationException("There are no more scenes left to exit from.");
+
+				_sceneStack.Pop();
+				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Peek() : default(SceneStackEntry);
+			}
 		}
+		#endregion
+
+		#region Update and render
 
 #if DEBUG
 		/// <summary>
@@ -99,7 +126,9 @@ namespace Frost.Logic
 		/// <summary>
 		/// Updates the active scene
 		/// </summary>
-		public void Update ()
+		/// <returns>True if there is still a scene to process</returns>
+		/// <remarks>A return value of false indicates that the last scene has exited and the game should terminate.</remarks>
+		public bool Update ()
 		{
 			// Get the previous state and next state to update
 			int prevStateIndex;
@@ -112,6 +141,8 @@ namespace Frost.Logic
 
 			// Release the state
 			StateManager.ReleaseUpdateState();
+
+			return ScenesRemaining;
 		}
 
 #if DEBUG
@@ -137,23 +168,27 @@ namespace Frost.Logic
 		/// </summary>
 		public void Render ()
 		{
-			// Retrieve the next state to render
-			int prevStateIndex;
-			var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
+			if(ScenesRemaining)
+			{// Only render if there's a scene
+				// Retrieve the next state to render
+				int prevStateIndex;
+				var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
 
-			if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
-			{// Render the frame
-				_display.EnterFrame();
-				CurrentScene.Draw(_display, nextStateIndex);
-				_display.ExitFrame();
+				if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
+				{ // Render the frame
+					_display.EnterFrame();
+					CurrentScene.Draw(_display, nextStateIndex);
+					_display.ExitFrame();
 
-				if(prevStateIndex == nextStateIndex)
-					++RenderedDuplicateFrames;
+					if(prevStateIndex == nextStateIndex)
+						++RenderedDuplicateFrames;
+				}
+
+				// Release the state
+				StateManager.ReleaseRenderState();
 			}
-
-			// Release the state
-			StateManager.ReleaseRenderState();
 		}
+		#endregion
 
 		/// <summary>
 		/// An entry in the stack

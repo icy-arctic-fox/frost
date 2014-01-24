@@ -296,7 +296,8 @@ namespace Frost
 				IsRunningSlow = (nextUpdateTime <= 0d && !UnboundedUpdateRate);
 
 				// Perform the update
-				_scenes.Update();
+				if(!_scenes.Update())
+					_running = false; // All scenes exited
 
 				// Calculate how long the update took
 				var elapsed = stopwatch.Elapsed.TotalSeconds;
