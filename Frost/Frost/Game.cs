@@ -71,8 +71,7 @@ namespace Frost
 			// Create the window
 			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle); // TODO: Pass title to constructor
 
-			// Create the state manager
-			Manager = new StateManager(Window, null, null, UpdateRate, Configuration.FrameRate); // TODO: Somehow get the nodes from type params?
+			// TODO: Create scene manager
 		}
 
 		/// <summary>
@@ -80,7 +79,7 @@ namespace Frost
 		/// </summary>
 		public void Run ()
 		{
-			Manager.Run(); // TODO: Add state manager options to configuration
+			// TODO
 		}
 
 		#region Game configuration

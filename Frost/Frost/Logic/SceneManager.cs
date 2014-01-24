@@ -12,8 +12,34 @@ namespace Frost.Logic
 	/// When it is finished, the top scene is popped off the stack.</remarks>
 	public class SceneManager
 	{
+		private readonly object _locker = new object();
+		private SceneStackEntry _curScene;
 		private readonly Stack<SceneStackEntry> _sceneStack = new Stack<SceneStackEntry>();
 		private readonly IDisplay _display;
+
+		/// <summary>
+		/// Scene currently being processed
+		/// </summary>
+		public Scene CurrentScene
+		{
+			get
+			{
+				lock(_locker)
+					return _curScene.Scene;
+			}
+		}
+
+		/// <summary>
+		/// State manager for the current scene
+		/// </summary>
+		internal StateManager StateManager
+		{
+			get
+			{
+				lock(_locker)
+					return _curScene.Manager;
+			}
+		}
 
 		/// <summary>
 		/// Creates a new scene manager
@@ -41,8 +67,12 @@ namespace Frost.Logic
 			if(scene == null)
 				throw new ArgumentNullException("scene", "The scene to enter can't be null.");
 
-			var entry = new SceneStackEntry(scene, _display);
-			_sceneStack.Push(entry);
+			var entry = new SceneStackEntry(scene);
+			lock(_locker)
+			{
+				_sceneStack.Push(entry);
+				_curScene = entry;
+			}
 		}
 
 		/// <summary>
@@ -59,15 +89,40 @@ namespace Frost.Logic
 		/// </summary>
 		public void Update ()
 		{
-			throw new NotImplementedException();
+			// Get the previous state and next state to update
+			int prevStateIndex;
+			var nextStateIndex = StateManager.AcquireNextUpdateState(out prevStateIndex);
+
+			// Perform the update
+			_display.Update();
+			CurrentScene.Step(prevStateIndex, nextStateIndex);
+			((Window)_display).Title = String.Join(" - ", ToString(), StateManager); // TODO: Remove this
+
+			// Release the state
+			StateManager.ReleaseUpdateState();
 		}
 
 		/// <summary>
-		/// Draws the active scene
+		/// Renders the active scene
 		/// </summary>
-		public void Draw ()
+		public void Render ()
 		{
-			throw new NotImplementedException();
+			// Retrieve the next state to render
+			int prevStateIndex;
+			var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
+
+			if(/* TODO: RenderDuplicateFrames || */ prevStateIndex != nextStateIndex)
+			{// Render the frame
+				_display.EnterFrame();
+				CurrentScene.Draw(_display, nextStateIndex);
+				_display.ExitFrame();
+
+/* TODO:				if(prevStateIndex == nextStateIndex)
+					++RenderedDuplicateFrames; */
+			}
+
+			// Release the state
+			StateManager.ReleaseRenderState();
 		}
 
 		/// <summary>
@@ -89,16 +144,13 @@ namespace Frost.Logic
 			/// Creates a new stack entry
 			/// </summary>
 			/// <param name="scene">Scene to update and render</param>
-			/// <param name="display">Display to draw the scene onto</param>
-			public SceneStackEntry (Scene scene, IDisplay display)
+			public SceneStackEntry (Scene scene)
 			{
 				if(scene == null)
 					throw new ArgumentNullException("scene", "The scene to execute can't be null.");
-				if(display == null)
-					throw new ArgumentNullException("display", "The display to render to can't be null.");
 
 				Scene   = scene;
-				Manager = new StateManager(display, scene, scene);
+				Manager = new StateManager();
 			}
 		}
 	}
