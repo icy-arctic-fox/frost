@@ -23,23 +23,29 @@ namespace Frost.Logic
 		/// <param name="state">Index of the state to draw</param>
 		private delegate void DrawMethod (IDisplay display, int state);
 
-		private readonly UpdateMethod _update;
-		private readonly DrawMethod _render;
+		private UpdateMethod _update;
+		private DrawMethod _render;
 
 		/// <summary>
-		/// Creates the base of the scene
+		/// Sets the root scene object that will be updated every tick
 		/// </summary>
-		/// <param name="update">Object to update every logic tick</param>
-		/// <param name="render">Object to render every frame</param>
-		protected Scene (IStepable update, IRenderable render)
+		/// <param name="updateRoot">Updatable root object</param>
+		protected void SetUpdateRoot (IStepable updateRoot)
 		{
-			if(update == null)
-				throw new ArgumentNullException("update", "The scene update object can't be null.");
-			if(render == null)
-				throw new ArgumentNullException("render", "The scene render object can't be null.");
+			if(updateRoot == null)
+				throw new ArgumentNullException("updateRoot", "The root scene update object can't be null.");
+			_update = updateRoot.Step;
+		}
 
-			_update = update.Step;
-			_render = render.Draw;
+		/// <summary>
+		/// Sets the root scene object that will be rendered every frame
+		/// </summary>
+		/// <param name="renderRoot">Renderable root object</param>
+		protected void SetRenderRoot (IRenderable renderRoot)
+		{
+			if(renderRoot == null)
+				throw new ArgumentNullException("renderRoot", "The root scene render object can't be null.");
+			_render = renderRoot.Draw;
 		}
 
 		/// <summary>
@@ -50,7 +56,7 @@ namespace Frost.Logic
 		/// <remarks>The only game state that should be modified during this process is the state indicated by <paramref name="next"/>.
 		/// The state indicated by <paramref name="prev"/> can be used for reference (if needed), but should not be modified.
 		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
-		public void Step (int prev, int next)
+		public virtual void Step (int prev, int next)
 		{
 			_update(prev, next);
 		}
@@ -62,7 +68,7 @@ namespace Frost.Logic
 		/// <param name="state">Index of the state to draw</param>
 		/// <remarks>None of the game states should be modified by this process - including the state indicated by <paramref name="state"/>.
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
-		public void Draw (IDisplay display, int state)
+		public virtual void Draw (IDisplay display, int state)
 		{
 			_render(display, state);
 		}

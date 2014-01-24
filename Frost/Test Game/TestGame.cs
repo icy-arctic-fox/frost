@@ -39,7 +39,7 @@ namespace Test_Game
 		/// <returns>A scene</returns>
 		protected override Scene CreateInitialScene ()
 		{
-			throw new System.NotImplementedException();
+			return new BallScene(this);
 		}
 	}
 }
