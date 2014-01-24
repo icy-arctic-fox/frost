@@ -79,7 +79,7 @@ namespace Frost
 		/// Starts the game runner.
 		/// This call blocks until told to exit by the <see cref="Stop"/> method.
 		/// </summary>
-		/// <param name="rate">Target number of updated and rendered frames per second</param>
+		/// <param name="rate">Target number of updates and rendered frames per second - use 0 for no limit</param>
 		/// <param name="multiThreaded">Indicates whether frame processing should be multi-threaded</param>
 		public void Run (double rate, bool multiThreaded = true)
 		{
@@ -93,8 +93,8 @@ namespace Frost
 		/// <param name="updateRate">Target number of updates per second - use 0 for no limit</param>
 		/// <param name="renderRate">Target number of rendered frames per second - use 0 for no limit</param>
 		/// <param name="multiThreaded">Indicates whether frame processing should be multi-threaded</param>
-		/// <exception cref="InvalidOperationException">Thrown if the state manager is already running</exception>
-		/// <exception cref="ObjectDisposedException">Thrown if the state manager has already been disposed</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the game is already running</exception>
+		/// <exception cref="ObjectDisposedException">Thrown if the game has already been disposed</exception>
 		public void Run (double updateRate = DefaultTargetUpdateRate, double renderRate = DefaultTargetRenderRate, bool multiThreaded = true)
 		{
 			if(Disposed)
@@ -271,7 +271,7 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Handles timing for the update phase and only updates if it's time.
+		/// Handles timing for the update phase and only updates if it's time to do so.
 		/// This method returns without updating if it's not time to perform an update step.
 		/// </summary>
 		/// <param name="stopwatch">Stopwatch used to calculate when updates should occur</param>
@@ -404,7 +404,7 @@ namespace Frost
 			_scenes.StateManager.RenderThreadId = Thread.CurrentThread.ManagedThreadId; // TODO: Handle switching to a new scene
 #endif
 			if(!_display.SetActive())
-				throw new AccessViolationException("Could not activate rendering to the display on the state manager's render thread. It may be active on another thread.");
+				throw new AccessViolationException("Could not activate rendering to the display on the render thread. It may be active on another thread.");
 			var timeout = TimeSpan.FromSeconds(MaxRenderInterval);
 
 			// Stack access is faster for these since they're checked quite frequently
@@ -422,7 +422,7 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Handles timing for the render phase and only draws if it's time.
+		/// Handles timing for the render phase and only draws if it's time to do so.
 		/// This method returns without drawing if it's not time to perform a render.
 		/// </summary>
 		/// <param name="stopwatch">Stopwatch used to </param>
