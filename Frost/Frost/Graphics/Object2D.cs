@@ -87,6 +87,21 @@ namespace Frost.Graphics
 				_dirty = true;
 			}
 		}
+
+		private float _rot;
+
+		/// <summary>
+		/// Clockwise rotation of the object in degrees
+		/// </summary>
+		public float Rotation
+		{
+			get { return _rot; }
+			set
+			{
+				_rot = value;
+				_dirty = true;
+			}
+		}
 		#endregion
 
 		protected Object2D ()
@@ -126,8 +141,9 @@ namespace Frost.Graphics
 			if(_dirty)
 			{// Apply transformations to the next state
 				var state = InitialState;
-				state.Transform.Translate(_x, _y);
 				state.Transform.Scale(_sx, _sy);
+				state.Transform.Rotate(_rot);
+				state.Transform.Translate(_x, _y);
 
 				_states[next] = state;
 				_dirty = false;
