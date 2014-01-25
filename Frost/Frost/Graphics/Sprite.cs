@@ -1,5 +1,4 @@
 ﻿using Frost.Display;
-using Frost.Logic;
 
 namespace Frost.Graphics
 {
@@ -14,20 +13,22 @@ namespace Frost.Graphics
 		private readonly SFML.Graphics.Sprite _sprite;
 
 		/// <summary>
-		/// Underlying SFML implementation of the sprite
-		/// </summary>
-		internal SFML.Graphics.Sprite InternalSprite
-		{
-			get { return _sprite; }
-		}
-
-		/// <summary>
 		/// Creates a new sprite
 		/// </summary>
 		/// <param name="texture">Texture to apply to the sprite</param>
 		public Sprite (Texture texture)
 		{
 			_sprite = new SFML.Graphics.Sprite(texture.InternalTexture);
+		}
+
+		/// <summary>
+		/// Underlying implementation that draws the sprite
+		/// </summary>
+		/// <param name="display">Display to draw on</param>
+		/// <param name="transform">Transformation to apply to the sprite</param>
+		protected override void DrawObject (IDisplay display, SFML.Graphics.RenderStates transform)
+		{
+			display.Draw(_sprite, transform);
 		}
 	}
 }
