@@ -41,6 +41,52 @@ namespace Frost.Graphics
 				_dirty = true;
 			}
 		}
+
+		/// <summary>
+		/// Amount of scaling
+		/// </summary>
+		private float _sx = 1f, _sy = 1f;
+
+		/// <summary>
+		/// Horizontal scaling.
+		/// Less than 1 will shrink the object, greater than 1 will stretch the object.
+		/// </summary>
+		public float ScaleX
+		{
+			get { return _sx; }
+			set
+			{
+				_sx = value;
+				_dirty = true;
+			}
+		}
+
+		/// <summary>
+		/// Vertical scaling.
+		/// Less than 1 will shrink the object, greater than 1 will stretch the object.
+		/// </summary>
+		public float ScaleY
+		{
+			get { return _sy; }
+			set
+			{
+				_sy = value;
+				_dirty = true;
+			}
+		}
+
+		/// <summary>
+		/// Adjusts the horizontal and vertical scaling to the same value
+		/// </summary>
+		public float Scale
+		{
+			set
+			{
+				_sx = value;
+				_sy = value;
+				_dirty = true;
+			}
+		}
 		#endregion
 
 		protected Object2D ()
@@ -81,6 +127,7 @@ namespace Frost.Graphics
 			{// Apply transformations to the next state
 				var state = InitialState;
 				state.Transform.Translate(_x, _y);
+				state.Transform.Scale(_sx, _sy);
 
 				_states[next] = state;
 				_dirty = false;
