@@ -194,9 +194,9 @@ namespace Frost.Logic
 				var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
 
 				if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
-				{ // Render the frame
+				{// Render the frame
 					_display.EnterFrame();
-					CurrentScene.Draw(_display, nextStateIndex);
+					CurrentScene.Draw(_display, nextStateIndex); // TODO: Add interpolation between rendered frames
 					_display.ExitFrame();
 
 					if(prevStateIndex == nextStateIndex)
