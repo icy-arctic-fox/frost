@@ -52,7 +52,7 @@ namespace Frost.Graphics
 		#region Update and render
 
 		/// <summary>
-		/// The initial state of the sprite
+		/// The initial transformation state of a 2D object
 		/// </summary>
 		private static RenderStates InitialState
 		{
@@ -71,7 +71,7 @@ namespace Frost.Graphics
 		private bool _dirty;
 
 		/// <summary>
-		/// Updates the state of the sprite
+		/// Updates the state of the object
 		/// </summary>
 		/// <param name="prev">Index of the previous state</param>
 		/// <param name="next">Index of the state to update</param>
@@ -90,7 +90,7 @@ namespace Frost.Graphics
 		}
 
 		/// <summary>
-		/// Draws a sprite's state to a display
+		/// Draws a object's state to a display
 		/// </summary>
 		/// <param name="display">Display to draw to</param>
 		/// <param name="state">Index of the state to draw</param>

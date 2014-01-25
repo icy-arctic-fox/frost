@@ -15,17 +15,17 @@ namespace Frost.Display
 		bool VSync { get; set; } // TODO: Implement 'Adaptive' VSync
 
 		/// <summary>
-		/// Draws a sprite to the display
+		/// Draws an object to the display
 		/// </summary>
-		/// <param name="sprite">Sprite to draw</param>
-		void Draw (Sprite sprite);
+		/// <param name="drawable">Object to draw</param>
+		void Draw (Drawable drawable);
 
 		/// <summary>
-		/// Draws a sprite to the display with additional transformation and render options
+		/// Draws an object to the display with additional transformation and render options
 		/// </summary>
-		/// <param name="sprite">Sprite to draw</param>
-		/// <param name="states">Additional transformation and render options</param>
-		void Draw (Sprite sprite, RenderStates states);
+		/// <param name="drawable">Object to draw</param>
+		/// <param name="transform">Additional transformation and render options</param>
+		void Draw (Drawable drawable, RenderStates transform);
 
 		/// <summary>
 		/// Performs any updates to the display's state (not part of the rendered frames)

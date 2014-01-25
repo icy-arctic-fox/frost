@@ -251,14 +251,23 @@ namespace Frost.Display
 			}
 		}
 
-		public void Draw (Sprite sprite)
+		/// <summary>
+		/// Draws a basic object to the window
+		/// </summary>
+		/// <param name="drawable">Object to draw</param>
+		public void Draw (Drawable drawable)
 		{
-			_window.Draw(sprite);
+			_window.Draw(drawable);
 		}
 
-		public void Draw (Sprite sprite, RenderStates states)
+		/// <summary>
+		/// Draws a basic object with a transformation
+		/// </summary>
+		/// <param name="drawable">Object to draw</param>
+		/// <param name="transform">Transformation to apply to <paramref name="drawable"/></param>
+		public void Draw (Drawable drawable, RenderStates transform)
 		{
-			_window.Draw(sprite, states);
+			_window.Draw(drawable, transform);
 		}
 
 		/// <summary>
