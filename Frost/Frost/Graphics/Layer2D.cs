@@ -12,6 +12,8 @@ namespace Frost.Graphics
 	/// </summary>
 	public class Layer2D : IDisplayContainer<Object2D>
 	{
+		private readonly List<Object2D> _objects = new List<Object2D>();
+
 		/// <summary>
 		/// Draws the state of a layer and all contained objects
 		/// </summary>
@@ -21,7 +23,8 @@ namespace Frost.Graphics
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
 		public void Draw (IDisplay display, int state)
 		{
-			throw new NotImplementedException();
+			foreach(var obj in _objects)
+				obj.Draw(display, state);
 		}
 
 		/// <summary>
@@ -30,7 +33,7 @@ namespace Frost.Graphics
 		/// <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the objects</returns>
 		public IEnumerator<Object2D> GetEnumerator ()
 		{
-			throw new NotImplementedException();
+			return _objects.GetEnumerator();
 		}
 
 		/// <summary>
@@ -49,7 +52,11 @@ namespace Frost.Graphics
 		/// <param name="item">The object to add to the layer</param>
 		public void Add (Object2D item)
 		{
-			throw new NotImplementedException();
+#if DEBUG
+			if(item == null)
+				throw new ArgumentNullException("item", "The object can't be null.");
+#endif
+			_objects.Add(item);
 		}
 
 		/// <summary>
@@ -57,7 +64,7 @@ namespace Frost.Graphics
 		/// </summary>
 		public void Clear ()
 		{
-			throw new NotImplementedException();
+			_objects.Clear();
 		}
 
 		/// <summary>
@@ -67,7 +74,7 @@ namespace Frost.Graphics
 		/// <param name="item">The object to locate in the layer</param>
 		public bool Contains (Object2D item)
 		{
-			throw new NotImplementedException();
+			return _objects.Contains(item);
 		}
 
 		/// <summary>
@@ -81,7 +88,7 @@ namespace Frost.Graphics
 		/// <exception cref="T:System.ArgumentException">Thrown if <paramref name="array"/> is multidimensional or the number of objects in the layer is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
 		public void CopyTo (Object2D[] array, int arrayIndex)
 		{
-			throw new NotImplementedException();
+			_objects.CopyTo(array, arrayIndex);
 		}
 
 		/// <summary>
@@ -92,7 +99,7 @@ namespace Frost.Graphics
 		/// <param name="item">The object to remove from the layer</param>
 		public bool Remove (Object2D item)
 		{
-			throw new NotImplementedException();
+			return _objects.Remove(item);
 		}
 
 		/// <summary>
@@ -100,7 +107,7 @@ namespace Frost.Graphics
 		/// </summary>
 		public int Count
 		{
-			get { throw new NotImplementedException(); }
+			get { return _objects.Count; }
 		}
 
 		/// <summary>
