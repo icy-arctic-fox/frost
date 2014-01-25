@@ -92,6 +92,7 @@ namespace Frost
 
 			// Create the window
 			Window = new Window(Configuration.WindowWidth, Configuration.WindowHeight, GameTitle);
+			Window.Closed += Window_Closed;
 
 			// Create the runner
 			var initialScene = CreateInitialScene();
@@ -129,6 +130,19 @@ namespace Frost
 				}
 			}
 		}
+
+		#region Subscribers
+
+		/// <summary>
+		/// Stop the runner when the window is closed
+		/// </summary>
+		/// <param name="sender">Window object</param>
+		/// <param name="e">Event arguments</param>
+		private void Window_Closed (object sender, EventArgs e)
+		{
+			Runner.Stop();
+		}
+		#endregion
 
 		#region Game configuration
 
