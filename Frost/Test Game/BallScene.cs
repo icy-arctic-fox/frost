@@ -38,9 +38,15 @@ namespace Test_Game
 			public void Step (int prev, int next)
 			{
 				if(_sprite.X > 500f)
+				{
 					_sprite.X = 0f;
+					_sprite.Rotation = 0f;
+				}
 				else
+				{
 					_sprite.X += 3f;
+					_sprite.Rotation += 3f;
+				}
 				_sprite.Step(prev, next);
 			}
 
