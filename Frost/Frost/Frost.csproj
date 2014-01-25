@@ -74,6 +74,7 @@
     <Compile Include="Logic\Scene.cs" />
     <Compile Include="Logic\SceneManager.cs" />
     <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\InputModule.cs" />
     <Compile Include="ResourceManager.cs" />
     <Compile Include="Graphics\IRenderable.cs">
       <SubType>Code</SubType>
