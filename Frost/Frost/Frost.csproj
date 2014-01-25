@@ -66,7 +66,7 @@
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\IDisplayContainer.cs" />
     <Compile Include="Graphics\Object2D.cs" />
-    <Compile Include="Graphics\RenderLayer.cs" />
+    <Compile Include="Graphics\Layer2D.cs" />
     <Compile Include="Graphics\ResourceLoader.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
