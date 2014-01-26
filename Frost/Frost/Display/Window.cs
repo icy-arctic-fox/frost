@@ -1,7 +1,9 @@
 ﻿using System;
+using Frost.Modules.Input;
 using SFML.Graphics;
 using SFML.Window;
 using Frost.Utility;
+using M = SFML.Window.Mouse;
 
 namespace Frost.Display
 {
@@ -56,6 +58,13 @@ namespace Frost.Display
 
 			// Listen for window events
 			_window.Closed += _window_Closed;
+
+			_window.MouseButtonPressed  += _window_MouseButtonPressed;
+			_window.MouseButtonReleased += _window_MouseButtonReleased;
+			_window.MouseEntered        += _window_MouseEntered;
+			_window.MouseLeft           += _window_MouseLeft;
+			_window.MouseMoved          += _window_MouseMoved;
+			// TODO: MouseWheelMoved
 		}
 
 		#region Events
@@ -117,6 +126,166 @@ namespace Frost.Display
 			_window.Close();
 			Closed.NotifySubscribers(this, args);
 		}
+		#endregion
+
+		#region Mouse events
+		#region MouseDown
+
+		/// <summary>
+		/// Triggered when the mouse is pressed inside the window
+		/// </summary>
+		public event EventHandler<MouseEventArgs> MouseDown;
+
+		/// <summary>
+		/// Called when a mouse button is pressed inside the window
+		/// </summary>
+		/// <param name="args">Mouse event arguments</param>
+		/// <remarks>This method triggers the <see cref="MouseDown"/> event.</remarks>
+		protected virtual void OnMouseDown (MouseEventArgs args)
+		{
+			MouseDown.NotifySubscribers(this, args);
+		}
+
+		/// <summary>
+		/// Called when the underlying window has a mouse button pressed in it
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Mouse event arguments</param>
+		private void _window_MouseButtonPressed (object sender, MouseButtonEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region MouseUp
+
+		/// <summary>
+		/// Triggered when a mouse button is release inside or outside of the window
+		/// </summary>
+		public event EventHandler<MouseEventArgs> MouseUp;
+
+		/// <summary>
+		/// Called when a mouse button is release inside or outside of the window
+		/// </summary>
+		/// <param name="args">Mouse event arguments</param>
+		/// <remarks>This method triggers the <see cref="MouseUp"/> event.</remarks>
+		protected virtual void OnMouseUp (MouseEventArgs args)
+		{
+			MouseUp.NotifySubscribers(this, args);
+		}
+
+		/// <summary>
+		/// Called when the underlying window has a mouse button released in it
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Mouse event arguments</param>
+		void _window_MouseButtonReleased (object sender, MouseButtonEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region MouseEnter
+
+		/// <summary>
+		/// Triggered when the mouse moves into the window
+		/// </summary>
+		public event EventHandler<MouseEventArgs> MouseEnter;
+
+		/// <summary>
+		/// Called when the mouse moves into the window
+		/// </summary>
+		/// <param name="args">Mouse event arguments</param>
+		/// <remarks>This method triggers the <see cref="MouseEnter"/> event.</remarks>
+		protected virtual void OnMouseEnter (MouseEventArgs args)
+		{
+			MouseEnter.NotifySubscribers(this, args);
+		}
+
+		/// <summary>
+		/// Called when the mouse enters the underlying window
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Mouse event arguments</param>
+		void _window_MouseEntered (object sender, EventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region MouseLeave
+
+		/// <summary>
+		/// Triggered when the mouse leaves the window
+		/// </summary>
+		public event EventHandler<MouseEventArgs> MouseLeave;
+
+		/// <summary>
+		/// Called when the mouse leaves the window
+		/// </summary>
+		/// <param name="args">Mouse event arguments</param>
+		/// <remarks>This method triggers the <see cref="MouseLeave"/> event.</remarks>
+		protected virtual void OnMouseLeave (MouseEventArgs args)
+		{
+			MouseLeave.NotifySubscribers(this, args);
+		}
+
+		/// <summary>
+		/// Called when the mouse leaves the underlying window
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Mouse event arguments</param>
+		void _window_MouseLeft (object sender, EventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region MouseMove
+
+		/// <summary>
+		/// Triggered when the mouse moves inside of the window
+		/// </summary>
+		public event EventHandler<MouseEventArgs> MouseMove;
+
+		/// <summary>
+		/// Called when the mouse moves inside of the window
+		/// </summary>
+		/// <param name="args">Mouse event arguments</param>
+		/// <remarks>This method triggers the <see cref="MouseMove"/> event.</remarks>
+		protected virtual void OnMouseMove (MouseEventArgs args)
+		{
+			MouseMove.NotifySubscribers(this, args);
+		}
+
+		/// <summary>
+		/// Called when the mouse moves inside the underlying window
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Mouse event arguments</param>
+		void _window_MouseMoved (object sender, MouseMoveEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region Click
+
+		/// <summary>
+		/// Triggered when a mouse button is clicked (pressed and released)
+		/// </summary>
+		public event EventHandler<MouseEventArgs> Click;
+
+		/// <summary>
+		/// Called when a mouse button is pressed and released inside the window
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		/// <remarks>This method triggers the <see cref="Click"/> event.</remarks>
+		protected virtual void OnClick (MouseEventArgs args)
+		{
+			Click.NotifySubscribers(null, args);
+		}
+		#endregion
 		#endregion
 		#endregion
 
@@ -231,6 +400,83 @@ namespace Frost.Display
 			get { return _backColor; }
 			set { _backColor = value; }
 		}
+
+		#region Mouse
+		#region Position
+
+		/// <summary>
+		/// Location of the mouse along the x-axis relative to the window's top-left corner
+		/// </summary>
+		public int MouseX
+		{
+			get { return M.GetPosition(_window).X; }
+			set { M.SetPosition(new Vector2i(value, MouseY), _window); }
+		}
+
+		/// <summary>
+		/// Location of the mouse along the y-axis relative to the window's top-left corner
+		/// </summary>
+		public int MouseY
+		{
+			get { return M.GetPosition(_window).Y; }
+			set { M.SetPosition(new Vector2i(MouseX, value), _window); }
+		}
+
+		/// <summary>
+		/// Location of the mouse on the screen
+		/// </summary>
+		public Point2D MousePosition
+		{
+			get { return M.GetPosition(_window); }
+			set { M.SetPosition(value, _window); }
+		}
+		#endregion
+
+		#region Buttons
+
+		/// <summary>
+		/// Buttons currently being pressed
+		/// </summary>
+		public static MouseButton Buttons
+		{
+			get
+			{
+				var buttons = MouseButton.None;
+				if(M.IsButtonPressed(M.Button.Left))
+					buttons |= MouseButton.Left;
+				if(M.IsButtonPressed(M.Button.Right))
+					buttons |= MouseButton.Right;
+				if(M.IsButtonPressed(M.Button.Middle))
+					buttons |= MouseButton.Middle;
+				return buttons;
+			}
+		}
+
+		/// <summary>
+		/// Indicates whether the left mouse button is being pressed
+		/// </summary>
+		public static bool Left
+		{
+			get { return M.IsButtonPressed(M.Button.Left); }
+		}
+
+		/// <summary>
+		/// Indicates whether the right mouse button is being pressed
+		/// </summary>
+		public static bool Right
+		{
+			get { return M.IsButtonPressed(M.Button.Right); }
+		}
+
+		/// <summary>
+		/// Indicates whether the middle mouse button is being pressed
+		/// </summary>
+		public static bool Middle
+		{
+			get { return M.IsButtonPressed(M.Button.Middle); }
+		}
+		#endregion
+		#endregion
 
 		#region Display
 
