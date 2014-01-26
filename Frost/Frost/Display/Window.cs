@@ -58,6 +58,11 @@ namespace Frost.Display
 			_window = new RenderWindow(new VideoMode(width, height), _title);
 
 			// Listen for window events
+			subscribe();
+		}
+
+		private void subscribe ()
+		{
 			_window.Closed += _window_Closed;
 
 			_window.MouseButtonPressed  += _window_MouseButtonPressed;
@@ -66,6 +71,19 @@ namespace Frost.Display
 			_window.MouseLeft           += _window_MouseLeft;
 			_window.MouseMoved          += _window_MouseMoved;
 			Mouse.Release += Mouse_Release;
+			// TODO: MouseWheelMoved	
+		}
+
+		private void unsubscribe ()
+		{
+			_window.Closed -= _window_Closed;
+
+			_window.MouseButtonPressed  -= _window_MouseButtonPressed;
+			_window.MouseButtonReleased -= _window_MouseButtonReleased;
+			_window.MouseEntered        -= _window_MouseEntered;
+			_window.MouseLeft           -= _window_MouseLeft;
+			_window.MouseMoved          -= _window_MouseMoved;
+			Mouse.Release -= Mouse_Release;
 			// TODO: MouseWheelMoved
 		}
 
@@ -539,10 +557,16 @@ namespace Frost.Display
 
 		#region Disposable
 
+		private volatile bool _disposed;
+
 		/// <summary>
 		/// Indicates whether or not the window and its resources have been freed
 		/// </summary>
-		public bool Disposed { get; private set; }
+		public bool Disposed
+		{
+			get { return _disposed; }
+			set { _disposed = value; }
+		}
 
 		/// <summary>
 		/// Closes the window and frees the resources held by it
@@ -551,9 +575,11 @@ namespace Frost.Display
 		/// <seealso cref="Disposed"/>
 		public void Dispose ()
 		{
-			if(!Disposed)
+			if(!_disposed)
 			{// Window hasn't been disposed of yet
-				Disposed = true;
+				_disposed = true;
+
+				unsubscribe();
 				_window.Close();
 				_window.Dispose();
 			}

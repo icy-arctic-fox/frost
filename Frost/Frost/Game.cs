@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Frost.Display;
 using Frost.Logic;
@@ -72,6 +73,8 @@ namespace Frost
 		/// <returns>A scene</returns>
 		protected abstract Scene CreateInitialScene ();
 
+		private readonly List<IModule> _modules = new List<IModule>();
+
 		/// <summary>
 		/// Creates and initializes the modules used by the game
 		/// </summary>
@@ -89,6 +92,7 @@ namespace Frost
 		protected void AddModule (IModule module)
 		{
 			Runner.AddModule(module);
+			_modules.Add(module);
 		}
 
 		/// <summary>
@@ -149,7 +153,20 @@ namespace Frost
 						Directory.CreateDirectory(gameDataDir);
 					Configuration.Save(GameConfigurationPath);
 				}
+
+				Window.Dispose();
+				Resources.Dispose();
+				ShutdownModules();
 			}
+		}
+
+		/// <summary>
+		/// Shuts down and disposes of game modules
+		/// </summary>
+		protected virtual void ShutdownModules ()
+		{
+			foreach(var module in _modules)
+				module.Dispose();
 		}
 
 		#region Subscribers
