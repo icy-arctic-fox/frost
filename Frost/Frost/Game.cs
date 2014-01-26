@@ -2,6 +2,7 @@
 using System.IO;
 using Frost.Display;
 using Frost.Logic;
+using Frost.Modules;
 
 namespace Frost
 {
@@ -70,6 +71,25 @@ namespace Frost
 		/// </summary>
 		/// <returns>A scene</returns>
 		protected abstract Scene CreateInitialScene ();
+
+		/// <summary>
+		/// Creates and initializes the modules used by the game
+		/// </summary>
+		protected virtual void InitializeModules ()
+		{
+			var input = new InputModule();
+			input.Initialize();
+			AddModule(input);
+		}
+
+		/// <summary>
+		/// Adds a module to the game which is processed each logic update
+		/// </summary>
+		/// <param name="module">Module to add</param>
+		protected void AddModule (IModule module)
+		{
+			Runner.AddModule(module);
+		}
 
 		/// <summary>
 		/// Initializes the core game components

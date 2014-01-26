@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using Frost.Display;
 using Frost.Logic;
+using Frost.Modules;
 using Frost.Utility;
 
 namespace Frost
@@ -35,6 +38,29 @@ namespace Frost
 			_display = display;
 			_scenes  = new SceneManager(initialScene, display);
 		}
+
+		#region Modules
+		/// <summary>
+		/// Describes a method that updates a module
+		/// </summary>
+		private delegate void ModuleUpdate ();
+
+		/// <summary>
+		/// Collection of module update methods to call for each logic update
+		/// </summary>
+		private readonly List<ModuleUpdate> _moduleUpdates = new List<ModuleUpdate>();
+
+		/// <summary>
+		/// Adds a module to the game which is processed each logic update
+		/// </summary>
+		/// <param name="module">Module to add</param>
+		internal void AddModule (IModule module)
+		{
+			if(module == null)
+				throw new ArgumentNullException("module", "The module to add for processing can't be null.");
+			_moduleUpdates.Add(module.Update);
+		}
+		#endregion
 
 		#region Flow control (start/stop)
 
@@ -297,6 +323,8 @@ namespace Frost
 
 				// Perform the update
 				((Window)_display).Title = ToString(); // TODO: Remove this
+				foreach(var update in _moduleUpdates)
+					update();
 				if(!_scenes.Update())
 					_running = false; // All scenes exited
 
@@ -304,7 +332,7 @@ namespace Frost
 				var elapsed = stopwatch.Elapsed.TotalSeconds;
 				_updateCounter.AddMeasurement(elapsed);
 				LastUpdateInterval = time = elapsed - time;
-				nextUpdateTime -= time;
+				nextUpdateTime  -= time;
 				totalUpdateTime += time;
 
 				// Reset the stopwatch, since it isn't accurate over longer periods of time.
@@ -509,7 +537,7 @@ namespace Frost
 		public override string ToString ()
 		{
 			var sm = _scenes.StateManager;
-			var sb = new System.Text.StringBuilder();
+			var sb = new StringBuilder();
 			sb.Append("Frame: ");
 			sb.Append(sm.FrameNumber);
 			sb.Append(" - ");
