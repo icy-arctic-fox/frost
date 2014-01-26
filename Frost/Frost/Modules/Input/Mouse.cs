@@ -137,5 +137,22 @@ namespace Frost.Modules.Input
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Converts an SFML mouse button to a Frost <see cref="MouseButton"/>
+		/// </summary>
+		/// <param name="button">Button value to convert</param>
+		/// <returns>A <see cref="MouseButton"/></returns>
+		internal static MouseButton FromSfml (this M.Button button)
+		{
+			var b = MouseButton.None;
+			if(button.HasFlag(M.Button.Left))
+				b |= MouseButton.Left;
+			if(button.HasFlag(M.Button.Right))
+				b |= MouseButton.Right;
+			if(button.HasFlag(M.Button.Middle))
+				b |= MouseButton.Middle;
+			return b;
+		}
 	}
 }
