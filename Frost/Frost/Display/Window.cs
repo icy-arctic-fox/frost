@@ -458,51 +458,6 @@ namespace Frost.Display
 			set { M.SetPosition(value, _window); }
 		}
 		#endregion
-
-		#region Buttons
-
-		/// <summary>
-		/// Buttons currently being pressed
-		/// </summary>
-		public static MouseButton Buttons
-		{
-			get
-			{
-				var buttons = MouseButton.None;
-				if(M.IsButtonPressed(M.Button.Left))
-					buttons |= MouseButton.Left;
-				if(M.IsButtonPressed(M.Button.Right))
-					buttons |= MouseButton.Right;
-				if(M.IsButtonPressed(M.Button.Middle))
-					buttons |= MouseButton.Middle;
-				return buttons;
-			}
-		}
-
-		/// <summary>
-		/// Indicates whether the left mouse button is being pressed
-		/// </summary>
-		public static bool Left
-		{
-			get { return M.IsButtonPressed(M.Button.Left); }
-		}
-
-		/// <summary>
-		/// Indicates whether the right mouse button is being pressed
-		/// </summary>
-		public static bool Right
-		{
-			get { return M.IsButtonPressed(M.Button.Right); }
-		}
-
-		/// <summary>
-		/// Indicates whether the middle mouse button is being pressed
-		/// </summary>
-		public static bool Middle
-		{
-			get { return M.IsButtonPressed(M.Button.Middle); }
-		}
-		#endregion
 		#endregion
 
 		#region Display
