@@ -1,9 +1,10 @@
 ﻿using System;
-using Frost.Modules.Input;
 using SFML.Graphics;
 using SFML.Window;
+using Frost.Modules.Input;
 using Frost.Utility;
-using M = SFML.Window.Mouse;
+using Mouse = Frost.Modules.Input.Mouse;
+using M     = SFML.Window.Mouse;
 
 namespace Frost.Display
 {
@@ -129,6 +130,11 @@ namespace Frost.Display
 		#endregion
 
 		#region Mouse events
+
+		/// <summary>
+		/// Reusable mouse event arguments passed to listeners
+		/// </summary>
+		private readonly MouseEventArgs _mouseEventArgs = new MouseEventArgs();
 		#region MouseDown
 
 		/// <summary>
@@ -153,7 +159,9 @@ namespace Frost.Display
 		/// <param name="e">Mouse event arguments</param>
 		private void _window_MouseButtonPressed (object sender, MouseButtonEventArgs e)
 		{
-			throw new NotImplementedException();
+			_mouseEventArgs.Buttons  = e.Button.FromSfml();
+			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
+			OnMouseDown(_mouseEventArgs);
 		}
 		#endregion
 
@@ -181,7 +189,9 @@ namespace Frost.Display
 		/// <param name="e">Mouse event arguments</param>
 		void _window_MouseButtonReleased (object sender, MouseButtonEventArgs e)
 		{
-			throw new NotImplementedException();
+			_mouseEventArgs.Buttons  = e.Button.FromSfml();
+			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
+			OnMouseUp(_mouseEventArgs);
 		}
 		#endregion
 
@@ -209,7 +219,9 @@ namespace Frost.Display
 		/// <param name="e">Mouse event arguments</param>
 		void _window_MouseEntered (object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			_mouseEventArgs.Buttons  = MouseButton.None;
+			_mouseEventArgs.Position = MousePosition;
+			OnMouseEnter(_mouseEventArgs);
 		}
 		#endregion
 
@@ -237,7 +249,9 @@ namespace Frost.Display
 		/// <param name="e">Mouse event arguments</param>
 		void _window_MouseLeft (object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			_mouseEventArgs.Buttons  = MouseButton.None;
+			_mouseEventArgs.Position = MousePosition;
+			OnMouseLeave(_mouseEventArgs);
 		}
 		#endregion
 
@@ -265,7 +279,9 @@ namespace Frost.Display
 		/// <param name="e">Mouse event arguments</param>
 		void _window_MouseMoved (object sender, MouseMoveEventArgs e)
 		{
-			throw new NotImplementedException();
+			_mouseEventArgs.Buttons  = Mouse.Buttons;
+			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
+			OnMouseMove(_mouseEventArgs);
 		}
 		#endregion
 
