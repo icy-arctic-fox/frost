@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Frost.Logic
@@ -24,23 +25,10 @@ namespace Frost.Logic
 			// TODO: Add "backlog" state count argument (for roll-back)
 		}
 
-		#region Update and render loops/logic
-
 		/// <summary>
 		/// Frame number that each of the states are on
 		/// </summary>
 		private readonly long[] _stateFrameNumbers = new[] { 0L, 0L, 0L };
-
-		/// <summary>
-		/// Total number of frames that were skipped.
-		/// This represents the frames that were updated, but were not rendered.
-		/// </summary>
-		public long SkippedFrames { get; private set; }
-
-		/// <summary>
-		/// Total number of frames encountered that are duplicates
-		/// </summary>
-		public long DuplicatedFrames { get; private set; }
 
 		#region Update
 
@@ -161,6 +149,17 @@ namespace Frost.Logic
 		#region Render
 
 		/// <summary>
+		/// Total number of frames encountered that are duplicates
+		/// </summary>
+		public long DuplicatedFrames { get; private set; }
+
+		/// <summary>
+		/// Total number of frames that were skipped.
+		/// This represents the frames that were updated, but were not rendered.
+		/// </summary>
+		public long SkippedFrames { get; private set; }
+
+		/// <summary>
 		/// Index of the current state being drawn
 		/// </summary>
 		private int _curRenderStateIndex = -1;
@@ -257,7 +256,6 @@ namespace Frost.Logic
 			}
 			return _updateSignal.Wait(timeout);
 		}
-		#endregion
 		#endregion
 
 		/// <summary>
