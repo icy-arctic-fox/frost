@@ -76,6 +76,7 @@
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\InputModule.cs" />
     <Compile Include="Modules\Input\Mouse.cs" />
+    <Compile Include="Modules\Input\MouseButton.cs" />
     <Compile Include="ResourceManager.cs" />
     <Compile Include="Graphics\IRenderable.cs">
       <SubType>Code</SubType>
