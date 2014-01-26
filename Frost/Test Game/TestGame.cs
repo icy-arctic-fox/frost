@@ -1,5 +1,7 @@
-﻿using Frost;
+﻿using System;
+using Frost;
 using Frost.Logic;
+using Frost.Modules.Input;
 
 namespace Test_Game
 {
@@ -40,6 +42,17 @@ namespace Test_Game
 		protected override Scene CreateInitialScene ()
 		{
 			return new BallScene();
+		}
+
+		protected override void InitializeModules ()
+		{
+			base.InitializeModules();
+			Mouse.Move += Mouse_Move;
+		}
+
+		void Mouse_Move (object sender, MouseEventArgs e)
+		{
+			Window.Title = e.Position.ToString();
 		}
 	}
 }
