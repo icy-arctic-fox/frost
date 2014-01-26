@@ -89,5 +89,14 @@ namespace Frost
 			return new Point2D(point.X, point.Y);
 		}
 		#endregion
+
+		/// <summary>
+		/// Generates a string representation of the point
+		/// </summary>
+		/// <returns>A string in the form: (X, Y)</returns>
+		public override string ToString ()
+		{
+			return String.Format("({0}, {1})", X, Y);
+		}
 	}
 }
