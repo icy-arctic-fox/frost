@@ -51,15 +51,24 @@ namespace Frost.Modules
 		private void updateMouse ()
 		{
 			// Detect mouse button presses
+			// This should be done in the following order: Release, Press
 			var curButtons = Mouse.Buttons;
-			_mouseEventArgs.Buttons = curButtons;
-			if(_prevMouseButtons != (_prevMouseButtons & curButtons))
+			var buttons    = _prevMouseButtons & curButtons;
+			if(_prevMouseButtons != buttons)
+			{// Button was released
+				_mouseEventArgs.Buttons = _prevMouseButtons & ~curButtons;
 				Mouse.OnRelease(_mouseEventArgs);
-			if((curButtons & ~_prevMouseButtons) != MouseButton.None)
+			}
+			buttons = curButtons & ~_prevMouseButtons;
+			if(buttons != MouseButton.None)
+			{// Button was pressed
+				_mouseEventArgs.Buttons = buttons;
 				Mouse.OnPress(_mouseEventArgs);
+			}
 			_prevMouseButtons = curButtons;
 
 			// Check for mouse movement
+			// Movement is processed after button presses to prevent accidental drag.
 			var curMousePos = M.GetPosition();
 			if(curMousePos.X != _prevMousePos.X || curMousePos.Y != _prevMousePos.Y)
 			{// Mouse moved

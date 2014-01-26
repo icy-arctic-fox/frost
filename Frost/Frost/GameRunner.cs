@@ -322,7 +322,6 @@ namespace Frost
 				IsRunningSlow = (nextUpdateTime <= 0d && !UnboundedUpdateRate);
 
 				// Perform the update
-				((Window)_display).Title = ToString(); // TODO: Remove this
 				foreach(var update in _moduleUpdates)
 					update();
 				if(!_scenes.Update())

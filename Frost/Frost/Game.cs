@@ -118,6 +118,7 @@ namespace Frost
 			var initialScene = CreateInitialScene();
 			Runner = new GameRunner(Window, initialScene) {ThreadSynchronization = Configuration.SyncRenderThread};
 
+			InitializeModules();
 			Initialized = true;
 		}
 
