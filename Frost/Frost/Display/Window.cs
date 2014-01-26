@@ -65,6 +65,7 @@ namespace Frost.Display
 			_window.MouseEntered        += _window_MouseEntered;
 			_window.MouseLeft           += _window_MouseLeft;
 			_window.MouseMoved          += _window_MouseMoved;
+			Mouse.Release += Mouse_Release;
 			// TODO: MouseWheelMoved
 		}
 
@@ -183,15 +184,13 @@ namespace Frost.Display
 		}
 
 		/// <summary>
-		/// Called when the underlying window has a mouse button released in it
+		/// Called when the mouse is released inside or outside of the window
 		/// </summary>
-		/// <param name="sender">Underlying window</param>
+		/// <param name="sender">Invoking object</param>
 		/// <param name="e">Mouse event arguments</param>
-		void _window_MouseButtonReleased (object sender, MouseButtonEventArgs e)
+		void Mouse_Release (object sender, MouseEventArgs e)
 		{
-			_mouseEventArgs.Buttons  = e.Button.FromSfml();
-			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
-			OnMouseUp(_mouseEventArgs);
+			OnMouseUp(e);
 		}
 		#endregion
 
@@ -300,6 +299,18 @@ namespace Frost.Display
 		protected virtual void OnClick (MouseEventArgs args)
 		{
 			Click.NotifySubscribers(null, args);
+		}
+
+		/// <summary>
+		/// Called when the underlying window has a mouse button released in it
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Mouse event arguments</param>
+		void _window_MouseButtonReleased (object sender, MouseButtonEventArgs e)
+		{
+			_mouseEventArgs.Buttons  = e.Button.FromSfml();
+			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
+			OnClick(_mouseEventArgs);
 		}
 		#endregion
 		#endregion
