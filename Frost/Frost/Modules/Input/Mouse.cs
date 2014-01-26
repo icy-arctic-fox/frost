@@ -1,5 +1,6 @@
 ﻿using System;
 using SFML.Window;
+using Frost.Utility;
 using M = SFML.Window.Mouse;
 
 namespace Frost.Modules.Input
@@ -9,6 +10,8 @@ namespace Frost.Modules.Input
 	/// </summary>
 	public static class Mouse
 	{
+		#region Position
+
 		/// <summary>
 		/// Location of the mouse on the screen along the x-axis
 		/// </summary>
@@ -35,6 +38,23 @@ namespace Frost.Modules.Input
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}
+
+		/// <summary>
+		/// Triggered when the mouse moves
+		/// </summary>
+		public static event EventHandler<MouseEventArgs> Move;
+
+		/// <summary>
+		/// This method should be called from <see cref="InputModule"/> when a mouse move is detected
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		internal static void OnMove (MouseEventArgs args)
+		{
+			Move.NotifySubscribers(null, args);
+		}
+		#endregion
+
+		#region Buttons
 
 		/// <summary>
 		/// Buttons currently being pressed
@@ -77,5 +97,20 @@ namespace Frost.Modules.Input
 		{
 			get { return M.IsButtonPressed(M.Button.Middle); }
 		}
+
+		/// <summary>
+		/// Triggered when a mouse button is clicked
+		/// </summary>
+		public static event EventHandler<MouseEventArgs> Click;
+
+		/// <summary>
+		/// This method should be called from <see cref="InputModule"/> when a mouse click is detected
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		internal static void OnClick (MouseEventArgs args)
+		{
+			Click.NotifySubscribers(null, args);
+		}
+		#endregion
 	}
 }
