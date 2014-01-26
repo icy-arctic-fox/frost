@@ -1,4 +1,6 @@
 ﻿using System;
+using Vect  = SFML.Window.Vector2i;
+using Point = System.Drawing.Point;
 
 namespace Frost
 {
@@ -39,5 +41,48 @@ namespace Frost
 			var yDist = Y - point.Y;
 			return Math.Sqrt((xDist * xDist) + (yDist + yDist));
 		}
+
+		#region Implicit conversions
+
+		/// <summary>
+		/// Converts a <see cref="Point2D"/> to a <see cref="Vect"/>
+		/// </summary>
+		/// <param name="point">Point to convert</param>
+		/// <returns>An SFML 2D point</returns>
+		public static implicit operator Vect (Point2D point)
+		{
+			return new Vect(point.X, point.Y);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Vect"/> to a <see cref="Point2D"/>
+		/// </summary>
+		/// <param name="point">Point to convert</param>
+		/// <returns>A Frost 2D point</returns>
+		public static implicit operator Point2D (Vect point)
+		{
+			return new Point2D(point.X, point.Y);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Point2D"/> to a <see cref="Point"/>
+		/// </summary>
+		/// <param name="point">Point to convert</param>
+		/// <returns>A .NET 2D point</returns>
+		public static implicit operator Point (Point2D point)
+		{
+			return new Point(point.X, point.Y);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Point"/> to a <see cref="Point2D"/>
+		/// </summary>
+		/// <param name="point">Point to convert</param>
+		/// <returns>A Frost 2D point</returns>
+		public static implicit operator Point2D (Point point)
+		{
+			return new Point2D(point.X, point.Y);
+		}
+		#endregion
 	}
 }

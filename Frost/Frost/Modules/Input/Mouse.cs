@@ -33,10 +33,10 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Location of the mouse on the screen
 		/// </summary>
-		public static int Position
+		public static Point2D Position
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return M.GetPosition(); }
+			set { M.SetPosition(value); }
 		}
 
 		/// <summary>
