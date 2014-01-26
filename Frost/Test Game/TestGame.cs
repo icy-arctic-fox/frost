@@ -47,7 +47,7 @@ namespace Test_Game
 		protected override void InitializeModules ()
 		{
 			base.InitializeModules();
-			Mouse.Move += Mouse_Move;
+			Window.MouseMove += Mouse_Move;
 		}
 
 		void Mouse_Move (object sender, MouseEventArgs e)
