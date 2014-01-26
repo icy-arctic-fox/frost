@@ -10,6 +10,11 @@ namespace Frost
 	public struct Point2D
 	{
 		/// <summary>
+		/// Point at (0, 0)
+		/// </summary>
+		public static readonly Point2D Origin = new Point2D(0, 0);
+
+		/// <summary>
 		/// Offset along the x-axis
 		/// </summary>
 		public readonly int X;
