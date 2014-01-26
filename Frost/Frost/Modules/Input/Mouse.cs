@@ -136,23 +136,6 @@ namespace Frost.Modules.Input
 			Release.NotifySubscribers(null, args);
 		}
 		#endregion
-
-		#region Click
-
-		/// <summary>
-		/// Triggered when a mouse button is clicked (pressed and released)
-		/// </summary>
-		public static event EventHandler<MouseEventArgs> Click;
-
-		/// <summary>
-		/// This method should be called from <see cref="InputModule"/> when a mouse click is detected
-		/// </summary>
-		/// <param name="args">Event arguments</param>
-		internal static void OnClick (MouseEventArgs args)
-		{
-			Click.NotifySubscribers(null, args);
-		}
-		#endregion
 		#endregion
 	}
 }
