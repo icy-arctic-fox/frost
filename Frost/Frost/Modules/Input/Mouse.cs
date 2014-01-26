@@ -99,7 +99,10 @@ namespace Frost.Modules.Input
 		/// <param name="args">Event arguments</param>
 		internal static void OnMove (MouseEventArgs args)
 		{
-			Move.NotifySubscribers(null, args);
+			if(_locked)
+				M.SetPosition(_lockedPos);
+			else
+				Move.NotifySubscribers(null, args);
 		}
 		#endregion
 
@@ -136,6 +139,39 @@ namespace Frost.Modules.Input
 			Release.NotifySubscribers(null, args);
 		}
 		#endregion
+		#endregion
+
+		#region Lock
+		private static volatile bool _locked;
+		private static Vector2i _lockedPos;
+
+		/// <summary>
+		/// Locks the mouse so that it can't move from its current position
+		/// </summary>
+		public static void Lock ()
+		{
+			_lockedPos = M.GetPosition();
+			_locked    = true;
+		}
+
+		/// <summary>
+		/// Locks the mouse so that it can't move from a given position
+		/// </summary>
+		/// <param name="pos">Position to lock the mouse to</param>
+		public static void Lock (Point2D pos)
+		{
+			M.SetPosition(pos);
+			_lockedPos = pos;
+			_locked    = true;
+		}
+
+		/// <summary>
+		/// Unlocks the mouse so that it can move freely again
+		/// </summary>
+		public static void Unlock ()
+		{
+			_locked = false;
+		}
 		#endregion
 
 		/// <summary>
