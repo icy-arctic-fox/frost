@@ -38,20 +38,6 @@ namespace Frost.Modules.Input
 			get { return M.GetPosition(); }
 			set { M.SetPosition(value); }
 		}
-
-		/// <summary>
-		/// Triggered when the mouse moves
-		/// </summary>
-		public static event EventHandler<MouseEventArgs> Move;
-
-		/// <summary>
-		/// This method should be called from <see cref="InputModule"/> when a mouse move is detected
-		/// </summary>
-		/// <param name="args">Event arguments</param>
-		internal static void OnMove (MouseEventArgs args)
-		{
-			Move.NotifySubscribers(null, args);
-		}
 		#endregion
 
 		#region Buttons
@@ -97,9 +83,64 @@ namespace Frost.Modules.Input
 		{
 			get { return M.IsButtonPressed(M.Button.Middle); }
 		}
+		#endregion
+
+		#region Events
+		#region Move
 
 		/// <summary>
-		/// Triggered when a mouse button is clicked
+		/// Triggered when the mouse moves
+		/// </summary>
+		public static event EventHandler<MouseEventArgs> Move;
+
+		/// <summary>
+		/// This method should be called from <see cref="InputModule"/> when a mouse move is detected
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		internal static void OnMove (MouseEventArgs args)
+		{
+			Move.NotifySubscribers(null, args);
+		}
+		#endregion
+
+		#region Press
+
+		/// <summary>
+		/// Triggered when a mouse button is initially pressed down
+		/// </summary>
+		public static event EventHandler<MouseEventArgs> Press;
+
+		/// <summary>
+		/// This method should be called from <see cref="InputModule"/> when a mouse button initially becomes pressed
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		internal static void OnPress (MouseEventArgs args)
+		{
+			Press.NotifySubscribers(null, args);
+		}
+		#endregion
+
+		#region Release
+
+		/// <summary>
+		/// Triggered when a mouse button is released
+		/// </summary>
+		public static event EventHandler<MouseEventArgs> Release;
+
+		/// <summary>
+		/// This method should be called from <see cref="InputModule"/> when a mouse button becomes released
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		internal static void OnRelease (MouseEventArgs args)
+		{
+			Release.NotifySubscribers(null, args);
+		}
+		#endregion
+
+		#region Click
+
+		/// <summary>
+		/// Triggered when a mouse button is clicked (pressed and released)
 		/// </summary>
 		public static event EventHandler<MouseEventArgs> Click;
 
@@ -111,6 +152,7 @@ namespace Frost.Modules.Input
 		{
 			Click.NotifySubscribers(null, args);
 		}
+		#endregion
 		#endregion
 	}
 }

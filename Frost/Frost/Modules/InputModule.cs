@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Frost.Modules.Input;
+using M = SFML.Window.Mouse;
 
 namespace Frost.Modules
 {
@@ -12,7 +13,8 @@ namespace Frost.Modules
 		/// </summary>
 		public void Initialize ()
 		{
-			throw new NotImplementedException();
+			_mouseEventArgs.Buttons  = _prevMouseButtons = Mouse.Buttons;
+			_mouseEventArgs.Position = _prevMousePos     = M.GetPosition();
 		}
 
 		/// <summary>
@@ -21,8 +23,51 @@ namespace Frost.Modules
 		/// </summary>
 		public void Update ()
 		{
-			throw new NotImplementedException();
+			updateMouse(); // TODO: Skip this if none of the mouse events are subscribed to
+			// TODO: Update keyboard
+			// TODO: Update joysticks
 		}
+
+		#region Mouse
+
+		/// <summary>
+		/// Previous mouse buttons pressed - used to detect button presses
+		/// </summary>
+		private MouseButton _prevMouseButtons;
+
+		/// <summary>
+		/// Previous mouse position - used to detect mouse movement
+		/// </summary>
+		private SFML.Window.Vector2i _prevMousePos;
+		
+		/// <summary>
+		/// Reused arguments given to mouse subscribers
+		/// </summary>
+		private readonly MouseEventArgs _mouseEventArgs = new MouseEventArgs();
+
+		/// <summary>
+		/// Updates the state of the mouse and dispatches events for it
+		/// </summary>
+		private void updateMouse ()
+		{
+			// Detect mouse button presses
+			var curButtons = Mouse.Buttons;
+			_mouseEventArgs.Buttons = curButtons;
+			if(_prevMouseButtons != (_prevMouseButtons & curButtons))
+				Mouse.OnRelease(_mouseEventArgs);
+			if((curButtons & ~_prevMouseButtons) != MouseButton.None)
+				Mouse.OnPress(_mouseEventArgs);
+			_prevMouseButtons = curButtons;
+
+			// Check for mouse movement
+			var curMousePos = M.GetPosition();
+			if(curMousePos.X != _prevMousePos.X || curMousePos.Y != _prevMousePos.Y)
+			{// Mouse moved
+				_mouseEventArgs.Position = _prevMousePos = curMousePos;
+				Mouse.OnMove(_mouseEventArgs);
+			}
+		}
+		#endregion
 
 		#region Disposable
 		private volatile bool _disposed;
