@@ -7,8 +7,9 @@ namespace Frost.Utility
 	/// <summary>
 	/// Compacts a list of flags into a byte array by using individual bits
 	/// </summary>
-	public class FlagArray : IEnumerable<bool>, IEnumerable
+	public class FlagArray : IEnumerable<bool>
 	{
+		private readonly int _count;
 		private readonly byte[] _bytes;
 
 		/// <summary>
@@ -21,6 +22,7 @@ namespace Frost.Utility
 			if(count <= 1)
 				throw new ArgumentOutOfRangeException("count", "The number of flags can't be less than 1.");
 
+			_count = count;
 			var length = count / 8;
 			if(count % 8 != 0)
 				++length; // Round up
@@ -32,10 +34,28 @@ namespace Frost.Utility
 		/// </summary>
 		/// <param name="index">Index of the flag to access</param>
 		/// <returns>Value of the flag</returns>
+		/// <exception cref="IndexOutOfRangeException">Thrown if <paramref name="index"/> is out of range</exception>
 		public bool this[int index]
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get
+			{
+				int byteIndex, offset;
+				getBitIndex(index, out byteIndex, out offset);
+				var b = _bytes[byteIndex];
+				var v = b & (1 << offset);
+				return v != 0;
+			}
+
+			set
+			{
+				int byteIndex, offset;
+				getBitIndex(index, out byteIndex, out offset);
+				var b = _bytes[byteIndex];
+				b &= (byte)~(1 << offset);
+				if(value)
+					b |= (byte)(1 << offset);
+				_bytes[byteIndex] = b;
+			}
 		}
 
 		/// <summary>
@@ -76,7 +96,7 @@ namespace Frost.Utility
 		/// <returns>A byte array</returns>
 		public byte[] ToByteArray ()
 		{
-			throw new NotImplementedException();
+			return _bytes.Duplicate();
 		}
 
 		/// <summary>
@@ -96,7 +116,7 @@ namespace Frost.Utility
 		/// <returns>The number of flags</returns>
 		public int Count
 		{
-			get { throw new NotImplementedException(); }
+			get { return _count; }
 		}
 
 		/// <summary>
@@ -104,7 +124,23 @@ namespace Frost.Utility
 		/// </summary>
 		public int ByteLength
 		{
-			get { throw new NotImplementedException(); }
+			get { return _bytes.Length; }
+		}
+
+		/// <summary>
+		/// Calculates the byte and bit offset
+		/// </summary>
+		/// <param name="index">Index of the flag</param>
+		/// <param name="byteIndex">Byte index</param>
+		/// <param name="offset">Bit index inside of the byte</param>
+		/// <exception cref="IndexOutOfRangeException">Thrown if <paramref name="index"/> is out of range</exception>
+		private void getBitIndex (int index, out int byteIndex, out int offset)
+		{
+			if(index < 0 || index >= _count)
+				throw new IndexOutOfRangeException("The flag index is out of range.");
+
+			byteIndex = index / 8;
+			offset    = index % 8;
 		}
 	}
 }
