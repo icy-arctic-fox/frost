@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Frost;
 using Frost.Logic;
 using Frost.Modules.Input;
@@ -48,6 +49,22 @@ namespace Test_Game
 		{
 			base.InitializeModules();
 			Window.MouseMove += Mouse_Move;
+			Keyboard.KeyPress += Keyboard_KeyPress;
+			Keyboard.KeyRelease += Keyboard_KeyRelease;
+		}
+
+		private readonly HashSet<Key> _keys = new HashSet<Key>();
+
+		void Keyboard_KeyRelease (object sender, KeyboardEventArgs e)
+		{
+			_keys.Remove(e.Key);
+			Window.Title = String.Join(", ", _keys);
+		}
+
+		void Keyboard_KeyPress (object sender, KeyboardEventArgs e)
+		{
+			_keys.Add(e.Key);
+			Window.Title = String.Join(", ", _keys);
 		}
 
 		void Mouse_Move (object sender, MouseEventArgs e)
