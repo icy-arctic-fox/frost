@@ -44,7 +44,7 @@ namespace Frost
 		{
 			var xDist = X - point.X;
 			var yDist = Y - point.Y;
-			return Math.Sqrt((xDist * xDist) + (yDist + yDist));
+			return Math.Sqrt((xDist * xDist) + (yDist * yDist));
 		}
 
 		#region Implicit conversions
