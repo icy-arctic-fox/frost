@@ -64,7 +64,8 @@ namespace Frost.Utility
 		/// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the flags</returns>
 		public IEnumerator<bool> GetEnumerator ()
 		{
-			throw new NotImplementedException();
+			for(var i = 0; i < _count; ++i)
+				yield return this[i];
 		}
 
 		/// <summary>
@@ -87,7 +88,17 @@ namespace Frost.Utility
 		/// <exception cref="T:System.ArgumentException">Thrown if the number of flags in the source list is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
 		public void CopyTo (bool[] array, int arrayIndex)
 		{
-			throw new NotImplementedException();
+			if(array == null)
+				throw new ArgumentNullException("array", "The array to copy to can't be null.");
+			if(arrayIndex < 0)
+				throw new ArgumentOutOfRangeException("arrayIndex", "The starting index can't be less than 0.");
+			if(_count > array.Length - arrayIndex)
+				throw new ArgumentException("There are more elements to copy than available space in the array.");
+
+			var i = arrayIndex;
+			var enumerator = GetEnumerator();
+			while(enumerator.MoveNext())
+				array[i++] = enumerator.Current;
 		}
 
 		/// <summary>
@@ -105,9 +116,38 @@ namespace Frost.Utility
 		/// <param name="start">Index of the first flag to store</param>
 		/// <param name="count">Number of flags to include</param>
 		/// <returns>A byte array containing the selected flags</returns>
+		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="start"/> is less than 0 or greater than or equal to <see cref="Count"/></exception>
+		/// <exception cref="T:System.ArgumentException">Thrown if <paramref name="count"/> is greater than the number of flags available minus <paramref name="start"/></exception>
 		public byte[] ToByteArray (int start, int count)
 		{
-			throw new NotImplementedException();
+			if(start < 0 || start >= _count)
+				throw new ArgumentOutOfRangeException("start", "The starting index is out of range.");
+			if(count > _count - start)
+				throw new ArgumentException("The number of items to copy exceeds the number of items available.");
+
+			var length = count / 8;
+			if(count % 8 != 0)
+				++length;
+			var bytes = new byte[length];
+
+			for(int srcIndex = start, destIndex = 0, destByte = 0, destBit = 0; destIndex < count; ++srcIndex, ++destIndex)
+			{
+				var v = this[srcIndex];
+				var b = bytes[destByte];
+				b &= (byte)~(1 << destBit);
+				if(v)
+					b |= (byte)(1 << destBit);
+				bytes[destByte] = b;
+
+				++destBit;
+				if(destBit >= 8)
+				{
+					destBit = 0;
+					++destByte;
+				}
+			}
+
+			return bytes;
 		}
 
 		/// <summary>
