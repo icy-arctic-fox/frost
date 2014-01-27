@@ -1,5 +1,7 @@
 ﻿using Frost.Modules.Input;
+using Frost.Utility;
 using M = SFML.Window.Mouse;
+using K = SFML.Window.Keyboard;
 
 namespace Frost.Modules
 {
@@ -24,7 +26,7 @@ namespace Frost.Modules
 		public void Update ()
 		{
 			updateMouse(); // TODO: Skip this if none of the mouse events are subscribed to
-			// TODO: Update keyboard
+			updateKeyboard();  // TODO: Skip this if none of the keyboard events are subscribed to
 			// TODO: Update joysticks
 		}
 
@@ -74,6 +76,45 @@ namespace Frost.Modules
 			{// Mouse moved
 				_mouseEventArgs.Position = _prevMousePos = curMousePos;
 				Mouse.OnMove(_mouseEventArgs);
+			}
+		}
+		#endregion
+
+		#region Keyboard
+
+		/// <summary>
+		/// Status of each keyboard key (true for pressed)
+		/// </summary>
+		private readonly FlagArray _keyStates = new FlagArray((int)K.Key.KeyCount);
+
+		/// <summary>
+		/// Reused arguments given to keyboard subscribers
+		/// </summary>
+		private readonly KeyboardEventArgs _keyboardEventArgs = new KeyboardEventArgs(Key.A);
+
+		/// <summary>
+		/// Updates the state of the keyboard and dispatches events for it
+		/// </summary>
+		private void updateKeyboard ()
+		{
+			// TODO: Do all of the keys need to iterated?
+			var i = 0;
+			for(var k = (K.Key)0; k < K.Key.KeyCount; ++k, ++i)
+			{
+				var pressed    = K.IsKeyPressed(k);
+				var wasPressed = _keyStates[i];
+				if(wasPressed && !pressed)
+				{// Key was released
+					_keyStates[i] = false;
+					_keyboardEventArgs.Key = (Key)k;
+					Keyboard.OnKeyRelease(_keyboardEventArgs);
+				}
+				else if(!wasPressed && pressed)
+				{// Key was pressed
+					_keyStates[i] = true;
+					_keyboardEventArgs.Key = (Key)k;
+					Keyboard.OnKeyPress(_keyboardEventArgs);
+				}
 			}
 		}
 		#endregion
