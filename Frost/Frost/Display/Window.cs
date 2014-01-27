@@ -63,7 +63,9 @@ namespace Frost.Display
 
 		private void subscribe ()
 		{
-			_window.Closed += _window_Closed;
+			_window.Closed      += _window_Closed;
+			_window.LostFocus   += _window_LostFocus;
+			_window.GainedFocus += _window_GainedFocus;
 
 			_window.MouseButtonPressed  += _window_MouseButtonPressed;
 			_window.MouseButtonReleased += _window_MouseButtonReleased;
@@ -76,7 +78,9 @@ namespace Frost.Display
 
 		private void unsubscribe ()
 		{
-			_window.Closed -= _window_Closed;
+			_window.Closed      -= _window_Closed;
+			_window.LostFocus   -= _window_LostFocus;
+			_window.GainedFocus -= _window_GainedFocus;
 
 			_window.MouseButtonPressed  -= _window_MouseButtonPressed;
 			_window.MouseButtonReleased -= _window_MouseButtonReleased;
@@ -146,6 +150,71 @@ namespace Frost.Display
 			_window.Close();
 			Closed.NotifySubscribers(this, args);
 		}
+		#endregion
+
+		#region Focus events
+		/// <summary>
+		/// Indicates whether the window has focus
+		/// </summary>
+		public bool HasFocus { get; private set; }
+
+		#region GainedFocus
+
+		/// <summary>
+		/// Triggered when the window gains focus
+		/// </summary>
+		public event EventHandler<EventArgs> GainedFocus;
+
+		/// <summary>
+		/// Called when the window gains focus
+		/// </summary>
+		/// <param name="e">Event arguments</param>
+		/// <remarks>This method triggers the <see cref="GainedFocus"/> event.</remarks>
+		protected virtual void OnGainedFocus (EventArgs e)
+		{
+			HasFocus = true;
+			GainedFocus.NotifySubscribers(this, e);
+		}
+
+		/// <summary>
+		/// Called when the underlying window gains focus
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Event arguments</param>
+		private void _window_GainedFocus (object sender, EventArgs e)
+		{
+			OnGainedFocus(e);
+		}
+		#endregion
+
+		#region LostFocus
+
+		/// <summary>
+		/// Triggered when the window has lost focus
+		/// </summary>
+		public event EventHandler<EventArgs> LostFocus;
+
+		/// <summary>
+		/// Called when the window has lost focus
+		/// </summary>
+		/// <param name="e">Event arguments</param>
+		/// <remarks>This method triggers the <see cref="LostFocus"/> event.</remarks>
+		protected virtual void OnLostFocus (EventArgs e)
+		{
+			HasFocus = false;
+			LostFocus.NotifySubscribers(this, e);
+		}
+
+		/// <summary>
+		/// Called when the underlying window has lost focus
+		/// </summary>
+		/// <param name="sender">Underlying window</param>
+		/// <param name="e">Event arguments</param>
+		private void _window_LostFocus (object sender, EventArgs e)
+		{
+			OnLostFocus(e);
+		}
+		#endregion
 		#endregion
 
 		#region Mouse events
