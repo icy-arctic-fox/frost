@@ -7,6 +7,8 @@ namespace Frost.Modules.Input
 	/// </summary>
 	public enum Key
 	{
+		// TODO: Lock-type keys? (Caps-lock, num-lock)
+
 		#region Letters
 
 		/// <summary>
