@@ -75,6 +75,7 @@
     <Compile Include="Logic\SceneManager.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\InputModule.cs" />
+    <Compile Include="Modules\Input\InputType.cs" />
     <Compile Include="Modules\Input\Key.cs" />
     <Compile Include="Modules\Input\Keyboard.cs" />
     <Compile Include="Modules\Input\KeyboardEventArgs.cs" />
