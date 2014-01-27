@@ -322,8 +322,8 @@ namespace Frost
 				IsRunningSlow = (nextUpdateTime <= 0d && !UnboundedUpdateRate);
 
 				// Perform the update
-				foreach(var update in _moduleUpdates)
-					update();
+				for(var i = 0; i < _moduleUpdates.Count; ++i)
+					_moduleUpdates[i]();
 				if(!_scenes.Update())
 					_running = false; // All scenes exited
 
