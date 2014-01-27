@@ -22,31 +22,29 @@ namespace Frost.Utility
 		public static void NotifySubscribers<TEventArgs> (this EventHandler<TEventArgs> ev, object sender, TEventArgs args) where TEventArgs : EventArgs
 		{
 #if DEBUG
-			if(null == args)
+			if(args == null)
 				throw new ArgumentNullException("args", "The arguments passed to an event can't be null.");
 #endif
 
-			if(null != ev)
+			if(ev != null)
 			{// There are subscribers
-				var list = ev.GetInvocationList();
 				var cancelArgs = args as ICancellable;
-
 				if(cancelArgs != null)
 				{// The event could be cancelled
 					if(!cancelArgs.IsCanceled)
 					{// Only run this code if the event isn't already cancelled (for some reason...)
-						foreach(var d in list)
+						var list = ev.GetInvocationList();
+						for(var i = 0; i < list.Length; ++i)
 						{
-							CallDelegate(d, sender, args);
+							list[i].DynamicInvoke(sender, args);
 							if(cancelArgs.IsCanceled)
 								break; // Event has been cancelled, stop calling subscribers
 						}
 					}
 				}
 
-				else // The event won't be cancelled
-					foreach(var d in ev.GetInvocationList())
-						CallDelegate(d, sender, args);
+				else // The event won't be cancelled, just call it
+					ev(sender, args);
 			}
 		}
 
@@ -60,7 +58,7 @@ namespace Frost.Utility
 		public static void CallDelegate (this Delegate d, params object[] args)
 		{
 #if DEBUG
-			if(null == d)
+			if(d == null)
 				throw new ArgumentNullException("d", "Cannot call a null delegate.");
 #endif
 
