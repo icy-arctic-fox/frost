@@ -7,7 +7,7 @@ namespace Frost.Modules.Input
 	/// </summary>
 	public enum Key
 	{
-		#region Alphabet
+		#region Letters
 
 		/// <summary>
 		/// The letter A
@@ -140,7 +140,7 @@ namespace Frost.Modules.Input
 		Z = KC.Z,
 		#endregion
 
-		#region Numbers above the letters
+		#region Numbers
 
 		/// <summary>
 		/// The number 0
@@ -191,6 +191,64 @@ namespace Frost.Modules.Input
 		/// The number 9
 		/// </summary>
 		Num9 = KC.Num9,
+		#endregion
+
+		#region Punctuation
+
+		/// <summary>
+		/// Left square bracket symbol
+		/// </summary>
+		LBracket = KC.LBracket,
+
+		/// <summary>
+		/// Right square bracket symbol
+		/// </summary>
+		RBracket = KC.RBracket,
+
+		/// <summary>
+		/// Semi-colon symbol
+		/// </summary>
+		SemiColon = KC.SemiColon,
+
+		/// <summary>
+		/// Comma symbol
+		/// </summary>
+		Comma = KC.Comma,
+
+		/// <summary>
+		/// Period symbol
+		/// </summary>
+		Period = KC.Period,
+
+		/// <summary>
+		/// Single quote symbol
+		/// </summary>
+		Quote = KC.Quote,
+
+		/// <summary>
+		/// Forward slash symbol
+		/// </summary>
+		Slash = KC.Slash,
+
+		/// <summary>
+		/// Backward slash symbol
+		/// </summary>
+		BackSlash = KC.BackSlash,
+
+		/// <summary>
+		/// Tilde symbol
+		/// </summary>
+		Tilde = KC.Tilde,
+
+		/// <summary>
+		/// Equals sign
+		/// </summary>
+		Equal = KC.Equal,
+
+		/// <summary>
+		/// Hyphen symbol
+		/// </summary>
+		Dash = KC.Dash,
 		#endregion
 
 		#region Number pad
@@ -244,6 +302,26 @@ namespace Frost.Modules.Input
 		/// The number 0 on the number pad
 		/// </summary>
 		NumPad9 = KC.Numpad9,
+
+		/// <summary>
+		/// Addition key on the number pad
+		/// </summary>
+		Add = KC.Add,
+
+		/// <summary>
+		/// Subtraction key on the number pad
+		/// </summary>
+		Subtract = KC.Subtract,
+
+		/// <summary>
+		/// Multiplication key on the number pad
+		/// </summary>
+		Multiply = KC.Multiply,
+
+		/// <summary>
+		/// Division key on the number pad
+		/// </summary>
+		Divide = KC.Divide,
 		#endregion
 
 		#region Function (F) keys
@@ -347,41 +425,118 @@ namespace Frost.Modules.Input
 		Down = KC.Down,
 		#endregion
 
-		Escape = 36,
-		LControl = 37,
-		LShift = 38,
-		LAlt = 39,
-		LSystem = 40,
-		RControl = 41,
-		RShift = 42,
-		RAlt = 43,
-		RSystem = 44,
-		Menu = 45,
-		LBracket = 46,
-		RBracket = 47,
-		SemiColon = 48,
-		Comma = 49,
-		Period = 50,
-		Quote = 51,
-		Slash = 52,
-		BackSlash = 53,
-		Tilde = 54,
-		Equal = 55,
-		Dash = 56,
-		Space = 57,
-		Return = 58,
-		Back = 59,
-		Tab = 60,
-		PageUp = 61,
-		PageDown = 62,
-		End = 63,
-		Home = 64,
-		Insert = 65,
-		Delete = 66,
-		Add = 67,
-		Subtract = 68,
-		Multiply = 69,
-		Divide = 70,
-		Pause = 100,
+		#region Control keys
+
+		/// <summary>
+		/// Escape key
+		/// </summary>
+		Escape = KC.Escape,
+
+		/// <summary>
+		/// Left control key
+		/// </summary>
+		LControl = KC.LControl,
+
+		/// <summary>
+		/// Left shift key
+		/// </summary>
+		LShift = KC.LShift,
+
+		/// <summary>
+		/// Left alt key
+		/// </summary>
+		LAlt = KC.LAlt,
+
+		/// <summary>
+		/// Left system (Windows) key
+		/// </summary>
+		LSystem = KC.LSystem,
+
+		/// <summary>
+		/// Right control key
+		/// </summary>
+		RControl = KC.RControl,
+
+		/// <summary>
+		/// Right shift key
+		/// </summary>
+		RShift = KC.RShift,
+
+		/// <summary>
+		/// Right alt key
+		/// </summary>
+		RAlt = KC.RAlt,
+
+		/// <summary>
+		/// Right system (Windows) key
+		/// </summary>
+		RSystem = KC.RSystem,
+
+		/// <summary>
+		/// Menu key
+		/// </summary>
+		Menu = KC.Menu,
+
+		/// <summary>
+		/// Pause key
+		/// </summary>
+		Pause = KC.Pause,
+		#endregion
+
+		#region Spacing keys
+
+		/// <summary>
+		/// Space bar
+		/// </summary>
+		Space = KC.Space,
+
+		/// <summary>
+		/// Enter/Return key
+		/// </summary>
+		Enter = KC.Return,
+
+		/// <summary>
+		/// Backspace key
+		/// </summary>
+		Backspace = KC.Back,
+
+		/// <summary>
+		/// Tab indent key
+		/// </summary>
+		Tab = KC.Tab,
+		#endregion
+
+		#region Navigation keys
+
+		/// <summary>
+		/// Page up key
+		/// </summary>
+		PageUp = KC.PageUp,
+
+		/// <summary>
+		/// Page down key
+		/// </summary>
+		PageDown = KC.PageDown,
+
+		/// <summary>
+		/// End key
+		/// </summary>
+		End = KC.End,
+
+		/// <summary>
+		/// Home key
+		/// </summary>
+		Home = KC.Home,
+
+		/// <summary>
+		/// Insert key
+		/// </summary>
+		Insert = KC.Insert,
+
+		/// <summary>
+		/// Delete key
+		/// </summary>
+		Delete = KC.Delete,
+		#endregion
 	}
 }
