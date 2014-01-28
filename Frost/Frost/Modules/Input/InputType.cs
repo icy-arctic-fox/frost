@@ -5,6 +5,8 @@
 	/// </summary>
 	public enum InputType
 	{
+		// TODO: Add unassigned type
+
 		/// <summary>
 		/// Keyboard keys
 		/// </summary>

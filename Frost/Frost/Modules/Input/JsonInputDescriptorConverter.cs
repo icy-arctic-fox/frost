@@ -56,10 +56,10 @@ namespace Frost.Modules.Input
 				throw new FormatException("Unrecognized input type");
 			}
 
-			// Parse the ID
-			var id = Int32.Parse(parts[1]); // Will throw if invalid
+			// Parse the value
+			var value = Int32.Parse(parts[1]); // Will throw if invalid
 
-			return new InputDescriptor(type, id);
+			return new InputDescriptor(type, value);
 		}
 
 		/// <summary>
@@ -86,10 +86,10 @@ namespace Frost.Modules.Input
 				throw new FormatException("Unrecognized input type");
 			}
 
-			// Stringify the ID
-			var id = input.Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
+			// Stringify the value
+			var v = input.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-			var text = String.Format("{0}:{1}", type, id);
+			var text = String.Format("{0}:{1}", type, v);
 			writer.WriteValue(text);
 		}
 	}

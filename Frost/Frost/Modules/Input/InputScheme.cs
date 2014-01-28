@@ -48,7 +48,7 @@ namespace Frost.Modules.Input
 						break;
 
 					case InputType.Mouse:
-						if(input.Id == (int)MouseButton.None)
+						if(input.Value == (int)MouseButton.None) // TODO: Treat +/- mouse axis separate
 							Mouse.Move += Mouse_Move;
 						else
 						{
@@ -62,8 +62,8 @@ namespace Frost.Modules.Input
 					}
 				}
 
-				assignments[input.Id] = id;
-				_assignedIds[id]      = index;
+				assignments[input.Value] = id;
+				_assignedIds[id]         = index;
 			}
 		}
 
@@ -125,6 +125,7 @@ namespace Frost.Modules.Input
 		/// <remarks>This method triggers the <see cref="InputStarted"/> event.</remarks>
 		protected virtual void OnInputStarted (InputEventArgs args)
 		{
+			// TODO: Convert to ID
 			InputStarted.NotifySubscribers(this, args);
 		}
 
@@ -140,10 +141,22 @@ namespace Frost.Modules.Input
 		/// <remarks>This method triggers the <see cref="InputEnded"/> event.</remarks>
 		protected virtual void OnInputEnded (InputEventArgs args)
 		{
+			// TODO: Convert to ID
 			InputEnded.NotifySubscribers(this, args);
 		}
 
 		#region Subscribers
+
+		/// <summary>
+		/// Attempts to get the assigned index for a corresponding input
+		/// </summary>
+		/// <param name="input">Values for the input</param>
+		/// <param name="index">Index assigned to the input</param>
+		/// <returns>True if an index is assigned</returns>
+		private bool tryGetInputIndex (InputDescriptor input, out int index)
+		{
+			throw new NotImplementedException();
+		}
 
 		private void Keyboard_KeyPress (object sender, KeyboardEventArgs e)
 		{

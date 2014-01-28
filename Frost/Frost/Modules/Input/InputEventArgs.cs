@@ -16,6 +16,6 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Amount of input for varying "strength" (e.g.: joysticks)
 		/// </summary>
-		public float Value { get; internal set; }
+		public float Strength { get; internal set; }
 	}
 }

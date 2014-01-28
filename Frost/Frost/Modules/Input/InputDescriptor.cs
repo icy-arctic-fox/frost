@@ -1,12 +1,12 @@
 ﻿namespace Frost.Modules.Input
 {
 	/// <summary>
-	/// Information about an input source and input ID (button/key)
+	/// Information about an input source and input value (button/key)
 	/// </summary>
 	public struct InputDescriptor
 	{
 		private readonly InputType _type;
-		private readonly int _id;
+		private readonly int _value;
 
 		/// <summary>
 		/// Type of input
@@ -17,22 +17,22 @@
 		}
 
 		/// <summary>
-		/// ID associated with the input
+		/// Value (button/key) associated with the input
 		/// </summary>
-		public int Id
+		public int Value
 		{
-			get { return _id; }
+			get { return _value; }
 		}
 
 		/// <summary>
 		/// Creates a new input ID
 		/// </summary>
 		/// <param name="type">Type of input</param>
-		/// <param name="id">ID (button/key) associated with the input</param>
-		public InputDescriptor (InputType type, int id)
+		/// <param name="value">Value (button/key) associated with the input</param>
+		public InputDescriptor (InputType type, int value)
 		{
-			_type = type;
-			_id   = id;
+			_type  = type;
+			_value = value;
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@
 		/// <returns>True if <paramref name="a"/> and <paramref name="b"/> are equal</returns>
 		public static bool operator == (InputDescriptor a, InputDescriptor b)
 		{
-			return (a._type == b._type) && (a._id == b._id);
+			return (a._type == b._type) && (a._value == b._value);
 		}
 
 		/// <summary>
@@ -54,7 +54,7 @@
 		/// <returns>True if <paramref name="a"/> and <paramref name="b"/> are not equal</returns>
 		public static bool operator != (InputDescriptor a, InputDescriptor b)
 		{
-			return (a._type != b._type) || (a._id != b._id);
+			return (a._type != b._type) || (a._value != b._value);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@
 		/// <returns>True if <paramref name="other"/> is effectively the same</returns>
 		public bool Equals (InputDescriptor other)
 		{
-			return (_type == other._type) && (_id == other._id);
+			return (_type == other._type) && (_value == other._value);
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@
 		{
 			unchecked
 			{
-				return ((int)_type * 397) ^ _id;
+				return ((int)_type * 397) ^ _value;
 			}
 		}
 	}
