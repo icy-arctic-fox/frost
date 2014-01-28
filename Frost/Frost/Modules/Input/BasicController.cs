@@ -1,5 +1,6 @@
 ﻿using System;
 using Frost.Utility;
+using Newtonsoft.Json;
 
 namespace Frost.Modules.Input
 {
@@ -24,6 +25,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Accept, confirm, or advance button
 		/// </summary>
+		[JsonProperty("accept")]
 		public InputDescriptor AcceptButton { get; set; }
 		#endregion
 
@@ -42,6 +44,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Cancel or confirm button
 		/// </summary>
+		[JsonProperty("cancel")]
 		public InputDescriptor CancelButton { get; set; }
 		#endregion
 
@@ -60,6 +63,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Primary action button
 		/// </summary>
+		[JsonProperty("primary")]
 		public InputDescriptor PrimaryButton { get; set; }
 		#endregion
 
@@ -78,6 +82,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Secondary action button
 		/// </summary>
+		[JsonProperty("secondary")]
 		public InputDescriptor SecondaryButton { get; set; }
 		#endregion
 		#endregion
@@ -98,6 +103,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Up arrow button
 		/// </summary>
+		[JsonProperty("up")]
 		public InputDescriptor UpArrow { get; set; }
 		#endregion
 
@@ -116,6 +122,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Down arrow button
 		/// </summary>
+		[JsonProperty("down")]
 		public InputDescriptor DownArrow { get; set; }
 		#endregion
 
@@ -134,6 +141,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Left arrow button
 		/// </summary>
+		[JsonProperty("left")]
 		public InputDescriptor LeftArrow { get; set; }
 		#endregion
 
@@ -152,6 +160,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Right arrow button
 		/// </summary>
+		[JsonProperty("right")]
 		public InputDescriptor RightArrow { get; set; }
 		#endregion
 		#endregion

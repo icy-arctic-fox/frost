@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Frost.Utility;
+using Newtonsoft.Json;
 
 namespace Frost.Modules.Input
 {
@@ -174,6 +176,42 @@ namespace Frost.Modules.Input
 			var input = new InputDescriptor(InputType.Mouse, (int)e.Buttons);
 			_inputEventArgs.Input = input;
 			OnInputEnded(_inputEventArgs);
+		}
+		#endregion
+
+		#region Json
+		private static readonly JsonSerializer Json;
+
+		/// <summary>
+		/// Initializes the Json serializer
+		/// </summary>
+		static InputScheme ()
+		{
+			Json = new JsonSerializer {Formatting = Formatting.Indented};
+		}
+		#endregion
+
+		#region Save and load
+
+		/// <summary>
+		/// Saves the input scheme (control mapping/keybindings) to a file
+		/// </summary>
+		/// <param name="path">Path to the file</param>
+		public void Save (string path)
+		{
+			using(var writer = File.CreateText(path))
+				Json.Serialize(writer, this);
+		}
+
+		/// <summary>
+		/// Loads the configuration from a file
+		/// </summary>
+		/// <param name="path">Path of the file to load from</param>
+		/// <returns>The input scheme or null if there was an error loading the configuration</returns>
+		public static InputScheme Load<TScheme> (string path) where TScheme : InputScheme
+		{
+			using(var reader = File.OpenText(path))
+				return Json.Deserialize(reader, typeof(TScheme)) as TScheme;
 		}
 		#endregion
 
