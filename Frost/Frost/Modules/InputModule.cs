@@ -1,4 +1,5 @@
-﻿using Frost.Modules.Input;
+﻿using System.Threading;
+using Frost.Modules.Input;
 using Frost.Utility;
 using M = SFML.Window.Mouse;
 using K = SFML.Window.Keyboard;
@@ -28,6 +29,43 @@ namespace Frost.Modules
 			updateMouse(); // TODO: Skip this if none of the mouse events are subscribed to
 			updateKeyboard();  // TODO: Skip this if none of the keyboard events are subscribed to
 			// TODO: Update joysticks
+		}
+
+		private InputDescriptor _capturedInput;
+		private readonly ManualResetEventSlim _capturing = new ManualResetEventSlim();
+
+		/// <summary>
+		/// Captures the next input that the user makes and returns it
+		/// </summary>
+		/// <param name="timeout">Maximum amount of time to wait in milliseconds</param>
+		/// <returns>The input that the user provided or <see cref="InputDescriptor.Unassigned"/> if it took longer than <paramref name="timeout"/> to receive input</returns>
+		/// <remarks>This method should be called from a separate thread, as it would hang the update thread and not return any captured input.
+		/// All 'input started' events will not trigger while this method is blocking.</remarks>
+		public InputDescriptor CaptureNextInput (int timeout)
+		{
+			lock(_capturing)
+			{
+				_capturedInput = InputDescriptor.Unassigned;
+				_capturing.Reset();
+			}
+
+			_capturing.Wait(timeout);
+			return _capturedInput;
+		}
+
+		/// <summary>
+		/// Marks input as being captured
+		/// </summary>
+		/// <param name="type">Type of captured input</param>
+		/// <param name="value">Value of the captured input</param>
+		private void capturedInput (InputType type, int value)
+		{
+			var input = new InputDescriptor(type, value);
+			lock(_capturing)
+			{
+				_capturedInput = input;
+				_capturing.Set();
+			}
 		}
 
 		#region Mouse
@@ -64,8 +102,13 @@ namespace Frost.Modules
 			buttons = curButtons & ~_prevMouseButtons;
 			if(buttons != MouseButton.None)
 			{// Button was pressed
-				_mouseEventArgs.Buttons = buttons;
-				Mouse.OnPress(_mouseEventArgs);
+				if(_capturing.IsSet)
+				{// Not capturing
+					_mouseEventArgs.Buttons = buttons;
+					Mouse.OnPress(_mouseEventArgs);
+				}
+				else // Capture input
+					capturedInput(InputType.Mouse, (int)buttons);
 			}
 			_prevMouseButtons = curButtons;
 
@@ -76,6 +119,7 @@ namespace Frost.Modules
 			{// Mouse moved
 				_mouseEventArgs.Position = _prevMousePos = curMousePos;
 				Mouse.OnMove(_mouseEventArgs);
+				// TODO: Add capturing
 			}
 		}
 		#endregion
@@ -111,9 +155,14 @@ namespace Frost.Modules
 				}
 				else if(!wasPressed && pressed)
 				{// Key was pressed
-					_keyStates[i] = true;
-					_keyboardEventArgs.Key = (Key)k;
-					Keyboard.OnKeyPress(_keyboardEventArgs);
+					if(_capturing.IsSet)
+					{// Not capturing
+						_keyStates[i] = true;
+						_keyboardEventArgs.Key = (Key)k;
+						Keyboard.OnKeyPress(_keyboardEventArgs);
+					}
+					else // Capture input
+						capturedInput(InputType.Keyboard, i);
 				}
 			}
 		}
