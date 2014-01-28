@@ -34,36 +34,39 @@ namespace Frost.Modules.Input
 				if(_assignedIds.ContainsKey(id))
 					UnassignInput(id); // Un-assign existing ID first
 
-				var i = (int)input.Type;
-				var assignments = _inputAssignments[i];
-				if(assignments == null)
-				{// Haven't assigned to this type of input yet
-					_inputAssignments[i] = assignments = new Dictionary<int, int>(16);
+				if(input.Assigned)
+				{// Only set assigned input
+					var i = (int)input.Type;
+					var assignments = _inputAssignments[i];
+					if(assignments == null)
+					{// Haven't assigned to this type of input yet
+						_inputAssignments[i] = assignments = new Dictionary<int, int>(16);
 
-					switch(input.Type)
-					{// Subscribe to events
-					case InputType.Keyboard:
-						Keyboard.KeyPress   += Keyboard_KeyPress;
-						Keyboard.KeyRelease += Keyboard_KeyRelease;
-						break;
+						switch(input.Type)
+						{// Subscribe to events
+						case InputType.Keyboard:
+							Keyboard.KeyPress   += Keyboard_KeyPress;
+							Keyboard.KeyRelease += Keyboard_KeyRelease;
+							break;
 
-					case InputType.Mouse:
-						if(input.Value == (int)MouseButton.None) // TODO: Treat +/- mouse axis separate
-							Mouse.Move += Mouse_Move;
-						else
-						{
-							Mouse.Press   += Mouse_Press;
-							Mouse.Release += Mouse_Release;
+						case InputType.Mouse:
+							if(input.Value == (int)MouseButton.None) // TODO: Treat +/- mouse axis separate
+								Mouse.Move += Mouse_Move;
+							else
+							{
+								Mouse.Press   += Mouse_Press;
+								Mouse.Release += Mouse_Release;
+							}
+							break;
+
+						default:
+							throw new ArgumentException("Unsupported input source type");
 						}
-						break;
-
-					default:
-						throw new ArgumentException("Unsupported input source type");
 					}
-				}
 
-				assignments[input.Value] = id;
-				_assignedIds[id]         = i;
+					assignments[input.Value] = id;
+					_assignedIds[id]         = i;
+				}
 			}
 		}
 
