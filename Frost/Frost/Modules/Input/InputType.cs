@@ -8,7 +8,7 @@
 		/// <summary>
 		/// Keyboard keys
 		/// </summary>
-		Keyboard,
+		Keyboard = 0,
 
 		/// <summary>
 		/// Mouse buttons and movement
@@ -18,6 +18,12 @@
 		/// <summary>
 		/// Joystick positions and buttons
 		/// </summary>
-		Joystick
+		Joystick,
+
+		/// <summary>
+		/// Number of input types
+		/// </summary>
+		/// <remarks>Keep this entry last.</remarks>
+		Count
 	}
 }
