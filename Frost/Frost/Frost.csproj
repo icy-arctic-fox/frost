@@ -76,6 +76,7 @@
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\InputModule.cs" />
     <Compile Include="Modules\Input\InputEventArgs.cs" />
+    <Compile Include="Modules\Input\InputDescriptor.cs" />
     <Compile Include="Modules\Input\InputScheme.cs" />
     <Compile Include="Modules\Input\InputType.cs" />
     <Compile Include="Modules\Input\Key.cs" />

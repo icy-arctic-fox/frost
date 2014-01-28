@@ -14,9 +14,8 @@ namespace Frost.Modules.Input
 		/// Assigns an ID to an input
 		/// </summary>
 		/// <param name="id">ID to assign</param>
-		/// <param name="type">Type of input</param>
-		/// <param name="typeId">Integer value corresponding to the input (cast enum value to int)</param>
-		protected void AssignInput (int id, InputType type, int typeId)
+		/// <param name="input">Description of the input</param>
+		protected void AssignInput (int id, InputDescriptor input)
 		{
 			throw new NotImplementedException();
 		}
