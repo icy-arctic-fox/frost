@@ -1,26 +1,61 @@
-﻿using Frost;
-using Frost.Display;
+﻿using Frost.Display;
 using Frost.Graphics;
 using Frost.Logic;
+using Frost.Modules.Input;
 
 namespace Test_Game
 {
 	class BallScene : Scene
 	{
+		private const float Speed = 3f;
+
+		private readonly Ball _ball;
+
 		/// <summary>
 		/// Creates the base of the scene
 		/// </summary>
 		public BallScene ()
 		{
 			var texture = new Texture("ball-6x6.png");
-			var ball = new Ball(texture);
-			SetUpdateRoot(ball);
-			SetRenderRoot(ball);
+			_ball = new Ball(texture);
+			SetUpdateRoot(_ball);
+			SetRenderRoot(_ball);
+		}
+
+		private BasicController _controller;
+
+		public void SetController (BasicController controller)
+		{
+			_controller = controller;
+
+			controller.UpArrowPressed    += (sender, input) => { _ball.SpeedY = -Speed; };
+			controller.DownArrowPressed  += (sender, input) => { _ball.SpeedY =  Speed; };
+			controller.LeftArrowPressed  += (sender, input) => { _ball.SpeedX = -Speed; };
+			controller.RightArrowPressed += (sender, input) => { _ball.SpeedX =  Speed; };
+
+			controller.UpArrowReleased    += controller_VertReleased;
+			controller.DownArrowReleased  += controller_VertReleased;
+			controller.LeftArrowReleased  += controller_HorizReleased;
+			controller.RightArrowReleased += controller_HorizReleased;
+		}
+
+		void controller_VertReleased (object sender, InputEventArgs e)
+		{
+			_ball.SpeedY = 0f;
+		}
+
+		void controller_HorizReleased (object sender, InputEventArgs e)
+		{
+			_ball.SpeedX = 0f;
 		}
 
 		private class Ball : IStepable, IRenderable
 		{
 			private readonly Sprite _sprite;
+
+			public float SpeedX { get; set; }
+
+			public float SpeedY { get; set; }
 
 			public Ball (Texture texture)
 			{
@@ -37,16 +72,8 @@ namespace Test_Game
 			/// Modifying any other game state info during this process would corrupt the game state.</remarks>
 			public void Step (int prev, int next)
 			{
-				if(_sprite.X > 500f)
-				{
-					_sprite.X = 0f;
-					_sprite.Rotation = 0f;
-				}
-				else
-				{
-					_sprite.X += 3f;
-					_sprite.Rotation += 3f;
-				}
+				_sprite.X += SpeedX;
+				_sprite.Y += SpeedY;
 				_sprite.Step(prev, next);
 			}
 
