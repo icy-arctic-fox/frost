@@ -280,6 +280,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Indicates whether the input scheme has been disposed
 		/// </summary>
+		[JsonIgnore]
 		public bool Disposed
 		{
 			get { return _disposed; }

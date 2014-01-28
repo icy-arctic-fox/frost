@@ -22,12 +22,8 @@ namespace Test_Game
 			SetRenderRoot(_ball);
 		}
 
-		private BasicController _controller;
-
 		public void SetController (BasicController controller)
 		{
-			_controller = controller;
-
 			controller.UpArrowPressed    += (sender, input) => { _ball.SpeedY = -Speed; };
 			controller.DownArrowPressed  += (sender, input) => { _ball.SpeedY =  Speed; };
 			controller.LeftArrowPressed  += (sender, input) => { _ball.SpeedX = -Speed; };
