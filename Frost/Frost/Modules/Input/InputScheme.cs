@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Frost.Utility;
 
 namespace Frost.Modules.Input
 {
 	/// <summary>
 	/// Maps input to easier to recognize values
 	/// </summary>
-	public abstract class InputScheme : IDisposable
+	public abstract class InputScheme : IDisposable, IControllerBase
 	{
 		/// <summary>
 		/// Maps input type to input ID to assignment ID
@@ -111,21 +112,33 @@ namespace Frost.Modules.Input
 		private readonly InputEventArgs _inputEventArgs = new InputEventArgs();
 
 		/// <summary>
+		/// Triggered when any input is initially detected (such as a key being pressed)
+		/// </summary>
+		public event EventHandler<InputEventArgs> InputStarted;
+
+		/// <summary>
 		/// Called when an assigned input is initially detected (keyboard key press)
 		/// </summary>
 		/// <param name="args">Arguments for the input</param>
+		/// <remarks>This method triggers the <see cref="InputStarted"/> event.</remarks>
 		protected void OnInputStarted (InputEventArgs args)
 		{
-			throw new NotImplementedException();
+			InputStarted.NotifySubscribers(this, args);
 		}
+
+		/// <summary>
+		/// Triggered when any input stops (such as a key being released)
+		/// </summary>
+		public event EventHandler<InputEventArgs> InputEnded;
 
 		/// <summary>
 		/// Called when an assigned input has stopped (keyboard key release)
 		/// </summary>
 		/// <param name="args">Arguments for the input</param>
+		/// <remarks>This method triggers the <see cref="InputEnded"/> event.</remarks>
 		protected void OnInputEnded (InputEventArgs args)
 		{
-			throw new NotImplementedException();
+			InputEnded.NotifySubscribers(this, args);
 		}
 
 		#region Subscribers
