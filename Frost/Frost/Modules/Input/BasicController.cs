@@ -24,7 +24,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> AcceptButtonReleased;
 
-		private InputDescriptor _accept;
+		private InputDescriptor _accept = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Accept, confirm, or advance button
@@ -55,7 +55,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> CancelButtonReleased;
 
-		private InputDescriptor _cancel;
+		private InputDescriptor _cancel = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Cancel or confirm button
@@ -86,7 +86,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> PrimaryButtonReleased;
 
-		private InputDescriptor _primary;
+		private InputDescriptor _primary = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Primary action button
@@ -117,7 +117,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> SecondaryButtonReleased;
 
-		private InputDescriptor _secondary;
+		private InputDescriptor _secondary = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Secondary action button
@@ -150,7 +150,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> UpArrowReleased;
 
-		private InputDescriptor _up;
+		private InputDescriptor _up = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Up arrow button
@@ -181,7 +181,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> DownArrowReleased;
 
-		private InputDescriptor _down;
+		private InputDescriptor _down = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Down arrow button
@@ -212,7 +212,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> LeftArrowReleased;
 
-		private InputDescriptor _left;
+		private InputDescriptor _left = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Left arrow button
@@ -243,7 +243,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public event EventHandler<InputEventArgs> RightArrowReleased;
 
-		private InputDescriptor _right;
+		private InputDescriptor _right = InputDescriptor.Unassigned;
 
 		/// <summary>
 		/// Right arrow button
@@ -260,6 +260,24 @@ namespace Frost.Modules.Input
 		}
 		#endregion
 		#endregion
+
+		/// <summary>
+		/// Unassigns inputs from all buttons and arrows
+		/// </summary>
+		public override void Clear ()
+		{
+			base.Clear();
+
+			_accept    = InputDescriptor.Unassigned;
+			_cancel    = InputDescriptor.Unassigned;
+			_primary   = InputDescriptor.Unassigned;
+			_secondary = InputDescriptor.Unassigned;
+
+			_up    = InputDescriptor.Unassigned;
+			_down  = InputDescriptor.Unassigned;
+			_left  = InputDescriptor.Unassigned;
+			_right = InputDescriptor.Unassigned;
+		}
 
 		/// <summary>
 		/// Called when any input is detected
