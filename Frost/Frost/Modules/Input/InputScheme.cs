@@ -82,30 +82,52 @@ namespace Frost.Modules.Input
 					var found = (from entry in assignments where entry.Value == id select entry.Key).FirstOrDefault();
 					assignments.Remove(found);
 
-					if(assignments.Count <= 0)
-					{// Removed the last of this type, unsubscribe
-						switch((InputType)i)
-						{// Subscribe to events
-						case InputType.Keyboard:
-							Keyboard.KeyPress   -= Keyboard_KeyPress;
-							Keyboard.KeyRelease -= Keyboard_KeyRelease;
-							break;
-
-						case InputType.Mouse:
-							Mouse.Move    -= Mouse_Move;
-							Mouse.Press   -= Mouse_Press;
-							Mouse.Release -= Mouse_Release;
-							break;
-
-						default:
-							throw new ArgumentException("Unsupported input source type");
-						}
-						_inputAssignments[i] = null;
-					}
-
+					if(assignments.Count <= 0) // Removed the last of this type, unsubscribe
+						unsubscribe(i);
 					_assignedIds.Remove(id);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Clears all assigned inputs
+		/// </summary>
+		public virtual void Clear ()
+		{
+			lock(_inputAssignments)
+			{
+				for(var i = 0; i < _inputAssignments.Length; ++i)
+				{
+					var assignment = _inputAssignments[i];
+					if(assignment != null) // Remove listeners
+						unsubscribe(i);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Unsubscribes from events corresponding to the input type and sets the dictionary for it to null
+		/// </summary>
+		/// <param name="i">Input type (and index)</param>
+		private void unsubscribe (int i)
+		{
+			switch((InputType)i)
+			{
+			case InputType.Keyboard:
+				Keyboard.KeyPress   -= Keyboard_KeyPress;
+				Keyboard.KeyRelease -= Keyboard_KeyRelease;
+				break;
+
+			case InputType.Mouse:
+				Mouse.Move    -= Mouse_Move;
+				Mouse.Press   -= Mouse_Press;
+				Mouse.Release -= Mouse_Release;
+				break;
+
+			default:
+				throw new ArgumentException("Unsupported input source type");
+			}
+			_inputAssignments[i] = null;
 		}
 
 		/// <summary>
@@ -235,7 +257,7 @@ namespace Frost.Modules.Input
 		#region Save and load
 
 		/// <summary>
-		/// Saves the input scheme (control mapping/keybindings) to a file
+		/// Saves the input scheme (control mapping/key bindings) to a file
 		/// </summary>
 		/// <param name="path">Path to the file</param>
 		public void Save (string path)
@@ -295,12 +317,10 @@ namespace Frost.Modules.Input
 				_disposed = true;
 
 				// Unsubscribe from all events
-				Keyboard.KeyPress   -= Keyboard_KeyPress;
-				Keyboard.KeyRelease -= Keyboard_KeyRelease;
-
-				Mouse.Move    -= Mouse_Move;
-				Mouse.Press   -= Mouse_Press;
-				Mouse.Release -= Mouse_Release;
+				lock(_inputAssignments)
+				for(var i = 0; i < _inputAssignments.Length; --i)
+					if(_inputAssignments[i] != null)
+						unsubscribe(i);
 			}
 		}
 		#endregion
