@@ -9,6 +9,11 @@ namespace Frost.Modules.Input
 	public class InputEventArgs : EventArgs
 	{
 		/// <summary>
+		/// ID assigned to the input
+		/// </summary>
+		public int Id { get; set; }
+
+		/// <summary>
 		/// Description of the input that occurred
 		/// </summary>
 		public InputDescriptor Input { get; internal set; }

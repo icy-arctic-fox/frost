@@ -34,11 +34,11 @@ namespace Frost.Modules.Input
 				if(_assignedIds.ContainsKey(id))
 					UnassignInput(id); // Un-assign existing ID first
 
-				var index = (int)input.Type;
-				var assignments = _inputAssignments[index];
+				var i = (int)input.Type;
+				var assignments = _inputAssignments[i];
 				if(assignments == null)
-				{ // Haven't assigned to this type of input yet
-					_inputAssignments[index] = assignments = new Dictionary<int, int>(16);
+				{// Haven't assigned to this type of input yet
+					_inputAssignments[i] = assignments = new Dictionary<int, int>(16);
 
 					switch(input.Type)
 					{// Subscribe to events
@@ -63,7 +63,7 @@ namespace Frost.Modules.Input
 				}
 
 				assignments[input.Value] = id;
-				_assignedIds[id]         = index;
+				_assignedIds[id]         = i;
 			}
 		}
 
@@ -75,16 +75,16 @@ namespace Frost.Modules.Input
 		{
 			lock(_inputAssignments)
 			{
-				int index;
-				if(_assignedIds.TryGetValue(id, out index))
+				int i;
+				if(_assignedIds.TryGetValue(id, out i))
 				{
-					var assignments = _inputAssignments[index];
+					var assignments = _inputAssignments[i];
 					var found = (from entry in assignments where entry.Value == id select entry.Key).FirstOrDefault();
 					assignments.Remove(found);
 
 					if(assignments.Count <= 0)
 					{// Removed the last of this type, unsubscribe
-						switch((InputType)index)
+						switch((InputType)i)
 						{// Subscribe to events
 						case InputType.Keyboard:
 							Keyboard.KeyPress   -= Keyboard_KeyPress;
@@ -100,7 +100,7 @@ namespace Frost.Modules.Input
 						default:
 							throw new ArgumentException("Unsupported input source type");
 						}
-						_inputAssignments[index] = null;
+						_inputAssignments[i] = null;
 					}
 
 					_assignedIds.Remove(id);
@@ -125,7 +125,6 @@ namespace Frost.Modules.Input
 		/// <remarks>This method triggers the <see cref="InputStarted"/> event.</remarks>
 		protected virtual void OnInputStarted (InputEventArgs args)
 		{
-			// TODO: Convert to ID
 			InputStarted.NotifySubscribers(this, args);
 		}
 
@@ -141,35 +140,53 @@ namespace Frost.Modules.Input
 		/// <remarks>This method triggers the <see cref="InputEnded"/> event.</remarks>
 		protected virtual void OnInputEnded (InputEventArgs args)
 		{
-			// TODO: Convert to ID
 			InputEnded.NotifySubscribers(this, args);
 		}
 
 		#region Subscribers
 
 		/// <summary>
-		/// Attempts to get the assigned index for a corresponding input
+		/// Attempts to get the assigned ID for a corresponding input
 		/// </summary>
 		/// <param name="input">Values for the input</param>
-		/// <param name="index">Index assigned to the input</param>
-		/// <returns>True if an index is assigned</returns>
-		private bool tryGetInputIndex (InputDescriptor input, out int index)
+		/// <param name="id">ID assigned to the input</param>
+		/// <returns>True if an ID is assigned</returns>
+		private bool tryGetInputId (InputDescriptor input, out int id)
 		{
-			throw new NotImplementedException();
+			lock(_inputAssignments)
+			{
+				var i = (int)input.Type;
+				var assignments = _inputAssignments[i];
+				if(assignments != null) // There are indices for this input type
+					return assignments.TryGetValue(input.Value, out id);
+			}
+
+			id = -1;
+			return false;
 		}
 
 		private void Keyboard_KeyPress (object sender, KeyboardEventArgs e)
 		{
 			var input = new InputDescriptor(InputType.Keyboard, (int)e.Key);
-			_inputEventArgs.Input = input;
-			OnInputStarted(_inputEventArgs);
+			int id;
+			if(tryGetInputId(input, out id))
+			{// This is an assigned input
+				_inputEventArgs.Input = input;
+				_inputEventArgs.Id    = id;
+				OnInputStarted(_inputEventArgs);
+			}
 		}
 
 		private void Keyboard_KeyRelease (object sender, KeyboardEventArgs e)
 		{
 			var input = new InputDescriptor(InputType.Keyboard, (int)e.Key);
-			_inputEventArgs.Input = input;
-			OnInputEnded(_inputEventArgs);
+			int id;
+			if(tryGetInputId(input, out id))
+			{// This is an assigned input
+				_inputEventArgs.Input = input;
+				_inputEventArgs.Id    = id;
+				OnInputEnded(_inputEventArgs);
+			}
 		}
 
 		private void Mouse_Move (object sender, MouseEventArgs e)
@@ -180,15 +197,25 @@ namespace Frost.Modules.Input
 		private void Mouse_Press (object sender, MouseEventArgs e)
 		{
 			var input = new InputDescriptor(InputType.Mouse, (int)e.Buttons);
-			_inputEventArgs.Input = input;
-			OnInputStarted(_inputEventArgs);
+			int id;
+			if(tryGetInputId(input, out id))
+			{// This is an assigned input
+				_inputEventArgs.Input = input;
+				_inputEventArgs.Id    = id;
+				OnInputStarted(_inputEventArgs);
+			}
 		}
 
 		private void Mouse_Release (object sender, MouseEventArgs e)
 		{
 			var input = new InputDescriptor(InputType.Mouse, (int)e.Buttons);
-			_inputEventArgs.Input = input;
-			OnInputEnded(_inputEventArgs);
+			int id;
+			if(tryGetInputId(input, out id))
+			{// This is an assigned input
+				_inputEventArgs.Input = input;
+				_inputEventArgs.Id    = id;
+				OnInputEnded(_inputEventArgs);
+			}
 		}
 		#endregion
 
