@@ -267,25 +267,39 @@ namespace Frost.Modules.Input
 		/// <param name="args">Information about the input</param>
 		protected override void OnInputStarted (InputEventArgs args)
 		{
-			base.OnInputStarted(args);
+			base.OnInputEnded(args);
 
-			// TODO: Is there possibly a better way to do this?
-			if(args.Input == AcceptButton)
-				AcceptButtonPressed.NotifySubscribers(this, args);
-			else if(args.Input == CancelButton)
-				CancelButtonPressed.NotifySubscribers(this, args);
-			else if(args.Input == PrimaryButton)
-				PrimaryButtonPressed.NotifySubscribers(this, args);
-			else if(args.Input == SecondaryButton)
-				SecondaryButtonPressed.NotifySubscribers(this, args);
-			else if(args.Input == UpArrow)
-				UpArrowPressed.NotifySubscribers(this, args);
-			else if(args.Input == DownArrow)
-				DownArrowPressed.NotifySubscribers(this, args);
-			else if(args.Input == LeftArrow)
-				LeftArrowPressed.NotifySubscribers(this, args);
-			else if(args.Input == RightArrow)
-				RightArrowPressed.NotifySubscribers(this, args);
+			EventHandler<InputEventArgs> ev;
+			switch(args.Id)
+			{
+			case AcceptButtonId:
+				ev = AcceptButtonPressed;
+				break;
+			case CancelButtonId:
+				ev = CancelButtonPressed;
+				break;
+			case PrimaryButtonId:
+				ev = PrimaryButtonPressed;
+				break;
+			case SecondaryButtonId:
+				ev = SecondaryButtonPressed;
+				break;
+			case UpArrowId:
+				ev = UpArrowPressed;
+				break;
+			case DownArrowId:
+				ev = DownArrowPressed;
+				break;
+			case LeftArrowId:
+				ev = LeftArrowPressed;
+				break;
+			case RightArrowId:
+				ev = RightArrowPressed;
+				break;
+			default:
+				return;
+			}
+			ev.NotifySubscribers(this, args);
 		}
 
 		/// <summary>
@@ -296,22 +310,37 @@ namespace Frost.Modules.Input
 		{
 			base.OnInputEnded(args);
 
-			if(args.Input == AcceptButton)
-				AcceptButtonReleased.NotifySubscribers(this, args);
-			else if(args.Input == CancelButton)
-				CancelButtonReleased.NotifySubscribers(this, args);
-			else if(args.Input == PrimaryButton)
-				PrimaryButtonReleased.NotifySubscribers(this, args);
-			else if(args.Input == SecondaryButton)
-				SecondaryButtonReleased.NotifySubscribers(this, args);
-			else if(args.Input == UpArrow)
-				UpArrowReleased.NotifySubscribers(this, args);
-			else if(args.Input == DownArrow)
-				DownArrowReleased.NotifySubscribers(this, args);
-			else if(args.Input == LeftArrow)
-				LeftArrowReleased.NotifySubscribers(this, args);
-			else if(args.Input == RightArrow)
-				RightArrowReleased.NotifySubscribers(this, args);
+			EventHandler<InputEventArgs> ev;
+			switch(args.Id)
+			{
+			case AcceptButtonId:
+				ev = AcceptButtonReleased;
+				break;
+			case CancelButtonId:
+				ev = CancelButtonReleased;
+				break;
+			case PrimaryButtonId:
+				ev = PrimaryButtonReleased;
+				break;
+			case SecondaryButtonId:
+				ev = SecondaryButtonReleased;
+				break;
+			case UpArrowId:
+				ev = UpArrowReleased;
+				break;
+			case DownArrowId:
+				ev = DownArrowReleased;
+				break;
+			case LeftArrowId:
+				ev = LeftArrowReleased;
+				break;
+			case RightArrowId:
+				ev = RightArrowReleased;
+				break;
+			default:
+				return;
+			}
+			ev.NotifySubscribers(this, args);
 		}
 	}
 }
