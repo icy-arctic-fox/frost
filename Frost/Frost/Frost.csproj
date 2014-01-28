@@ -81,6 +81,7 @@
     <Compile Include="Modules\Input\InputDescriptor.cs" />
     <Compile Include="Modules\Input\InputScheme.cs" />
     <Compile Include="Modules\Input\InputType.cs" />
+    <Compile Include="Modules\Input\JsonInputDescriptorConverter.cs" />
     <Compile Include="Modules\Input\Key.cs" />
     <Compile Include="Modules\Input\Keyboard.cs" />
     <Compile Include="Modules\Input\KeyboardEventArgs.cs" />

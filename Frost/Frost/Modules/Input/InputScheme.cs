@@ -188,6 +188,7 @@ namespace Frost.Modules.Input
 		static InputScheme ()
 		{
 			Json = new JsonSerializer {Formatting = Formatting.Indented};
+			Json.Converters.Add(new JsonInputDescriptorConverter());
 		}
 		#endregion
 
