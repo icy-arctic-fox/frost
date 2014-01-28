@@ -26,8 +26,13 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Middle mouse button
 		/// </summary>
-		Middle = 0x04
+		Middle = 0x04,
 
 		// TODO: Add other two extra buttons
+
+		/// <summary>
+		/// Number of detectable mouse buttons
+		/// </summary>
+		Count = 4
 	}
 }

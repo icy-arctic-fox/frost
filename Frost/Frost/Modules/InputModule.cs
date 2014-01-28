@@ -96,19 +96,28 @@ namespace Frost.Modules
 			var buttons    = _prevMouseButtons & curButtons;
 			if(_prevMouseButtons != buttons)
 			{// Button was released
-				_mouseEventArgs.Buttons = _prevMouseButtons & ~curButtons;
-				Mouse.OnRelease(_mouseEventArgs);
+				buttons = _prevMouseButtons & ~curButtons;
+				for(var b = (MouseButton)0; b < MouseButton.Count; ++b)
+					if(buttons.HasFlag(b))
+					{
+						_mouseEventArgs.Buttons = b;
+						Mouse.OnRelease(_mouseEventArgs);
+					}
 			}
 			buttons = curButtons & ~_prevMouseButtons;
 			if(buttons != MouseButton.None)
 			{// Button was pressed
-				if(_capturing.IsSet)
-				{// Not capturing
-					_mouseEventArgs.Buttons = buttons;
-					Mouse.OnPress(_mouseEventArgs);
-				}
-				else // Capture input
-					capturedInput(InputType.Mouse, (int)buttons);
+				for(var b = (MouseButton)0; b < MouseButton.Count; ++b)
+					if(buttons.HasFlag(b))
+					{
+						if(_capturing.IsSet)
+						{// Not capturing
+							_mouseEventArgs.Buttons = buttons;
+							Mouse.OnPress(_mouseEventArgs);
+						}
+						else // Capture input
+							capturedInput(InputType.Mouse, (int)buttons);
+					}
 			}
 			_prevMouseButtons = curButtons;
 
