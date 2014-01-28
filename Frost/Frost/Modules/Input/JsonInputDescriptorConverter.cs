@@ -16,8 +16,16 @@ namespace Frost.Modules.Input
 		/// <returns>True if <paramref name="objectType"/> is the type <see cref="InputDescriptor"/></returns>
 		public override bool CanConvert (Type objectType)
 		{
-			return objectType == typeof(InputDescriptor); // TODO: Change to Mono compatible code
+#if MONO
+			return objectType.GUID == typeof(InputDescriptor).GUID;
+#else
+			return objectType == typeof(InputDescriptor);
+#endif
 		}
+
+		private const string KeyboardType = "Keyboard";
+		private const string MouseType    = "Mouse";
+		private const string JoystickType = "Joystick"; // TODO: Add joystick serialization
 
 		/// <summary>
 		/// Reads the string form of the input descriptor
@@ -29,8 +37,29 @@ namespace Frost.Modules.Input
 		/// <returns>Parsed input descriptor</returns>
 		public override object ReadJson (JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
-			var text = (string)reader.Value;
-			throw new NotImplementedException();
+			var text  = (string)reader.Value;
+			var parts = text.Split(':');
+			if(parts.Length != 2)
+				throw new FormatException("The format of the input descriptor is expected to be: TYPE:ID");
+			
+			// Parse the type
+			InputType type;
+			switch(parts[0])
+			{
+			case KeyboardType:
+				type = InputType.Keyboard;
+				break;
+			case MouseType:
+				type = InputType.Mouse;
+				break;
+			default:
+				throw new FormatException("Unrecognized input type");
+			}
+
+			// Parse the ID
+			var id = Int32.Parse(parts[1]); // Will throw if invalid
+
+			return new InputDescriptor(type, id);
 		}
 
 		/// <summary>
@@ -42,7 +71,25 @@ namespace Frost.Modules.Input
 		public override void WriteJson (JsonWriter writer, object value, JsonSerializer serializer)
 		{
 			var input = (InputDescriptor)value;
-			var text = String.Empty; // TODO
+			
+			// Stringify the type
+			string type;
+			switch(input.Type)
+			{
+			case InputType.Keyboard:
+				type = KeyboardType;
+				break;
+			case InputType.Mouse:
+				type = MouseType;
+				break;
+			default:
+				throw new FormatException("Unrecognized input type");
+			}
+
+			// Stringify the ID
+			var id = input.Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+			var text = String.Format("{0}:{1}", type, id);
 			writer.WriteValue(text);
 		}
 	}
