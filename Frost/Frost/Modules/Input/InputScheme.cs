@@ -7,7 +7,7 @@ namespace Frost.Modules.Input
 	/// <summary>
 	/// Maps input to easier to recognize values
 	/// </summary>
-	public abstract class InputScheme
+	public abstract class InputScheme : IDisposable
 	{
 		/// <summary>
 		/// Maps input type to input ID to assignment ID
@@ -144,6 +144,55 @@ namespace Frost.Modules.Input
 		private void Mouse_Release (object sender, MouseEventArgs e)
 		{
 			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region Disposable
+
+		private volatile bool _disposed;
+
+		/// <summary>
+		/// Indicates whether the input scheme has been disposed
+		/// </summary>
+		public bool Disposed
+		{
+			get { return _disposed; }
+		}
+
+		/// <summary>
+		/// Disposes of the scheme and the resources it holds
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Destroys the input scheme
+		/// </summary>
+		~InputScheme ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the scheme and the resources it holds
+		/// </summary>
+		/// <param name="disposing">Indicates whether inner-resources should be disposed (<see cref="Dispose"/> was called)</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(!_disposed)
+			{
+				_disposed = true;
+
+				// Unsubscribe from all events
+				Keyboard.KeyPress   -= Keyboard_KeyPress;
+				Keyboard.KeyRelease -= Keyboard_KeyRelease;
+
+				Mouse.Move    -= Mouse_Move;
+				Mouse.Press   -= Mouse_Press;
+				Mouse.Release -= Mouse_Release;
+			}
 		}
 		#endregion
 	}
