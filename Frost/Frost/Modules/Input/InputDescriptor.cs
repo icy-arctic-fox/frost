@@ -30,6 +30,14 @@
 		}
 
 		/// <summary>
+		/// Indicates whether the input is assigned
+		/// </summary>
+		public bool Assigned
+		{
+			get { return _type != InputType.Unassigned; }
+		}
+
+		/// <summary>
 		/// Creates a new input descriptor
 		/// </summary>
 		/// <param name="type">Type of input</param>

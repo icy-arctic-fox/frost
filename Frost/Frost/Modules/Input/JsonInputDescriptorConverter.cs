@@ -27,6 +27,8 @@ namespace Frost.Modules.Input
 		private const string MouseType    = "Mouse";
 		private const string JoystickType = "Joystick"; // TODO: Add joystick serialization
 
+		private const string UnassignedInput = "Unassigned";
+
 		/// <summary>
 		/// Reads the string form of the input descriptor
 		/// </summary>
@@ -38,6 +40,10 @@ namespace Frost.Modules.Input
 		public override object ReadJson (JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			var text  = (string)reader.Value;
+			if(text == UnassignedInput)
+				return InputDescriptor.Unassigned;
+
+			// Split into type and value
 			var parts = text.Split(':');
 			if(parts.Length != 2)
 				throw new FormatException("The format of the input descriptor is expected to be: TYPE:ID");
@@ -71,25 +77,32 @@ namespace Frost.Modules.Input
 		public override void WriteJson (JsonWriter writer, object value, JsonSerializer serializer)
 		{
 			var input = (InputDescriptor)value;
-			
-			// Stringify the type
-			string type;
-			switch(input.Type)
+			string text;
+
+			if(!input.Assigned)
+				text = UnassignedInput;
+			else
 			{
-			case InputType.Keyboard:
-				type = KeyboardType;
-				break;
-			case InputType.Mouse:
-				type = MouseType;
-				break;
-			default:
-				throw new FormatException("Unrecognized input type");
+				// Stringify the type
+				string type;
+				switch(input.Type)
+				{
+				case InputType.Keyboard:
+					type = KeyboardType;
+					break;
+				case InputType.Mouse:
+					type = MouseType;
+					break;
+				default:
+					throw new FormatException("Unrecognized input type");
+				}
+
+				// Stringify the value
+				var v = input.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+				text = String.Format("{0}:{1}", type, v);
 			}
 
-			// Stringify the value
-			var v = input.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-			var text = String.Format("{0}:{1}", type, v);
 			writer.WriteValue(text);
 		}
 	}
