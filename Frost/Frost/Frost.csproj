@@ -79,7 +79,7 @@
     <Compile Include="Modules\Input\IControllerBase.cs" />
     <Compile Include="Modules\Input\InputEventArgs.cs" />
     <Compile Include="Modules\Input\InputDescriptor.cs" />
-    <Compile Include="Modules\Input\InputScheme.cs" />
+    <Compile Include="Modules\Input\Controller.cs" />
     <Compile Include="Modules\Input\InputType.cs" />
     <Compile Include="Modules\Input\JsonInputDescriptorConverter.cs" />
     <Compile Include="Modules\Input\Key.cs" />

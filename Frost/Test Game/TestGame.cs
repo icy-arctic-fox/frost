@@ -60,7 +60,6 @@ namespace Test_Game
 				LeftArrow  = new InputDescriptor(InputType.Keyboard, (int)Key.Left),
 				RightArrow = new InputDescriptor(InputType.Keyboard, (int)Key.Right)
 			};
-			controller.Save(@"C:\Users\Michael\Desktop\controller.config");
 
 			_scene.SetController(controller);
 		}

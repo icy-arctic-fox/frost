@@ -7,7 +7,7 @@ namespace Frost.Modules.Input
 	/// <summary>
 	/// Simplistic four-button controller with arrows
 	/// </summary>
-	public class BasicController : InputScheme
+	public class BasicController : Controller
 	{
 		private const int AcceptButtonId    = 0;
 		private const int CancelButtonId    = 1;

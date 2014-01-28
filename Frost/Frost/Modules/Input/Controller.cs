@@ -10,7 +10,7 @@ namespace Frost.Modules.Input
 	/// <summary>
 	/// Maps input to easier to recognize values
 	/// </summary>
-	public abstract class InputScheme : IDisposable, IControllerBase
+	public abstract class Controller : IDisposable, IControllerBase
 	{
 		/// <summary>
 		/// Maps input type to input ID to assignment ID
@@ -245,7 +245,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Initializes the Json serializer
 		/// </summary>
-		static InputScheme ()
+		static Controller ()
 		{
 			Json = new JsonSerializer {Formatting = Formatting.Indented};
 			Json.Converters.Add(new JsonInputDescriptorConverter());
@@ -269,7 +269,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		/// <param name="path">Path of the file to load from</param>
 		/// <returns>The input scheme or null if there was an error loading the configuration</returns>
-		public static TScheme Load<TScheme> (string path) where TScheme : InputScheme
+		public static TScheme Load<TScheme> (string path) where TScheme : Controller
 		{
 			using(var reader = File.OpenText(path))
 				return Json.Deserialize(reader, typeof(TScheme)) as TScheme;
@@ -300,7 +300,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Destroys the input scheme
 		/// </summary>
-		~InputScheme ()
+		~Controller ()
 		{
 			Dispose(false);
 		}
