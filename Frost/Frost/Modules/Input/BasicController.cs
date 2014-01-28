@@ -9,10 +9,18 @@ namespace Frost.Modules.Input
 	/// </summary>
 	public class BasicController : InputScheme
 	{
+		private const int AcceptButtonId    = 0;
+		private const int CancelButtonId    = 1;
+		private const int PrimaryButtonId   = 2;
+		private const int SecondaryButtonId = 3;
+
+		private const int UpArrowId    = 4;
+		private const int DownArrowId  = 5;
+		private const int LeftArrowId  = 6;
+		private const int RightArrowId = 7;
+
 		#region Buttons
 		#region Accept button
-
-		private const int AcceptButtonId = 0;
 
 		/// <summary>
 		/// Triggered when the accept button is pressed
@@ -43,8 +51,6 @@ namespace Frost.Modules.Input
 
 		#region Cancel button
 
-		private const int CancelButtonId = 1;
-
 		/// <summary>
 		/// Triggered when the cancel button is pressed
 		/// </summary>
@@ -74,8 +80,6 @@ namespace Frost.Modules.Input
 
 		#region Primary button
 
-		private const int PrimaryButtonId = 2;
-
 		/// <summary>
 		/// Triggered when the primary button is pressed
 		/// </summary>
@@ -104,8 +108,6 @@ namespace Frost.Modules.Input
 		#endregion
 
 		#region Secondary button
-
-		private const int SecondaryButtonId = 3;
 
 		/// <summary>
 		/// Triggered when the secondary button is pressed
@@ -138,8 +140,6 @@ namespace Frost.Modules.Input
 		#region Arrows
 		#region Up arrow
 
-		private const int UpArrowId = 4;
-
 		/// <summary>
 		/// Triggered when the up arrow is pressed
 		/// </summary>
@@ -168,8 +168,6 @@ namespace Frost.Modules.Input
 		#endregion
 
 		#region Down arrow
-
-		private const int DownArrowId = 5;
 
 		/// <summary>
 		/// Triggered when the down arrow is pressed
@@ -200,8 +198,6 @@ namespace Frost.Modules.Input
 
 		#region Left arrow
 
-		private const int LeftArrowId = 6;
-
 		/// <summary>
 		/// Triggered when the left arrow is pressed
 		/// </summary>
@@ -230,8 +226,6 @@ namespace Frost.Modules.Input
 		#endregion
 
 		#region Right arrow
-
-		private const int RightArrowId = 7;
 
 		/// <summary>
 		/// Triggered when the right arrow is pressed

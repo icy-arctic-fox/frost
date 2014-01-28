@@ -266,7 +266,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		/// <param name="path">Path of the file to load from</param>
 		/// <returns>The input scheme or null if there was an error loading the configuration</returns>
-		public static InputScheme Load<TScheme> (string path) where TScheme : InputScheme
+		public static TScheme Load<TScheme> (string path) where TScheme : InputScheme
 		{
 			using(var reader = File.OpenText(path))
 				return Json.Deserialize(reader, typeof(TScheme)) as TScheme;
