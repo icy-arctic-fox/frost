@@ -5,7 +5,10 @@
 	/// </summary>
 	public enum InputType
 	{
-		// TODO: Add unassigned type
+		/// <summary>
+		/// No input type and value has been assigned
+		/// </summary>
+		Unassigned = -1,
 
 		/// <summary>
 		/// Keyboard keys

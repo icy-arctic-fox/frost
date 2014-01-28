@@ -5,6 +5,11 @@
 	/// </summary>
 	public struct InputDescriptor
 	{
+		/// <summary>
+		/// An input that doesn't have an assigned type and value
+		/// </summary>
+		public static readonly InputDescriptor Unassigned = new InputDescriptor(InputType.Unassigned, 0);
+
 		private readonly InputType _type;
 		private readonly int _value;
 
@@ -25,7 +30,7 @@
 		}
 
 		/// <summary>
-		/// Creates a new input ID
+		/// Creates a new input descriptor
 		/// </summary>
 		/// <param name="type">Type of input</param>
 		/// <param name="value">Value (button/key) associated with the input</param>
@@ -43,7 +48,8 @@
 		/// <returns>True if <paramref name="a"/> and <paramref name="b"/> are equal</returns>
 		public static bool operator == (InputDescriptor a, InputDescriptor b)
 		{
-			return (a._type == b._type) && (a._value == b._value);
+			return ((a._type == b._type) && (a._value == b._value)) ||
+					(a._type == InputType.Unassigned && b._type == InputType.Unassigned);
 		}
 
 		/// <summary>
@@ -54,7 +60,8 @@
 		/// <returns>True if <paramref name="a"/> and <paramref name="b"/> are not equal</returns>
 		public static bool operator != (InputDescriptor a, InputDescriptor b)
 		{
-			return (a._type != b._type) || (a._value != b._value);
+			return ((a._type != b._type) || (a._value != b._value)) &&
+					(a._type != InputType.Unassigned || b._type != InputType.Unassigned);
 		}
 
 		/// <summary>
@@ -64,7 +71,8 @@
 		/// <returns>True if <paramref name="other"/> is effectively the same</returns>
 		public bool Equals (InputDescriptor other)
 		{
-			return (_type == other._type) && (_value == other._value);
+			return ((_type == other._type) && (_value == other._value)) ||
+					(_type == InputType.Unassigned && other._type == InputType.Unassigned);
 		}
 
 		/// <summary>
@@ -85,10 +93,7 @@
 		/// <returns>A 32-bit signed integer that is the hash code for this instance</returns>
 		public override int GetHashCode ()
 		{
-			unchecked
-			{
-				return ((int)_type * 397) ^ _value;
-			}
+			return (_type == InputType.Unassigned) ? -1 : unchecked(((int)_type * 397) ^ _value);
 		}
 	}
 }
