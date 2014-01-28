@@ -9,9 +9,9 @@ namespace Frost.Modules.Input
 	public class InputEventArgs : EventArgs
 	{
 		/// <summary>
-		/// ID of the input that occurred
+		/// Description of the input that occurred
 		/// </summary>
-		public int Id { get; internal set; }
+		public InputDescriptor Input { get; internal set; }
 
 		/// <summary>
 		/// Amount of input for varying "strength" (e.g.: joysticks)

@@ -111,10 +111,19 @@ namespace Frost.Modules.Input
 		private readonly InputEventArgs _inputEventArgs = new InputEventArgs();
 
 		/// <summary>
-		/// Called when an assigned input is detected
+		/// Called when an assigned input is initially detected (keyboard key press)
 		/// </summary>
 		/// <param name="args">Arguments for the input</param>
-		protected void OnInputReceived (InputEventArgs args)
+		protected void OnInputStarted (InputEventArgs args)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Called when an assigned input has stopped (keyboard key release)
+		/// </summary>
+		/// <param name="args">Arguments for the input</param>
+		protected void OnInputEnded (InputEventArgs args)
 		{
 			throw new NotImplementedException();
 		}
@@ -123,12 +132,16 @@ namespace Frost.Modules.Input
 
 		private void Keyboard_KeyPress (object sender, KeyboardEventArgs e)
 		{
-			throw new NotImplementedException();
+			var input = new InputDescriptor(InputType.Keyboard, (int)e.Key);
+			_inputEventArgs.Input = input;
+			OnInputStarted(_inputEventArgs);
 		}
 
 		private void Keyboard_KeyRelease (object sender, KeyboardEventArgs e)
 		{
-			throw new NotImplementedException();
+			var input = new InputDescriptor(InputType.Keyboard, (int)e.Key);
+			_inputEventArgs.Input = input;
+			OnInputEnded(_inputEventArgs);
 		}
 
 		private void Mouse_Move (object sender, MouseEventArgs e)
@@ -138,12 +151,16 @@ namespace Frost.Modules.Input
 
 		private void Mouse_Press (object sender, MouseEventArgs e)
 		{
-			throw new NotImplementedException();
+			var input = new InputDescriptor(InputType.Mouse, (int)e.Buttons);
+			_inputEventArgs.Input = input;
+			OnInputStarted(_inputEventArgs);
 		}
 
 		private void Mouse_Release (object sender, MouseEventArgs e)
 		{
-			throw new NotImplementedException();
+			var input = new InputDescriptor(InputType.Mouse, (int)e.Buttons);
+			_inputEventArgs.Input = input;
+			OnInputEnded(_inputEventArgs);
 		}
 		#endregion
 
