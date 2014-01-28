@@ -75,6 +75,7 @@
     <Compile Include="Logic\SceneManager.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\InputModule.cs" />
+    <Compile Include="Modules\Input\BasicController.cs" />
     <Compile Include="Modules\Input\IControllerBase.cs" />
     <Compile Include="Modules\Input\InputEventArgs.cs" />
     <Compile Include="Modules\Input\InputDescriptor.cs" />

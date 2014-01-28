@@ -121,7 +121,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		/// <param name="args">Arguments for the input</param>
 		/// <remarks>This method triggers the <see cref="InputStarted"/> event.</remarks>
-		protected void OnInputStarted (InputEventArgs args)
+		protected virtual void OnInputStarted (InputEventArgs args)
 		{
 			InputStarted.NotifySubscribers(this, args);
 		}
@@ -136,7 +136,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		/// <param name="args">Arguments for the input</param>
 		/// <remarks>This method triggers the <see cref="InputEnded"/> event.</remarks>
-		protected void OnInputEnded (InputEventArgs args)
+		protected virtual void OnInputEnded (InputEventArgs args)
 		{
 			InputEnded.NotifySubscribers(this, args);
 		}
