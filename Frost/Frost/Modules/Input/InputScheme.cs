@@ -95,14 +95,9 @@ namespace Frost.Modules.Input
 		public virtual void Clear ()
 		{
 			lock(_inputAssignments)
-			{
 				for(var i = 0; i < _inputAssignments.Length; ++i)
-				{
-					var assignment = _inputAssignments[i];
-					if(assignment != null) // Remove listeners
+					if(_inputAssignments[i] != null) // Remove listeners
 						unsubscribe(i);
-				}
-			}
 		}
 
 		/// <summary>
@@ -317,10 +312,7 @@ namespace Frost.Modules.Input
 				_disposed = true;
 
 				// Unsubscribe from all events
-				lock(_inputAssignments)
-				for(var i = 0; i < _inputAssignments.Length; --i)
-					if(_inputAssignments[i] != null)
-						unsubscribe(i);
+				Clear();
 			}
 		}
 		#endregion
