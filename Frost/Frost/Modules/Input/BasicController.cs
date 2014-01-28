@@ -82,6 +82,80 @@ namespace Frost.Modules.Input
 		#endregion
 		#endregion
 
+		#region Arrows
+		#region Up arrow
+
+		/// <summary>
+		/// Triggered when the up arrow is pressed
+		/// </summary>
+		public event EventHandler<InputEventArgs> UpArrowPressed;
+
+		/// <summary>
+		/// Triggered when the up arrow is released
+		/// </summary>
+		public event EventHandler<InputEventArgs> UpArrowReleased;
+
+		/// <summary>
+		/// Up arrow button
+		/// </summary>
+		public InputDescriptor UpArrow { get; private set; }
+		#endregion
+
+		#region Down arrow
+
+		/// <summary>
+		/// Triggered when the down arrow is pressed
+		/// </summary>
+		public event EventHandler<InputEventArgs> DownArrowPressed;
+
+		/// <summary>
+		/// Triggered when the down arrow is released
+		/// </summary>
+		public event EventHandler<InputEventArgs> DownArrowReleased;
+
+		/// <summary>
+		/// Down arrow button
+		/// </summary>
+		public InputDescriptor DownArrow { get; private set; }
+		#endregion
+
+		#region Left arrow
+
+		/// <summary>
+		/// Triggered when the left arrow is pressed
+		/// </summary>
+		public event EventHandler<InputEventArgs> LeftArrowPressed;
+
+		/// <summary>
+		/// Triggered when the left arrow is released
+		/// </summary>
+		public event EventHandler<InputEventArgs> LeftArrowReleased;
+
+		/// <summary>
+		/// Left arrow button
+		/// </summary>
+		public InputDescriptor LeftArrow { get; private set; }
+		#endregion
+
+		#region Right arrow
+
+		/// <summary>
+		/// Triggered when the right arrow is pressed
+		/// </summary>
+		public event EventHandler<InputEventArgs> RightArrowPressed;
+
+		/// <summary>
+		/// Triggered when the right arrow is released
+		/// </summary>
+		public event EventHandler<InputEventArgs> RightArrowReleased;
+
+		/// <summary>
+		/// Right arrow button
+		/// </summary>
+		public InputDescriptor RightArrow { get; private set; }
+		#endregion
+		#endregion
+
 		/// <summary>
 		/// Called when any input is detected
 		/// </summary>
@@ -99,6 +173,14 @@ namespace Frost.Modules.Input
 				PrimaryButtonPressed.NotifySubscribers(this, args);
 			else if(args.Input == SecondaryButton)
 				SecondaryButtonPressed.NotifySubscribers(this, args);
+			else if(args.Input == UpArrow)
+				UpArrowPressed.NotifySubscribers(this, args);
+			else if(args.Input == DownArrow)
+				DownArrowPressed.NotifySubscribers(this, args);
+			else if(args.Input == LeftArrow)
+				LeftArrowPressed.NotifySubscribers(this, args);
+			else if(args.Input == RightArrow)
+				RightArrowPressed.NotifySubscribers(this, args);
 		}
 
 		/// <summary>
@@ -117,6 +199,14 @@ namespace Frost.Modules.Input
 				PrimaryButtonReleased.NotifySubscribers(this, args);
 			else if(args.Input == SecondaryButton)
 				SecondaryButtonReleased.NotifySubscribers(this, args);
+			else if(args.Input == UpArrow)
+				UpArrowReleased.NotifySubscribers(this, args);
+			else if(args.Input == DownArrow)
+				DownArrowReleased.NotifySubscribers(this, args);
+			else if(args.Input == LeftArrow)
+				LeftArrowReleased.NotifySubscribers(this, args);
+			else if(args.Input == RightArrow)
+				RightArrowReleased.NotifySubscribers(this, args);
 		}
 	}
 }
