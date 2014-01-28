@@ -24,7 +24,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Accept, confirm, or advance button
 		/// </summary>
-		public InputDescriptor AcceptButton { get; private set; }
+		public InputDescriptor AcceptButton { get; set; }
 		#endregion
 
 		#region Cancel button
@@ -42,7 +42,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Cancel or confirm button
 		/// </summary>
-		public InputDescriptor CancelButton { get; private set; }
+		public InputDescriptor CancelButton { get; set; }
 		#endregion
 
 		#region Primary button
@@ -60,7 +60,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Primary action button
 		/// </summary>
-		public InputDescriptor PrimaryButton { get; private set; }
+		public InputDescriptor PrimaryButton { get; set; }
 		#endregion
 
 		#region Secondary button
@@ -78,7 +78,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Secondary action button
 		/// </summary>
-		public InputDescriptor SecondaryButton { get; private set; }
+		public InputDescriptor SecondaryButton { get; set; }
 		#endregion
 		#endregion
 
@@ -98,7 +98,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Up arrow button
 		/// </summary>
-		public InputDescriptor UpArrow { get; private set; }
+		public InputDescriptor UpArrow { get; set; }
 		#endregion
 
 		#region Down arrow
@@ -116,7 +116,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Down arrow button
 		/// </summary>
-		public InputDescriptor DownArrow { get; private set; }
+		public InputDescriptor DownArrow { get; set; }
 		#endregion
 
 		#region Left arrow
@@ -134,7 +134,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Left arrow button
 		/// </summary>
-		public InputDescriptor LeftArrow { get; private set; }
+		public InputDescriptor LeftArrow { get; set; }
 		#endregion
 
 		#region Right arrow
@@ -152,7 +152,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Right arrow button
 		/// </summary>
-		public InputDescriptor RightArrow { get; private set; }
+		public InputDescriptor RightArrow { get; set; }
 		#endregion
 		#endregion
 
