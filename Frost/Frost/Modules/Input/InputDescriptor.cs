@@ -1,4 +1,6 @@
-﻿namespace Frost.Modules.Input
+﻿using System;
+
+namespace Frost.Modules.Input
 {
 	/// <summary>
 	/// Information about an input source and input value (button/key)
@@ -102,6 +104,32 @@
 		public override int GetHashCode ()
 		{
 			return (_type == InputType.Unassigned) ? -1 : unchecked(((int)_type * 397) ^ _value);
+		}
+
+		/// <summary>
+		/// Generates the string representation of the input descriptor
+		/// </summary>
+		/// <returns>A string in the form: TYPE: VALUE
+		/// or "Unassigned" or "Unknown"</returns>
+		public override string ToString ()
+		{
+			string value;
+			switch(_type)
+			{
+			case InputType.Keyboard:
+				value = ((Key)_value).ToString();
+				break;
+			case InputType.Mouse:
+				value = ((MouseButton)_value).ToString();
+				break;
+			case InputType.Unassigned:
+				return InputType.Unassigned.ToString();
+			default:
+				return "Unknown";
+			}
+
+			var type = _type.ToString();
+			return String.Format("{0}: {1}", type, value);
 		}
 	}
 }
