@@ -73,7 +73,7 @@ namespace Frost.Modules.Input
 		#endregion
 		#endregion
 
-		#region Logic (detecting key modifiers and typed characters)
+		#region Modifiers
 
 		/// <summary>
 		/// Flags indicating which modifier keys are currently being pressed
