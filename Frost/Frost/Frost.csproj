@@ -67,7 +67,7 @@
     <Compile Include="Graphics\IDisplayContainer.cs" />
     <Compile Include="Graphics\Object2D.cs" />
     <Compile Include="Graphics\Layer2D.cs" />
-    <Compile Include="Graphics\ResourceLoader.cs" />
+    <Compile Include="ResourceLoader.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="ICancellable.cs" />

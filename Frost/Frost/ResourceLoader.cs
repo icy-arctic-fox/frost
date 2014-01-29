@@ -1,8 +1,8 @@
 ﻿using System.IO;
+using Frost.Graphics;
 using Frost.IO.Resources;
-using Frost.Modules;
 
-namespace Frost.Graphics
+namespace Frost
 {
 	/// <summary>
 	/// Simplifies loading various graphical resources
