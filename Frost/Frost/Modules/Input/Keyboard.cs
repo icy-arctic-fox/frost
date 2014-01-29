@@ -37,7 +37,10 @@ namespace Frost.Modules.Input
 			// Update modifiers
 			var modifier = ToModifier(args.Key);
 			if(modifier != ModifierKey.None)
+			{
 				Modifiers |= modifier;
+				args.Modifiers = Modifiers;
+			}
 
 			KeyPress.NotifySubscribers(null, args);
 		}
@@ -60,7 +63,10 @@ namespace Frost.Modules.Input
 			// Update modifiers
 			var modifier = ToModifier(args.Key);
 			if(modifier != ModifierKey.None)
+			{
 				Modifiers &= ~modifier;
+				args.Modifiers = Modifiers;
+			}
 
 			KeyRelease.NotifySubscribers(null, args);
 		}
