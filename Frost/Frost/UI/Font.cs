@@ -1,13 +1,48 @@
 ﻿using System;
+using System.IO;
 using F = SFML.Graphics.Font;
 
 namespace Frost.UI
 {
-	public class Font : IDisposable
+	/// <summary>
+	/// Describes how text looks
+	/// </summary>
+	public sealed class Font : IDisposable
 	{
 		private readonly F _font;
 
-		#region Disposabled
+		/// <summary>
+		/// Creates a new font
+		/// </summary>
+		/// <param name="font">Underlying SFML font object</param>
+		private Font (F font)
+		{
+			_font = font;
+		}
+
+		/// <summary>
+		/// Loads a font from a file
+		/// </summary>
+		/// <param name="path">Path to the font file</param>
+		/// <returns>A <see cref="Font"/> object</returns>
+		public static Font LoadFromFile (string path)
+		{
+			var font = new F(path);
+			return new Font(font);
+		}
+
+		/// <summary>
+		/// Loads a font from a stream
+		/// </summary>
+		/// <param name="s">Stream containing the font data</param>
+		/// <returns>A <see cref="Font"/> object</returns>
+		public static Font LoadFromStream (Stream s)
+		{
+			var font = new F(s);
+			return new Font(font);
+		}
+
+		#region Disposable
 		private volatile bool _disposed;
 
 		/// <summary>
@@ -23,7 +58,7 @@ namespace Frost.UI
 		/// </summary>
 		public void Dispose ()
 		{
-			Dispose(true);
+			dispose(true);
 		}
 
 		/// <summary>
@@ -31,14 +66,14 @@ namespace Frost.UI
 		/// </summary>
 		~Font ()
 		{
-			Dispose(false);
+			dispose(false);
 		}
 
 		/// <summary>
 		/// Disposes of the resources held by the font
 		/// </summary>
 		/// <param name="disposing">True if internal resources should also be disposed (<see cref="Dispose"/> was called)</param>
-		protected virtual void Dispose (bool disposing)
+		private void dispose (bool disposing)
 		{
 			if(!_disposed)
 			{
