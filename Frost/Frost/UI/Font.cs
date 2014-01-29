@@ -12,6 +12,14 @@ namespace Frost.UI
 		private readonly F _font;
 
 		/// <summary>
+		/// Reference to the underlying SFML font
+		/// </summary>
+		internal F UnderlyingFont
+		{
+			get { return _font; }
+		}
+
+		/// <summary>
 		/// Creates a new font
 		/// </summary>
 		/// <param name="font">Underlying SFML font object</param>
