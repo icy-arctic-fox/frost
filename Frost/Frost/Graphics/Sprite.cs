@@ -13,6 +13,22 @@ namespace Frost.Graphics
 		private readonly SFML.Graphics.Sprite _sprite;
 
 		/// <summary>
+		/// Width of the sprite in pixels (before scaling)
+		/// </summary>
+		public override float Width
+		{
+			get { return _sprite.Texture.Size.X; }
+		}
+
+		/// <summary>
+		/// Height of the sprite in pixels (before scaling)
+		/// </summary>
+		public override float Height
+		{
+			get { return _sprite.Texture.Size.Y; }
+		}
+
+		/// <summary>
 		/// Creates a new sprite
 		/// </summary>
 		/// <param name="texture">Texture to apply to the sprite</param>

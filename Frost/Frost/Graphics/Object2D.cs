@@ -102,6 +102,18 @@ namespace Frost.Graphics
 				_dirty = true;
 			}
 		}
+
+		/// <summary>
+		/// Width of the object in pixels (before scaling)
+		/// </summary>
+		public abstract float Width { get; }
+
+		/// <summary>
+		/// Height of the object in pixels (before scaling)
+		/// </summary>
+		public abstract float Height { get; }
+
+		// TODO: Add bounds property
 		#endregion
 
 		protected Object2D ()
