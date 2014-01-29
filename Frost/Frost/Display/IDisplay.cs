@@ -1,11 +1,12 @@
-﻿using SFML.Graphics;
+﻿using Frost.Graphics;
+using SFML.Graphics;
 
 namespace Frost.Display
 {
 	/// <summary>
 	/// Describes an object that displays frames on the screen
 	/// </summary>
-	public interface IDisplay
+	public interface IDisplay : IRenderTarget
 	{
 		/// <summary>
 		/// Indicates whether vertical synchronization is enabled
@@ -13,19 +14,6 @@ namespace Frost.Display
 		/// <remarks>Vertical synchronization forces frames to be drawn to the screen in time with screen refreshes.
 		/// Enabling VSync can reduce the rendering rate (fps).</remarks>
 		bool VSync { get; set; } // TODO: Implement 'Adaptive' VSync
-
-		/// <summary>
-		/// Draws an object to the display
-		/// </summary>
-		/// <param name="drawable">Object to draw</param>
-		void Draw (Drawable drawable);
-
-		/// <summary>
-		/// Draws an object to the display with additional transformation and render options
-		/// </summary>
-		/// <param name="drawable">Object to draw</param>
-		/// <param name="transform">Additional transformation and render options</param>
-		void Draw (Drawable drawable, RenderStates transform);
 
 		/// <summary>
 		/// Performs any updates to the display's state (not part of the rendered frames)
