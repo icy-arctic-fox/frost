@@ -97,6 +97,7 @@
     <Compile Include="Logic\StateManager.cs" />
     <Compile Include="Logic\StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Font.cs" />
     <Compile Include="UI\Interface.cs" />
     <Compile Include="Utility\FlagArray.cs" />
     <Compile Include="Utility\SampleCounter.cs" />
