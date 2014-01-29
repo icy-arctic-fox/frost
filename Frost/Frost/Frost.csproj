@@ -99,7 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Font.cs" />
     <Compile Include="UI\Interface.cs" />
-    <Compile Include="UI\TextRenderer.cs" />
+    <Compile Include="Graphics\Text\TextRenderer.cs" />
     <Compile Include="Utility\FlagArray.cs" />
     <Compile Include="Utility\SampleCounter.cs" />
     <Compile Include="Utility\Cache.cs" />
