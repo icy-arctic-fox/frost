@@ -42,8 +42,19 @@ namespace Frost
 		/// <returns>Distance between the two points</returns>
 		public double DistanceTo (Point2D point)
 		{
-			var xDist = X - point.X;
-			var yDist = Y - point.Y;
+			return DistanceTo(point.X, point.Y);
+		}
+
+		/// <summary>
+		/// Calculates the distance to another point
+		/// </summary>
+		/// <param name="x">X-coordinate of the other point</param>
+		/// <param name="y">Y-coordinate of the other point</param>
+		/// <returns>Distance between the two points</returns>
+		public double DistanceTo (int x, int y)
+		{
+			var xDist = X - x;
+			var yDist = Y - y;
 			return Math.Sqrt((xDist * xDist) + (yDist * yDist));
 		}
 
