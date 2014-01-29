@@ -69,13 +69,13 @@ namespace Test_Game
 		void Keyboard_KeyRelease (object sender, KeyboardEventArgs e)
 		{
 			_keys.Remove(e.Key);
-			Window.Title = String.Join(", ", _keys);
+			Window.Title = String.Format("{0} - {1}", Keyboard.Modifiers, String.Join(", ", _keys));
 		}
 
 		void Keyboard_KeyPress (object sender, KeyboardEventArgs e)
 		{
 			_keys.Add(e.Key);
-			Window.Title = String.Join(", ", _keys);
+			Window.Title = String.Format("{0} - {1}", Keyboard.Modifiers, String.Join(", ", _keys));
 		}
 
 		void Mouse_Move (object sender, MouseEventArgs e)

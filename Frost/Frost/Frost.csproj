@@ -85,6 +85,7 @@
     <Compile Include="Modules\Input\Key.cs" />
     <Compile Include="Modules\Input\Keyboard.cs" />
     <Compile Include="Modules\Input\KeyboardEventArgs.cs" />
+    <Compile Include="Modules\Input\ModifierKey.cs" />
     <Compile Include="Modules\Input\Mouse.cs" />
     <Compile Include="Modules\Input\MouseButton.cs" />
     <Compile Include="Modules\Input\MouseEventArgs.cs" />
