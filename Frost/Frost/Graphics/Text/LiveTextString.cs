@@ -26,5 +26,41 @@ namespace Frost.Graphics.Text
 		{
 			return GetEnumerator();
 		}
+
+		#region Operators
+
+		/// <summary>
+		/// Concatenates a string to live text
+		/// </summary>
+		/// <param name="text">Original live text</param>
+		/// <param name="other">String to append to the live text</param>
+		/// <returns>Concatenated live text string</returns>
+		public static LiveTextString operator + (LiveTextString text, string other)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Concatenates a segment to live text
+		/// </summary>
+		/// <param name="text">Original live text</param>
+		/// <param name="other">Segment to append to the live text</param>
+		/// <returns>Concatenated live text string</returns>
+		public static LiveTextString operator + (LiveTextString text, LiveTextSegment other)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Concatenates two live text strings
+		/// </summary>
+		/// <param name="text">Original live text</param>
+		/// <param name="other">Other live text to concatenate</param>
+		/// <returns>Concatenated live text string</returns>
+		public static LiveTextString operator + (LiveTextString text, LiveTextString other)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 	}
 }
