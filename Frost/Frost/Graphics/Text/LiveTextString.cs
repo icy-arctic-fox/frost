@@ -10,6 +10,24 @@ namespace Frost.Graphics.Text
 	public class LiveTextString : IEnumerable<LiveTextSegment>
 	{
 		/// <summary>
+		/// Creates an empty live text string
+		/// </summary>
+		public LiveTextString ()
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a live text string from some existing text
+		/// </summary>
+		/// <param name="text">Text to create the live text string from</param>
+		/// <param name="formatted">True to interpret any formatting codes contained in <paramref name="text"/></param>
+		public LiveTextString (string text, bool formatted = true)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Returns an enumerator that iterates through the text segments
 		/// </summary>
 		/// <returns>A <see cref="LiveTextEnumerator"/> that can be used to iterate through the segments</returns>
