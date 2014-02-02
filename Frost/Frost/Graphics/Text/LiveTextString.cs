@@ -9,6 +9,8 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class LiveTextString : IEnumerable<LiveTextSegment>
 	{
+		private readonly List<LiveTextSegment> _segments = new List<LiveTextSegment>();
+
 		/// <summary>
 		/// Creates an empty live text string
 		/// </summary>
