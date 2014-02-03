@@ -30,9 +30,9 @@
 		{
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.systemTreeView = new System.Windows.Forms.TreeView();
 			this.packageTreeView = new System.Windows.Forms.TreeView();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
+			this.fileExplorer = new Resource_Packager_GUI.FileExplorer();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
@@ -55,7 +55,7 @@
 			// 
 			// splitContainer.Panel1
 			// 
-			this.splitContainer.Panel1.Controls.Add(this.systemTreeView);
+			this.splitContainer.Panel1.Controls.Add(this.fileExplorer);
 			// 
 			// splitContainer.Panel2
 			// 
@@ -63,14 +63,6 @@
 			this.splitContainer.Size = new System.Drawing.Size(624, 314);
 			this.splitContainer.SplitterDistance = 300;
 			this.splitContainer.TabIndex = 2;
-			// 
-			// systemTreeView
-			// 
-			this.systemTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.systemTreeView.Location = new System.Drawing.Point(0, 0);
-			this.systemTreeView.Name = "systemTreeView";
-			this.systemTreeView.Size = new System.Drawing.Size(300, 314);
-			this.systemTreeView.TabIndex = 0;
 			// 
 			// packageTreeView
 			// 
@@ -87,6 +79,14 @@
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(624, 25);
 			this.toolStrip.TabIndex = 3;
+			// 
+			// fileExplorer
+			// 
+			this.fileExplorer.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.fileExplorer.Location = new System.Drawing.Point(0, 0);
+			this.fileExplorer.Name = "fileExplorer";
+			this.fileExplorer.Size = new System.Drawing.Size(300, 314);
+			this.fileExplorer.TabIndex = 0;
 			// 
 			// MainForm
 			// 
@@ -111,9 +111,9 @@
 
 		private System.Windows.Forms.StatusStrip statusStrip;
 		private System.Windows.Forms.SplitContainer splitContainer;
-		private System.Windows.Forms.TreeView systemTreeView;
 		private System.Windows.Forms.TreeView packageTreeView;
 		private System.Windows.Forms.ToolStrip toolStrip;
+		private FileExplorer fileExplorer;
 	}
 }
 
