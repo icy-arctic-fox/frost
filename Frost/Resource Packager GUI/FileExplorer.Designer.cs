@@ -28,10 +28,12 @@
 		/// </summary>
 		private void InitializeComponent ()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.locationCombo = new System.Windows.Forms.ComboBox();
 			this.systemTreeView = new System.Windows.Forms.TreeView();
-			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.iconList = new System.Windows.Forms.ImageList(this.components);
+			this.tableLayoutPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// locationCombo
@@ -46,34 +48,44 @@
 			// systemTreeView
 			// 
 			this.systemTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.systemTreeView.ImageIndex = 0;
+			this.systemTreeView.ImageList = this.iconList;
 			this.systemTreeView.Location = new System.Drawing.Point(3, 30);
 			this.systemTreeView.Name = "systemTreeView";
+			this.systemTreeView.SelectedImageIndex = 0;
 			this.systemTreeView.Size = new System.Drawing.Size(392, 427);
 			this.systemTreeView.TabIndex = 1;
+			this.systemTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.systemTreeView_NodeMouseClick);
 			// 
-			// tableLayoutPanel1
+			// tableLayoutPanel
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Controls.Add(this.locationCombo, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this.systemTreeView, 0, 1);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(398, 460);
-			this.tableLayoutPanel1.TabIndex = 2;
+			this.tableLayoutPanel.ColumnCount = 1;
+			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel.Controls.Add(this.locationCombo, 0, 0);
+			this.tableLayoutPanel.Controls.Add(this.systemTreeView, 0, 1);
+			this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel.Name = "tableLayoutPanel";
+			this.tableLayoutPanel.RowCount = 2;
+			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel.Size = new System.Drawing.Size(398, 460);
+			this.tableLayoutPanel.TabIndex = 2;
+			// 
+			// iconList
+			// 
+			this.iconList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			this.iconList.ImageSize = new System.Drawing.Size(16, 16);
+			this.iconList.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// FileExplorer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.tableLayoutPanel1);
+			this.Controls.Add(this.tableLayoutPanel);
 			this.Name = "FileExplorer";
 			this.Size = new System.Drawing.Size(398, 460);
-			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -82,6 +94,7 @@
 
 		private System.Windows.Forms.ComboBox locationCombo;
 		private System.Windows.Forms.TreeView systemTreeView;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
+		private System.Windows.Forms.ImageList iconList;
 	}
 }
