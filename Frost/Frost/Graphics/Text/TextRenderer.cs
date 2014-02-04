@@ -16,6 +16,14 @@ namespace Frost.Graphics.Text
 		private RenderTexture _texture;
 
 		/// <summary>
+		/// Underlying texture to draw the text onto when preparing
+		/// </summary>
+		protected RenderTarget Texture
+		{
+			get { return _texture; }
+		}
+
+		/// <summary>
 		/// Indicates whether the text has been prepared (rendered) internally so that is is ready to be quickly drawn.
 		/// </summary>
 		public bool Prepared
@@ -53,7 +61,14 @@ namespace Frost.Graphics.Text
 		public void Draw (IRenderTarget target, int x = 0, int y = 0)
 		{
 			if(!Prepared)
+			{
 				Prepare();
+#if DEBUG
+				if(!Prepared)
+					throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
+#endif
+			}
+
 			// TODO: Copy data from _texture onto target
 			throw new NotImplementedException();
 		}
