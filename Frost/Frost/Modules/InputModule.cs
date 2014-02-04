@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Frost.Modules.Input;
 using Frost.Utility;
 using M = SFML.Window.Mouse;
@@ -189,11 +190,17 @@ namespace Frost.Modules
 		}
 
 		/// <summary>
+		/// Triggered when the module begins disposing
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
 		/// Disposes of the module by releasing resources held by it
 		/// </summary>
 		public void Dispose ()
 		{
 			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>
@@ -213,6 +220,7 @@ namespace Frost.Modules
 			if(!_disposed)
 			{
 				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 				if(disposing)
 				{
 					// ...

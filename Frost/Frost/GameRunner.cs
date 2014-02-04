@@ -13,7 +13,7 @@ namespace Frost
 	/// <summary>
 	/// Runs the game loop and controls the flow of the game between states and scenes
 	/// </summary>
-	public class GameRunner : IDisposable
+	public class GameRunner : IFullDisposable
 	{
 		/// <summary>
 		/// Display that will be rendered upon
@@ -495,6 +495,11 @@ namespace Frost
 		public bool Disposed { get; private set; }
 
 		/// <summary>
+		/// Triggered when the game runner is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
 		/// Frees the resources held by the runner
 		/// </summary>
 		/// <remarks>Disposing of the game runner will stop it if it is still running.</remarks>
@@ -520,6 +525,7 @@ namespace Frost
 			if(!Disposed)
 			{// Don't do anything if the runner is already disposed
 				Disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 				if(disposing)
 				{// Dispose of the resources this object holds
 					// TODO

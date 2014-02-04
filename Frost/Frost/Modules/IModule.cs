@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Frost.Modules
+﻿namespace Frost.Modules
 {
 	/// <summary>
 	/// Collection of functionality with logic that runs every update
 	/// </summary>
-	public interface IModule : IDisposable
+	public interface IModule : IFullDisposable
 	{
 		/// <summary>
 		/// Starts up the module and prepares it for usage

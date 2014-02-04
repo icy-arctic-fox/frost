@@ -9,7 +9,7 @@ namespace Frost
 	/// <summary>
 	/// Responsible for tracking all available resources and caching commonly used resources
 	/// </summary>
-	public class ResourceManager : IDisposable
+	public class ResourceManager : IFullDisposable
 	{
 		private readonly object _locker = new object();
 
@@ -301,6 +301,11 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Triggered when the resource manager is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
 		/// Disposes of the resource manager by releasing everything from the cache and references to all resources
 		/// </summary>
 		public void Dispose ()
@@ -325,6 +330,7 @@ namespace Frost
 			if(!_disposed)
 			{
 				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 				if(disposing)
 				{
 					lock(_locker)

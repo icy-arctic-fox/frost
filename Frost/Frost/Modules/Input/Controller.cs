@@ -10,7 +10,7 @@ namespace Frost.Modules.Input
 	/// <summary>
 	/// Maps input to easier to recognize values
 	/// </summary>
-	public abstract class Controller : IDisposable, IControllerBase
+	public abstract class Controller : IFullDisposable, IControllerBase
 	{
 		/// <summary>
 		/// Maps input type to input ID to assignment ID
@@ -290,6 +290,11 @@ namespace Frost.Modules.Input
 		}
 
 		/// <summary>
+		/// Triggered when the controller is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
 		/// Disposes of the scheme and the resources it holds
 		/// </summary>
 		public void Dispose ()
@@ -314,6 +319,7 @@ namespace Frost.Modules.Input
 			if(!_disposed)
 			{
 				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 
 				// Unsubscribe from all events
 				Clear();

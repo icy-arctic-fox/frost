@@ -5,7 +5,7 @@ namespace Frost.Graphics
 	/// <summary>
 	/// An image that lives on the graphics card
 	/// </summary>
-	public class Texture
+	public class Texture // TODO: Implement IDisposable
 	{
 		private readonly SFML.Graphics.Texture _texture;
 

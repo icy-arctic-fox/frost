@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Frost.Utility;
 using F = SFML.Graphics.Font;
 
 namespace Frost.UI
@@ -7,7 +8,7 @@ namespace Frost.UI
 	/// <summary>
 	/// Describes how text looks
 	/// </summary>
-	public sealed class Font : IDisposable
+	public sealed class Font : IFullDisposable
 	{
 		private readonly F _font;
 
@@ -62,6 +63,11 @@ namespace Frost.UI
 		}
 
 		/// <summary>
+		/// Triggered when the font is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
 		/// Disposes of the font and the resources it holds
 		/// </summary>
 		public void Dispose ()
@@ -86,6 +92,7 @@ namespace Frost.UI
 			if(!_disposed)
 			{
 				_disposed = true;
+				Disposing.NotifySubscribers(this, EventArgs.Empty);
 				if(disposing)
 					_font.Dispose();
 			}
