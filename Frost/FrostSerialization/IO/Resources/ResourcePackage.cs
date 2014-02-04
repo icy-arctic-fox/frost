@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Frost.Utility;
 
 namespace Frost.IO.Resources
 {
@@ -207,7 +208,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		public void Dispose ()
 		{
-//			Disposing.NotifySubscribers(this, EventArgs.Empty); // TODO
+			Disposing.NotifySubscribers(this, EventArgs.Empty);
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Frost.IO.Tnt;
+using Frost.Utility;
 using Ionic.Zlib;
 
 namespace Frost.IO.Resources
@@ -184,14 +185,14 @@ namespace Frost.IO.Resources
 		{
 			if(Disposed)
 				throw new ObjectDisposedException(GetType().FullName);
-//			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L /* TODO */, 0L);
+			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L, 0L)); // TODO
 			lock(Locker)
 			{
 				writeHeader();
 				writeResources();
 				Size = FileStream.Position;
 			}
-//			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L, 1L); // TODO
+			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L, 1L)); // TODO
 		}
 		#endregion
 
