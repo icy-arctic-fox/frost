@@ -8,11 +8,10 @@ namespace Frost.Graphics.Text
 	public class StringSegment : LiveTextSegment
 	{
 		/// <summary>
-		/// Draws the live text segment
+		/// Applies the segment to the renderer state
 		/// </summary>
-		/// <param name="target">Target to draw the segment on</param>
-		/// <param name="position">Location to place the segment in the target</param>
-		public override void Draw (IRenderTarget target, Point2D position)
+		/// <param name="renderer">Renderer that tracks the status of the live text</param>
+		public override void Apply (LiveTextRenderer renderer)
 		{
 			throw new NotImplementedException();
 		}
