@@ -56,7 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CancellableEventArgs.cs" />
     <Compile Include="Display\Window.cs" />
     <Compile Include="Display\IDisplay.cs" />
     <Compile Include="Display\WindowClosingEventArgs.cs" />
@@ -76,7 +75,6 @@
     <Compile Include="ResourceLoader.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="ICancellable.cs" />
     <Compile Include="Logic\Scene.cs" />
     <Compile Include="Logic\SceneManager.cs" />
     <Compile Include="Modules\IModule.cs" />
@@ -109,7 +107,6 @@
     <Compile Include="Utility\FlagArray.cs" />
     <Compile Include="Utility\SampleCounter.cs" />
     <Compile Include="Utility\Cache.cs" />
-    <Compile Include="Utility\DelegateUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="csfml-audio-2.dll">
