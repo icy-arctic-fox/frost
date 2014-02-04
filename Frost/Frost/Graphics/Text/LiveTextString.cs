@@ -32,7 +32,7 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Returns an enumerator that iterates through the text segments
 		/// </summary>
-		/// <returns>A <see cref="LiveTextEnumerator"/> that can be used to iterate through the segments</returns>
+		/// <returns>An enumerator object that can be used to iterate through the segments</returns>
 		public IEnumerator<LiveTextSegment> GetEnumerator ()
 		{
 			throw new NotImplementedException();
