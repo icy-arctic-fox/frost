@@ -129,12 +129,13 @@ namespace Resource_Packager_GUI
 		private void systemTreeView_BeforeSelect (object sender, TreeViewCancelEventArgs e)
 		{
 			var node = e.Node;
+			var path = node.Tag as string;
+
 			if(node.Nodes.Count <= 0)
-			{// Attempt to populate the node's children
-				var path = node.Tag as string;
 				if(path != null && Directory.Exists(path))
 					populateDirectoryNode(node, path);
-			}
+
+			locationCombo.Text = path;
 		}
 
 		private void systemTreeView_AfterCollapse (object sender, TreeViewEventArgs e)
