@@ -67,6 +67,7 @@
     <Compile Include="Graphics\IRenderTarget.cs" />
     <Compile Include="Graphics\Object2D.cs" />
     <Compile Include="Graphics\Layer2D.cs" />
+    <Compile Include="Graphics\Text\ITextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextSegment.cs" />
     <Compile Include="Graphics\Text\LiveTextString.cs" />

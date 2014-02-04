@@ -8,7 +8,7 @@ namespace Frost.Graphics.Text
 	/// Rendering time for text is reduced by drawing to an off-screen texture
 	/// and then copying it to an on-screen texture.
 	/// </summary>
-	public abstract class PlainTextRenderer
+	public abstract class PlainTextRenderer : ITextRenderer
 	{
 		/// <summary>
 		/// Underlying texture used to draw text on
