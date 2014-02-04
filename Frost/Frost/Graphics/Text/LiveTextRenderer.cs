@@ -38,6 +38,17 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
+		/// Disposes of the old underlying texture that text was draw on.
+		/// This should be called whenever a textual property has been changed.
+		/// </summary>
+		protected void ResetTexture ()
+		{
+			if(_texture != null)
+				_texture.Dispose();
+			_texture = null;
+		}
+
+		/// <summary>
 		/// Prepares the underlying texture to be drawn on.
 		/// This must be called as part of the <see cref="Prepare"/> process.
 		/// </summary>
