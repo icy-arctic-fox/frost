@@ -15,8 +15,16 @@ namespace Frost
 		/// <param name="min">Minimum value</param>
 		/// <param name="max">Maximum value</param>
 		/// <param name="value">Current value</param>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="max"/> is less than or equal to <paramref name="min"/></exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is less than <paramref name="min"/> or greater than <paramref name="max"/></exception>
 		public ProgressEventArgs (long min, long max, long value)
 		{
+#if DEBUG
+			if(max <= min) // Checking for equality here prevents divide-by-zero in Progress property
+				throw new ArgumentException("The maximum value must be larger than the minimum value.");
+			if(value < min || value > max)
+				throw new ArgumentOutOfRangeException("value", "The current value can't be less than the minimum or larger than the maximum.");
+#endif
 			_min   = min;
 			_max   = max;
 			_value = value;
