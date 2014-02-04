@@ -9,7 +9,7 @@ namespace Frost.IO.Resources
 	/// Resource packages can contain many resources of any type.
 	/// Resources contained in the package files can also be encrypted and compressed.
 	/// </summary>
-	public abstract class ResourcePackage : IPackageInfo, IDisposable
+	public abstract class ResourcePackage : IPackageInfo, IFullDisposable
 	{
 		protected const int Kilobyte = 1024;
 
@@ -198,11 +198,18 @@ namespace Frost.IO.Resources
 		}
 
 		/// <summary>
+		/// Triggered when the resource package is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
 		/// Disposes of the resource package by closing the file and freeing resources
 		/// </summary>
 		public void Dispose ()
 		{
+//			Disposing.NotifySubscribers(this, EventArgs.Empty); // TODO
 			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>
