@@ -3,7 +3,7 @@ using System.IO;
 using Frost.Utility;
 using F = SFML.Graphics.Font;
 
-namespace Frost.UI
+namespace Frost.Graphics.Text
 {
 	/// <summary>
 	/// Describes how text looks
@@ -36,7 +36,7 @@ namespace Frost.UI
 		/// <returns>A <see cref="Font"/> object</returns>
 		public static Font LoadFromFile (string path)
 		{
-			var font = new F(path);
+			var font = new SFML.Graphics.Font(path);
 			return new Font(font);
 		}
 
@@ -47,7 +47,7 @@ namespace Frost.UI
 		/// <returns>A <see cref="Font"/> object</returns>
 		public static Font LoadFromStream (Stream s)
 		{
-			var font = new F(s);
+			var font = new SFML.Graphics.Font(s);
 			return new Font(font);
 		}
 

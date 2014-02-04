@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Frost.Graphics;
+using Frost.Graphics.Text;
 using Frost.IO.Resources;
 using Frost.UI;
 

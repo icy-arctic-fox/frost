@@ -19,7 +19,7 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Font that determines the appearance of the text
 		/// </summary>
-		public abstract UI.Font Font { get; set; }
+		public abstract Font Font { get; set; }
 
 		/// <summary>
 		/// Underlying texture used to draw text on
