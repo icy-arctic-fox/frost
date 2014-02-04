@@ -12,6 +12,11 @@ namespace Frost.Graphics.Text
 	public abstract class PlainTextRenderer : ITextRenderer, IFullDisposable
 	{
 		/// <summary>
+		/// Displayed text
+		/// </summary>
+		public abstract string Text { get; set; }
+
+		/// <summary>
 		/// Underlying texture used to draw text on
 		/// </summary>
 		private RenderTexture _texture;

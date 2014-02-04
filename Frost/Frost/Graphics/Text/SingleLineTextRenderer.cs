@@ -9,7 +9,14 @@ namespace Frost.Graphics.Text
 	{
 		private readonly T _text = new T();
 
-
+		/// <summary>
+		/// Displayed text
+		/// </summary>
+		public override string Text
+		{
+			get { return _text.DisplayedString; }
+			set { _text.DisplayedString = value; }
+		}
 
 		/// <summary>
 		/// Prepares the text for drawing.

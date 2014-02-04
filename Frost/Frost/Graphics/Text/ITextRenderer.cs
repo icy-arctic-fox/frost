@@ -5,6 +5,16 @@
 	/// </summary>
 	public interface ITextRenderer
 	{
+		#region Text properties
+
+		/// <summary>
+		/// Displayed text
+		/// </summary>
+		string Text { get; set; }
+		#endregion
+
+		#region Preparation and drawing
+
 		/// <summary>
 		/// Indicates whether the text has been prepared (rendered) internally so that is is ready to be quickly drawn.
 		/// </summary>
@@ -25,5 +35,6 @@
 		/// <remarks>If the text hasn't been prepared by <see cref="Prepare"/> prior to calling this method,
 		/// <see cref="Prepare"/> will be called before drawing the text.</remarks>
 		void Draw (IRenderTarget target, int x = 0, int y = 0);
+		#endregion
 	}
 }
