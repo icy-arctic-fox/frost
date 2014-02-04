@@ -54,22 +54,41 @@ namespace Resource_Packager_GUI
 
 		private void populateDirectoryNode (TreeNode dirNode, string path)
 		{
-			// Populate with shell sub-directories to be expandable later
-			foreach(var dir in Directory.EnumerateDirectories(path))
-			{
-				var subDirName = dir.Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-				var subDirNode = new TreeNode {
-					Text = subDirName,
-					Tag  = dir + Path.DirectorySeparatorChar
-				};
-				dirNode.Nodes.Add(subDirNode);
-			}
+			dirNode.Nodes.Clear();
 
-			// Populate with directory contents
-			foreach(var file in Directory.EnumerateFiles(path))
+			try
 			{
-				var fileNode = constructFileNode(file);
-				dirNode.Nodes.Add(fileNode);
+				// Populate with shell sub-directories to be expandable later
+				foreach(var dir in Directory.EnumerateDirectories(path))
+				{
+					var attr = File.GetAttributes(dir);
+					if((attr & FileAttributes.System) == FileAttributes.System)
+						continue; // Skip system files and folders
+					var subDirName = dir.Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+					var subDirNode = new TreeNode {
+						Text = subDirName,
+						Tag = dir + Path.DirectorySeparatorChar
+					};
+					dirNode.Nodes.Add(subDirNode);
+				}
+
+				// Populate with directory contents
+				foreach(var file in Directory.EnumerateFiles(path))
+				{
+					var attr = File.GetAttributes(file);
+					if((attr & FileAttributes.System) == FileAttributes.System)
+						continue; // Skip system files and folders
+					var fileNode = constructFileNode(file);
+					dirNode.Nodes.Add(fileNode);
+				}
+			}
+			catch(IOException e)
+			{
+				MessageBox.Show(e.Message, "IO Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			catch(UnauthorizedAccessException e)
+			{
+				MessageBox.Show(e.Message, "Permission Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
@@ -97,16 +116,15 @@ namespace Resource_Packager_GUI
 			};
 		}
 
-		private void systemTreeView_NodeMouseClick (object sender, TreeNodeMouseClickEventArgs e)
+		private void systemTreeView_BeforeSelect (object sender, TreeViewCancelEventArgs e)
 		{
 			var node = e.Node;
-			if(!node.IsExpanded)
+			if(!node.IsExpanded && node.Nodes.Count <= 0)
 			{
 				var path = node.Tag as string;
 				if(path != null && Directory.Exists(path))
 				{// Populate the node's children with the contents of the directory
 					populateDirectoryNode(node, path);
-					systemTreeView.SelectedNode = node;
 					node.Expand();
 				}
 			}

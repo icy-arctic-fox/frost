@@ -31,8 +31,8 @@
 			this.components = new System.ComponentModel.Container();
 			this.locationCombo = new System.Windows.Forms.ComboBox();
 			this.systemTreeView = new System.Windows.Forms.TreeView();
-			this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.iconList = new System.Windows.Forms.ImageList(this.components);
+			this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -55,7 +55,13 @@
 			this.systemTreeView.SelectedImageIndex = 0;
 			this.systemTreeView.Size = new System.Drawing.Size(392, 427);
 			this.systemTreeView.TabIndex = 1;
-			this.systemTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.systemTreeView_NodeMouseClick);
+			this.systemTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.systemTreeView_BeforeSelect);
+			// 
+			// iconList
+			// 
+			this.iconList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			this.iconList.ImageSize = new System.Drawing.Size(16, 16);
+			this.iconList.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// tableLayoutPanel
 			// 
@@ -71,12 +77,6 @@
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel.Size = new System.Drawing.Size(398, 460);
 			this.tableLayoutPanel.TabIndex = 2;
-			// 
-			// iconList
-			// 
-			this.iconList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.iconList.ImageSize = new System.Drawing.Size(16, 16);
-			this.iconList.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// FileExplorer
 			// 
