@@ -107,6 +107,7 @@ namespace Frost.IO.Resources
 		/// <summary>
 		/// Triggered when progress is made while writing the resource package
 		/// </summary>
+		/// <remarks>This event can be subscribed to cross-thread.</remarks>
 		public event EventHandler<ProgressEventArgs> Progress;
 
 		/// <summary>
@@ -185,14 +186,14 @@ namespace Frost.IO.Resources
 		{
 			if(Disposed)
 				throw new ObjectDisposedException(GetType().FullName);
-			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L, 0L)); // TODO
+			Progress.NotifyThreadedSubscribers(this, new ProgressEventArgs(0L, 1L, 0L)); // TODO
 			lock(Locker)
 			{
 				writeHeader();
 				writeResources();
 				Size = FileStream.Position;
 			}
-			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L, 1L)); // TODO
+			Progress.NotifyThreadedSubscribers(this, new ProgressEventArgs(0L, 1L, 1L)); // TODO
 		}
 		#endregion
 

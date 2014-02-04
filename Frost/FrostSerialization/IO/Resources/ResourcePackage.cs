@@ -201,6 +201,7 @@ namespace Frost.IO.Resources
 		/// <summary>
 		/// Triggered when the resource package is being disposed
 		/// </summary>
+		/// <remarks>This event can be subscribed to cross-thread.</remarks>
 		public event EventHandler<EventArgs> Disposing;
 
 		/// <summary>
@@ -208,7 +209,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		public void Dispose ()
 		{
-			Disposing.NotifySubscribers(this, EventArgs.Empty);
+			Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
