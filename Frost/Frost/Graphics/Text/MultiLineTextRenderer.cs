@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Renders plain text on multiple lines
 	/// </summary>
-	public class MultiLineTextRenderer : TextRenderer
+	public class MultiLinePlainTextRenderer : PlainTextRenderer
 	{
 		/// <summary>
 		/// Prepares the text for drawing.
