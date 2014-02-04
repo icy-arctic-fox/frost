@@ -35,7 +35,7 @@ namespace Frost.Graphics.Text
 			PrepareTexture(width, height);
 
 			// Draw the text
-			Texture.Draw(_text);
+			Target.Draw(_text);
 		}
 	}
 }

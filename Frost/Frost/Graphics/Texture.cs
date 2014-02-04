@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Frost.Graphics
 {
@@ -15,6 +16,18 @@ namespace Frost.Graphics
 		internal SFML.Graphics.Texture InternalTexture
 		{
 			get { return _texture; }
+		}
+
+		/// <summary>
+		/// Creates a texture from an existing SFML texture
+		/// </summary>
+		/// <param name="texture">SFML texture</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="texture"/> is null</exception>
+		internal Texture (SFML.Graphics.Texture texture)
+		{
+			if(texture == null)
+				throw new ArgumentNullException("texture", "The internal texture can't be null.");
+			_texture = texture;
 		}
 
 		/// <summary>

@@ -19,14 +19,14 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Underlying texture used to draw text on
 		/// </summary>
-		private RenderTexture _texture;
+		private RenderTexture _target;
 
 		/// <summary>
 		/// Underlying texture to draw the text onto when preparing
 		/// </summary>
-		protected RenderTarget Texture
+		protected RenderTarget Target
 		{
-			get { return _texture; }
+			get { return _target; }
 		}
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public bool Prepared
 		{
-			get { return _texture != null; }
+			get { return _target != null; }
 		}
 
 		/// <summary>
@@ -43,9 +43,9 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		protected void ResetTexture ()
 		{
-			if(_texture != null)
-				_texture.Dispose();
-			_texture = null;
+			if(_target != null)
+				_target.Dispose();
+			_target = null;
 		}
 
 		/// <summary>
@@ -56,9 +56,9 @@ namespace Frost.Graphics.Text
 		/// <param name="height">Height of the texture in pixels</param>
 		protected void PrepareTexture (uint width, uint height)
 		{
-			if(_texture != null)
-				_texture.Dispose();
-			_texture = new RenderTexture(width, height);
+			if(_target != null)
+				_target.Dispose();
+			_target = new RenderTexture(width, height);
 		}
 
 		/// <summary>
@@ -68,14 +68,13 @@ namespace Frost.Graphics.Text
 		public abstract void Prepare ();
 
 		/// <summary>
-		/// Draws the text onto a texture at a given position
+		/// Draws and retrieves the texture that contains the text
 		/// </summary>
-		/// <param name="target">Object to draw the text onto</param>
-		/// <param name="x">X-offset at which to draw the text</param>
-		/// <param name="y">Y-offset at which to draw the text</param>
 		/// <remarks>If the text hasn't been prepared by <see cref="Prepare"/> prior to calling this method,
-		/// <see cref="Prepare"/> will be called before drawing the text.</remarks>
-		public void Draw (IRenderTarget target, int x = 0, int y = 0)
+		/// <see cref="Prepare"/> will be called before drawing the text.
+		/// However, if it has been, then no drawing needs to be done.
+		/// The texture only needs to be redrawn when a property is changed.</remarks>
+		public Texture DrawTexture ()
 		{
 			if(!Prepared)
 			{
@@ -85,9 +84,7 @@ namespace Frost.Graphics.Text
 					throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
 #endif
 			}
-
-			// TODO: Copy data from _texture onto target
-			throw new NotImplementedException();
+			return new Texture(_target.Texture);
 		}
 
 		#region Disposable
@@ -138,7 +135,7 @@ namespace Frost.Graphics.Text
 				if(disposing)
 				{// Dispose of the internal resources
 					if(Prepared)
-						_texture.Dispose();
+						_target.Dispose();
 				}
 			}
 		}

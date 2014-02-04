@@ -27,14 +27,13 @@
 		void Prepare ();
 
 		/// <summary>
-		/// Draws the text onto a texture at a given position
+		/// Draws and retrieves the texture that contains the text
 		/// </summary>
-		/// <param name="target">Object to draw the text onto</param>
-		/// <param name="x">X-offset at which to draw the text</param>
-		/// <param name="y">Y-offset at which to draw the text</param>
 		/// <remarks>If the text hasn't been prepared by <see cref="Prepare"/> prior to calling this method,
-		/// <see cref="Prepare"/> will be called before drawing the text.</remarks>
-		void Draw (IRenderTarget target, int x = 0, int y = 0);
+		/// <see cref="Prepare"/> will be called before drawing the text.
+		/// However, if it has been, then no drawing needs to be done.
+		/// The texture only needs to be redrawn when a property is changed.</remarks>
+		Texture DrawTexture ();
 		#endregion
 	}
 }
