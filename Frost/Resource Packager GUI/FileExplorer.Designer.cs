@@ -47,6 +47,7 @@
 			// 
 			// systemTreeView
 			// 
+			this.systemTreeView.CheckBoxes = true;
 			this.systemTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.systemTreeView.ImageIndex = 0;
 			this.systemTreeView.ImageList = this.iconList;

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -11,6 +13,34 @@ namespace Frost.ResourcePackagerGui
 		{
 			InitializeComponent();
 			initializeTreeView();
+		}
+
+		/// <summary>
+		/// Collection of file paths of selected files
+		/// </summary>
+		public string[] SelectedFiles
+		{
+			get
+			{
+				var list = new List<string>();
+				findCheckedNodes(systemTreeView.Nodes, list);
+				return list.ToArray();
+			}
+		}
+
+		/// <summary>
+		/// Recursively iterates through tree nodes to find which ones are checked
+		/// </summary>
+		/// <param name="rootNode">Node to start at</param>
+		/// <param name="files">List of files to append checked nodes to</param>
+		private static void findCheckedNodes (IEnumerable rootNode, ICollection<string> files)
+		{
+			foreach(TreeNode node in rootNode)
+			{
+				if(node.Checked)
+					files.Add((string)node.Tag);
+				findCheckedNodes(node.Nodes, files);
+			}
 		}
 
 		private void initializeTreeView (string basePath = null)
