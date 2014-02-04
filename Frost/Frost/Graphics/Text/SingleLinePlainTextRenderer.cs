@@ -28,7 +28,14 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public override void Prepare ()
 		{
-			throw new System.NotImplementedException();
+			// Calculate the size of the text
+			var bounds = _text.GetLocalBounds();
+			var width  = (uint)bounds.Width  + 1;
+			var height = (uint)bounds.Height + 1;
+			PrepareTexture(width, height);
+
+			// Draw the text
+			Texture.Draw(_text);
 		}
 	}
 }
