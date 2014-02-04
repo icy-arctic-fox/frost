@@ -11,7 +11,7 @@ namespace Frost.Display
 	/// <summary>
 	/// Interface for displaying graphics to the user
 	/// </summary>
-	public class Window : IDisplay, IDisposable
+	public class Window : IDisplay, IFullDisposable
 	{
 		#region Constants
 
@@ -638,19 +638,45 @@ namespace Frost.Display
 		}
 
 		/// <summary>
-		/// Closes the window and frees the resources held by it
+		/// Triggered when the window is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Closes the window and releases it and its resources
 		/// </summary>
 		/// <remarks>If the window has already been disposed, then this method will do nothing.</remarks>
 		/// <seealso cref="Disposed"/>
 		public void Dispose ()
 		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Deconstructs the window
+		/// </summary>
+		~Window ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Closes the window and frees the resources held by it
+		/// </summary>
+		protected virtual void Dispose (bool disposing)
+		{
 			if(!_disposed)
 			{// Window hasn't been disposed of yet
 				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 
 				unsubscribe();
-				_window.Close();
-				_window.Dispose();
+				if(disposing)
+				{
+					_window.Close();
+					_window.Dispose();
+				}
 			}
 		}
 		#endregion
