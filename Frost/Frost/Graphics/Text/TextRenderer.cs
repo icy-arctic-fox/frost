@@ -16,22 +16,31 @@ namespace Frost.Graphics.Text
 		private RenderTexture _texture;
 
 		/// <summary>
-		/// Prepares the text for drawing.
-		/// This method renders the text internally so that it is ready to be quickly drawn.
+		/// Indicates whether the text has been prepared (rendered) internally so that is is ready to be quickly drawn.
 		/// </summary>
-		public void Prepare ()
+		public bool Prepared
 		{
-			throw new NotImplementedException();
+			get { return _texture != null; }
 		}
 
 		/// <summary>
-		/// Draws the text onto a texture
+		/// Prepares the underlying texture to be drawn on.
+		/// This must be called as part of the <see cref="Prepare"/> process.
 		/// </summary>
-		/// <param name="target">Object to draw the text onto</param>
-		public void Draw (IRenderTarget target)
+		/// <param name="width">Width of the texture in pixels</param>
+		/// <param name="height">Height of the texture in pixels</param>
+		protected void PrepareTexture (uint width, uint height)
 		{
-			throw new NotImplementedException();
+			if(_texture != null)
+				_texture.Dispose();
+			_texture = new RenderTexture(width, height);
 		}
+
+		/// <summary>
+		/// Prepares the text for drawing.
+		/// This method renders the text internally so that it is ready to be quickly drawn.
+		/// </summary>
+		public abstract void Prepare ();
 
 		/// <summary>
 		/// Draws the text onto a texture at a given position
@@ -39,8 +48,13 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Object to draw the text onto</param>
 		/// <param name="x">X-offset at which to draw the text</param>
 		/// <param name="y">Y-offset at which to draw the text</param>
-		public void Draw (IRenderTarget target, int x, int y)
+		/// <remarks>If the text hasn't been prepared by <see cref="Prepare"/> prior to calling this method,
+		/// <see cref="Prepare"/> will be called before drawing the text.</remarks>
+		public void Draw (IRenderTarget target, int x = 0, int y = 0)
 		{
+			if(!Prepared)
+				Prepare();
+			// TODO: Copy data from _texture onto target
 			throw new NotImplementedException();
 		}
 	}
