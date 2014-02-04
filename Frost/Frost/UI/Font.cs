@@ -73,6 +73,7 @@ namespace Frost.UI
 		public void Dispose ()
 		{
 			dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>
