@@ -15,7 +15,11 @@ namespace Frost.Graphics.Text
 		public override string Text
 		{
 			get { return _text.DisplayedString; }
-			set { _text.DisplayedString = value; }
+			set
+			{
+				_text.DisplayedString = value;
+				ResetTexture();
+			}
 		}
 
 		/// <summary>
