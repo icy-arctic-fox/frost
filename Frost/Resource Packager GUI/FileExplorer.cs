@@ -37,7 +37,7 @@ namespace Resource_Packager_GUI
 //				systemTreeView.Nodes.Add(dirNode);
 			}
 		}
-
+		 
 		/// <summary>
 		/// Constructs a tree node for a drive
 		/// </summary>
@@ -52,6 +52,11 @@ namespace Resource_Packager_GUI
 			};
 		}
 
+		/// <summary>
+		/// Populates an existing directory node with the directory's contents
+		/// </summary>
+		/// <param name="dirNode">Node to populate</param>
+		/// <param name="path">Path to the directory to pull contents from</param>
 		private void populateDirectoryNode (TreeNode dirNode, string path)
 		{
 			dirNode.Nodes.Clear();
@@ -92,6 +97,11 @@ namespace Resource_Packager_GUI
 			}
 		}
 
+		/// <summary>
+		/// Creates a tree node for a file
+		/// </summary>
+		/// <param name="path">Path to the file</param>
+		/// <returns>Constructed tree node</returns>
 		private TreeNode constructFileNode (string path)
 		{
 			var name = Path.GetFileNameWithoutExtension(path) ?? path;
@@ -119,15 +129,17 @@ namespace Resource_Packager_GUI
 		private void systemTreeView_BeforeSelect (object sender, TreeViewCancelEventArgs e)
 		{
 			var node = e.Node;
-			if(!node.IsExpanded && node.Nodes.Count <= 0)
-			{
+			if(node.Nodes.Count <= 0)
+			{// Attempt to populate the node's children
 				var path = node.Tag as string;
 				if(path != null && Directory.Exists(path))
-				{// Populate the node's children with the contents of the directory
 					populateDirectoryNode(node, path);
-					node.Expand();
-				}
 			}
+		}
+
+		private void systemTreeView_AfterCollapse (object sender, TreeViewEventArgs e)
+		{
+			e.Node.Nodes.Clear();
 		}
 	}
 }

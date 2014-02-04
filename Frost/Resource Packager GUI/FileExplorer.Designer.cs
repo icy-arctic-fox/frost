@@ -55,6 +55,7 @@
 			this.systemTreeView.SelectedImageIndex = 0;
 			this.systemTreeView.Size = new System.Drawing.Size(392, 427);
 			this.systemTreeView.TabIndex = 1;
+			this.systemTreeView.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.systemTreeView_AfterCollapse);
 			this.systemTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.systemTreeView_BeforeSelect);
 			// 
 			// iconList
