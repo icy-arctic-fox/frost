@@ -4,13 +4,14 @@ using System.IO;
 using Frost.Display;
 using Frost.Logic;
 using Frost.Modules;
+using Frost.Utility;
 
 namespace Frost
 {
 	/// <summary>
 	/// Base class for all games that use the Frost engine
 	/// </summary>
-	public abstract class Game
+	public abstract class Game : IFullDisposable
 	{
 		#region Game components and modules
 
@@ -254,6 +255,56 @@ namespace Frost
 
 			// Give up, there's no configuration. Create a new one.
 			return new GameConfiguration();
+		}
+		#endregion
+
+		#region Disposable
+
+		/// <summary>
+		/// Flag that indicates whether the game has been disposed
+		/// </summary>
+		public bool Disposed { get; private set; }
+
+		/// <summary>
+		/// Triggered when the game is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Frees the resources held by the game
+		/// </summary>
+		/// <remarks>Disposing of the game will stop and shut it down if it is still running.</remarks>
+		public void Dispose ()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Tears down the game
+		/// </summary>
+		~Game ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Underlying method that releases the resources held by the game
+		/// </summary>
+		/// <param name="disposing">True if <see cref="Dispose"/> was called and inner resources should be disposed as well</param>
+		protected void Dispose (bool disposing)
+		{
+			if(!Disposed)
+			{// Don't do anything if the game is already disposed
+				Disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+				if(disposing)
+				{// Dispose of the resources this object holds
+					Shutdown();
+					Runner.Dispose();
+					Window.Dispose();
+					Resources.Dispose();
+				}
+			}
 		}
 		#endregion
 	}

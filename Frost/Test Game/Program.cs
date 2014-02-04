@@ -4,10 +4,12 @@
 	{
 		static void Main (string[] args)
 		{
-			var game = new TestGame();
-			game.Initialize();
-			game.Run();
-			game.Shutdown();
+			using(var game = new TestGame())
+			{
+				game.Initialize();
+				game.Run();
+				game.Shutdown();
+			}
 		}
 	}
 }
