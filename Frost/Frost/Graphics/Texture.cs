@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using T = SFML.Graphics.Texture;
 
 namespace Frost.Graphics
 {
@@ -8,12 +9,12 @@ namespace Frost.Graphics
 	/// </summary>
 	public class Texture // TODO: Implement IDisposable
 	{
-		private readonly SFML.Graphics.Texture _texture;
+		private readonly T _texture;
 
 		/// <summary>
 		/// Underlying SFML texture
 		/// </summary>
-		internal SFML.Graphics.Texture InternalTexture
+		internal T InternalTexture
 		{
 			get { return _texture; }
 		}
@@ -23,7 +24,7 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="texture">SFML texture</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="texture"/> is null</exception>
-		internal Texture (SFML.Graphics.Texture texture)
+		internal Texture (T texture)
 		{
 			if(texture == null)
 				throw new ArgumentNullException("texture", "The internal texture can't be null.");
@@ -36,7 +37,7 @@ namespace Frost.Graphics
 		/// <param name="filename">Path to the image file to load</param>
 		public Texture (string filename)
 		{
-			_texture = new SFML.Graphics.Texture(filename);
+			_texture = new T(filename);
 		}
 
 		/// <summary>
@@ -45,7 +46,7 @@ namespace Frost.Graphics
 		/// <param name="s">Stream containing an image to load into the texture</param>
 		public Texture (Stream s)
 		{
-			_texture = new SFML.Graphics.Texture(s);
+			_texture = new T(s);
 		}
 
 		/// <summary>
@@ -55,7 +56,19 @@ namespace Frost.Graphics
 		/// <param name="height">Height of the texture in pixels</param>
 		public Texture (uint width, uint height)
 		{
-			_texture = new SFML.Graphics.Texture(width, height);
+			_texture = new T(width, height);
+		}
+
+		/// <summary>
+		/// Clones the existing texture to a new instance.
+		/// This allows the two textures to be used independently of each other.
+		/// </summary>
+		/// <returns>A copy of the texture</returns>
+		public Texture Clone ()
+		{
+			var image = _texture.CopyToImage();
+			var tex   = new T(image);
+			return new Texture(tex);
 		}
 	}
 }
