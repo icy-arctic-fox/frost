@@ -91,7 +91,7 @@ namespace Frost.Graphics.Text
 					throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
 #endif
 			}
-			return new Texture(_target.Texture); // TODO: Fix so that disposing the renderer doesn't dispose of the texture
+			return new Texture(_target.Texture).Clone();
 		}
 
 		#region Disposable
@@ -142,7 +142,7 @@ namespace Frost.Graphics.Text
 				if(disposing)
 				{// Dispose of the internal resources
 					if(Prepared)
-						_target.Dispose();
+						_target.Texture.Dispose();
 				}
 			}
 		}
