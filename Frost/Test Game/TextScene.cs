@@ -27,7 +27,7 @@ namespace Test_Game
 			{
 				using(var renderer = new SingleLinePlainTextRenderer())
 				{
-					renderer.Font = null; // TODO
+					renderer.Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
 					renderer.Text = text;
 					var texture   = renderer.DrawTexture();
 					_sprite = new Sprite(texture);
