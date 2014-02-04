@@ -1,4 +1,4 @@
-﻿namespace Resource_Packager_GUI
+﻿namespace Frost.ResourcePackagerGui
 {
 	partial class FileExplorer
 	{

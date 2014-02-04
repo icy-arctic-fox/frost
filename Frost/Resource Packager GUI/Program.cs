@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
-namespace Resource_Packager_GUI
+namespace Frost.ResourcePackagerGui
 {
 	static class Program
 	{

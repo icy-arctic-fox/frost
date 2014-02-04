@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Resource_Packager_GUI
+namespace Frost.ResourcePackagerGui
 {
 	public partial class FileExplorer : UserControl
 	{

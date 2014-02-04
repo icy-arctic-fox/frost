@@ -1,4 +1,4 @@
-﻿namespace Resource_Packager_GUI
+﻿namespace Frost.ResourcePackagerGui
 {
 	partial class MainForm
 	{
@@ -32,7 +32,7 @@
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.packageTreeView = new System.Windows.Forms.TreeView();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
-			this.fileExplorer = new Resource_Packager_GUI.FileExplorer();
+			this.fileExplorer = new FileExplorer();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();

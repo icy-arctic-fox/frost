@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Resource Packager GUI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Graphical interface for creating and extracting contents of resource packages")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Resource Packager GUI")]
