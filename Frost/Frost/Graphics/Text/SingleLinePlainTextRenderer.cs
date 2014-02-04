@@ -44,8 +44,8 @@ namespace Frost.Graphics.Text
 		{
 			// Calculate the size of the text
 			var bounds = _text.GetLocalBounds();
-			var width  = (uint)bounds.Width  + 1;
-			var height = (uint)bounds.Height + 1;
+			var width  = (uint)(bounds.Width  + bounds.Left) + 1;
+			var height = (uint)(bounds.Height + bounds.Top)  + 1;
 			PrepareTexture(width, height);
 
 			// Draw the text
