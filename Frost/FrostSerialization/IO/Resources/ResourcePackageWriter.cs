@@ -76,10 +76,12 @@ namespace Frost.IO.Resources
 		/// <param name="id">Globally unique ID of the resource</param>
 		/// <param name="name">Name of the resource</param>
 		/// <param name="data">Data contained in the resource</param>
+		/// <exception cref="ObjectDisposedException">Thrown if the package writer has been disposed</exception>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="data"/> are null</exception>
 		/// <exception cref="ArgumentException">Thrown if a resource by the <paramref name="name"/> or <paramref name="id"/> has already been added</exception>
 		public void Add (Guid id, string name, byte[] data) // TODO: Add encryption and other options
 		{
+			EnsureUndisposed();
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
 			if(data == null)
@@ -100,6 +102,11 @@ namespace Frost.IO.Resources
 
 		#region IO
 		#region Save
+
+		/// <summary>
+		/// Triggered when progress is made while writing the resource package
+		/// </summary>
+		public event EventHandler<ProgressEventArgs> Progress;
 
 		/// <summary>
 		/// Writes the resource package header to the file
@@ -172,14 +179,19 @@ namespace Frost.IO.Resources
 		/// <summary>
 		/// Writes out all of the resources to the package file
 		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown if the packager writer has been disposed</exception>
 		public void Flush ()
 		{
+			if(Disposed)
+				throw new ObjectDisposedException(GetType().FullName);
+//			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L /* TODO */, 0L);
 			lock(Locker)
 			{
 				writeHeader();
 				writeResources();
 				Size = FileStream.Position;
 			}
+//			Progress.NotifySubscribers(this, new ProgressEventArgs(0L, 1L, 1L); // TODO
 		}
 		#endregion
 

@@ -218,6 +218,16 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="disposing">True if inner-resources should be disposed of (<see cref="Dispose"/> was called)</param>
 		protected abstract void Dispose (bool disposing);
+
+		/// <summary>
+		/// Checks if the resource package has been disposed
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown if the resource package has been disposed</exception>
+		protected void EnsureUndisposed ()
+		{
+			if(Disposed)
+				throw new ObjectDisposedException(GetType().FullName);
+		}
 		#endregion
 	}
 }

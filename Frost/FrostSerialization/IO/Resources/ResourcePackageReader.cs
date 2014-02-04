@@ -128,9 +128,11 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="name">Name of the resource to retrieve</param>
 		/// <returns>The data for the resource or null if no resource by the name <paramref name="name"/> exists</returns>
+		/// <exception cref="ObjectDisposedException">Thrown if the package reader has been disposed</exception>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
 		public byte[] GetResource (string name)
 		{
+			EnsureUndisposed();
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
 
@@ -149,8 +151,10 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="id">Unique ID of the resource to retrieve</param>
 		/// <returns>The data for the resource or null if no resource by the ID <paramref name="id"/> exists</returns>
+		/// <exception cref="ObjectDisposedException">Thrown if the package reader has been disposed</exception>
 		public byte[] GetResource (Guid id)
 		{
+			EnsureUndisposed();
 			ResourcePackageEntry entry;
 			lock(Locker)
 				if(TryGetResourceInfo(id, out entry))
@@ -166,9 +170,11 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="name">Name of the resource to retrieve</param>
 		/// <returns>A stream that can be used to pull resource data or null if the resource doesn't exist</returns>
+		/// <exception cref="ObjectDisposedException">Thrown if the package reader has been disposed</exception>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
 		public Stream GetResourceStream (string name)
 		{
+			EnsureUndisposed();
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
 
@@ -187,8 +193,10 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="id">Unique ID of the resource to retrieve</param>
 		/// <returns>A stream that can be used to pull resource data or null if the resource doesn't exist</returns>
+		/// <exception cref="ObjectDisposedException">Thrown if the package reader has been disposed</exception>
 		public Stream GetResourceStream (Guid id)
 		{
+			EnsureUndisposed();
 			ResourcePackageEntry entry;
 			lock(Locker)
 				if(TryGetResourceInfo(id, out entry))
