@@ -27,6 +27,7 @@ namespace Test_Game
 			{
 				using(var renderer = new SingleLinePlainTextRenderer())
 				{
+					renderer.Font = null; // TODO
 					renderer.Text = text;
 					var texture   = renderer.DrawTexture();
 					_sprite = new Sprite(texture);

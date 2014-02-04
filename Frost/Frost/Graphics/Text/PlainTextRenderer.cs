@@ -17,6 +17,11 @@ namespace Frost.Graphics.Text
 		public abstract string Text { get; set; }
 
 		/// <summary>
+		/// Font that determines the appearance of the text
+		/// </summary>
+		public abstract UI.Font Font { get; set; }
+
+		/// <summary>
 		/// Underlying texture used to draw text on
 		/// </summary>
 		private RenderTexture _target;
@@ -44,8 +49,10 @@ namespace Frost.Graphics.Text
 		protected void ResetTexture ()
 		{
 			if(_target != null)
+			{
 				_target.Dispose();
-			_target = null;
+				_target = null;
+			}
 		}
 
 		/// <summary>

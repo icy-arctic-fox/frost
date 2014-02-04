@@ -1,4 +1,6 @@
-﻿namespace Frost.Graphics.Text
+﻿using Frost.UI;
+
+namespace Frost.Graphics.Text
 {
 	/// <summary>
 	/// An object that renders text onto a texture
@@ -11,6 +13,11 @@
 		/// Displayed text
 		/// </summary>
 		string Text { get; set; }
+
+		/// <summary>
+		/// Font that determines the appearance of the text
+		/// </summary>
+		Font Font { get; set; }
 		#endregion
 
 		#region Preparation and drawing
