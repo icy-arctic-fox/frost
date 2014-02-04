@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Resource_Packager_GUI
@@ -33,8 +28,16 @@ namespace Resource_Packager_GUI
 
 			else
 			{// Use a directory as the base path
-//				var dirNode = constructDirectoryNode(basePath);
-//				systemTreeView.Nodes.Add(dirNode);
+				var name = Path.GetFileName(basePath) ?? basePath;
+				var path = basePath;
+				if(path[path.Length - 1] != Path.DirectorySeparatorChar)
+					path += Path.DirectorySeparatorChar; // Append trailing / if not present
+				var dirNode = new TreeNode {
+					Text = name,
+					Tag  = path
+				};
+				populateDirectoryNode(dirNode, basePath);
+				systemTreeView.Nodes.Add(dirNode);
 			}
 		}
 		 
