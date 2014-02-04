@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Utility;
 using SFML.Graphics;
 
 namespace Frost.Graphics.Text
@@ -8,7 +9,7 @@ namespace Frost.Graphics.Text
 	/// Rendering time for text is reduced by drawing to an off-screen texture
 	/// and then copying it to an on-screen texture.
 	/// </summary>
-	public abstract class PlainTextRenderer : ITextRenderer
+	public abstract class PlainTextRenderer : ITextRenderer, IFullDisposable
 	{
 		/// <summary>
 		/// Underlying texture used to draw text on
@@ -72,5 +73,59 @@ namespace Frost.Graphics.Text
 			// TODO: Copy data from _texture onto target
 			throw new NotImplementedException();
 		}
+
+		#region Disposable
+
+		private volatile bool _disposed;
+
+		/// <summary>
+		/// Indicates whether the text renderer has been disposed
+		/// </summary>
+		public bool Disposed
+		{
+			get { return _disposed; }
+		}
+
+		/// <summary>
+		/// Triggered when the text renderer is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Frees the resources held by the text renderer
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Deconstructs the text renderer
+		/// </summary>
+		~PlainTextRenderer ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the text renderer
+		/// </summary>
+		/// <param name="disposing">Flag indicating whether internal resources should be freed</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(!_disposed)
+			{
+				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+
+				if(disposing)
+				{// Dispose of the internal resources
+					if(Prepared)
+						_texture.Dispose();
+				}
+			}
+		}
+		#endregion
 	}
 }
