@@ -25,13 +25,12 @@ namespace Test_Game
 
 			public TextSprite (string text)
 			{
-				using(var renderer = new SingleLinePlainTextRenderer())
-				{
-					renderer.Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
-					renderer.Text = text;
-					var texture   = renderer.DrawTexture();
-					_sprite = new Sprite(texture);
-				}
+				var renderer = new SingleLinePlainTextRenderer {
+					Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf"),
+					Text = text
+				};
+				var texture = renderer.DrawTexture();
+				_sprite     = new Sprite(texture);
 			}
 
 			/// <summary>
