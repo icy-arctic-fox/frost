@@ -89,6 +89,7 @@ namespace Frost.Graphics.Text
 #if DEBUG
 				if(!Prepared)
 					throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
+				_target.Display();
 #endif
 			}
 			return new Texture(_target.Texture);
