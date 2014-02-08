@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Frost.Utility;
 using T = SFML.Graphics.Texture;
 
 namespace Frost.Graphics
@@ -7,7 +8,7 @@ namespace Frost.Graphics
 	/// <summary>
 	/// An image that lives on the graphics card
 	/// </summary>
-	public class Texture // TODO: Implement IDisposable
+	public class Texture : IFullDisposable
 	{
 		private readonly T _texture;
 
@@ -70,5 +71,55 @@ namespace Frost.Graphics
 			var tex   = new T(image);
 			return new Texture(tex);
 		}
+		#region Disposable
+
+		private volatile bool _disposed;
+
+		/// <summary>
+		/// Indicates whether the texture has been freed
+		/// </summary>
+		public bool Disposed
+		{
+			get { return _disposed; }
+		}
+
+		/// <summary>
+		/// Triggered when the texture is being freed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Frees the resources held by the texture
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Deconstructs the texture
+		/// </summary>
+		~Texture ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the texture
+		/// </summary>
+		/// <param name="disposing">Flag indicating whether internal resources should be freed</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(!_disposed)
+			{
+				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+
+				if(disposing) // Dispose of the internal texture
+					_texture.Dispose();
+			}
+		}
+		#endregion
 	}
 }
