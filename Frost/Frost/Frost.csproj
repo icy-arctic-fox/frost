@@ -69,7 +69,7 @@
     <Compile Include="Graphics\Layer2D.cs" />
     <Compile Include="Graphics\Text\MultiLineLiveTextRenderer.cs" />
     <Compile Include="Graphics\Text\SingleLineLiveTextRenderer.cs" />
-    <Compile Include="Graphics\Text\ITextRenderer.cs" />
+    <Compile Include="Graphics\Text\TextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextSegment.cs" />
     <Compile Include="Graphics\Text\LiveTextString.cs" />

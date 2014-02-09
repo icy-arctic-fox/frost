@@ -1,4 +1,5 @@
-﻿using Frost.Display;
+﻿using System;
+using Frost.Display;
 using Frost.Graphics;
 using Frost.Graphics.Text;
 using Frost.Logic;
@@ -25,13 +26,11 @@ namespace Test_Game
 
 			public TextSprite (string text)
 			{
-				using(var renderer = new SingleLinePlainTextRenderer())
-				{
+				var renderer = new SingleLinePlainTextRenderer();
 					renderer.Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
-					renderer.Text = text;
-					var texture = renderer.DrawTexture();
+					renderer.Text = String.Join("\n", text, text, text);
+				var texture = renderer.Texture;
 					_sprite     = new Sprite(texture);
-				}
 			}
 
 			/// <summary>

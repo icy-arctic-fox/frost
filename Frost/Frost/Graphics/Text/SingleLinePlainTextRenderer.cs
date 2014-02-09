@@ -1,5 +1,4 @@
-﻿using Frost.UI;
-using T = SFML.Graphics.Text;
+﻿using T = SFML.Graphics.Text;
 
 namespace Frost.Graphics.Text
 {
@@ -8,34 +7,6 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class SingleLinePlainTextRenderer : PlainTextRenderer
 	{
-		private readonly T _text = new T();
-
-		/// <summary>
-		/// Displayed text
-		/// </summary>
-		public override string Text
-		{
-			get { return _text.DisplayedString; }
-			set
-			{
-				_text.DisplayedString = value;
-				ResetTexture();
-			}
-		}
-
-		/// <summary>
-		/// Font that determines the appearance of the text
-		/// </summary>
-		public override Font Font
-		{
-			get { return null; } // TODO
-			set
-			{
-				_text.Font = value.UnderlyingFont;
-				ResetTexture();
-			}
-		}
-
 		/// <summary>
 		/// Prepares the text for drawing.
 		/// This method renders the text internally so that it is ready to be quickly drawn.
@@ -43,13 +14,13 @@ namespace Frost.Graphics.Text
 		public override void Prepare ()
 		{
 			// Calculate the size of the text
-			var bounds = _text.GetLocalBounds();
+			var bounds = TextObject.GetLocalBounds();
 			var width  = (uint)(bounds.Width  + bounds.Left) + 1;
 			var height = (uint)(bounds.Height + bounds.Top)  + 1;
 			PrepareTexture(width, height);
 
 			// Draw the text
-			Target.Draw(_text);
+			Buffer.Draw(TextObject);
 		}
 	}
 }
