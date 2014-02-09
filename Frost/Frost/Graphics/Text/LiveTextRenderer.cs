@@ -1,6 +1,4 @@
 ﻿using System;
-using Frost.Utility;
-using SFML.Graphics;
 
 namespace Frost.Graphics.Text
 {
@@ -9,12 +7,15 @@ namespace Frost.Graphics.Text
 	/// Rendering time for text is reduced by drawing to an off-screen texture
 	/// and then copying it to an on-screen texture.
 	/// </summary>
-	public abstract class LiveTextRenderer
+	public class LiveTextRenderer : TextRenderer
 	{
 		/// <summary>
 		/// Prepares the text for drawing.
 		/// This method renders the text internally so that it is ready to be quickly drawn.
 		/// </summary>
-		public abstract void Prepare ();
+		public override void Prepare ()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

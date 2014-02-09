@@ -67,14 +67,10 @@
     <Compile Include="Graphics\IRenderTarget.cs" />
     <Compile Include="Graphics\Object2D.cs" />
     <Compile Include="Graphics\Layer2D.cs" />
-    <Compile Include="Graphics\Text\MultiLineLiveTextRenderer.cs" />
-    <Compile Include="Graphics\Text\SingleLineLiveTextRenderer.cs" />
     <Compile Include="Graphics\Text\TextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextSegment.cs" />
     <Compile Include="Graphics\Text\LiveTextString.cs" />
-    <Compile Include="Graphics\Text\MultiLinePlainTextRenderer.cs" />
-    <Compile Include="Graphics\Text\SingleLinePlainTextRenderer.cs" />
     <Compile Include="Graphics\Text\StringSegment.cs" />
     <Compile Include="ResourceLoader.cs" />
     <Compile Include="Graphics\Sprite.cs" />

@@ -26,11 +26,12 @@ namespace Test_Game
 
 			public TextSprite (string text)
 			{
-				var renderer = new SingleLinePlainTextRenderer();
-					renderer.Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
-					renderer.Text = String.Join("\n", text, text, text);
+				var renderer = new PlainTextRenderer {
+					Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf"),
+					Text = String.Join("\n", text, text, text)
+				};
 				var texture = renderer.Texture;
-					_sprite     = new Sprite(texture);
+				_sprite     = new Sprite(texture);
 			}
 
 			/// <summary>
