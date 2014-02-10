@@ -10,7 +10,7 @@ namespace Frost.Graphics
 	/// </summary>
 	public class Texture : IFullDisposable
 	{
-		private readonly T _texture;
+		private T _texture;
 
 		/// <summary>
 		/// Underlying SFML texture
@@ -18,6 +18,14 @@ namespace Frost.Graphics
 		internal T InternalTexture
 		{
 			get { return _texture; }
+			set
+			{
+#if DEBUG
+				if(value == null)
+					throw new ArgumentNullException("value", "The new internal texture can't be null.");
+#endif
+				_texture = value;
+			}
 		}
 
 		/// <summary>

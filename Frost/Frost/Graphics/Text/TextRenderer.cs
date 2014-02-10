@@ -70,8 +70,8 @@ namespace Frost.Graphics.Text
 				_buffer.Dispose();
 				_buffer = null;
 
-				_texture.Dispose();
-				_texture = null;
+				if(_texture != null)
+					_texture.InternalTexture.Dispose();
 			}
 		}
 
@@ -85,8 +85,12 @@ namespace Frost.Graphics.Text
 		{
 			if(_buffer != null)
 				_buffer.Dispose();
-			_buffer  = new RenderTexture(width, height);
-			_texture = new Texture(_buffer.Texture);
+			_buffer = new RenderTexture(width, height);
+
+			if(_texture == null)
+				_texture = new Texture(_buffer.Texture);
+			else
+				_texture.InternalTexture = _buffer.Texture;
 		}
 
 		/// <summary>
@@ -98,25 +102,23 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Draws and retrieves the texture that contains the text
 		/// </summary>
+		/// <returns>A texture containing the rendered text</returns>
 		/// <remarks>If the text hasn't been prepared by <see cref="Prepare"/> prior to calling this method,
 		/// <see cref="Prepare"/> will be called before drawing the text.
 		/// However, if it has been, then no drawing needs to be done.
 		/// The texture only needs to be redrawn when a property is changed.</remarks>
-		public Texture Texture
+		public Texture GetTexture ()
 		{
-			get
+			if(!Prepared)
 			{
-				if(!Prepared)
-				{
-					Prepare();
+				Prepare();
 #if DEBUG
-					if(_texture == null)
-						throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
-					_buffer.Display();
+				if(_texture == null) // Would be nice to check if the internal texture was disposed
+					throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
+				_buffer.Display();
 #endif
-				}
-				return _texture;
 			}
+			return _texture;
 		}
 		#endregion
 

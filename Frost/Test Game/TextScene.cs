@@ -30,7 +30,7 @@ namespace Test_Game
 					Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf"),
 					Text = String.Join("\n", text, text, text)
 				};
-				var texture = renderer.Texture;
+				var texture = renderer.GetTexture();
 				_sprite     = new Sprite(texture);
 			}
 
