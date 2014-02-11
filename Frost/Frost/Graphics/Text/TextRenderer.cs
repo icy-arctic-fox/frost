@@ -20,6 +20,62 @@ namespace Frost.Graphics.Text
 		private Font _font;
 		#endregion
 
+		private bool _multiLine = true,
+			_wordWrap = true;
+
+		/// <summary>
+		/// Indicates whether the text is allowed to span multiple lines and can contain newlines
+		/// </summary>
+		/// <remarks>Newlines (\n) and carriage-returns (\r) will be ignored if this property is false.</remarks>
+		public bool MultiLine
+		{
+			get { return _multiLine; }
+			set
+			{
+				if(value != _multiLine)
+				{
+					Prepared   = false;
+					_multiLine = value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Indicates whether words automatically wrap to the next line if the text becomes longer than a specified length
+		/// </summary>
+		public bool WordWrap
+		{
+			get { return _wordWrap; }
+			set
+			{
+				if(value != _wordWrap)
+				{
+					Prepared  = false;
+					_wordWrap = value;
+				}
+			}
+		}
+
+		private uint _wrapLength;
+
+		/// <summary>
+		/// Width of text (in pixels) to wrap each line by
+		/// </summary>
+		/// <remarks>There must be at least one word per line.
+		/// It is possible to go over this length if the first word on a line has a pixel length greater than this value.</remarks>
+		public uint WrapLength
+		{
+			get { return _wrapLength; }
+			set
+			{
+				if(value != _wrapLength)
+				{
+					Prepared    = false;
+					_wrapLength = value;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Current font that determines the appearance of the text
 		/// </summary>
