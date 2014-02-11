@@ -1,4 +1,6 @@
-﻿namespace Frost.Graphics.Text
+﻿using System;
+
+namespace Frost.Graphics.Text
 {
 	/// <summary>
 	/// Draws text onto the screen.
@@ -7,10 +9,19 @@
 	/// </summary>
 	public class PlainTextRenderer : TextRenderer
 	{
+		private string _text = String.Empty;
+
+		/// <summary>
+		/// Text to render
+		/// </summary>
 		public string Text
 		{
-			get { return TextObject.DisplayedString; }
-			set { TextObject.DisplayedString = value; }
+			get { return _text; }
+			set
+			{
+				Prepared = false;
+				_text    = value;
+			}
 		}
 
 		/// <summary>
@@ -18,6 +29,32 @@
 		/// This method renders the text internally so that it is ready to be quickly drawn.
 		/// </summary>
 		public override void Prepare ()
+		{
+			if(!MultiLine)
+			{// Strip new lines
+				var stripped =  _text.Replace("\n", String.Empty);
+				stripped = stripped.Replace("\r", String.Empty);
+				TextObject.DisplayedString = stripped;
+			}
+
+			if(WordWrap)
+				PrepareWordWrap();
+			else
+				PrepareNoWrap();
+		}
+
+		/// <summary>
+		/// Draws the text using word wrapping
+		/// </summary>
+		protected void PrepareWordWrap ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Draws the text not using word wrapping
+		/// </summary>
+		protected void PrepareNoWrap ()
 		{
 			// Calculate the size of the text
 			var bounds = TextObject.GetLocalBounds();
