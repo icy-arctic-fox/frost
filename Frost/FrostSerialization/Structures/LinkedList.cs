@@ -30,7 +30,7 @@ namespace Frost.Structures
 		/// </summary>
 		/// <param name="reverse">When true, the enumerator will start at the end and iterate backwards</param>
 		/// <returns>An enumerator used to iterate through node values</returns>
-		public IEnumerator<T> GetEnumerator (bool reverse)
+		public LinkedListEnumerator<T> GetEnumerator (bool reverse)
 		{
 			throw new NotImplementedException();
 		}
