@@ -12,16 +12,7 @@ namespace Frost.Structures
 	/// However, care should be taken that the list is not modified unexpectedly elsewhere.</remarks>
 	public class LinkedListEnumerator<T> : IEnumerator<T>
 	{
-		private readonly LinkedList<T> _list;
-
-		/// <summary>
-		/// List being enumerated through
-		/// </summary>
-		public LinkedList<T> List
-		{
-			get { return _list; }
-		}
-
+		private readonly LinkedListNode<T> _curNode;
 		private readonly bool _reverse;
 
 		/// <summary>
@@ -72,5 +63,81 @@ namespace Frost.Structures
 		{
 			// ...
 		}
+
+		/// <summary>
+		/// Creates a linked list enumerator
+		/// </summary>
+		/// <param name="start">Starting node</param>
+		/// <param name="reverse">True to iterate backwards through nodes</param>
+		public LinkedListEnumerator (LinkedListNode<T> start, bool reverse = false)
+		{
+			_curNode = start;
+			_reverse = reverse;
+		}
+
+		#region List operations
+
+		/// <summary>
+		/// Adds an element to the list after the current position of the enumerator
+		/// </summary>
+		/// <param name="value">Value to insert</param>
+		public void AddAfter (T value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Adds an element to the list before the current position of the enumerator
+		/// </summary>
+		/// <param name="value">Value to insert</param>
+		public void AddBefore (T value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes the node at the current position of the enumerator
+		/// </summary>
+		public void Remove ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes the node before the current position of the enumerator
+		/// </summary>
+		public void RemovePrevious ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes the node after the current position of the enumerator
+		/// </summary>
+		public void RemoveNext ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes all nodes before the current position of the enumerator
+		/// </summary>
+		/// <remarks>All nodes will be removed if the enumerator is past the end of the list.
+		/// If <see cref="Reverse"/> is true, this method removes previous nodes (nodes with a higher index).</remarks>
+		public void RemovePrior ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes all nodes after the current position of the enumerator
+		/// </summary>
+		/// <remarks>All nodes will be removed if the enumerator is before the start of the list.
+		/// If <see cref="Reverse"/> is true, this method removes upcoming nodes (nodes with a lower index).</remarks>
+		public void RemoveFollowing ()
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 	}
 }
