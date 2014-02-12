@@ -11,19 +11,19 @@ namespace Frost.Structures
 		/// <summary>
 		/// Node prior to this one in the list
 		/// </summary>
-		public LinkedListNode<T> PreviousNode { get; internal set; }
+		public LinkedListNode<T> Previous { get; internal set; }
 
 		/// <summary>
 		/// Node following this one in the list
 		/// </summary>
-		public LinkedListNode<T> NextNode { get; internal set; }
+		public LinkedListNode<T> Next { get; internal set; }
 
 		/// <summary>
 		/// Indicates whether there are any nodes prior to this one in the list
 		/// </summary>
 		public bool HasPrevious
 		{
-			get { return PreviousNode != null; }
+			get { return Previous != null; }
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace Frost.Structures
 		/// </summary>
 		public bool HasNext
 		{
-			get { return NextNode != null; }
+			get { return Next != null; }
 		}
 
 		/// <summary>
@@ -73,13 +73,13 @@ namespace Frost.Structures
 				throw new ArgumentException("The next node is part of an existing list.", "next");
 #endif
 
-			Value        = value;
-			PreviousNode = prev;
-			NextNode     = next;
+			Value    = value;
+			Previous = prev;
+			Next     = next;
 			if(prev != null)
-				prev.NextNode = this;
+				prev.Next = this;
 			if(next != null)
-				next.PreviousNode = this;
+				next.Previous = this;
 		}
 	}
 }
