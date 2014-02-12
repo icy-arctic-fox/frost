@@ -14,7 +14,7 @@ namespace Frost.Structures
 	/// <remarks>The purpose of creating this class instead of using .NET's <see cref="T:System.Collections.Generic.LinkedList`1"/>
 	/// is because it was limited in some areas.
 	/// This class has the same functionality, but expands on a linked list's possibilities.</remarks>
-	public class LinkedList<T> : IList<T>
+	public class LinkedList<T> : IList<T>, ICloneable
 	{
 		/// <summary>
 		/// Creates an enumerator that iterates through nodes in the list
@@ -170,19 +170,165 @@ namespace Frost.Structures
 			set { throw new NotImplementedException(); }
 		}
 
-		// TODO: First
-		// TODO: Last
-		// TODO: Clone()
-		// TODO: CreateReadOnly()
-		// TODO: InsertBefore(Node, T)
-		// TODO: InsertAfter(Node, T)
-		// TODO: AddFirst(T)
-		// TODO: AddLast(T)
-		// TODO: RemoveNode(Node)
-		// TODO: RemoveBefore(Node)
-		// TODO: RemoveAfter(Node)
-		// TODO: RemoveFollowing(Node)
-		// TODO: RemovePrior(Node)
-		// TODO: GetNodeAt(int)
+		/// <summary>
+		/// First node in the list
+		/// </summary>
+		public LinkedListNode<T> First
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		/// <summary>
+		/// Last node in the list
+		/// </summary>
+		public LinkedListNode<T> Last
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		/// <summary>
+		/// Clones the elements in the list
+		/// </summary>
+		/// <returns>A cloned linked list</returns>
+		/// <remarks>Only a shallow copy is performed, however the nodes are copied.
+		/// Copying the nodes prevents two lists from conflicting with each other.</remarks>
+		public LinkedList<T> CloneList ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Clones the elements in the list
+		/// </summary>
+		/// <returns>A cloned linked list</returns>
+		/// <remarks>Only a shallow copy is performed, however the nodes are copied.
+		/// Copying the nodes prevents two lists from conflicting with each other.</remarks>
+		public object Clone ()
+		{
+			return CloneList();
+		}
+
+		/// <summary>
+		/// Creates a copy of the linked list that is read-only
+		/// </summary>
+		/// <returns>A copy of the linked list with read-only status</returns>
+		/// <remarks>A shallow copy is performed and the nodes are not cloned.
+		/// This allows the original list that isn't read-only to be updated, which in turn updates all read-only copies.</remarks>
+		public LinkedList<T> CreateReadOnly ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Inserts a new node before an existing one
+		/// </summary>
+		/// <param name="node">Node to insert before</param>
+		/// <param name="value">Value to insert</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		public void InsertBefore (LinkedListNode<T> node, T value)
+		{
+			// TODO: How do we know that [node] is in this list?
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Inserts a new node after an existing one
+		/// </summary>
+		/// <param name="node">Node to insert after</param>
+		/// <param name="value">Value to insert</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		public void InsertAfter (LinkedListNode<T> node, T value)
+		{
+			// TODO: How do we know that [node] is in this list?
+			throw new NotImplementedException();
+		}
+		
+		/// <summary>
+		/// Inserts a new node at the start of the list
+		/// </summary>
+		/// <param name="value">Value to insert</param>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		public void AddFirst (T value)
+		{
+			throw new NotImplementedException();
+		}
+		
+		/// <summary>
+		/// Inserts a new node at the end of the list
+		/// </summary>
+		/// <param name="value">Value to insert</param>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		public void AddLast (T value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes a node from the list
+		/// </summary>
+		/// <param name="node">Node to remove</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		public void RemoveNode (LinkedListNode<T> node)
+		{
+			throw new NotImplementedException();
+		}
+		
+		/// <summary>
+		/// Removes a node prior to <see cref="node"/>
+		/// </summary>
+		/// <param name="node">Node to remove before</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		public void RemoveBefore (LinkedListNode<T> node)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes a node following <see cref="node"/>
+		/// </summary>
+		/// <param name="node">Node to remove after</param>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		public void RemoveAfter (LinkedListNode<T> node)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes all nodes following, but not including <see cref="node"/>
+		/// </summary>
+		/// <param name="node">Node to remove after</param>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		public void RemoveFollowing (LinkedListNode<T> node)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes all nodes prior to, but not including <see cref="node"/>
+		/// </summary>
+		/// <param name="node">Node to remove before</param>
+		/// <remarks>This operation takes O(1) time.</remarks>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
+		public void RemovePrior (LinkedListNode<T> node)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Retrieves a node from the list at a given index
+		/// </summary>
+		/// <param name="index">Index of the node to retrieve</param>
+		/// <returns>A linked list node</returns>
+		/// <exception cref="IndexOutOfRangeException">Thrown if <paramref name="index"/> is outside the bounds of the list</exception>
+		public LinkedListNode<T> GetNodeAt (int index)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
