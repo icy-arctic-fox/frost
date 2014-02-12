@@ -107,5 +107,68 @@ namespace Frost.Structures
 			if(next != null)
 				next.Previous = this;
 		}
+
+		#region List operations
+
+		/// <summary>
+		/// Adds an element to the list after the current node
+		/// </summary>
+		/// <param name="value">Value to insert</param>
+		public void AddAfter (T value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Adds an element to the list before the current node
+		/// </summary>
+		/// <param name="value">Value to insert</param>
+		public void AddBefore (T value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes the current node from the list
+		/// </summary>
+		public void Remove ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes the previous node from the list
+		/// </summary>
+		public void RemovePrevious ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes the next node from the list
+		/// </summary>
+		public void RemoveNext ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes all nodes before the current one from the list,
+		/// effectively making this node the first one in the list.
+		/// </summary>
+		public void RemovePrior ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes all nodes after the current one from the list,
+		/// effectively making this node the last one in the list.
+		/// </summary>
+		public void RemoveFollowing ()
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 	}
 }
