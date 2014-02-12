@@ -94,6 +94,7 @@
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures\LinkedList.cs" />
+    <Compile Include="Structures\LinkedListNode.cs" />
     <Compile Include="Utility\ByteUtility.cs" />
     <Compile Include="Utility\DelegateUtility.cs" />
     <Compile Include="Utility\EndianUtility.cs" />
