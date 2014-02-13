@@ -331,5 +331,47 @@ namespace Frost.Structures
 		{
 			throw new NotImplementedException();
 		}
+
+		/// <summary>
+		/// Removes nodes starting at an index until the end of the list and creates a new linked list from them
+		/// </summary>
+		/// <param name="index">Index of the first node to slice off</param>
+		/// <returns>A new linked list containing the sliced nodes</returns>
+		public LinkedList<T> Slice (int index)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes a number of nodes starting at an index and creates a new linked list from them
+		/// </summary>
+		/// <param name="index">Index of the first node to slice off</param>
+		/// <param name="count">Number of nodes to slice off</param>
+		/// <returns>A new linked list containing the sliced nodes</returns>
+		public LinkedList<T> Slice (int index, int count)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes nodes starting at a given point and until the end of the list and creates a new linked list from them
+		/// </summary>
+		/// <param name="start">First node to slice off</param>
+		/// <returns>A new linked list containing the sliced nodes</returns>
+		public LinkedList<T> Slice (LinkedListNode<T> start)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes a number of nodes starting at a given point and creates a new linked list from them
+		/// </summary>
+		/// <param name="start">First node to slice off</param>
+		/// <param name="count">Number of nodes to slice off</param>
+		/// <returns>A new linked list containing the sliced nodes</returns>
+		public LinkedList<T> Slice (LinkedListNode<T> start, int count)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
