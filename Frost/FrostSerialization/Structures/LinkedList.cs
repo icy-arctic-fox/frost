@@ -32,7 +32,8 @@ namespace Frost.Structures
 		/// <returns>An enumerator used to iterate through node values</returns>
 		public LinkedListEnumerator<T> GetEnumerator (bool reverse)
 		{
-			throw new NotImplementedException();
+			var node = reverse ? Last : First;
+			return new LinkedListEnumerator<T>(node, reverse);
 		}
 
 		/// <summary>
