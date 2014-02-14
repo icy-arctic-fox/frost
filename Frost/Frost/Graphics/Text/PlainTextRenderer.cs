@@ -82,51 +82,23 @@ namespace Frost.Graphics.Text
 						// This will prevent infinite blank lines by putting at least one word per line.
 						var startingWord = (curWord == firstWord) ? curWord : curWord.Next;
 						if(startingWord != null)
-						{// There's words to move to the next line
-//							wordList.RemoveFollowing(startingWord); // Why doesn't .NET support this on linked lists?
+						{
+							var newLine = new LinkedList<string>();
+							while(startingWord != null)
+							{// Move each of the remaining words to the next line
+								var nextWord = startingWord.Next;
+								var word = startingWord.Value;
+								wordList.Remove(startingWord);
+								newLine.AddLast(word);
+								startingWord = nextWord;
+							}
+							lines.AddAfter(curLine, newLine);
 						}
 					}
 					curWord = curWord.Next;
 				}
 				curLine = curLine.Next;
 			}
-
-			/*
-        
-        @lines.push([line[0]]) # Add at least one item to prevent infinte empty lines
-        line_length, _ = segment_size(line[0]) unless carry
-        
-        j, carry = 1, false
-        while j < line.count
-          s = line[j]
-          
-          # Get the width of the segment
-          w, _ = segment_size(s)
-          segment_length = w
-          
-          if w > 0 # Segment has width (text or image) - add the width of a space
-            w, _ = segment_size(' ')
-            segment_length += w
-          end
-          
-          line_length = line_length + segment_length
-          if line_length > @target_width # Exceeded the length for the line
-            items = line.slice!(j, line.count - j)
-            lines.insert(i + 1, items) # Push the segments to the next line
-            line_length = segment_length # Set this here because calling segment_size() multiple times
-            carry = true                 # on the same segment can cause problems
-            break # Not really needed, but here anyways
-          else # Segment can fit on the line
-            @lines[-1].push(' ') if w > 0 # Segment has width and needs to be prefixed with whitespace
-            @lines[-1].push(s)
-          end
-          
-          j += 1
-        end
-        
-        i += 1
-      end
-			 * */
 		}
 
 		/// <summary>
@@ -136,7 +108,7 @@ namespace Frost.Graphics.Text
 		protected void PrepareNoWrap (string text)
 		{
 			// Calculate the size of the text
-			var bounds = TextObject.GetLocalBounds();
+			var bounds = getTextBounds(text);
 			var width  = (uint)(bounds.Width + bounds.Left) + 1;
 			var height = (uint)(bounds.Height + bounds.Top) + 1;
 			PrepareTexture(width, height);
