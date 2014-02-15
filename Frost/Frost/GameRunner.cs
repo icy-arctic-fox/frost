@@ -6,6 +6,7 @@ using System.Threading;
 using Frost.Display;
 using Frost.Logic;
 using Frost.Modules;
+using Frost.UI;
 using Frost.Utility;
 
 namespace Frost
@@ -26,6 +27,26 @@ namespace Frost
 		private readonly SceneManager _scenes;
 
 		/// <summary>
+		/// Debug information
+		/// </summary>
+		private readonly DebugOverlay _debugOverlay;
+
+		private volatile bool _debug
+#if DEBUG
+			= true // Enable debug overlay by default with debug builds
+#endif
+			;
+
+		/// <summary>
+		/// Indicates whether the debug overlay is displayed
+		/// </summary>
+		public bool Debug
+		{
+			get { return _debug; }
+			set { _debug = value; }
+		}
+
+		/// <summary>
 		/// Creates a new game runner
 		/// </summary>
 		/// <param name="display">Display to render to</param>
@@ -37,6 +58,7 @@ namespace Frost
 
 			_display = display;
 			_scenes  = new SceneManager(initialScene, display);
+			_debugOverlay = new DebugOverlay(this);
 		}
 
 		#region Modules
@@ -130,6 +152,9 @@ namespace Frost
 
 			_targetUpdateInterval = (updateRate <= 0d) ? 0d : 1d / updateRate;
 			_targetRenderInterval = (renderRate <= 0d) ? 0d : 1d / renderRate;
+
+			if(_debug)
+				_scenes.AddOverlay(_debugOverlay);
 
 			_running = true;
 			if(multiThreaded)
@@ -324,6 +349,8 @@ namespace Frost
 				// Perform the update
 				for(var i = 0; i < _moduleUpdates.Count; ++i)
 					_moduleUpdates[i]();
+				if(_debug)
+					_debugOverlay.Update();
 				if(!_scenes.Update())
 					_running = false; // All scenes exited
 

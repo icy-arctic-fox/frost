@@ -3,6 +3,7 @@ using Frost.Display;
 using Frost.Graphics;
 using Frost.Graphics.Text;
 using Frost.Logic;
+using Frost.UI;
 
 namespace Test_Game
 {
@@ -22,6 +23,7 @@ namespace Test_Game
 
 		private class TextSprite : IStepable, IRenderable
 		{
+			private readonly DebugOverlay _debug;
 			private readonly SimpleText _text;
 
 			public TextSprite (string text)
@@ -52,7 +54,7 @@ namespace Test_Game
 			/// Modifying the game state info during this process would corrupt the game state.</remarks>
 			public void Draw (IDisplay display, int state)
 			{
-				_text.Draw(display);
+//				_text.Draw(display);
 			}
 		}
 	}

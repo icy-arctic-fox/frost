@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Frost.Display;
+using Frost.Graphics;
 
 namespace Frost.Logic
 {
@@ -16,6 +17,7 @@ namespace Frost.Logic
 		private SceneStackEntry _curScene;
 		private readonly Stack<SceneStackEntry> _sceneStack = new Stack<SceneStackEntry>();
 		private readonly IDisplay _display;
+		private readonly List<IRenderable> _overlays = new List<IRenderable>();
 
 		/// <summary>
 		/// Checks if there are any scenes being processed
@@ -70,6 +72,16 @@ namespace Frost.Logic
 
 			_display = display;
 			EnterScene(initialScene);
+		}
+
+		/// <summary>
+		/// Adds an overlay that is rendered each frame
+		/// </summary>
+		/// <param name="overlay">Overlay to render</param>
+		public void AddOverlay (IRenderable overlay)
+		{
+			if(overlay != null)
+				_overlays.Add(overlay);
 		}
 
 		#region Scene management
@@ -197,6 +209,8 @@ namespace Frost.Logic
 				{// Render the frame
 					_display.EnterFrame();
 					CurrentScene.Draw(_display, nextStateIndex); // TODO: Add interpolation between rendered frames
+					for(var i = 0; i < _overlays.Count; ++i)
+						_overlays[i].Draw(_display, nextStateIndex);
 					_display.ExitFrame();
 
 					if(prevStateIndex == nextStateIndex)

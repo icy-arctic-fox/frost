@@ -103,6 +103,7 @@
     <Compile Include="Logic\StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Text\Font.cs" />
+    <Compile Include="UI\DebugOverlay.cs" />
     <Compile Include="UI\Interface.cs" />
     <Compile Include="Graphics\Text\PlainTextRenderer.cs" />
     <Compile Include="Utility\FlagArray.cs" />
