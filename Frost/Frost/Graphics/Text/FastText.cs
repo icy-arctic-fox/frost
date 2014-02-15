@@ -3,12 +3,12 @@
 	/// <summary>
 	/// Optimized for rendering text that changes frequently with a font that doesn't change at all
 	/// </summary>
-	public class FastTextRenderer
+	public class FastText
 	{
 		private readonly uint _size;
 		private readonly SFML.Graphics.Font _font;
 
-		public FastTextRenderer (uint size, Font font)
+		public FastText (uint size, Font font)
 		{
 			_size = size;
 			_font = font.UnderlyingFont;

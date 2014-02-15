@@ -22,12 +22,12 @@ namespace Test_Game
 
 		private class TextSprite : IStepable, IRenderable
 		{
-			private readonly FastTextRenderer _text;
+			private readonly FastText _text;
 
 			public TextSprite (string text)
 			{
 				var font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
-				_text = new FastTextRenderer(16, font) {Text = text};
+				_text = new FastText(16, font) {Text = text};
 			}
 
 			/// <summary>
