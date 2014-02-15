@@ -73,7 +73,7 @@ namespace Frost.Graphics.Text
 			for(var i = 0; i < textLength; ++i)
 			{// Construct each set of 4 vertices for each glyph
 				var c = _text[i];
-				var j = (uint)(i << 2); // x4
+				var j = (uint)(i * 4);
 				constructFromGlyph(c, j, ref pos);
 			}
 		}
@@ -132,7 +132,7 @@ namespace Frost.Graphics.Text
 		{
 			for(var i = 0U; i < _verts.VertexCount; ++i)
 			{
-				var vert = _verts[i];
+				var vert  = _verts[i];
 				_verts[i] = new Vertex(vert.Position, color, vert.TexCoords);
 			}
 		}
@@ -143,6 +143,9 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Render target</param>
 		public void Draw (IRenderTarget target)
 		{
+			// The render state has to be created here
+			// and the font texture retrieved as well.
+			// For some reason, the characters aren't displayed if the render state or texture is saved.
 			var rs = new RenderStates(_font.GetTexture(_size));
 			target.Draw(_verts, rs);
 		}
