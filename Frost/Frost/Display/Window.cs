@@ -586,6 +586,16 @@ namespace Frost.Display
 		}
 
 		/// <summary>
+		/// Draws vertices with a transformation
+		/// </summary>
+		/// <param name="verts">Vertices to draw</param>
+		/// <param name="transform">Transformation to apply to <paramref name="verts"/></param>
+		public void Draw (Vertex[] verts, RenderStates transform)
+		{
+			_window.Draw(verts, PrimitiveType.Quads, transform); // TODO: Support primitive type selection
+		}
+
+		/// <summary>
 		/// Sets a window as being actively rendered in on a thread.
 		/// The window can be rendered from only one thread at a time.
 		/// The initial thread that created the window will be "active."
