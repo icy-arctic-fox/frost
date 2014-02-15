@@ -69,12 +69,13 @@ namespace Frost.Graphics.Text
 		{
 			var glyph = _font.GetGlyph(c, _size, false);
 			var rect  = glyph.TextureRect;
+			var vOff  = _size - rect.Height;
 
 			// Quad points
-			var v1 = new SFML.Window.Vector2f(pos,              0f);
-			var v2 = new SFML.Window.Vector2f(pos + rect.Width, 0f);
-			var v3 = new SFML.Window.Vector2f(pos + rect.Width, rect.Height);
-			var v4 = new SFML.Window.Vector2f(pos,              rect.Height);
+			var v1 = new SFML.Window.Vector2f(pos,              vOff);
+			var v2 = new SFML.Window.Vector2f(pos + rect.Width, vOff);
+			var v3 = new SFML.Window.Vector2f(pos + rect.Width, vOff + rect.Height);
+			var v4 = new SFML.Window.Vector2f(pos,              vOff + rect.Height);
 
 			// Texture points
 			var t1 = new SFML.Window.Vector2f(rect.Left,              rect.Top);
