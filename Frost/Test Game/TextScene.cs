@@ -22,16 +22,12 @@ namespace Test_Game
 
 		private class TextSprite : IStepable, IRenderable
 		{
-			private readonly Sprite _sprite;
+			private readonly FastTextRenderer _text;
 
 			public TextSprite (string text)
 			{
-				var renderer = new PlainTextRenderer {
-					Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf"),
-					Text = String.Join("\n", text, text, text)
-				};
-				var texture = renderer.GetTexture();
-				_sprite     = new Sprite(texture);
+				var font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
+				_text = new FastTextRenderer(16, font) {Text = text};
 			}
 
 			/// <summary>
@@ -44,7 +40,7 @@ namespace Test_Game
 			/// Modifying any other game state info during this process would corrupt the game state.</remarks>
 			public void Step (int prev, int next)
 			{
-				_sprite.Step(prev, next);
+				// ...
 			}
 
 			/// <summary>
@@ -56,7 +52,7 @@ namespace Test_Game
 			/// Modifying the game state info during this process would corrupt the game state.</remarks>
 			public void Draw (IDisplay display, int state)
 			{
-				_sprite.Draw(display, state);
+				_text.Draw(display);
 			}
 		}
 	}

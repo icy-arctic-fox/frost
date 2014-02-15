@@ -1,4 +1,5 @@
 ﻿using Frost;
+using Frost.Graphics;
 using Frost.Logic;
 
 namespace Test_Game
@@ -40,6 +41,12 @@ namespace Test_Game
 		protected override Scene CreateInitialScene ()
 		{
 			return new TextScene();
+		}
+
+		public override void Initialize ()
+		{
+			base.Initialize();
+			Window.BackgroundColor = new Color(128, 128, 128);
 		}
 	}
 }
