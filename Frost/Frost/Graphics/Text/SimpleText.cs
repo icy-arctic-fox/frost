@@ -4,21 +4,23 @@ using SFML.Graphics;
 namespace Frost.Graphics.Text
 {
 	/// <summary>
-	/// Optimized for rendering text that changes frequently with a font that doesn't change at all
+	/// Bare minimal text functionality.
+	/// This class is optimized for text that changes frequently,
+	/// but doesn't allow the font, size, or color to change after initialization.
 	/// </summary>
-	public class FastText
+	public class SimpleText
 	{
 		private readonly uint _size;
 		private readonly SFML.Graphics.Font _font;
 		private readonly VertexArray _verts;
 
 		/// <summary>
-		/// Creates a new fast text object
+		/// Creates a new simple text object
 		/// </summary>
 		/// <param name="font">Font used to render the text</param>
 		/// <param name="size">Font size</param>
 		/// <param name="color">Font color</param>
-		public FastText (Font font, uint size, Color color)
+		public SimpleText (Font font, uint size, Color color)
 		{
 			_font  = font.UnderlyingFont;
 			_size  = size;
