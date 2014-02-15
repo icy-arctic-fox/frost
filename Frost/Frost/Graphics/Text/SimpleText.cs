@@ -14,6 +14,7 @@ namespace Frost.Graphics.Text
 		private readonly uint _size;
 		private readonly SFML.Graphics.Font _font;
 		private readonly VertexArray _verts;
+		private RenderStates _rs = RenderStates.Default;
 
 		/// <summary>
 		/// Creates a new simple text object
@@ -77,6 +78,9 @@ namespace Frost.Graphics.Text
 				var j = (uint)(i * 4);
 				constructFromGlyph(c, j, ref pos);
 			}
+
+			// Store the texture
+			_rs.Texture = _font.GetTexture(_size);
 		}
 
 		/// <summary>
@@ -144,11 +148,7 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Render target</param>
 		public void Draw (IRenderTarget target)
 		{
-			// The render state has to be created here
-			// and the font texture retrieved as well.
-			// For some reason, the characters aren't displayed if the render state or texture is saved.
-			var rs = new RenderStates(_font.GetTexture(_size));
-			target.Draw(_verts, rs);
+			target.Draw(_verts, _rs);
 		}
 
 		#region Disposable
