@@ -182,11 +182,11 @@ namespace Frost.Modules.Input
 		internal static MouseButton FromSfml (this M.Button button)
 		{
 			var b = MouseButton.None;
-			if(button.HasFlag(M.Button.Left))
+			if((button & M.Button.Left) == M.Button.Left)
 				b |= MouseButton.Left;
-			if(button.HasFlag(M.Button.Right))
+			if((button & M.Button.Right) == M.Button.Right)
 				b |= MouseButton.Right;
-			if(button.HasFlag(M.Button.Middle))
+			if((button & M.Button.Middle) == M.Button.Middle)
 				b |= MouseButton.Middle;
 			return b;
 		}

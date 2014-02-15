@@ -99,7 +99,7 @@ namespace Frost.Modules
 			{// Button was released
 				buttons = _prevMouseButtons & ~curButtons;
 				for(var b = (MouseButton)0; b < MouseButton.Count; ++b)
-					if(buttons.HasFlag(b))
+					if((buttons & b) == b)
 					{
 						_mouseEventArgs.Buttons = b;
 						Mouse.OnRelease(_mouseEventArgs);
@@ -109,7 +109,7 @@ namespace Frost.Modules
 			if(buttons != MouseButton.None)
 			{// Button was pressed
 				for(var b = (MouseButton)0; b < MouseButton.Count; ++b)
-					if(buttons.HasFlag(b))
+					if((buttons & b) == b)
 					{
 						if(_capturing.IsSet)
 						{// Not capturing
