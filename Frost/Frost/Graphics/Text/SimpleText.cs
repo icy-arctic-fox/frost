@@ -1,5 +1,6 @@
 ﻿using System;
 using SFML.Graphics;
+using Frost.Utility;
 
 namespace Frost.Graphics.Text
 {
@@ -8,7 +9,7 @@ namespace Frost.Graphics.Text
 	/// This class is optimized for text that changes frequently,
 	/// but doesn't allow the font, size, or color to change after initialization.
 	/// </summary>
-	public class SimpleText
+	public class SimpleText : IFullDisposable
 	{
 		private readonly uint _size;
 		private readonly SFML.Graphics.Font _font;
@@ -149,5 +150,54 @@ namespace Frost.Graphics.Text
 			var rs = new RenderStates(_font.GetTexture(_size));
 			target.Draw(_verts, rs);
 		}
+
+		#region Disposable
+
+		private volatile bool _disposed;
+
+		/// <summary>
+		/// Indicates whether the text has been disposed
+		/// </summary>
+		public bool Disposed
+		{
+			get { return _disposed; }
+		}
+
+		/// <summary>
+		/// Triggered when the text is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Releases resources held by the text
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Deconstructs the text
+		/// </summary>
+		~SimpleText ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the text and its resources
+		/// </summary>
+		/// <param name="disposing">Indicates whether inner resources should be disposed</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(!_disposed)
+			{
+				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+				if(disposing)
+					_verts.Dispose();
+			}
+		}
+		#endregion
 	}
 }
