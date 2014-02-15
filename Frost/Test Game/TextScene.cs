@@ -27,7 +27,7 @@ namespace Test_Game
 			public TextSprite (string text)
 			{
 				var font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
-				_text = new FastText(font, 16) {Text = text};
+				_text = new FastText(font, 16, new Color(0, 0, 255)) {Text = text};
 			}
 
 			/// <summary>

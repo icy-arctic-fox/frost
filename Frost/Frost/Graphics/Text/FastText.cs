@@ -17,11 +17,13 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="font">Font used to render the text</param>
 		/// <param name="size">Font size</param>
-		public FastText (Font font, uint size)
+		/// <param name="color">Font color</param>
+		public FastText (Font font, uint size, Color color)
 		{
 			_font  = font.UnderlyingFont;
 			_size  = size;
 			_verts = new VertexArray(PrimitiveType.Quads);
+			_color = color;
 		}
 
 		private string _text;
@@ -36,6 +38,21 @@ namespace Frost.Graphics.Text
 			{
 				_text = value ?? String.Empty;
 				constructVertices();
+			}
+		}
+
+		private SFML.Graphics.Color _color;
+
+		/// <summary>
+		/// Color of the text
+		/// </summary>
+		public Color Color
+		{
+			get { return _color; }
+			set
+			{
+				_color = value;
+				updateVertColor(_color);
 			}
 		}
 
@@ -69,28 +86,53 @@ namespace Frost.Graphics.Text
 		{
 			var glyph = _font.GetGlyph(c, _size, false);
 			var rect  = glyph.TextureRect;
-			var vOff  = _size - rect.Height;
 
-			// Quad points
-			var v1 = new SFML.Window.Vector2f(pos,              vOff);
-			var v2 = new SFML.Window.Vector2f(pos + rect.Width, vOff);
-			var v3 = new SFML.Window.Vector2f(pos + rect.Width, vOff + rect.Height);
-			var v4 = new SFML.Window.Vector2f(pos,              vOff + rect.Height);
+			// Calculate vertex positions
+			var h = rect.Height;
+			var w = rect.Width;
+			var left   = pos;
+			var right  = left + w;
+			var top    = _size - h;
+			var bottom = top + h;
+
+			// Vertex points
+			var v1 = new SFML.Window.Vector2f(left,  top);
+			var v2 = new SFML.Window.Vector2f(right, top);
+			var v3 = new SFML.Window.Vector2f(right, bottom);
+			var v4 = new SFML.Window.Vector2f(left,  bottom);
+
+			// Calculate texture positions
+			left   = rect.Left;
+			right  = left + w;
+			top    = rect.Top;
+			bottom = top + h;
 
 			// Texture points
-			var t1 = new SFML.Window.Vector2f(rect.Left,              rect.Top);
-			var t2 = new SFML.Window.Vector2f(rect.Left + rect.Width, rect.Top);
-			var t3 = new SFML.Window.Vector2f(rect.Left + rect.Width, rect.Top + rect.Height);
-			var t4 = new SFML.Window.Vector2f(rect.Left,              rect.Top + rect.Height);
+			var t1 = new SFML.Window.Vector2f(left,  top);
+			var t2 = new SFML.Window.Vector2f(right, top);
+			var t3 = new SFML.Window.Vector2f(right, bottom);
+			var t4 = new SFML.Window.Vector2f(left,  bottom);
 
 			// Store the vertex information
-			// TODO: Add support for color
-			_verts[index++] = new Vertex(v1, t1);
-			_verts[index++] = new Vertex(v2, t2);
-			_verts[index++] = new Vertex(v3, t3);
-			_verts[index]   = new Vertex(v4, t4);
+			_verts[index]   = new Vertex(v1, _color, t1);
+			_verts[++index] = new Vertex(v2, _color, t2);
+			_verts[++index] = new Vertex(v3, _color, t3);
+			_verts[++index] = new Vertex(v4, _color, t4);
 
 			pos += glyph.Advance;
+		}
+
+		/// <summary>
+		/// Updates the color of each vertex
+		/// </summary>
+		/// <param name="color">Color to set the vertices to</param>
+		private void updateVertColor (SFML.Graphics.Color color)
+		{
+			for(var i = 0U; i < _verts.VertexCount; ++i)
+			{
+				var vert = _verts[i];
+				_verts[i] = new Vertex(vert.Position, color, vert.TexCoords);
+			}
 		}
 
 		/// <summary>
