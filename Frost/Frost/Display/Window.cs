@@ -590,9 +590,9 @@ namespace Frost.Display
 		/// </summary>
 		/// <param name="verts">Vertices to draw</param>
 		/// <param name="transform">Transformation to apply to <paramref name="verts"/></param>
-		public void Draw (Vertex[] verts, RenderStates transform)
+		public void Draw (VertexArray verts, RenderStates transform)
 		{
-			_window.Draw(verts, PrimitiveType.Quads, transform); // TODO: Support primitive type selection
+			_window.Draw(verts, transform);
 		}
 
 		/// <summary>

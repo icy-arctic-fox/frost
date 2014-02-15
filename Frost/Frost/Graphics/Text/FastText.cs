@@ -1,4 +1,7 @@
-﻿namespace Frost.Graphics.Text
+﻿using System;
+using SFML.Graphics;
+
+namespace Frost.Graphics.Text
 {
 	/// <summary>
 	/// Optimized for rendering text that changes frequently with a font that doesn't change at all
@@ -7,38 +10,91 @@
 	{
 		private readonly uint _size;
 		private readonly SFML.Graphics.Font _font;
+		private VertexArray _verts;
+		private readonly SFML.Graphics.Texture _texture;
 
-		public FastText (uint size, Font font)
+		/// <summary>
+		/// Creates a new fast text object
+		/// </summary>
+		/// <param name="font">Font used to render the text</param>
+		/// <param name="size">Font size</param>
+		public FastText (Font font, uint size)
 		{
-			_size = size;
-			_font = font.UnderlyingFont;
+			_font    = font.UnderlyingFont;
+			_size    = size;
+			_verts   = new VertexArray(PrimitiveType.Quads);
+			_texture = _font.GetTexture(size);
 		}
 
-		public string Text { get; set; }
+		private string _text;
 
-		public void Draw (IRenderTarget target)
+		/// <summary>
+		/// Displayed text
+		/// </summary>
+		public string Text
 		{
-			var point = new SFML.Window.Vector2f();
-			for(var i = 0; i < Text.Length; ++i)
-				drawCharacter(Text[i], target, ref point, out point);
+			get { return _text ?? String.Empty; }
+			set
+			{
+				_text = value ?? String.Empty;
+				constructVertices();
+			}
 		}
 
-		private void drawCharacter (char c, IRenderTarget target, ref SFML.Window.Vector2f curPoint,
-									out SFML.Window.Vector2f nextPoint)
+		/// <summary>
+		/// Updates the vertices that display each glyph
+		/// </summary>
+		private void constructVertices ()
+		{
+			var textLength = _text.Length;
+			var vertCount  = (uint)textLength * 4;
+			if(_verts.VertexCount != vertCount)
+				_verts.Resize(vertCount);
+			for(var i = 0; i < textLength; ++i)
+			{// Construct each set of 4 vertices for each glyph
+				var c = _text[i];
+				var j = (uint)(i << 2); // x4
+				constructFromGlyph(c, ref _verts, j);
+			}
+		}
+
+		/// <summary>
+		/// Constructs a set of vertices from a glyph
+		/// </summary>
+		/// <param name="c">Character to get the texture of</param>
+		/// <param name="verts">Vertex array to update</param>
+		/// <param name="index">Index of the first vertex</param>
+		private void constructFromGlyph (char c, ref VertexArray verts, uint index)
 		{
 			var glyph = _font.GetGlyph(c, _size, false);
-			var transform = SFML.Graphics.RenderStates.Default;
-			transform.Texture = _font.GetTexture(_size);
-			transform.Transform.Translate(curPoint);
-			var verts = new SFML.Graphics.Vertex[4];
-			var rect = glyph.TextureRect;
-			verts[0] = new SFML.Graphics.Vertex(new SFML.Window.Vector2f(0, 0), new SFML.Window.Vector2f(rect.Left, rect.Top));
-			verts[1] = new SFML.Graphics.Vertex(new SFML.Window.Vector2f(rect.Width, 0), new SFML.Window.Vector2f(rect.Left + rect.Width, rect.Top));
-			verts[2] = new SFML.Graphics.Vertex(new SFML.Window.Vector2f(rect.Width, rect.Height), new SFML.Window.Vector2f(rect.Left + rect.Width, rect.Top + rect.Height));
-			verts[3] = new SFML.Graphics.Vertex(new SFML.Window.Vector2f(0, rect.Height), new SFML.Window.Vector2f(rect.Left, rect.Top + rect.Height));
-			target.Draw(verts, transform);
-			nextPoint = curPoint;
-			nextPoint.X += glyph.Advance;
+			var rect  = glyph.TextureRect;
+
+			// Quad points
+			var v1 = new SFML.Window.Vector2f(0f,         0f);
+			var v2 = new SFML.Window.Vector2f(rect.Width, 0f);
+			var v3 = new SFML.Window.Vector2f(rect.Width, rect.Height);
+			var v4 = new SFML.Window.Vector2f(0f,         rect.Height);
+
+			// Texture points
+			var t1 = new SFML.Window.Vector2f(rect.Left,              rect.Top);
+			var t2 = new SFML.Window.Vector2f(rect.Left + rect.Width, rect.Top);
+			var t3 = new SFML.Window.Vector2f(rect.Left + rect.Width, rect.Top + rect.Height);
+			var t4 = new SFML.Window.Vector2f(rect.Left,              rect.Top + rect.Height);
+
+			verts[index++] = new Vertex(v1, t1);
+			verts[index++] = new Vertex(v2, t2);
+			verts[index++] = new Vertex(v3, t3);
+			verts[index]   = new Vertex(v4, t4);
+		}
+
+		/// <summary>
+		/// Draws the text onto a renderable object
+		/// </summary>
+		/// <param name="target">Render target</param>
+		public void Draw (IRenderTarget target)
+		{
+			var rs = new RenderStates(_texture);
+			target.Draw(_verts, rs);
 		}
 	}
 }

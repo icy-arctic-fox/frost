@@ -25,6 +25,6 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="verts">Vertices to draw</param>
 		/// <param name="transform">Additional transformation and render options</param>
-		void Draw (Vertex[] verts, RenderStates transform);
+		void Draw (VertexArray verts, RenderStates transform);
 	}
 }
