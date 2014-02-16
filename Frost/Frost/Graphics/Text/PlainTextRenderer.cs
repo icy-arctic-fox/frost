@@ -43,6 +43,7 @@ namespace Frost.Graphics.Text
 				PrepareWordWrap(text);
 			else
 				PrepareNoWrap(text);
+			Prepared = true;
 		}
 
 		#region Word Wrap

@@ -174,7 +174,7 @@ namespace Frost.Graphics.Text
 #endif
 				_buffer.Display();
 			}
-			return _texture;
+			return _texture.Clone();
 		}
 		#endregion
 
