@@ -26,7 +26,10 @@ These tokens represent some static numerical value.
 * `def` Definition
 * `function` Function
 * `class` Class
-* `new` New Instance
+* `new` NewInstance
+* `if` If
+* `else` Else
+* `while` While
 
 ### Punctuation ###
 
@@ -40,6 +43,19 @@ These tokens represent some static numerical value.
 * `;` Semicolon
 * `:` Colon
 * `,` Comma
+
+### Operators ###
+
+* `+` Add
+* `-` Subtract
+* `*` Multiply
+* `/` Divide
+* `=` Assignment
+* `<` LessThan
+* `>` GreaterThan
+* `<=` LessThanEqual
+* `>=` GreaterThanEqual
+* `==` Equal
 
 **Notes:**
 
