@@ -2,7 +2,6 @@ Tokens
 ------
 
 ### Numerical ###
-These tokens represent some static numerical value.
 
 * `[0-9]+` Integer
 * `[0-9]+.[0-9]+` Float
@@ -23,10 +22,11 @@ These tokens represent some static numerical value.
 
 ### Keywords ###
 
-* `def` Definition
+* `def` Def
 * `function` Function
 * `class` Class
-* `new` NewInstance
+* `var` Variable
+* `new` New
 * `if` If
 * `else` Else
 * `while` While
@@ -88,7 +88,7 @@ If the function doesn't accept any arguments, then the argument list should be e
 Any number of statements can be listed inside of the function.
 
 **Syntax:**
-`Definition` `Function` `Identifier(name)` `LeftParen` *`ArgumentList(args)`* `RightParen` `LeftCurlyBrace` *`StatementList(statements)`* `RightCurlyBrace`
+`Def` `Function` `Identifier(name)` `LeftParen` *`ArgumentList(args)`* `RightParen` `LeftCurlyBrace` *`StatementList(statements)`* `RightCurlyBrace`
 
 **Examples:**
 
@@ -105,7 +105,7 @@ Defines a class.
 A class is a collection of function definitions and values.
 
 **Syntax:**
-`Definition` `Class` `Identifier` `LeftCurlyBrace` *`ClassList`* `RightCurlyBrace`
+`Def` `Class` `Identifier` `LeftCurlyBrace` *`ClassList`* `RightCurlyBrace`
 
 **Examples:**
 
@@ -130,7 +130,7 @@ Pluggable types allow for customized definitions.
 Pluggable types are defined in the engine or extensions of the engine.
 
 **Syntax:**
-`Definition` `Identifier(type)` `Identifier(name)` `LeftParen` *`ArgumentList(args)`* `RightParen` `LeftCurlyBrace` *`StatementList(statements)`* `RightCurlyBrace`
+`Def` `Identifier(type)` `Identifier(name)` `LeftParen` *`ArgumentList(args)`* `RightParen` `LeftCurlyBrace` *`StatementList(statements)`* `RightCurlyBrace`
 
 **Examples:**
 
@@ -141,3 +141,24 @@ Pluggable types are defined in the engine or extensions of the engine.
 	def chat_command spawn_enemy (enemy) {
 		// ...
 	}
+
+### Functions ###
+...
+
+#### Argument List ####
+...
+
+#### Statement List ####
+...
+
+### Classes ###
+...
+
+#### Class List ####
+...
+
+### Variables ###
+...
+
+### Statements ###
+...
