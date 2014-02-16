@@ -15,6 +15,11 @@ namespace Frost.Modules.Input
 		public Key Key { get; internal set; }
 
 		/// <summary>
+		/// Modifier keys that were pressed with the key
+		/// </summary>
+		public ModifierKey Modifiers { get; internal set; }
+
+		/// <summary>
 		/// Creates a new keyboard event
 		/// </summary>
 		/// <param name="key">Keyboard key that was pressed or released during the event</param>

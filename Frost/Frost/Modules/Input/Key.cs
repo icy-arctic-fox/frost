@@ -435,6 +435,19 @@ namespace Frost.Modules.Input
 		Escape = KC.Escape,
 
 		/// <summary>
+		/// Menu key
+		/// </summary>
+		Menu = KC.Menu,
+
+		/// <summary>
+		/// Pause key
+		/// </summary>
+		Pause = KC.Pause,
+		#endregion
+
+		#region Modifier keys
+
+		/// <summary>
 		/// Left control key
 		/// </summary>
 		LControl = KC.LControl,
@@ -473,16 +486,6 @@ namespace Frost.Modules.Input
 		/// Right system (Windows) key
 		/// </summary>
 		RSystem = KC.RSystem,
-
-		/// <summary>
-		/// Menu key
-		/// </summary>
-		Menu = KC.Menu,
-
-		/// <summary>
-		/// Pause key
-		/// </summary>
-		Pause = KC.Pause,
 		#endregion
 
 		#region Spacing keys

@@ -37,12 +37,22 @@ namespace Test_Game
 
 		void controller_VertReleased (object sender, InputEventArgs e)
 		{
-			_ball.SpeedY = 0f;
+			if(Keyboard.IsKeyPressed(Key.Up))
+				_ball.SpeedY = -Speed;
+			else if(Keyboard.IsKeyPressed(Key.Down))
+				_ball.SpeedY = Speed;
+			else
+				_ball.SpeedY = 0f;
 		}
 
 		void controller_HorizReleased (object sender, InputEventArgs e)
 		{
-			_ball.SpeedX = 0f;
+			if(Keyboard.IsKeyPressed(Key.Left))
+				_ball.SpeedX = -Speed;
+			else if(Keyboard.IsKeyPressed(Key.Right))
+				_ball.SpeedX = Speed;
+			else
+				_ball.SpeedX = 0f;
 		}
 
 		private class Ball : IStepable, IRenderable
