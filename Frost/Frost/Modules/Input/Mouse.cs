@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Geometry;
 using SFML.Window;
 using Frost.Utility;
 using M = SFML.Window.Mouse;

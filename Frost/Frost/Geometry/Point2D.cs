@@ -1,8 +1,8 @@
 ﻿using System;
-using Vect  = SFML.Window.Vector2i;
-using Point = System.Drawing.Point;
+using System.Drawing;
+using SFML.Window;
 
-namespace Frost
+namespace Frost.Geometry
 {
 	/// <summary>
 	/// An two-dimension point
@@ -61,21 +61,21 @@ namespace Frost
 		#region Implicit conversions
 
 		/// <summary>
-		/// Converts a <see cref="Point2D"/> to a <see cref="Vect"/>
+		/// Converts a <see cref="Point2D"/> to a <see cref="Vector2i"/>
 		/// </summary>
 		/// <param name="point">Point to convert</param>
 		/// <returns>An SFML 2D point</returns>
-		public static implicit operator Vect (Point2D point)
+		public static implicit operator Vector2i (Point2D point)
 		{
-			return new Vect(point.X, point.Y);
+			return new Vector2i(point.X, point.Y);
 		}
 
 		/// <summary>
-		/// Converts a <see cref="Vect"/> to a <see cref="Point2D"/>
+		/// Converts a <see cref="Vector2i"/> to a <see cref="Point2D"/>
 		/// </summary>
 		/// <param name="point">Point to convert</param>
 		/// <returns>A Frost 2D point</returns>
-		public static implicit operator Point2D (Vect point)
+		public static implicit operator Point2D (Vector2i point)
 		{
 			return new Point2D(point.X, point.Y);
 		}

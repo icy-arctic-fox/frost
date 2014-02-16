@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Geometry;
 
 namespace Frost.Modules.Input
 {

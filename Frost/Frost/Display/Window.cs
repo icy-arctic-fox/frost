@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Geometry;
 using SFML.Graphics;
 using SFML.Window;
 using Frost.Modules.Input;
