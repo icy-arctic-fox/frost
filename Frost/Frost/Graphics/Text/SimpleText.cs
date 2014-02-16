@@ -12,6 +12,7 @@ namespace Frost.Graphics.Text
 	public class SimpleText : IFullDisposable
 	{
 		private readonly uint _size;
+		private readonly int _spacing;
 		private readonly SFML.Graphics.Font _font;
 		private readonly VertexArray _verts;
 		private RenderStates _rs = RenderStates.Default;
@@ -24,10 +25,11 @@ namespace Frost.Graphics.Text
 		/// <param name="color">Font color</param>
 		public SimpleText (Font font, uint size, Color color)
 		{
-			_font  = font.UnderlyingFont;
-			_size  = size;
-			_verts = new VertexArray(PrimitiveType.Quads);
-			_color = color;
+			_font    = font.UnderlyingFont;
+			_size    = size;
+			_spacing = _font.GetLineSpacing(size);
+			_verts   = new VertexArray(PrimitiveType.Quads);
+			_color   = color;
 		}
 
 		private string _text;
@@ -91,15 +93,16 @@ namespace Frost.Graphics.Text
 		/// <param name="pos">X-offset to place the character at and position for the next character after returning</param>
 		private void constructFromGlyph (char c, uint index, ref float pos)
 		{
-			var glyph = _font.GetGlyph(c, _size, false);
-			var rect  = glyph.TextureRect;
+			var glyph  = _font.GetGlyph(c, _size, false);
+			var rect   = glyph.TextureRect;
+			var bounds = glyph.Bounds;
 
 			// Calculate vertex positions
 			var h = rect.Height;
 			var w = rect.Width;
-			var left   = pos;
+			var left   = pos + bounds.Left;
 			var right  = left + w;
-			var top    = _size - h;
+			var top    = _spacing + bounds.Top;
 			var bottom = top + h;
 
 			// Vertex points
