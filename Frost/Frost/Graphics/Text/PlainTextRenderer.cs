@@ -22,7 +22,7 @@ namespace Frost.Graphics.Text
 			set
 			{
 				Prepared = false;
-				_text    = value;
+				_text = value;
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace Frost.Graphics.Text
 		{
 			var text = _text;
 			if(!MultiLine)
-			{// Strip new lines
+			{ // Strip new lines
 				text = text.Replace("\n", String.Empty);
 				text = text.Replace("\r", String.Empty);
 			}
@@ -45,6 +45,11 @@ namespace Frost.Graphics.Text
 				PrepareNoWrap(text);
 		}
 
+		#region Word Wrap
+
+		private static readonly Regex _newlineRegex    = new Regex(@"\r?\n", RegexOptions.Compiled);
+		private static readonly Regex _whitespaceRegex = new Regex(@"\s+", RegexOptions.Compiled);
+
 		/// <summary>
 		/// Draws the text using word wrapping
 		/// </summary>
@@ -52,16 +57,17 @@ namespace Frost.Graphics.Text
 		protected void PrepareWordWrap (string text)
 		{
 			// Perform the word wrapping
+			SFML.Graphics.FloatRect rect;
 			var lines = breakTextIntoWords(text);
-			var rect  = applyWordWrap(lines);
+			var words = applyWordWrap(lines, TextObject, out rect);
 
-			// Calculate the texture size
-			var width  = (uint)(rect.Width  + rect.Left) + 1;
-			var height = (uint)(rect.Height + rect.Top)  + 1;
+			// Prepare the texture
+			var width  = (uint)(rect.Width + rect.Left) + 1;
+			var height = (uint)(rect.Height + rect.Top) + 1;
 			PrepareTexture(width, height);
 
 			// Draw the text
-			Buffer.Draw(TextObject);
+			drawWords(words);
 		}
 
 		/// <summary>
@@ -69,20 +75,18 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="text">Text to break apart</param>
 		/// <returns>A list of lines with each element containing a list of words</returns>
-		private static LinkedList<LinkedList<string>> breakTextIntoWords (string text)
+		private static IEnumerable<IEnumerable<string>> breakTextIntoWords (string text)
 		{
 			// Break apart the string at existing line breaks
-			var lines     = new LinkedList<LinkedList<string>>();
-			var newlines  = new Regex(@"\r?\n", RegexOptions.Compiled);
-			var origLines = newlines.Split(text);
+			var origLines = _newlineRegex.Split(text);
+			var lines = new string[origLines.Length][];
 
 			// Break each line apart into words
-			var whitespace = new Regex(@"\s+", RegexOptions.Compiled);
-			foreach(var line in origLines)
+			for(var i = 0; i < lines.Length; ++i)
 			{
-				var words = whitespace.Split(line);
-				var curLineWords = new LinkedList<string>(words);
-				lines.AddLast(curLineWords);
+				var line  = origLines[i];
+				var words = _whitespaceRegex.Split(line);
+				lines[i]  = words;
 			}
 
 			return lines;
@@ -91,64 +95,33 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Moves words to new lines if they extend past the desired length
 		/// </summary>
-		/// <param name="lines">List of lines with each element containing a list of words</param>
-		/// <returns>Bounds for the entire text</returns>
-		private SFML.Graphics.FloatRect applyWordWrap (LinkedList<LinkedList<string>> lines)
+		/// <param name="origLines">List of lines with each element containing a list of words</param>
+		/// <param name="t">Text object used to calculate the bounds</param>
+		/// <param name="rect">Bounding box for all words</param>
+		private static IEnumerable<IEnumerable<string>> applyWordWrap (IEnumerable<IEnumerable<string>> origLines, SFML.Graphics.Text t, out SFML.Graphics.FloatRect rect)
 		{
-			var rect = new SFML.Graphics.FloatRect(0f, 0f, 0f, 0f);
-
-			var curLine = lines.First;
-			while(curLine != null)
-			{
-				var pos    = 0f;
-				var height = 0f;
-				var wordList  = curLine.Value;
-				var firstWord = wordList.First;
-				var curWord   = firstWord;
-				while(curWord != null)
+			var lines = new LinkedList<LinkedList<string>>();
+			foreach(var origLine in origLines)
+			{//
+				var line = new LinkedList<string>();
+				var pos = 0f;
+				foreach(var word in origLine)
 				{
-					// Calculate the bounds
-					var bounds = getTextBounds(curWord.Value);
-					pos += bounds.Width + bounds.Left;
-					if(pos > rect.Width)
-						rect.Width = pos;
-					var textHeight = bounds.Height + bounds.Top;
-					if(textHeight > height)
-						height = textHeight;
-
-					if(pos > WrapLength)
-					{// Line has overflowed, push upcoming words to the next line
-						// If the current word is the first word on the line, select the next word to start at.
-						// This will prevent infinite blank lines by putting at least one word per line.
-						var startingWord = (curWord == firstWord) ? curWord : curWord.Next;
-						if(startingWord != null)
-						{
-							var newLine = new LinkedList<string>();
-							while(startingWord != null)
-							{// Move each of the remaining words to the next line
-								var nextWord = startingWord.Next;
-								var word = startingWord.Value;
-								wordList.Remove(startingWord);
-								newLine.AddLast(word);
-								startingWord = nextWord;
-							}
-							lines.AddAfter(curLine, newLine);
-						}
-					}
-					curWord = curWord.Next;
+					// Calculate the bounds of the word
+					var bounds = getTextBounds(word, t);
+					pos += bounds.Width + bounds.Height;
 				}
-				rect.Height += height;
-				curLine = curLine.Next;
+				lines.AddLast(line);
 			}
 
-			return rect;
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
 		/// Draws each of the words in the text
 		/// </summary>
 		/// <param name="lines">List of lines with each element containing a list of words</param>
-		private void drawWords (LinkedList<LinkedList<string>> lines)
+		private void drawWords (IEnumerable<IEnumerable<string>> lines)
 		{
 			var state = new SFML.Graphics.RenderStates();
 
@@ -164,15 +137,45 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
+		/// Information about a word when wrapping text
+		/// </summary>
+		private struct Word
+		{
+			/// <summary>
+			/// The actual text for the word
+			/// </summary>
+			public readonly string Text;
+
+			/// <summary>
+			/// Location of the word
+			/// </summary>
+			public readonly float X, Y;
+
+			/// <summary>
+			/// Creates a word reference
+			/// </summary>
+			/// <param name="text">Actual text for the word</param>
+			/// <param name="x">X-coordinate of the word</param>
+			/// <param name="y">Y-coordinate of the word</param>
+			public Word(string text, float x, float y)
+			{
+				Text = text;
+				X = x;
+				Y = y;
+			}
+		}
+		#endregion
+
+		/// <summary>
 		/// Draws the text not using word wrapping
 		/// </summary>
 		/// <param name="text">Text to render</param>
 		protected void PrepareNoWrap (string text)
 		{
 			// Calculate the size of the text
-			var bounds = getTextBounds(text);
-			var width  = (uint)(bounds.Width + bounds.Left) + 1;
-			var height = (uint)(bounds.Height + bounds.Top) + 1;
+			var bounds = getTextBounds(text, TextObject);
+			var width  = (uint)(bounds.Width  + bounds.Left) + 1;
+			var height = (uint)(bounds.Height + bounds.Top)  + 1;
 			PrepareTexture(width, height);
 
 			// Draw the text
@@ -183,11 +186,12 @@ namespace Frost.Graphics.Text
 		/// Gets the bounds calculated for some given text
 		/// </summary>
 		/// <param name="text">Text to calculate the bounds of</param>
+		/// <param name="t">Text object used to calculate the bounds</param>
 		/// <returns>Text bounds</returns>
-		private SFML.Graphics.FloatRect getTextBounds (string text)
+		private static SFML.Graphics.FloatRect getTextBounds (string text, SFML.Graphics.Text t)
 		{
-			TextObject.DisplayedString = text;
-			return TextObject.GetLocalBounds();
+			t.DisplayedString = text;
+			return t.GetLocalBounds();
 		}
 	}
 }

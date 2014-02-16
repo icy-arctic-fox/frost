@@ -19,7 +19,7 @@ namespace Frost.UI
 			_background = new RectangleShape(new SFML.Window.Vector2f(200f, 125f)) {
 				FillColor = new SFML.Graphics.Color(0, 0, 0, 128)
 			};
-			var font   = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
+			var font   = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf"); // TODO: Replace with parameter
 			var color  = new Color(255, 255, 255);
 			_frameText = new SimpleText(font, 12, color);
 		}
