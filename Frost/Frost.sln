@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost", "Frost\Frost.csproj", "{87399C66-DB86-4BC6-92EA-BF8D1D9DADE7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD} = {B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}
@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource Packager GUI", "Re
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test Game", "Test Game\Test Game.csproj", "{D96AF0F4-FFD1-430A-B49A-4D775AED1920}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frost Script", "Frost Script\Frost Script.csproj", "{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,16 @@ Global
 		{D96AF0F4-FFD1-430A-B49A-4D775AED1920}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D96AF0F4-FFD1-430A-B49A-4D775AED1920}.Release|x86.ActiveCfg = Release|x86
 		{D96AF0F4-FFD1-430A-B49A-4D775AED1920}.Release|x86.Build.0 = Release|x86
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AFE442F9-A877-4BD2-B69F-7BB4DFED328A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
