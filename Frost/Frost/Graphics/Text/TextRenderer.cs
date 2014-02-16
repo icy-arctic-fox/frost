@@ -171,8 +171,8 @@ namespace Frost.Graphics.Text
 #if DEBUG
 				if(_texture == null) // Would be nice to check if the internal texture was disposed
 					throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
-				_buffer.Display();
 #endif
+				_buffer.Display();
 			}
 			return _texture;
 		}

@@ -98,39 +98,48 @@ namespace Frost.Graphics.Text
 		/// <param name="origLines">List of lines with each element containing a list of words</param>
 		/// <param name="t">Text object used to calculate the bounds</param>
 		/// <param name="rect">Bounding box for all words</param>
-		private static IEnumerable<IEnumerable<string>> applyWordWrap (IEnumerable<IEnumerable<string>> origLines, SFML.Graphics.Text t, out SFML.Graphics.FloatRect rect)
+		private static IEnumerable<IEnumerable<Word>> applyWordWrap (IEnumerable<IEnumerable<string>> origLines, SFML.Graphics.Text t, out SFML.Graphics.FloatRect rect)
 		{
-			var lines = new LinkedList<LinkedList<string>>();
+			var lines = new LinkedList<LinkedList<Word>>();
+			float y = 0f, left = 0f, top = 0f, width = 0f, height = 0f;
 			foreach(var origLine in origLines)
-			{//
-				var line = new LinkedList<string>();
-				var pos = 0f;
+			{
+				var line = new LinkedList<Word>();
+				var x = 0f;
+				var max = 0f;
 				foreach(var word in origLine)
 				{
 					// Calculate the bounds of the word
 					var bounds = getTextBounds(word, t);
-					pos += bounds.Width + bounds.Height;
+					line.AddLast(new Word(word, x, y));
+					x += bounds.Width + bounds.Left;
+					if(bounds.Height + bounds.Top > max)
+						max = bounds.Height + bounds.Top;
+					if(x > width)
+						width = x;
 				}
+				y += max;
 				lines.AddLast(line);
 			}
 
-			throw new NotImplementedException();
+			rect = new SFML.Graphics.FloatRect(left, top, width, y);
+			return lines;
 		}
 
 		/// <summary>
 		/// Draws each of the words in the text
 		/// </summary>
 		/// <param name="lines">List of lines with each element containing a list of words</param>
-		private void drawWords (IEnumerable<IEnumerable<string>> lines)
+		private void drawWords (IEnumerable<IEnumerable<Word>> lines)
 		{
-			var state = new SFML.Graphics.RenderStates();
-
 			foreach(var line in lines)
 			{
 				foreach(var word in line)
 				{
 					// TODO
-					TextObject.DisplayedString = word;
+					TextObject.DisplayedString = word.Text;
+					var state = SFML.Graphics.RenderStates.Default;
+					state.Transform.Translate(word.X, word.Y);
 					Buffer.Draw(TextObject, state);
 				}
 			}
@@ -173,6 +182,7 @@ namespace Frost.Graphics.Text
 		protected void PrepareNoWrap (string text)
 		{
 			// Calculate the size of the text
+			TextObject.DisplayedString = text;
 			var bounds = getTextBounds(text, TextObject);
 			var width  = (uint)(bounds.Width  + bounds.Left) + 1;
 			var height = (uint)(bounds.Height + bounds.Top)  + 1;
