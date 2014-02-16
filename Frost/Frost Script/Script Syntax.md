@@ -10,9 +10,9 @@ Tokens
 
 ### Built-in Types ###
 
-* `int` Integer
-* `float` Float
-* `string` String
+* `int` IntegerType
+* `float` FloatType
+* `string` StringType
 
 ### Strings ###
 

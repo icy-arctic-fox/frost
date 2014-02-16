@@ -36,6 +36,49 @@ namespace Frost.Scripting.Compiler
 			{
 				switch(_type)
 				{
+				case TokenType.Integer:
+				case TokenType.Float:
+				case TokenType.Hex:
+				case TokenType.Binary:
+					return TokenCategory.Numerical;
+				case TokenType.IntType:
+				case TokenType.FloatType:
+				case TokenType.StringType:
+					return TokenCategory.Type;
+				case TokenType.QuotedString:
+				case TokenType.DoubleQuotedString:
+					return TokenCategory.String;
+				case TokenType.Def:
+				case TokenType.Function:
+				case TokenType.Class:
+				case TokenType.Variable:
+				case TokenType.New:
+				case TokenType.If:
+				case TokenType.Else:
+				case TokenType.While:
+					return TokenCategory.Keyword;
+				case TokenType.LeftParen:
+				case TokenType.RightParen:
+				case TokenType.LeftBrace:
+				case TokenType.RightBrace:
+				case TokenType.LeftCurlyBrace:
+				case TokenType.RightCurlyBrace:
+				case TokenType.Dot:
+				case TokenType.Semicolon:
+				case TokenType.Colon:
+				case TokenType.Comma:
+					return TokenCategory.Punctuation;
+				case TokenType.Add:
+				case TokenType.Subtract:
+				case TokenType.Multiply:
+				case TokenType.Divide:
+				case TokenType.Assignment:
+				case TokenType.LessThan:
+				case TokenType.GreaterThan:
+				case TokenType.LessThanEqual:
+				case TokenType.GreaterThanEqual:
+				case TokenType.Equal:
+					return TokenCategory.Operator;
 				default:
 					return TokenCategory.Identifier;
 				}

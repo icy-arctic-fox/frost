@@ -6,7 +6,7 @@
 	public enum TokenCategory
 	{
 		/// <summary>
-		/// Static numerical value
+		/// Literal numerical value
 		/// </summary>
 		Numerical,
 
