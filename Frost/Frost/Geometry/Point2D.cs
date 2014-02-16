@@ -5,7 +5,7 @@ using SFML.Window;
 namespace Frost.Geometry
 {
 	/// <summary>
-	/// An two-dimension point
+	/// An two-dimensional point with integer values
 	/// </summary>
 	public struct Point2D
 	{
