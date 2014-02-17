@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripting\Compiler\Lexer.cs" />
     <Compile Include="Scripting\Compiler\Token.cs" />
     <Compile Include="Scripting\Compiler\TokenCategory.cs" />
     <Compile Include="Scripting\Compiler\TokenType.cs" />
