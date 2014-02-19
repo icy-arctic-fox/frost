@@ -48,15 +48,97 @@ namespace Frost.Scripting.Compiler
 				resetLexeme();
 				char c;
 				if(skipWhitespace(out c))
-				{
-					
-				}
+					return initialState(c);
 			}
 
 			return null; // No tokens left
 		}
 
-		#region Stream reading utilities
+		#region Lexer states
+
+		/// <summary>
+		/// Starting state for all tokens
+		/// </summary>
+		/// <param name="c">First character</param>
+		/// <returns>A token</returns>
+		private Token initialState (char c)
+		{
+			if(Char.IsDigit(c))
+				return digitState(c);
+
+			// else - Character doesn't match anything known of
+			error(String.Format("Unrecognized character '{0}'", c));
+			return null; // Should never get here
+		}
+
+		/// <summary>
+		/// State when the character parsed is a digit
+		/// </summary>
+		/// <param name="c"></param>
+		/// <returns></returns>
+		private Token digitState (char c)
+		{
+			return (c == '0') ? digit0State() : numberState(c);
+		}
+
+		/// <summary>
+		/// State when parsing a number that is likely in a format that isn't base 10
+		/// </summary>
+		/// <returns>A numerical token</returns>
+		private Token digit0State ()
+		{
+			char t; // Get the next char, which indicates the type
+			if(getNextChar(out t))
+			{// Check what the character is
+				var numBase = 10;
+				switch(t)
+				{
+				case 'x':
+					numBase = 16;
+					break;
+				case 'b':
+					numBase = 2;
+					break;
+				case '.':
+					pushback(t);
+					return numberState('0');
+				default:
+					if(Char.IsDigit(t)) // Octal
+						numBase = 8;
+					else // Unknown
+						error(String.Format("Unexpected character '{0}' found. Expected numerical literal.", t));
+					break;
+				}
+
+				// Continue reading digits
+				char d;
+				while(getNextChar(out d))
+				{// Getting an end of stream is fine, that signifies that the number completed
+					if(!Char.IsDigit(d))
+						error(String.Format("Expected digit in numerical literal, but got '{0}'", d));
+				}
+
+				// Parse the value and create a token
+				var value = Convert.ToInt32(Lexeme, numBase);
+				throw new NotImplementedException(); // TODO: Return IntegerToken
+			}
+			
+			// End of stream, just a 0 by itself
+			throw new NotImplementedException(); // TODO: Return IntegerToken
+		}
+
+		/// <summary>
+		/// State when parsing a base 10 numerical value (integer or decimal)
+		/// </summary>
+		/// <param name="c">First character in the number</param>
+		/// <returns>A numerical token</returns>
+		private Token numberState (char c)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
+		#region Lexer utilities
 
 		/// <summary>
 		/// Indicates if the end of the stream has been reached
@@ -164,10 +246,10 @@ namespace Frost.Scripting.Compiler
 			if(getNextChar(out actual))
 			{
 				if(actual != expected)
-					throw new ParserException(String.Format("Expected '{0}', but got '{1}'", expected, actual), _line, _char);
+					error(String.Format("Expected '{0}', but got '{1}'", expected, actual));
 			}
 			else
-				throw new ParserException(String.Format("Unexpected end of file reached. Expected '{0}'", expected), _line, _char);
+				error(String.Format("Unexpected end of file reached. Expected '{0}'", expected));
 		}
 
 		/// <summary>
@@ -179,8 +261,17 @@ namespace Frost.Scripting.Compiler
 		{
 			char c;
 			if(getNextChar(out c) && !Char.IsWhiteSpace(c))
-				throw new ParserException(String.Format("Unexpected character '{0}' encountered when whitespace was expected", c),
-										_line, _char);
+				error(String.Format("Unexpected character '{0}' encountered when whitespace was expected", c));
+		}
+
+		/// <summary>
+		/// Throws a parser exception for the current position in the stream
+		/// </summary>
+		/// <param name="message">Informational message</param>
+		/// <exception cref="ParserException">It's what this method does</exception>
+		private void error (string message)
+		{
+			throw new ParserException(message, _line, _char);
 		}
 		#endregion
 
