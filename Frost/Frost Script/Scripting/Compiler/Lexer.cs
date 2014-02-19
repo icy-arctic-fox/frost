@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Frost.IO;
 using Frost.Utility;
 
 namespace Frost.Scripting.Compiler
@@ -12,7 +13,10 @@ namespace Frost.Scripting.Compiler
 	/// </summary>
 	public class Lexer : IFullDisposable
 	{
+		private readonly PushbackStream _pushback;
 		private readonly BinaryReader _br;
+		private uint _line, _char;
+		private readonly StringBuilder _lexeme = new StringBuilder();
 
 		/// <summary>
 		/// Creates a new token lexer
@@ -24,7 +28,19 @@ namespace Frost.Scripting.Compiler
 			if(s == null)
 				throw new ArgumentNullException("s", "The stream to read characters from can't be null.");
 
-			_br = new BinaryReader(s);
+			_pushback = new PushbackStream(s);
+			_br       = new BinaryReader(_pushback);
+			_line     = 1;
+			_char     = 1;
+		}
+
+		/// <summary>
+		/// Gets the next token from the stream
+		/// </summary>
+		/// <returns>Next token or null if there aren't any token remaining</returns>
+		public Token GetNext ()
+		{
+			throw new NotImplementedException();
 		}
 
 		#region Disposable
