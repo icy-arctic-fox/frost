@@ -40,10 +40,23 @@ namespace Frost.Scripting.Compiler
 		/// Gets the next token from the stream
 		/// </summary>
 		/// <returns>Next token or null if there aren't any token remaining</returns>
+		/// <exception cref="ParserException">Thrown if an unexpected character was encountered</exception>
 		public Token GetNext ()
 		{
-			throw new NotImplementedException();
+			while(!EndOfStream)
+			{// A while-loop is used here to continue reading when a comment is encountered
+				resetLexeme();
+				char c;
+				if(skipWhitespace(out c))
+				{
+					
+				}
+			}
+
+			return null; // No tokens left
 		}
+
+		#region Stream reading utilities
 
 		/// <summary>
 		/// Indicates if the end of the stream has been reached
@@ -66,7 +79,7 @@ namespace Frost.Scripting.Compiler
 		/// <summary>
 		/// Clears the contents of the lexeme
 		/// </summary>
-		private void restartLexeme ()
+		private void resetLexeme ()
 		{
 			_lexeme.Clear();
 		}
@@ -129,7 +142,7 @@ namespace Frost.Scripting.Compiler
 				}
 				else
 				{// Non-whitespace character encountered
-					restartLexeme();
+					resetLexeme();
 					_lexeme.Append(c);
 					return true;
 				}
@@ -143,7 +156,7 @@ namespace Frost.Scripting.Compiler
 		/// Reads a character from the stream and throws an exception if it didn't match the expected character
 		/// </summary>
 		/// <param name="expected">Character that is expected to be next in the stream</param>
-		/// <exception cref="Exception">Thrown if the character read from the stream doesn't match <paramref name="expected"/>.
+		/// <exception cref="ParserException">Thrown if the character read from the stream doesn't match <paramref name="expected"/>.
 		/// This is also thrown if the end of the stream was encountered.</exception>
 		private void expect (char expected)
 		{
@@ -156,6 +169,20 @@ namespace Frost.Scripting.Compiler
 			else
 				throw new ParserException(String.Format("Unexpected end of file reached. Expected '{0}'", expected), _line, _char);
 		}
+
+		/// <summary>
+		/// Reads a character from the stream and throws an exception if it isn't whitespace
+		/// </summary>
+		/// <remarks>The end of the stream is considered whitespace.</remarks>
+		/// <exception cref="ParserException">Thrown if the character read from the stream isn't whitespace</exception>
+		private void expectWhitespace ()
+		{
+			char c;
+			if(getNextChar(out c) && !Char.IsWhiteSpace(c))
+				throw new ParserException(String.Format("Unexpected character '{0}' encountered when whitespace was expected", c),
+										_line, _char);
+		}
+		#endregion
 
 		#region Disposable
 
