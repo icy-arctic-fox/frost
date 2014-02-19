@@ -9,8 +9,10 @@ namespace Frost.Utility
 	/// </summary>
 	public class FlagArray : IEnumerable<bool>
 	{
+		private const int FlagsPerElement = sizeof(int) * 8;
+
 		private readonly int _count;
-		private readonly byte[] _bytes;
+		private readonly int[] _flags;
 
 		/// <summary>
 		/// Creates a new flag array
@@ -23,10 +25,10 @@ namespace Frost.Utility
 				throw new ArgumentOutOfRangeException("count", "The number of flags can't be less than 1.");
 
 			_count = count;
-			var length = count / 8;
-			if(count % 8 != 0)
+			var length = count / FlagsPerElement;
+			if(count % FlagsPerElement != 0)
 				++length; // Round up
-			_bytes = new byte[length];
+			_flags = new int[length];
 		}
 
 		/// <summary>
@@ -41,7 +43,7 @@ namespace Frost.Utility
 			{
 				int byteIndex, offset;
 				getBitIndex(index, out byteIndex, out offset);
-				var b = _bytes[byteIndex];
+				var b = _flags[byteIndex];
 				var v = b & (1 << offset);
 				return v != 0;
 			}
@@ -50,11 +52,11 @@ namespace Frost.Utility
 			{
 				int byteIndex, offset;
 				getBitIndex(index, out byteIndex, out offset);
-				var b = _bytes[byteIndex];
+				var b = _flags[byteIndex];
 				b &= (byte)~(1 << offset);
 				if(value)
 					b |= (byte)(1 << offset);
-				_bytes[byteIndex] = b;
+				_flags[byteIndex] = b;
 			}
 		}
 
@@ -107,7 +109,27 @@ namespace Frost.Utility
 		/// <returns>A byte array</returns>
 		public byte[] ToByteArray ()
 		{
-			return _bytes.Duplicate();
+			var length = ByteLength;
+			var bytes  = new byte[length];
+
+			for(int srcIndex = 0, destIndex = 0, destByte = 0, destBit = 0; destIndex < _count; ++srcIndex, ++destIndex)
+			{
+				var v = this[srcIndex];
+				var b = bytes[destByte];
+				b &= (byte)~(1 << destBit);
+				if(v)
+					b |= (byte)(1 << destBit);
+				bytes[destByte] = b;
+
+				++destBit;
+				if(destBit >= 8)
+				{
+					destBit = 0;
+					++destByte;
+				}
+			}
+
+			return bytes;
 		}
 
 		/// <summary>
@@ -151,6 +173,58 @@ namespace Frost.Utility
 		}
 
 		/// <summary>
+		/// Creates an integer array containing all of the flags
+		/// </summary>
+		/// <returns>An integer array</returns>
+		public int[] ToIntArray ()
+		{
+			var ints = new int[_flags.Length];
+			for(var i = 0; i < ints.Length; ++i)
+				ints[i] = _flags[i];
+			return ints;
+		}
+
+		/// <summary>
+		/// Creates an integer array containing the selected flags
+		/// </summary>
+		/// <param name="start">Index of the first flag to store</param>
+		/// <param name="count">Number of flags to include</param>
+		/// <returns>An integer array containing the selected flags</returns>
+		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="start"/> is less than 0 or greater than or equal to <see cref="Count"/></exception>
+		/// <exception cref="T:System.ArgumentException">Thrown if <paramref name="count"/> is greater than the number of flags available minus <paramref name="start"/></exception>
+		public int[] ToIntArray (int start, int count)
+		{
+			if(start < 0 || start >= _count)
+				throw new ArgumentOutOfRangeException("start", "The starting index is out of range.");
+			if(count > _count - start)
+				throw new ArgumentException("The number of items to copy exceeds the number of items available.");
+
+			var length = count / FlagsPerElement;
+			if(count % FlagsPerElement != 0)
+				++length;
+			var ints = new int[length];
+
+			for(int srcIndex = start, destIndex = 0, destByte = 0, destBit = 0; destIndex < count; ++srcIndex, ++destIndex)
+			{
+				var v = this[srcIndex];
+				var b = ints[destByte];
+				b &= (byte)~(1 << destBit);
+				if(v)
+					b |= (byte)(1 << destBit);
+				ints[destByte] = b;
+
+				++destBit;
+				if(destBit >= FlagsPerElement)
+				{
+					destBit = 0;
+					++destByte;
+				}
+			}
+
+			return ints;
+		}
+
+		/// <summary>
 		/// Gets the number of flags contained in the array
 		/// </summary>
 		/// <returns>The number of flags</returns>
@@ -164,23 +238,31 @@ namespace Frost.Utility
 		/// </summary>
 		public int ByteLength
 		{
-			get { return _bytes.Length; }
+			get { return _flags.Length * sizeof(int); }
+		}
+
+		/// <summary>
+		/// Number of integers needed to store the flags
+		/// </summary>
+		public int IntLength
+		{
+			get { return _flags.Length; }
 		}
 
 		/// <summary>
 		/// Calculates the byte and bit offset
 		/// </summary>
 		/// <param name="index">Index of the flag</param>
-		/// <param name="byteIndex">Byte index</param>
+		/// <param name="intIndex">Integer index</param>
 		/// <param name="offset">Bit index inside of the byte</param>
 		/// <exception cref="IndexOutOfRangeException">Thrown if <paramref name="index"/> is out of range</exception>
-		private void getBitIndex (int index, out int byteIndex, out int offset)
+		private void getBitIndex (int index, out int intIndex, out int offset)
 		{
 			if(index < 0 || index >= _count)
 				throw new IndexOutOfRangeException("The flag index is out of range.");
 
-			byteIndex = index / 8;
-			offset    = index % 8;
+			intIndex = index / FlagsPerElement;
+			offset   = index % FlagsPerElement;
 		}
 	}
 }
