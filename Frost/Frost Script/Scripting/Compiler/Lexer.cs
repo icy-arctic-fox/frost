@@ -120,11 +120,11 @@ namespace Frost.Scripting.Compiler
 
 				// Parse the value and create a token
 				var value = Convert.ToInt32(Lexeme, (int)b);
-				return new IntegerToken(value, b, _line, _char);
+				return new IntegerToken(value, b, _line, TokenStartPosition);
 			}
 			
 			// End of stream, just a 0 by itself
-			return new IntegerToken(0, IntegerToken.Base.Decimal, _line, _char);
+			return new IntegerToken(0, IntegerToken.Base.Decimal, _line, TokenStartPosition);
 		}
 
 		/// <summary>
@@ -172,6 +172,14 @@ namespace Frost.Scripting.Compiler
 		private string Lexeme
 		{
 			get { return _lexeme.ToString(); }
+		}
+
+		/// <summary>
+		/// Position of where the current token (lexeme) started on the line
+		/// </summary>
+		private uint TokenStartPosition
+		{
+			get { return _char - (uint)_lexeme.Length + 1; }
 		}
 
 		/// <summary>
