@@ -5,18 +5,10 @@ namespace Frost.Scripting.Compiler
 	/// <summary>
 	/// A token is one or more characters taken from a stream that symbolize something
 	/// </summary>
+	/// <remarks>Tokens that require additional information,
+	/// such as a numerical value or lexeme string have a sub-class.</remarks>
 	public class Token
 	{
-		private readonly string _value;
-
-		/// <summary>
-		/// String value of the token
-		/// </summary>
-		public string Value
-		{
-			get { return _value; }
-		}
-
 		private readonly TokenTag _tag;
 
 		/// <summary>
@@ -106,20 +98,14 @@ namespace Frost.Scripting.Compiler
 		/// <summary>
 		/// Creates a new token
 		/// </summary>
-		/// <param name="value">String value of the token</param>
 		/// <param name="tag">Type of token the lexer produced</param>
 		/// <param name="line">Line number that the token appeared on</param>
 		/// <param name="pos">Position of the character on the line where the token starts</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
-		public Token (string value, TokenTag tag, uint line, uint pos)
+		public Token (TokenTag tag, uint line, uint pos)
 		{
-			if(value == null)
-				throw new ArgumentNullException("value", "The token's string value can't be null.");
-
-			_value = value;
 			_tag  = tag;
-			_line  = line;
-			_char  = pos;
+			_line = line;
+			_char = pos;
 		}
 
 		/// <summary>
@@ -129,7 +115,7 @@ namespace Frost.Scripting.Compiler
 		/// Line #:# Value</returns>
 		public override string ToString ()
 		{
-			return String.Format("Line {0}:{1} {2}", _line, _char, _value);
+			return String.Format("Line {0}({1}) {2}", _line, _char, _tag);
 		}
 	}
 }
