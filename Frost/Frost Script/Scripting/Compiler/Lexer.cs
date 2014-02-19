@@ -90,21 +90,21 @@ namespace Frost.Scripting.Compiler
 			char t; // Get the next char, which indicates the type
 			if(getNextChar(out t))
 			{// Check what the character is
-				var numBase = 10;
+				var b = IntegerToken.Base.Decimal;
 				switch(t)
 				{
 				case 'x':
-					numBase = 16;
+					b = IntegerToken.Base.Hexadecimal;
 					break;
 				case 'b':
-					numBase = 2;
+					b = IntegerToken.Base.Binary;
 					break;
 				case '.':
 					pushback(t);
 					return numberState('0');
 				default:
 					if(Char.IsDigit(t)) // Octal
-						numBase = 8;
+						b = IntegerToken.Base.Octal;
 					else // Unknown
 						error(String.Format("Unexpected character '{0}' found. Expected numerical literal.", t));
 					break;
@@ -119,12 +119,12 @@ namespace Frost.Scripting.Compiler
 				}
 
 				// Parse the value and create a token
-				var value = Convert.ToInt32(Lexeme, numBase);
-				throw new NotImplementedException(); // TODO: Return IntegerToken
+				var value = Convert.ToInt32(Lexeme, (int)b);
+				return new IntegerToken(value, b, _line, _char);
 			}
 			
 			// End of stream, just a 0 by itself
-			throw new NotImplementedException(); // TODO: Return IntegerToken
+			return new IntegerToken(0, IntegerToken.Base.Decimal, _line, _char);
 		}
 
 		/// <summary>
