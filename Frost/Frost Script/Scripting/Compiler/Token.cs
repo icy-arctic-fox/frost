@@ -30,8 +30,6 @@ namespace Frost.Scripting.Compiler
 				{
 				case TokenTag.Integer:
 				case TokenTag.Float:
-				case TokenTag.Hex:
-				case TokenTag.Binary:
 					return TokenCategory.Numerical;
 				case TokenTag.IntType:
 				case TokenTag.FloatType:
@@ -112,7 +110,7 @@ namespace Frost.Scripting.Compiler
 		/// Creates a string representation of the token
 		/// </summary>
 		/// <returns>The token as a string in the form:
-		/// Line #:# Value</returns>
+		/// Line LINE(CHAR) TAG</returns>
 		public override string ToString ()
 		{
 			return String.Format("Line {0}({1}) {2}", _line, _char, _tag);

@@ -16,16 +16,6 @@
 		/// Floating-point number literal
 		/// </summary>
 		Float,
-
-		/// <summary>
-		/// Integer represented in hexadecimal
-		/// </summary>
-		Hex,
-
-		/// <summary>
-		/// Integer represented in binary
-		/// </summary>
-		Binary,
 		#endregion
 
 		#region Built-in Types
