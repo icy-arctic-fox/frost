@@ -80,7 +80,25 @@ namespace Frost.IO
 		/// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed</exception>
 		public override int Read (byte[] buffer, int offset, int count)
 		{
-			throw new NotImplementedException();
+			if(buffer == null)
+				throw new ArgumentNullException("buffer", "The buffer to read into can't be null.");
+			if(offset < 0)
+				throw new ArgumentOutOfRangeException("offset", "The starting offset into the buffer can't be less than zero.");
+			if(count < 0)
+				throw new ArgumentOutOfRangeException("count", "The number of bytes to read into the buffer can't be less than zero.");
+			if(offset + count > buffer.Length)
+				throw new ArgumentException("The number of bytes to read exceeds the length of the buffer.");
+
+			var pushedLength = _ms.Length - _ms.Position;
+			var pushedToReadLength = (int)((pushedLength < count) ? pushedLength : count); // Take the lesser of the two
+			if(pushedToReadLength > 0) // Read bytes from the pushback stream first
+				_ms.Read(buffer, offset, pushedToReadLength);
+			offset += pushedToReadLength;
+			count  -= pushedToReadLength;
+			if(count > 0) // Read any remaining bytes from the underlying stream
+				count = _s.Read(buffer, offset, count);
+
+			return pushedToReadLength + count;
 		}
 
 		/// <summary>
@@ -92,7 +110,7 @@ namespace Frost.IO
 		/// <param name="count">The number of bytes to be written to the current stream</param>
 		public override void Write (byte[] buffer, int offset, int count)
 		{
-			throw new NotImplementedException();
+			_ms.Write(buffer, offset, count);
 		}
 
 		/// <summary>
