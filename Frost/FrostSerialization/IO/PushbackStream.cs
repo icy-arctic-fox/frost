@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Frost.Utility;
 
 namespace Frost.IO
 {
@@ -8,9 +9,10 @@ namespace Frost.IO
 	/// The pushed data is read first before advancing in the underlying stream.
 	/// This stream decorator can be used to simulate seeking on a non-seekable stream by pushing previously read data back onto the stream.
 	/// </summary>
-	public sealed class PushbackStream : Stream
+	public sealed class PushbackStream : Stream, IFullDisposable
 	{
 		private readonly Stream _s;
+		private readonly MemoryStream _ms = new MemoryStream();
 
 		/// <summary>
 		/// Creates a new pushback stream decorator
@@ -45,7 +47,7 @@ namespace Frost.IO
 		/// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed</exception>
 		public override long Seek (long offset, SeekOrigin origin)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -57,7 +59,7 @@ namespace Frost.IO
 		/// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed</exception>
 		public override void SetLength (long value)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -107,9 +109,10 @@ namespace Frost.IO
 		/// Indicates whether the current stream supports seeking
 		/// </summary>
 		/// <returns>True if the stream supports seeking; otherwise, false</returns>
+		/// <remarks>This property is always false.</remarks>
 		public override bool CanSeek
 		{
-			get { throw new NotImplementedException(); }
+			get { return false; }
 		}
 
 		/// <summary>
@@ -129,7 +132,7 @@ namespace Frost.IO
 		/// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed</exception>
 		public override long Length
 		{
-			get { throw new NotImplementedException(); }
+			get { return _s.Length + _ms.Length; }
 		}
 
 		/// <summary>
@@ -140,8 +143,61 @@ namespace Frost.IO
 		/// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed</exception>
 		public override long Position
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return _s.Position + _ms.Position; }
+			set { Seek(value, SeekOrigin.Begin); }
 		}
+		#region Disposable
+
+		private volatile bool _disposed;
+
+		/// <summary>
+		/// Indicates whether the pushback stream has been disposed
+		/// </summary>
+		public bool Disposed
+		{
+			get { return _disposed; }
+		}
+
+		/// <summary>
+		/// Triggered when the pushback stream is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Frees the resources held by the pushback stream
+		/// </summary>
+		public new void Dispose ()
+		{
+			dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Deconstructs the pushback stream
+		/// </summary>
+		~PushbackStream ()
+		{
+			dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the pushback stream
+		/// </summary>
+		/// <param name="disposing">Flag indicating whether internal resources should be freed</param>
+		private void dispose (bool disposing)
+		{
+			if(!_disposed)
+			{
+				_disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+
+				if(disposing)
+				{// Dispose of the streams
+					_s.Dispose();
+					_ms.Dispose();
+				}
+			}
+		}
+		#endregion
 	}
 }
