@@ -111,7 +111,7 @@ namespace Frost.Scripting.Compiler
 		/// <param name="line">Line number that the token appeared on</param>
 		/// <param name="pos">Position of the character on the line where the token starts</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
-		protected Token (string value, TokenType type, uint line, uint pos)
+		public Token (string value, TokenType type, uint line, uint pos)
 		{
 			if(value == null)
 				throw new ArgumentNullException("value", "The token's string value can't be null.");
