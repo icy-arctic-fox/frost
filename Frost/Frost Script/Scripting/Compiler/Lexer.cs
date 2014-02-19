@@ -151,10 +151,10 @@ namespace Frost.Scripting.Compiler
 			if(getNextChar(out actual))
 			{
 				if(actual != expected)
-					throw new ParserException(String.Format("Expected {0}, but got {1}", expected, actual), _line, _char);
+					throw new ParserException(String.Format("Expected '{0}', but got '{1}'", expected, actual), _line, _char);
 			}
 			else
-				throw new ParserException(String.Format("Unexpected end of file reached. Expected {0}", expected), _line, _char);
+				throw new ParserException(String.Format("Unexpected end of file reached. Expected '{0}'", expected), _line, _char);
 		}
 
 		#region Disposable
