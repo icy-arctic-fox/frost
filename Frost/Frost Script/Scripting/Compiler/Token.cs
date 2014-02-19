@@ -17,14 +17,14 @@ namespace Frost.Scripting.Compiler
 			get { return _value; }
 		}
 
-		private readonly TokenType _type;
+		private readonly TokenTag _tag;
 
 		/// <summary>
 		/// Type of token the lexer produced
 		/// </summary>
-		private TokenType Type
+		private TokenTag Tag
 		{
-			get { return _type; }
+			get { return _tag; }
 		}
 
 		/// <summary>
@@ -34,50 +34,50 @@ namespace Frost.Scripting.Compiler
 		{
 			get
 			{
-				switch(_type)
+				switch(_tag)
 				{
-				case TokenType.Integer:
-				case TokenType.Float:
-				case TokenType.Hex:
-				case TokenType.Binary:
+				case TokenTag.Integer:
+				case TokenTag.Float:
+				case TokenTag.Hex:
+				case TokenTag.Binary:
 					return TokenCategory.Numerical;
-				case TokenType.IntType:
-				case TokenType.FloatType:
-				case TokenType.StringType:
+				case TokenTag.IntType:
+				case TokenTag.FloatType:
+				case TokenTag.StringType:
 					return TokenCategory.Type;
-				case TokenType.QuotedString:
-				case TokenType.DoubleQuotedString:
+				case TokenTag.QuotedString:
+				case TokenTag.DoubleQuotedString:
 					return TokenCategory.String;
-				case TokenType.Def:
-				case TokenType.Function:
-				case TokenType.Class:
-				case TokenType.Variable:
-				case TokenType.New:
-				case TokenType.If:
-				case TokenType.Else:
-				case TokenType.While:
+				case TokenTag.Def:
+				case TokenTag.Function:
+				case TokenTag.Class:
+				case TokenTag.Variable:
+				case TokenTag.New:
+				case TokenTag.If:
+				case TokenTag.Else:
+				case TokenTag.While:
 					return TokenCategory.Keyword;
-				case TokenType.LeftParen:
-				case TokenType.RightParen:
-				case TokenType.LeftBrace:
-				case TokenType.RightBrace:
-				case TokenType.LeftCurlyBrace:
-				case TokenType.RightCurlyBrace:
-				case TokenType.Dot:
-				case TokenType.Semicolon:
-				case TokenType.Colon:
-				case TokenType.Comma:
+				case TokenTag.LeftParen:
+				case TokenTag.RightParen:
+				case TokenTag.LeftBrace:
+				case TokenTag.RightBrace:
+				case TokenTag.LeftCurlyBrace:
+				case TokenTag.RightCurlyBrace:
+				case TokenTag.Dot:
+				case TokenTag.Semicolon:
+				case TokenTag.Colon:
+				case TokenTag.Comma:
 					return TokenCategory.Punctuation;
-				case TokenType.Add:
-				case TokenType.Subtract:
-				case TokenType.Multiply:
-				case TokenType.Divide:
-				case TokenType.Assignment:
-				case TokenType.LessThan:
-				case TokenType.GreaterThan:
-				case TokenType.LessThanEqual:
-				case TokenType.GreaterThanEqual:
-				case TokenType.Equal:
+				case TokenTag.Add:
+				case TokenTag.Subtract:
+				case TokenTag.Multiply:
+				case TokenTag.Divide:
+				case TokenTag.Assignment:
+				case TokenTag.LessThan:
+				case TokenTag.GreaterThan:
+				case TokenTag.LessThanEqual:
+				case TokenTag.GreaterThanEqual:
+				case TokenTag.Equal:
 					return TokenCategory.Operator;
 				default:
 					return TokenCategory.Identifier;
@@ -107,17 +107,17 @@ namespace Frost.Scripting.Compiler
 		/// Creates a new token
 		/// </summary>
 		/// <param name="value">String value of the token</param>
-		/// <param name="type">Type of token the lexer produced</param>
+		/// <param name="tag">Type of token the lexer produced</param>
 		/// <param name="line">Line number that the token appeared on</param>
 		/// <param name="pos">Position of the character on the line where the token starts</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="value"/> is null</exception>
-		public Token (string value, TokenType type, uint line, uint pos)
+		public Token (string value, TokenTag tag, uint line, uint pos)
 		{
 			if(value == null)
 				throw new ArgumentNullException("value", "The token's string value can't be null.");
 
 			_value = value;
-			_type  = type;
+			_tag  = tag;
 			_line  = line;
 			_char  = pos;
 		}

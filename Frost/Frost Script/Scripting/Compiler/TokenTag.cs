@@ -1,9 +1,9 @@
 ﻿namespace Frost.Scripting.Compiler
 {
 	/// <summary>
-	/// All valid token types
+	/// All valid token tags
 	/// </summary>
-	public enum TokenType
+	public enum TokenTag
 	{
 		#region Numerical
 

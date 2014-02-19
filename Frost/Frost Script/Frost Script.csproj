@@ -45,7 +45,7 @@
     <Compile Include="Scripting\Compiler\ParserException.cs" />
     <Compile Include="Scripting\Compiler\Token.cs" />
     <Compile Include="Scripting\Compiler\TokenCategory.cs" />
-    <Compile Include="Scripting\Compiler\TokenType.cs" />
+    <Compile Include="Scripting\Compiler\TokenTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FrostSerialization\Frost Serialization.csproj">
