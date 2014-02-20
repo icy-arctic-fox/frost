@@ -136,7 +136,8 @@ namespace Frost.Scripting.Compiler
 					error(String.Format("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but got '{0}'", d));
 			}
 			const IntegerToken.Base b = IntegerToken.Base.Hexadecimal;
-			return Convert.ToInt32(Lexeme, (int)b);
+			var lexeme = Lexeme.Substring(2); // Remove 0x prefix
+			return Convert.ToInt32(lexeme, (int)b);
 		}
 
 		/// <summary>
@@ -152,7 +153,8 @@ namespace Frost.Scripting.Compiler
 					error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
 			}
 			const IntegerToken.Base b = IntegerToken.Base.Binary;
-			return Convert.ToInt32(Lexeme, (int)b);
+			var lexeme = Lexeme.Substring(2); // Remove 0b prefix
+			return Convert.ToInt32(lexeme, (int)b);
 		}
 
 		/// <summary>
