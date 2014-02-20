@@ -37,6 +37,17 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
+		/// Checks if the lexer returns null for an empty string/stream
+		/// </summary>
+		[TestMethod]
+		public void EmptyTest ()
+		{
+			var lexer = setupLexer(String.Empty);
+			var token = lexer.GetNext();
+			Assert.IsNull(token);
+		}
+
+		/// <summary>
 		/// Does the lexer give a correct token for just the character 0?
 		/// </summary>
 		[TestMethod]
@@ -45,6 +56,17 @@ namespace Frost_Script_Test
 			var lexer = setupLexer("0");
 			var token = lexer.GetNext();
 			assertIntegerToken(token, 1, 1, 0);
+		}
+
+		/// <summary>
+		/// Does the lexer give a correct token for a single digit number?
+		/// </summary>
+		[TestMethod]
+		public void SingleDigitIntegerTest ()
+		{
+			var lexer = setupLexer("5");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, 5);
 		}
 	}
 }
