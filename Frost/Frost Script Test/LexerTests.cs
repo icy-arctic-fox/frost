@@ -13,6 +13,26 @@ namespace Frost_Script_Test
 	public class LexerTests
 	{
 		/// <summary>
+		/// Checks if the constructor throws an exception when given a null stream
+		/// </summary>
+		[TestMethod]
+		public void NullStreamTest ()
+		{
+			try
+			{
+				new Lexer(null);
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ArgumentNullException));
+				var ane = (ArgumentNullException)e;
+				Assert.AreEqual("s", ane.ParamName);
+				return;
+			}
+			Assert.Fail("The constructor did not throw an exception.");
+		}
+
+		/// <summary>
 		/// Checks if the lexer returns null for an empty string/stream
 		/// </summary>
 		[TestMethod]
