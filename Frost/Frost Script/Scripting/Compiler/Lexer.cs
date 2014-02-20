@@ -91,40 +91,84 @@ namespace Frost.Scripting.Compiler
 			if(getNextChar(out t))
 			{// Check what the character is
 				var b = IntegerToken.Base.Decimal;
+				var value = 0;
 				switch(t)
 				{
 				case 'x':
 					b = IntegerToken.Base.Hexadecimal;
+					value = hexadecimalIntegerState();
 					break;
 				case 'b':
 					b = IntegerToken.Base.Binary;
+					value = binaryIntegerState();
 					break;
 				case '.':
 					pushback(t);
 					return numberState('0');
 				default:
-					if(Char.IsDigit(t)) // Octal
+					if(Char.IsDigit(t))
+					{// Octal
 						b = IntegerToken.Base.Octal;
+						value = octalIntegerState();
+					}
 					else // Unknown
 						error(String.Format("Unexpected character '{0}' found. Expected numerical literal.", t));
 					break;
 				}
 
-				// Continue reading digits
-				char d;
-				while(getNextChar(out d))
-				{// Getting an end of stream is fine, that signifies that the number completed
-					if(!Char.IsDigit(d))
-						error(String.Format("Expected digit in numerical literal, but got '{0}'", d));
-				}
-
-				// Parse the value and create a token
-				var value = Convert.ToInt32(Lexeme, (int)b);
 				return new IntegerToken(value, b, _line, TokenStartPosition);
 			}
 			
 			// End of stream, just a 0 by itself
 			return new IntegerToken(0, IntegerToken.Base.Decimal, _line, TokenStartPosition);
+		}
+
+		/// <summary>
+		/// State when parsing an integer in hexadecimal
+		/// </summary>
+		/// <returns>Parsed integer value</returns>
+		private int hexadecimalIntegerState ()
+		{
+			char d;
+			while(getNextChar(out d))
+			{// Getting an end of stream is fine, that signifies that the number completed
+				if(!Char.IsDigit(d) && (d < 'a' || d > 'f') && (d < 'A' || d > 'F'))
+					error(String.Format("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but got '{0}'", d));
+			}
+			const IntegerToken.Base b = IntegerToken.Base.Hexadecimal;
+			return Convert.ToInt32(Lexeme, (int)b);
+		}
+
+		/// <summary>
+		/// State when parsing an integer in binary
+		/// </summary>
+		/// <returns>Parsed integer value</returns>
+		private int binaryIntegerState ()
+		{
+			char d;
+			while(getNextChar(out d))
+			{// Getting an end of stream is fine, that signifies that the number completed
+				if(d != '0' && d != '1')
+					error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
+			}
+			const IntegerToken.Base b = IntegerToken.Base.Binary;
+			return Convert.ToInt32(Lexeme, (int)b);
+		}
+
+		/// <summary>
+		/// State when parsing an integer in octal
+		/// </summary>
+		/// <returns></returns>
+		private int octalIntegerState ()
+		{
+			char d;
+			while(getNextChar(out d))
+			{// Getting an end of stream is fine, that signifies that the number completed
+				if(d < '0' || d > '7')
+					error(String.Format("Expected 0-7 digit in octal numerical literal, but got '{0}'", d));
+			}
+			const IntegerToken.Base b = IntegerToken.Base.Octal;
+			return Convert.ToInt32(Lexeme, (int)b);
 		}
 
 		/// <summary>
