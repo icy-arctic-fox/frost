@@ -53,8 +53,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="LexerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Frost Script\Frost Script.csproj">
+      <Project>{afe442f9-a877-4bd2-b69f-7bb4dfed328a}</Project>
+      <Name>Frost Script</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FrostSerialization\Frost Serialization.csproj">
+      <Project>{B64F778C-0FFF-4CE1-9BD7-996CE85D0ABD}</Project>
+      <Name>Frost Serialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
