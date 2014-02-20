@@ -34,6 +34,8 @@ namespace Frost_Script_Test
 			Assert.IsNull(token);
 		}
 
+		#region Numeric literal tests
+
 		/// <summary>
 		/// Checks if the lexer gives a correct token for just the character 0
 		/// </summary>
@@ -136,12 +138,35 @@ namespace Frost_Script_Test
 				Assert.IsInstanceOfType(e, typeof(ParserException));
 				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
 				var pe = (ParserException)e;
-				Assert.Equals(1, pe.Line);
-				Assert.Equals(1, pe.Character);
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(1U, pe.Character);
 				return;
 			}
 			Assert.Fail("The lexer did not throw an exception.");
 		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about invalid characters in binary integers
+		/// </summary>
+		[TestMethod]
+		public void InvalidBinaryIntegerTest ()
+		{
+			var lexer = setupLexer("0b10abc");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(5U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+		#endregion
 		#endregion
 
 		#region Utility methods
