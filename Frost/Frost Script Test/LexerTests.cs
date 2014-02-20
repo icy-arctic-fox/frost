@@ -48,7 +48,7 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
-		/// Does the lexer give a correct token for just the character 0?
+		/// Checks if the lexer gives a correct token for just the character 0
 		/// </summary>
 		[TestMethod]
 		public void ZeroTest ()
@@ -59,7 +59,7 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
-		/// Does the lexer give a correct token for a single digit number?
+		/// Checks if the lexer gives a correct token for a single digit number
 		/// </summary>
 		[TestMethod]
 		public void SingleDigitIntegerTest ()
@@ -67,6 +67,30 @@ namespace Frost_Script_Test
 			var lexer = setupLexer("5");
 			var token = lexer.GetNext();
 			assertIntegerToken(token, 1, 1, 5);
+		}
+
+		/// <summary>
+		/// Checks if the lexer handles binary integers starting with 0
+		/// </summary>
+		[TestMethod]
+		public void BinaryIntegerTest ()
+		{
+			const int value = 21845;
+			var lexer = setupLexer("0b0101010101010101");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, value);
+		}
+
+		/// <summary>
+		/// Checks if the lexer handles binary integers starting with 1
+		/// </summary>
+		[TestMethod]
+		public void BinaryIntegerTest2 ()
+		{
+			const int value = 21845;
+			var lexer = setupLexer("0b101010101010101");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, value);
 		}
 	}
 }
