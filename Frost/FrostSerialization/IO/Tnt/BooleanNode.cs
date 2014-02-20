@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Frost.IO.Tnt
+﻿namespace Frost.IO.Tnt
 {
 	/// <summary>
 	/// True or false value node

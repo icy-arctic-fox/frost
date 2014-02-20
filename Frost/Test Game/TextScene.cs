@@ -3,7 +3,6 @@ using Frost.Display;
 using Frost.Graphics;
 using Frost.Graphics.Text;
 using Frost.Logic;
-using Frost.UI;
 
 namespace Test_Game
 {
