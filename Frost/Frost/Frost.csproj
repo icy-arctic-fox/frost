@@ -94,7 +94,7 @@
     <Compile Include="Modules\Input\Mouse.cs" />
     <Compile Include="Modules\Input\MouseButton.cs" />
     <Compile Include="Modules\Input\MouseEventArgs.cs" />
-    <Compile Include="Geometry\Point2D.cs" />
+    <Compile Include="Geometry\Point2i.cs" />
     <Compile Include="ResourceManager.cs" />
     <Compile Include="Graphics\IRenderable.cs">
       <SubType>Code</SubType>

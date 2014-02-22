@@ -34,7 +34,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Location of the mouse on the screen
 		/// </summary>
-		public static Point2D Position
+		public static Point2i Position
 		{
 			get { return M.GetPosition(); }
 			set { M.SetPosition(value); }
@@ -159,7 +159,7 @@ namespace Frost.Modules.Input
 		/// Locks the mouse so that it can't move from a given position
 		/// </summary>
 		/// <param name="pos">Position to lock the mouse to</param>
-		public static void Lock (Point2D pos)
+		public static void Lock (Point2i pos)
 		{
 			M.SetPosition(pos);
 			_lockedPos = pos;

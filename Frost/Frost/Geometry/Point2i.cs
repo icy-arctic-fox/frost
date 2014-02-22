@@ -7,12 +7,12 @@ namespace Frost.Geometry
 	/// <summary>
 	/// An two-dimensional point with integer values
 	/// </summary>
-	public struct Point2D
+	public struct Point2i
 	{
 		/// <summary>
 		/// Point at (0, 0)
 		/// </summary>
-		public static readonly Point2D Origin = new Point2D(0, 0);
+		public static readonly Point2i Origin = new Point2i(0, 0);
 
 		/// <summary>
 		/// Offset along the x-axis
@@ -29,7 +29,7 @@ namespace Frost.Geometry
 		/// </summary>
 		/// <param name="x">Offset along the x-axis</param>
 		/// <param name="y">Offset along the y-axis</param>
-		public Point2D (int x, int y)
+		public Point2i (int x, int y)
 		{
 			X = x;
 			Y = y;
@@ -40,7 +40,7 @@ namespace Frost.Geometry
 		/// </summary>
 		/// <param name="point">Other point</param>
 		/// <returns>Distance between the two points</returns>
-		public double DistanceTo (Point2D point)
+		public double DistanceTo (Point2i point)
 		{
 			return DistanceTo(point.X, point.Y);
 		}
@@ -61,43 +61,43 @@ namespace Frost.Geometry
 		#region Implicit conversions
 
 		/// <summary>
-		/// Converts a <see cref="Point2D"/> to a <see cref="Vector2i"/>
+		/// Converts a <see cref="Point2i"/> to a <see cref="Vector2i"/>
 		/// </summary>
 		/// <param name="point">Point to convert</param>
-		/// <returns>An SFML 2D point</returns>
-		public static implicit operator Vector2i (Point2D point)
+		/// <returns>An SFML 2D <see cref="Vector2i"/></returns>
+		public static implicit operator Vector2i (Point2i point)
 		{
 			return new Vector2i(point.X, point.Y);
 		}
 
 		/// <summary>
-		/// Converts a <see cref="Vector2i"/> to a <see cref="Point2D"/>
+		/// Converts a <see cref="Vector2i"/> to a <see cref="Point2i"/>
 		/// </summary>
 		/// <param name="point">Point to convert</param>
-		/// <returns>A Frost 2D point</returns>
-		public static implicit operator Point2D (Vector2i point)
+		/// <returns>A Frost 2D <see cref="Point2i"/></returns>
+		public static implicit operator Point2i (Vector2i point)
 		{
-			return new Point2D(point.X, point.Y);
+			return new Point2i(point.X, point.Y);
 		}
 
 		/// <summary>
-		/// Converts a <see cref="Point2D"/> to a <see cref="Point"/>
+		/// Converts a <see cref="Point2i"/> to a <see cref="Point"/>
 		/// </summary>
 		/// <param name="point">Point to convert</param>
-		/// <returns>A .NET 2D point</returns>
-		public static implicit operator Point (Point2D point)
+		/// <returns>A .NET 2D <see cref="Point"/></returns>
+		public static implicit operator Point (Point2i point)
 		{
 			return new Point(point.X, point.Y);
 		}
 
 		/// <summary>
-		/// Converts a <see cref="Point"/> to a <see cref="Point2D"/>
+		/// Converts a <see cref="Point"/> to a <see cref="Point2i"/>
 		/// </summary>
 		/// <param name="point">Point to convert</param>
-		/// <returns>A Frost 2D point</returns>
-		public static implicit operator Point2D (Point point)
+		/// <returns>A Frost 2D <see cref="Point2i"/></returns>
+		public static implicit operator Point2i (Point point)
 		{
-			return new Point2D(point.X, point.Y);
+			return new Point2i(point.X, point.Y);
 		}
 		#endregion
 

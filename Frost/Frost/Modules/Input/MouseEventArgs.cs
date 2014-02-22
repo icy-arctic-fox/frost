@@ -13,7 +13,7 @@ namespace Frost.Modules.Input
 		/// <summary>
 		/// Location of the mouse on the screen when the event occurred
 		/// </summary>
-		public Point2D Position { get; internal set; }
+		public Point2i Position { get; internal set; }
 
 		/// <summary>
 		/// Mouse buttons that were pressed during the event
@@ -25,7 +25,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		public MouseEventArgs ()
 		{
-			Position = Point2D.Origin;
+			Position = Point2i.Origin;
 			Buttons  = MouseButton.None;
 		}
 
@@ -34,7 +34,7 @@ namespace Frost.Modules.Input
 		/// </summary>
 		/// <param name="position">Location of the mouse on the screen when the event occurred</param>
 		/// <param name="buttons">Mouse buttons that were pressed during the event</param>
-		public MouseEventArgs (Point2D position, MouseButton buttons)
+		public MouseEventArgs (Point2i position, MouseButton buttons)
 		{
 			Position = position;
 			Buttons  = buttons;

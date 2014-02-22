@@ -249,7 +249,7 @@ namespace Frost.Display
 		private void _window_MouseButtonPressed (object sender, MouseButtonEventArgs e)
 		{
 			_mouseEventArgs.Buttons  = e.Button.FromSfml();
-			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
+			_mouseEventArgs.Position = new Point2i(e.X, e.Y);
 			OnMouseDown(_mouseEventArgs);
 		}
 		#endregion
@@ -367,7 +367,7 @@ namespace Frost.Display
 		void _window_MouseMoved (object sender, MouseMoveEventArgs e)
 		{
 			_mouseEventArgs.Buttons  = Mouse.Buttons;
-			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
+			_mouseEventArgs.Position = new Point2i(e.X, e.Y);
 			OnMouseMove(_mouseEventArgs);
 		}
 		#endregion
@@ -397,7 +397,7 @@ namespace Frost.Display
 		void _window_MouseButtonReleased (object sender, MouseButtonEventArgs e)
 		{
 			_mouseEventArgs.Buttons  = e.Button.FromSfml();
-			_mouseEventArgs.Position = new Point2D(e.X, e.Y);
+			_mouseEventArgs.Position = new Point2i(e.X, e.Y);
 			OnClick(_mouseEventArgs);
 		}
 		#endregion
@@ -540,7 +540,7 @@ namespace Frost.Display
 		/// <summary>
 		/// Location of the mouse on the screen
 		/// </summary>
-		public Point2D MousePosition
+		public Point2i MousePosition
 		{
 			get { return M.GetPosition(_window); }
 			set { M.SetPosition(value, _window); }
