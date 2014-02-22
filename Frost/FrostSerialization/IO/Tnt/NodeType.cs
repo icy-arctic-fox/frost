@@ -104,7 +104,7 @@
 		/// <summary>
 		/// X and Y-coordinates represented as floating-point numbers
 		/// </summary>
-		Coordinate2D = 19,
+		Point2f = 19,
 
 		/// <summary>
 		/// X, Y, and Z-coordinates represented as floating-point numbers

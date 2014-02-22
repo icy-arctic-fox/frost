@@ -5,9 +5,9 @@ using Frost.IO.Tnt;
 
 namespace Frost.TntEditor.NodeValueControls
 {
-	public partial class Coordinate2DNodeValueControl : UserControl, INodeEditorControl
+	public partial class Point2fNodeValueControl : UserControl, INodeEditorControl
 	{
-		public Coordinate2DNodeValueControl ()
+		public Point2fNodeValueControl ()
 		{
 			InitializeComponent();
 		}
@@ -23,7 +23,7 @@ namespace Frost.TntEditor.NodeValueControls
 				x = 0f;
 			if(!Single.TryParse(yTextBox.Text, out y))
 				y = 0f;
-			return new Coordinate2DNode(x, y);
+			return new Point2fNode(x, y);
 		}
 
 		/// <summary>
@@ -32,9 +32,9 @@ namespace Frost.TntEditor.NodeValueControls
 		/// <param name="node">Node to pull values from</param>
 		public void FromNode (Node node)
 		{
-			var coord = (Coordinate2DNode)node;
-			xTextBox.Text = coord.X.ToString(CultureInfo.InvariantCulture);
-			yTextBox.Text = coord.Y.ToString(CultureInfo.InvariantCulture);
+			var point = (Point2fNode)node;
+			xTextBox.Text = point.X.ToString(CultureInfo.InvariantCulture);
+			yTextBox.Text = point.Y.ToString(CultureInfo.InvariantCulture);
 		}
 	}
 }

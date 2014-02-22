@@ -1,6 +1,6 @@
 ﻿namespace Frost.TntEditor.NodeValueControls
 {
-	partial class Coordinate2DNodeValueControl
+	partial class Point2fNodeValueControl
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -97,7 +97,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "Coordinate2DNodeValueControl";
+			this.Name = "Point2fNodeValueControl";
 			this.Size = new System.Drawing.Size(295, 53);
 			this.tableLayoutPanel.ResumeLayout(false);
 			this.tableLayoutPanel.PerformLayout();

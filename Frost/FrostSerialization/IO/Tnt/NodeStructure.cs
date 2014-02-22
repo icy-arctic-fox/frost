@@ -30,11 +30,11 @@ namespace Frost.IO.Tnt
 			{typeof(BlobNode).FullName,         NodeType.Blob},
 			{typeof(XyNode).FullName,           NodeType.Xy},
 			{typeof(XyzNode).FullName,          NodeType.Xyz},
-			{typeof(Coordinate2DNode).FullName, NodeType.Coordinate2D},
+			{typeof(Point2fNode).FullName,      NodeType.Point2f},
 			{typeof(Coordinate3DNode).FullName, NodeType.Coordinate3D},
 			{typeof(ColorNode).FullName,        NodeType.Color},
 			{typeof(ListNode).FullName,         NodeType.List},
-			{typeof(ComplexNode).FullName,     NodeType.Complex}
+			{typeof(ComplexNode).FullName,      NodeType.Complex}
 		};
 
 		/// <summary>
@@ -299,19 +299,19 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
-		/// Ensures that a node is a 2D coordinate node and retrieves its value
+		/// Ensures that a node is a 2D point node and retrieves its value
 		/// </summary>
 		/// <param name="node">Node to verify</param>
 		/// <param name="x">The node's x-coordinate</param>
 		/// <param name="y">The node's y-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Coordinate2DNode"/></exception>
-		public static void ExpectCoordinate2DNode (this Node node, out float x, out float y)
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Point2fNode"/></exception>
+		public static void ExpectPoint2fNode (this Node node, out float x, out float y)
 		{
-			ExpectNodeType(node, NodeType.Coordinate2D);
-			var coord = (Coordinate2DNode)node;
-			x = coord.X;
-			y = coord.Y;
+			ExpectNodeType(node, NodeType.Point2f);
+			var point = (Point2fNode)node;
+			x = point.X;
+			y = point.Y;
 		}
 
 		/// <summary>
@@ -324,7 +324,7 @@ namespace Frost.IO.Tnt
 		/// <param name="z">The node's z-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Coordinate3DNode"/></exception>
-		public static void ExpectCoordinate2DNode (this Node node, out float x, out float y, out float z)
+		public static void ExpectCoordinate3DNode (this Node node, out float x, out float y, out float z)
 		{
 			ExpectNodeType(node, NodeType.Coordinate3D);
 			var coord = (Coordinate3DNode)node;
@@ -412,7 +412,7 @@ namespace Frost.IO.Tnt
 		/// <returns>The child node cast to the correct type</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> or <paramref name="name"/> are null</exception>
 		/// <exception cref="FormatException">Thrown if no child exists in <paramref name="node"/> with the name <paramref name="name"/></exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for the child node does not match <paramref name="type"/></exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for the child node does not match the type parameter</exception>
 		public static TChild ExpectNodeType<TChild> (this ComplexNode node, string name) where TChild : Node
 		{
 			if(node == null)
@@ -690,7 +690,7 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
-		/// Ensures that a child node is a 2D coordinate node and retrieves its value
+		/// Ensures that a child node is a 2D point node and retrieves its value
 		/// </summary>
 		/// <param name="node">Complex node to check</param>
 		/// <param name="name">Name of the child node</param>
@@ -698,10 +698,10 @@ namespace Frost.IO.Tnt
 		/// <param name="y">The child node's y-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="FormatException">Thrown if no child exists in <paramref name="node"/> with the name <paramref name="name"/></exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="Coordinate2DNode"/></exception>
-		public static void ExpectCoordinate2DNode (this ComplexNode node, string name, out float x, out float y)
+		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="Point2fNode"/></exception>
+		public static void ExpectPoint2fNode (this ComplexNode node, string name, out float x, out float y)
 		{
-			var child = ExpectNodeType<Coordinate2DNode>(node, name);
+			var child = ExpectNodeType<Point2fNode>(node, name);
 			x = child.X;
 			y = child.Y;
 		}
@@ -716,7 +716,7 @@ namespace Frost.IO.Tnt
 		/// <param name="z">The child node's z-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="FormatException">Thrown if no child exists in <paramref name="node"/> with the name <paramref name="name"/></exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="Coordinate2DNode"/></exception>
+		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="Point2iNode"/></exception>
 		public static void ExpectCoordinate3DNode(this ComplexNode node, string name, out float x, out float y, out float z)
 		{
 			var child = ExpectNodeType<Coordinate3DNode>(node, name);

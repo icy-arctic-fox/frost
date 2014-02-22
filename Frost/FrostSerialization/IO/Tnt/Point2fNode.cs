@@ -3,9 +3,9 @@
 namespace Frost.IO.Tnt
 {
 	/// <summary>
-	/// 2D coordinate node
+	/// 2D point node with floating-point values
 	/// </summary>
-	public class Coordinate2DNode : Node
+	public class Point2fNode : Node
 	{
 		#region Node properties
 
@@ -13,19 +13,19 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Coordinate2D"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Point2f"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Coordinate2D; }
+			get { return NodeType.Point2f; }
 		}
 
 		/// <summary>
-		/// X value stored in the node
+		/// X-coordinate
 		/// </summary>
 		public float X { get; set; }
 
 		/// <summary>
-		/// Y value stored in the node
+		/// Y-coordinate
 		/// </summary>
 		public float Y { get; set; }
 
@@ -39,11 +39,11 @@ namespace Frost.IO.Tnt
 		#endregion
 
 		/// <summary>
-		/// Creates a new 2D coordinate node
+		/// Creates a new 2D point node
 		/// </summary>
-		/// <param name="x">X value to store in the node</param>
-		/// <param name="y">Y value to store in the node</param>
-		public Coordinate2DNode (float x, float y)
+		/// <param name="x">X-coordinate</param>
+		/// <param name="y">Y-coordinate</param>
+		public Point2fNode (float x, float y)
 		{
 			X = x;
 			Y = y;
@@ -53,9 +53,9 @@ namespace Frost.IO.Tnt
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public Coordinate2DNode CloneNode ()
+		public Point2fNode CloneNode ()
 		{
-			return new Coordinate2DNode(X, Y);
+			return new Point2fNode(X, Y);
 		}
 
 		/// <summary>
@@ -70,15 +70,15 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a 2D coordinate node by reading its payload from a stream
+		/// Constructs a 2D point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed 2D coordinate node</returns>
-		internal static Coordinate2DNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed 2D point node</returns>
+		internal static Point2fNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var x = br.ReadSingle();
 			var y = br.ReadSingle();
-			return new Coordinate2DNode(x, y);
+			return new Point2fNode(x, y);
 		}
 
 		/// <summary>

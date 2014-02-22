@@ -84,11 +84,11 @@
     <Compile Include="NodeInfoPanel.Designer.cs">
       <DependentUpon>NodeInfoPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="NodeValueControls\Coordinate2dNodeValueControl.cs">
+    <Compile Include="NodeValueControls\Point2fNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NodeValueControls\Coordinate2dNodeValueControl.Designer.cs">
-      <DependentUpon>Coordinate2dNodeValueControl.cs</DependentUpon>
+    <Compile Include="NodeValueControls\Point2fNodeValueControl.Designer.cs">
+      <DependentUpon>Point2fNodeValueControl.cs</DependentUpon>
     </Compile>
     <Compile Include="NodeValueControls\Coordinate3dNodeValueControl.cs">
       <SubType>UserControl</SubType>
@@ -179,8 +179,8 @@
     <EmbeddedResource Include="NodeInfoPanel.resx">
       <DependentUpon>NodeInfoPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NodeValueControls\Coordinate2dNodeValueControl.resx">
-      <DependentUpon>Coordinate2dNodeValueControl.cs</DependentUpon>
+    <EmbeddedResource Include="NodeValueControls\Point2fNodeValueControl.resx">
+      <DependentUpon>Point2fNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\Coordinate3dNodeValueControl.resx">
       <DependentUpon>Coordinate3dNodeValueControl.cs</DependentUpon>
