@@ -160,7 +160,7 @@ namespace Frost.Scripting.Compiler
 		/// <summary>
 		/// State when parsing an integer in octal
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Parsed integer value</returns>
 		private int octalIntegerState ()
 		{
 			char d;
