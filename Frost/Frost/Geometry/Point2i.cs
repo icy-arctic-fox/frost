@@ -70,6 +70,7 @@ namespace Frost.Geometry
 
 		#region Operators
 		#region Point2i
+		#region Equality
 
 		/// <summary>
 		/// Compares two points to determine if they're equal
@@ -96,7 +97,24 @@ namespace Frost.Geometry
 		}
 		#endregion
 
+		#region Addition
+
+		// TODO
+		#endregion
+
+		#region Subtraction
+
+		// TODO
+		#endregion
+
+		#region Scaling
+
+		// TODO
+		#endregion
+		#endregion
+
 		#region Vector2i
+		#region Equality
 
 		/// <summary>
 		/// Compares two points to determine if they're equal
@@ -147,7 +165,24 @@ namespace Frost.Geometry
 		}
 		#endregion
 
+		#region Addition
+
+		// TODO
+		#endregion
+
+		#region Subtraction
+
+		// TODO
+		#endregion
+
+		#region Scaling
+
+		// TODO
+		#endregion
+		#endregion
+
 		#region Point
+		#region Equality
 
 		/// <summary>
 		/// Compares two points to determine if they're equal
@@ -196,6 +231,22 @@ namespace Frost.Geometry
 		{
 			return (left.X != right._x) || (left.Y != right._y);
 		}
+		#endregion
+
+		#region Addition
+
+		// TODO
+		#endregion
+
+		#region Subtraction
+
+		// TODO
+		#endregion
+
+		#region Scaling
+
+		// TODO
+		#endregion
 		#endregion
 
 		#region Implicit conversions

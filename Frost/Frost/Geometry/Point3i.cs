@@ -107,6 +107,21 @@ namespace Frost.Geometry
 			return (left._x != right._x) || (left._y != right._y) || (left._z != right._z);
 		}
 		#endregion
+
+		#region Addition
+
+		// TODO
+		#endregion
+
+		#region Subtraction
+
+		// TODO
+		#endregion
+
+		#region Scaling
+
+		// TODO
+		#endregion
 		#endregion
 
 		/// <summary>
