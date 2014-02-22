@@ -117,8 +117,8 @@ namespace Frost.TntEditor
 			case NodeType.Point2f:
 				_nodeEditorControl = new Point2fNodeValueControl();
 				break;
-			case NodeType.Coordinate3D:
-				_nodeEditorControl = new Coordinate3DNodeValueControl();
+			case NodeType.Point3f:
+				_nodeEditorControl = new Point3fNodeValueControl();
 				break;
 			case NodeType.Color:
 				_nodeEditorControl = new ColorNodeValueControl();

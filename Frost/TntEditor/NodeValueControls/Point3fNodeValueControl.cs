@@ -5,9 +5,9 @@ using Frost.IO.Tnt;
 
 namespace Frost.TntEditor.NodeValueControls
 {
-	public partial class Coordinate3DNodeValueControl : UserControl, INodeEditorControl
+	public partial class Point3fNodeValueControl : UserControl, INodeEditorControl
 	{
-		public Coordinate3DNodeValueControl ()
+		public Point3fNodeValueControl ()
 		{
 			InitializeComponent();
 		}
@@ -25,7 +25,7 @@ namespace Frost.TntEditor.NodeValueControls
 				y = 0f;
 			if(!Single.TryParse(zTextBox.Text, out z))
 				z = 0f;
-			return new Coordinate3DNode(x, y, z);
+			return new Point3fNode(x, y, z);
 		}
 
 		/// <summary>
@@ -34,10 +34,10 @@ namespace Frost.TntEditor.NodeValueControls
 		/// <param name="node">Node to pull values from</param>
 		public void FromNode (Node node)
 		{
-			var coord = (Coordinate3DNode)node;
-			xTextBox.Text = coord.X.ToString(CultureInfo.InvariantCulture);
-			yTextBox.Text = coord.Y.ToString(CultureInfo.InvariantCulture);
-			zTextBox.Text = coord.Z.ToString(CultureInfo.InvariantCulture);
+			var point = (Point3fNode)node;
+			xTextBox.Text = point.X.ToString(CultureInfo.InvariantCulture);
+			yTextBox.Text = point.Y.ToString(CultureInfo.InvariantCulture);
+			zTextBox.Text = point.Z.ToString(CultureInfo.InvariantCulture);
 		}
 	}
 }

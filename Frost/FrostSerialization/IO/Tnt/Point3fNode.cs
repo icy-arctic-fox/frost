@@ -3,9 +3,9 @@
 namespace Frost.IO.Tnt
 {
 	/// <summary>
-	/// 3D coordinate node
+	/// 3D point node with floating-point values
 	/// </summary>
-	public class Coordinate3DNode : Node
+	public class Point3fNode : Node
 	{
 		#region Node properties
 
@@ -13,24 +13,24 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Coordinate3D"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Point3f"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Coordinate3D; }
+			get { return NodeType.Point3f; }
 		}
 
 		/// <summary>
-		/// X value stored in the node
+		/// X-coordinate
 		/// </summary>
 		public float X { get; set; }
 
 		/// <summary>
-		/// Y value stored in the node
+		/// Y-coordinate
 		/// </summary>
 		public float Y { get; set; }
 
 		/// <summary>
-		/// Z value stored in the node
+		/// Z-coordinate
 		/// </summary>
 		public float Z { get; set; }
 
@@ -44,12 +44,12 @@ namespace Frost.IO.Tnt
 		#endregion
 
 		/// <summary>
-		/// Creates a new 3D coordinate node
+		/// Creates a new 3D point node
 		/// </summary>
-		/// <param name="x">X value to store in the node</param>
-		/// <param name="y">Y value to store in the node</param>
-		/// <param name="z">Z value to store in the node</param>
-		public Coordinate3DNode (float x, float y, float z)
+		/// <param name="x">X-coordinate</param>
+		/// <param name="y">Y-coordinate</param>
+		/// <param name="z">Z-coordinate</param>
+		public Point3fNode (float x, float y, float z)
 		{
 			X = x;
 			Y = y;
@@ -60,9 +60,9 @@ namespace Frost.IO.Tnt
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public Coordinate3DNode CloneNode ()
+		public Point3fNode CloneNode ()
 		{
-			return new Coordinate3DNode(X, Y, Z);
+			return new Point3fNode(X, Y, Z);
 		}
 
 		/// <summary>
@@ -77,16 +77,16 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a 3D coordinate node by reading its payload from a stream
+		/// Constructs a 3D point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed 3D coordinate node</returns>
-		internal static Coordinate3DNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed 3D point node</returns>
+		internal static Point3fNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var x = br.ReadSingle();
 			var y = br.ReadSingle();
 			var z = br.ReadSingle();
-			return new Coordinate3DNode(x, y, z);
+			return new Point3fNode(x, y, z);
 		}
 
 		/// <summary>

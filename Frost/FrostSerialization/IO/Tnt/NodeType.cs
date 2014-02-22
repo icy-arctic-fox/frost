@@ -109,7 +109,7 @@
 		/// <summary>
 		/// X, Y, and Z-coordinates represented as floating-point numbers
 		/// </summary>
-		Coordinate3D = 20,
+		Point3f = 20,
 
 		/// <summary>
 		/// ARGB color value

@@ -68,7 +68,7 @@
     <Compile Include="IO\Tnt\BooleanNode.cs" />
     <Compile Include="IO\Tnt\BlobNode.cs" />
     <Compile Include="IO\Tnt\Point2fNode.cs" />
-    <Compile Include="IO\Tnt\Coordinate3DNode.cs" />
+    <Compile Include="IO\Tnt\Point3fNode.cs" />
     <Compile Include="IO\Tnt\ColorNode.cs" />
     <Compile Include="IO\Tnt\ComplexNode.cs" />
     <Compile Include="IO\Tnt\INodeMarshal.cs" />

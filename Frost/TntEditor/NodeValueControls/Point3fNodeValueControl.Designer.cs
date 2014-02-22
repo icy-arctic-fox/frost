@@ -1,6 +1,6 @@
 ﻿namespace Frost.TntEditor.NodeValueControls
 {
-	partial class Coordinate3DNodeValueControl
+	partial class Point3fNodeValueControl
 	{
 		/// <summary> 
 		/// Required designer variable.

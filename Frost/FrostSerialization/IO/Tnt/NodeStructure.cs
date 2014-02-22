@@ -12,29 +12,29 @@ namespace Frost.IO.Tnt
 		/// Maps full class names of nodes to their corresponding <see cref="NodeType"/> value
 		/// </summary>
 		private static readonly Dictionary<string, NodeType> _nodeTypeMap = new Dictionary<string, NodeType> {
-			{typeof(BooleanNode).FullName,      NodeType.Boolean},
-			{typeof(ByteNode).FullName,         NodeType.Byte},
-			{typeof(SByteNode).FullName,        NodeType.SByte},
-			{typeof(ShortNode).FullName,        NodeType.Short},
-			{typeof(UShortNode).FullName,       NodeType.UShort},
-			{typeof(IntNode).FullName,          NodeType.Int},
-			{typeof(UIntNode).FullName,         NodeType.UInt},
-			{typeof(LongNode).FullName,         NodeType.Long},
-			{typeof(ULongNode).FullName,        NodeType.ULong},
-			{typeof(FloatNode).FullName,        NodeType.Float},
-			{typeof(DoubleNode).FullName,       NodeType.Double},
-			{typeof(StringNode).FullName,       NodeType.String},
-			{typeof(GuidNode).FullName,         NodeType.Guid},
-			{typeof(DateTimeNode).FullName,     NodeType.DateTime},
-			{typeof(TimeSpanNode).FullName,     NodeType.TimeSpan},
-			{typeof(BlobNode).FullName,         NodeType.Blob},
-			{typeof(XyNode).FullName,           NodeType.Xy},
-			{typeof(XyzNode).FullName,          NodeType.Xyz},
-			{typeof(Point2fNode).FullName,      NodeType.Point2f},
-			{typeof(Coordinate3DNode).FullName, NodeType.Coordinate3D},
-			{typeof(ColorNode).FullName,        NodeType.Color},
-			{typeof(ListNode).FullName,         NodeType.List},
-			{typeof(ComplexNode).FullName,      NodeType.Complex}
+			{typeof(BooleanNode).FullName,  NodeType.Boolean},
+			{typeof(ByteNode).FullName,     NodeType.Byte},
+			{typeof(SByteNode).FullName,    NodeType.SByte},
+			{typeof(ShortNode).FullName,    NodeType.Short},
+			{typeof(UShortNode).FullName,   NodeType.UShort},
+			{typeof(IntNode).FullName,      NodeType.Int},
+			{typeof(UIntNode).FullName,     NodeType.UInt},
+			{typeof(LongNode).FullName,     NodeType.Long},
+			{typeof(ULongNode).FullName,    NodeType.ULong},
+			{typeof(FloatNode).FullName,    NodeType.Float},
+			{typeof(DoubleNode).FullName,   NodeType.Double},
+			{typeof(StringNode).FullName,   NodeType.String},
+			{typeof(GuidNode).FullName,     NodeType.Guid},
+			{typeof(DateTimeNode).FullName, NodeType.DateTime},
+			{typeof(TimeSpanNode).FullName, NodeType.TimeSpan},
+			{typeof(BlobNode).FullName,     NodeType.Blob},
+			{typeof(XyNode).FullName,       NodeType.Xy},
+			{typeof(XyzNode).FullName,      NodeType.Xyz},
+			{typeof(Point2fNode).FullName,  NodeType.Point2f},
+			{typeof(Point3fNode).FullName,  NodeType.Point3f},
+			{typeof(ColorNode).FullName,    NodeType.Color},
+			{typeof(ListNode).FullName,     NodeType.List},
+			{typeof(ComplexNode).FullName,  NodeType.Complex}
 		};
 
 		/// <summary>
@@ -315,7 +315,7 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
-		/// Ensures that a node is a 3D coordinate node and retrieves its value
+		/// Ensures that a node is a 3D point node and retrieves its value
 		/// </summary>
 		/// <param name="node">Node to verify</param>
 		/// <returns>The node's value</returns>
@@ -323,14 +323,14 @@ namespace Frost.IO.Tnt
 		/// <param name="y">The node's y-coordinate</param>
 		/// <param name="z">The node's z-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Coordinate3DNode"/></exception>
-		public static void ExpectCoordinate3DNode (this Node node, out float x, out float y, out float z)
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Point3fNode"/></exception>
+		public static void ExpectPoint3fNode (this Node node, out float x, out float y, out float z)
 		{
-			ExpectNodeType(node, NodeType.Coordinate3D);
-			var coord = (Coordinate3DNode)node;
-			x = coord.X;
-			y = coord.Y;
-			z = coord.Z;
+			ExpectNodeType(node, NodeType.Point3f);
+			var point = (Point3fNode)node;
+			x = point.X;
+			y = point.Y;
+			z = point.Z;
 		}
 
 		/// <summary>
@@ -716,10 +716,10 @@ namespace Frost.IO.Tnt
 		/// <param name="z">The child node's z-coordinate</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="FormatException">Thrown if no child exists in <paramref name="node"/> with the name <paramref name="name"/></exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="Point2iNode"/></exception>
-		public static void ExpectCoordinate3DNode(this ComplexNode node, string name, out float x, out float y, out float z)
+		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="Point3fNode"/></exception>
+		public static void ExpectPoint3fNode (this ComplexNode node, string name, out float x, out float y, out float z)
 		{
-			var child = ExpectNodeType<Coordinate3DNode>(node, name);
+			var child = ExpectNodeType<Point3fNode>(node, name);
 			x = child.X;
 			y = child.Y;
 			z = child.Z;

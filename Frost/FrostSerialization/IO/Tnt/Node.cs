@@ -130,8 +130,8 @@ namespace Frost.IO.Tnt
 				return XyzNode.ReadPayload;
 			case NodeType.Point2f:
 				return Point2fNode.ReadPayload;
-			case NodeType.Coordinate3D:
-				return Coordinate3DNode.ReadPayload;
+			case NodeType.Point3f:
+				return Point3fNode.ReadPayload;
 			case NodeType.Color:
 				return ColorNode.ReadPayload;
 			case NodeType.List:
@@ -223,8 +223,8 @@ namespace Frost.IO.Tnt
 				return new XyzNode(default(int), default(int), default(int));
 			case NodeType.Point2f:
 				return new Point2fNode(default(float), default(float));
-			case NodeType.Coordinate3D:
-				return new Coordinate3DNode(default(float), default(float), default(float));
+			case NodeType.Point3f:
+				return new Point3fNode(default(float), default(float), default(float));
 			case NodeType.Color:
 				return new ColorNode(default(int));
 			case NodeType.List:

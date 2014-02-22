@@ -90,11 +90,11 @@
     <Compile Include="NodeValueControls\Point2fNodeValueControl.Designer.cs">
       <DependentUpon>Point2fNodeValueControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="NodeValueControls\Coordinate3dNodeValueControl.cs">
+    <Compile Include="NodeValueControls\Point3fNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NodeValueControls\Coordinate3dNodeValueControl.Designer.cs">
-      <DependentUpon>Coordinate3dNodeValueControl.cs</DependentUpon>
+    <Compile Include="NodeValueControls\Point3fNodeValueControl.Designer.cs">
+      <DependentUpon>Point3fNodeValueControl.cs</DependentUpon>
     </Compile>
     <Compile Include="NodeValueControls\ColorNodeValueControl.cs">
       <SubType>UserControl</SubType>
@@ -182,8 +182,8 @@
     <EmbeddedResource Include="NodeValueControls\Point2fNodeValueControl.resx">
       <DependentUpon>Point2fNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NodeValueControls\Coordinate3dNodeValueControl.resx">
-      <DependentUpon>Coordinate3dNodeValueControl.cs</DependentUpon>
+    <EmbeddedResource Include="NodeValueControls\Point3fNodeValueControl.resx">
+      <DependentUpon>Point3fNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\ColorNodeValueControl.resx">
       <DependentUpon>ColorNodeValueControl.cs</DependentUpon>
