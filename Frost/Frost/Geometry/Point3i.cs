@@ -12,7 +12,7 @@ namespace Frost.Geometry
 		/// </summary>
 		public static readonly Point3i Origin = new Point3i(0, 0, 0);
 
-		private readonly int _x;
+		private readonly int _x, _y, _z;
 
 		/// <summary>
 		/// Offset along the x-axis
@@ -22,8 +22,6 @@ namespace Frost.Geometry
 			get { return _x; }
 		}
 
-		private readonly int _y;
-
 		/// <summary>
 		/// Offset along the y-axis
 		/// </summary>
@@ -31,8 +29,6 @@ namespace Frost.Geometry
 		{
 			get { return _y; }
 		}
-
-		private readonly int _z;
 
 		/// <summary>
 		/// Offset along the z-axis
