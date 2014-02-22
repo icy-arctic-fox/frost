@@ -99,7 +99,7 @@
 		/// <summary>
 		/// X, Y, and Z size of location as an integer
 		/// </summary>
-		Xyz = 18,
+		Point3i = 18,
 
 		/// <summary>
 		/// X and Y-coordinates represented as floating-point numbers

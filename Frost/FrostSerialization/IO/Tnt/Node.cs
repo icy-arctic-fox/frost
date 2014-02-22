@@ -126,8 +126,8 @@ namespace Frost.IO.Tnt
 				return BlobNode.ReadPayload;
 			case NodeType.Point2i:
 				return Point2iNode.ReadPayload;
-			case NodeType.Xyz:
-				return XyzNode.ReadPayload;
+			case NodeType.Point3i:
+				return Point3iNode.ReadPayload;
 			case NodeType.Point2f:
 				return Point2fNode.ReadPayload;
 			case NodeType.Point3f:
@@ -219,8 +219,8 @@ namespace Frost.IO.Tnt
 				return new BlobNode(new byte[0]);
 			case NodeType.Point2i:
 				return new Point2iNode(default(int), default(int));
-			case NodeType.Xyz:
-				return new XyzNode(default(int), default(int), default(int));
+			case NodeType.Point3i:
+				return new Point3iNode(default(int), default(int), default(int));
 			case NodeType.Point2f:
 				return new Point2fNode(default(float), default(float));
 			case NodeType.Point3f:

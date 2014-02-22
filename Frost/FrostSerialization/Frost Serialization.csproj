@@ -91,7 +91,7 @@
     <Compile Include="IO\Tnt\Node.cs" />
     <Compile Include="IO\Tnt\NodeType.cs" />
     <Compile Include="IO\Tnt\Point2iNode.cs" />
-    <Compile Include="IO\Tnt\XyzNode.cs" />
+    <Compile Include="IO\Tnt\Point3iNode.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ByteUtility.cs" />

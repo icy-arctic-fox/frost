@@ -120,11 +120,11 @@
     <Compile Include="NodeValueControls\ListNodeValueControl.Designer.cs">
       <DependentUpon>ListNodeValueControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="NodeValueControls\XyzNodeValueControl.cs">
+    <Compile Include="NodeValueControls\Point3iNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NodeValueControls\XyzNodeValueControl.Designer.cs">
-      <DependentUpon>XyzNodeValueControl.cs</DependentUpon>
+    <Compile Include="NodeValueControls\Point3iNodeValueControl.Designer.cs">
+      <DependentUpon>Point3iNodeValueControl.cs</DependentUpon>
     </Compile>
     <Compile Include="NodeValueControls\Point2iNodeValueControl.cs">
       <SubType>UserControl</SubType>
@@ -197,8 +197,8 @@
     <EmbeddedResource Include="NodeValueControls\ListNodeValueControl.resx">
       <DependentUpon>ListNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NodeValueControls\XyzNodeValueControl.resx">
-      <DependentUpon>XyzNodeValueControl.cs</DependentUpon>
+    <EmbeddedResource Include="NodeValueControls\Point3iNodeValueControl.resx">
+      <DependentUpon>Point3iNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\Point2iNodeValueControl.resx">
       <DependentUpon>Point2iNodeValueControl.cs</DependentUpon>

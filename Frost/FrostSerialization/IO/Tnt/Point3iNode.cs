@@ -6,7 +6,7 @@ namespace Frost.IO.Tnt
 	/// X, Y, and Z node.
 	/// Contains X, Y, and Z integer values for sizes or locations.
 	/// </summary>
-	public class XyzNode : Node
+	public class Point3iNode : Node
 	{
 		#region Node properties
 
@@ -14,24 +14,24 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Xyz"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Point3i"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Xyz; }
+			get { return NodeType.Point3i; }
 		}
 
 		/// <summary>
-		/// X value stored in the node
+		/// X position or size
 		/// </summary>
 		public int X { get; set; }
 
 		/// <summary>
-		/// Y value stored in the node
+		/// Y position or size
 		/// </summary>
 		public int Y { get; set; }
 
 		/// <summary>
-		/// Z value stored in the node
+		/// Z position or size
 		/// </summary>
 		public int Z { get; set; }
 
@@ -45,12 +45,12 @@ namespace Frost.IO.Tnt
 		#endregion
 
 		/// <summary>
-		/// Creates a new x, y, and z node
+		/// Creates a new 3D point node
 		/// </summary>
-		/// <param name="x">X value to store in the node</param>
-		/// <param name="y">Y value to store in the node</param>
-		/// <param name="z">Z value to store in the node</param>
-		public XyzNode (int x, int y, int z)
+		/// <param name="x">X position or size</param>
+		/// <param name="y">Y position or size</param>
+		/// <param name="z">Z position or size</param>
+		public Point3iNode (int x, int y, int z)
 		{
 			X = x;
 			Y = y;
@@ -61,7 +61,7 @@ namespace Frost.IO.Tnt
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public XyzNode CloneNode ()
+		public Point3iNode CloneNode ()
 		{
 			throw new NotImplementedException();
 		}
@@ -78,16 +78,16 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs an x, y, and z node by reading its payload from a stream
+		/// Constructs a 3D point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed x, y, and z node</returns>
-		internal static XyzNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed 3D point node</returns>
+		internal static Point3iNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var x = br.ReadInt32();
 			var y = br.ReadInt32();
 			var z = br.ReadInt32();
-			return new XyzNode(x, y, z);
+			return new Point3iNode(x, y, z);
 		}
 
 		/// <summary>

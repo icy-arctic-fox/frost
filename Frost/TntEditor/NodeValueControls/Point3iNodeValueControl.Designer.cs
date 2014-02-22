@@ -1,6 +1,6 @@
 ﻿namespace Frost.TntEditor.NodeValueControls
 {
-	partial class XyzNodeValueControl
+	partial class Point3iNodeValueControl
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -126,7 +126,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "XyzNodeValueControl";
+			this.Name = "Point3iNodeValueControl";
 			this.Size = new System.Drawing.Size(246, 78);
 			this.tableLayoutPanel.ResumeLayout(false);
 			this.tableLayoutPanel.PerformLayout();
