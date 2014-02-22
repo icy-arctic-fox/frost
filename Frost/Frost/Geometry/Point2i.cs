@@ -68,6 +68,136 @@ namespace Frost.Geometry
 			return Math.Sqrt((xDist * xDist) + (yDist * yDist));
 		}
 
+		#region Operators
+		#region Point2i
+
+		/// <summary>
+		/// Compares two points to determine if they're equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are equal</returns>
+		/// <remarks>The points are considered equal if their <see cref="X"/> and <see cref="Y"/> values are the same.</remarks>
+		public static bool operator == (Point2i left, Point2i right)
+		{
+			return (left._x == right._x) && (left._y == right._y);
+		}
+
+		/// <summary>
+		/// Compares two points to determine if they're not equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are not equal</returns>
+		/// <remarks>The points are considered not equal if their <see cref="X"/> or <see cref="Y"/> values are different.</remarks>
+		public static bool operator != (Point2i left, Point2i right)
+		{
+			return (left._x != right._x) || (left._y != right._y);
+		}
+		#endregion
+
+		#region Vector2i
+
+		/// <summary>
+		/// Compares two points to determine if they're equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are equal</returns>
+		/// <remarks>The points are considered equal if their <see cref="X"/> and <see cref="Y"/> values are the same.</remarks>
+		public static bool operator == (Point2i left, Vector2i right)
+		{
+			return (left._x == right.X) && (left._y == right.Y);
+		}
+
+		/// <summary>
+		/// Compares two points to determine if they're not equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are not equal</returns>
+		/// <remarks>The points are considered not equal if their <see cref="X"/> or <see cref="Y"/> values are different.</remarks>
+		public static bool operator != (Point2i left, Vector2i right)
+		{
+			return (left._x != right.X) || (left._y != right.Y);
+		}
+
+		/// <summary>
+		/// Compares two points to determine if they're equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are equal</returns>
+		/// <remarks>The points are considered equal if their <see cref="X"/> and <see cref="Y"/> values are the same.</remarks>
+		public static bool operator == (Vector2i left, Point2i right)
+		{
+			return (left.X == right._x) && (left.Y == right._y);
+		}
+
+		/// <summary>
+		/// Compares two points to determine if they're not equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are not equal</returns>
+		/// <remarks>The points are considered not equal if their <see cref="X"/> or <see cref="Y"/> values are different.</remarks>
+		public static bool operator != (Vector2i left, Point2i right)
+		{
+			return (left.X != right._x) || (left.Y != right._y);
+		}
+		#endregion
+
+		#region Point
+
+		/// <summary>
+		/// Compares two points to determine if they're equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are equal</returns>
+		/// <remarks>The points are considered equal if their <see cref="X"/> and <see cref="Y"/> values are the same.</remarks>
+		public static bool operator == (Point2i left, Point right)
+		{
+			return (left._x == right.X) && (left._y == right.Y);
+		}
+
+		/// <summary>
+		/// Compares two points to determine if they're not equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are not equal</returns>
+		/// <remarks>The points are considered not equal if their <see cref="X"/> or <see cref="Y"/> values are different.</remarks>
+		public static bool operator != (Point2i left, Point right)
+		{
+			return (left._x != right.X) || (left._y != right.Y);
+		}
+
+		/// <summary>
+		/// Compares two points to determine if they're equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are equal</returns>
+		/// <remarks>The points are considered equal if their <see cref="X"/> and <see cref="Y"/> values are the same.</remarks>
+		public static bool operator == (Point left, Point2i right)
+		{
+			return (left.X == right._x) && (left.Y == right._y);
+		}
+
+		/// <summary>
+		/// Compares two points to determine if they're not equal
+		/// </summary>
+		/// <param name="left">First point to compare</param>
+		/// <param name="right">Second point to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are not equal</returns>
+		/// <remarks>The points are considered not equal if their <see cref="X"/> or <see cref="Y"/> values are different.</remarks>
+		public static bool operator != (Point left, Point2i right)
+		{
+			return (left.X != right._x) || (left.Y != right._y);
+		}
+		#endregion
+
 		#region Implicit conversions
 
 		/// <summary>
@@ -110,6 +240,7 @@ namespace Frost.Geometry
 			return new Point2i(point.X, point.Y);
 		}
 		#endregion
+		#endregion
 
 		/// <summary>
 		/// Generates a string representation of the point
@@ -118,6 +249,35 @@ namespace Frost.Geometry
 		public override string ToString ()
 		{
 			return String.Format("({0}, {1})", _x, _y);
+		}
+
+		/// <summary>
+		/// Determines if the point is equal to another object
+		/// </summary>
+		/// <param name="obj">Object to compare against</param>
+		/// <returns>True if <paramref name="obj"/> is considered the same</returns>
+		/// <remarks><paramref name="obj"/> is considered the same if it is a <see cref="Point2i"/>, <see cref="Vector2i"/>, or <see cref="Point"/> with the same <see cref="X"/> and <see cref="Y"/> values.</remarks>
+		public override bool Equals (object obj)
+		{
+			if(obj is Point2i)
+				return this == (Point2i)obj;
+			if(obj is Vector2i)
+				return this == (Vector2i)obj;
+			if(obj is Point)
+				return this == (Point)obj;
+			return false;
+		}
+
+		/// <summary>
+		/// Generates a hash from the values in the point
+		/// </summary>
+		/// <returns>A hash code</returns>
+		public override int GetHashCode ()
+		{
+			var hash = 17;
+			hash = hash * 31 + _x;
+			hash = hash * 31 + _y;
+			return hash;
 		}
 	}
 }
