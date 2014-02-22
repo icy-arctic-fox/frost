@@ -14,15 +14,25 @@ namespace Frost.Geometry
 		/// </summary>
 		public static readonly Point2i Origin = new Point2i(0, 0);
 
+		private readonly int _x;
+
 		/// <summary>
 		/// Offset along the x-axis
 		/// </summary>
-		public readonly int X;
+		public int X
+		{
+			get { return _x; }
+		}
+
+		private readonly int _y;
 
 		/// <summary>
 		/// Offset along the y-axis
 		/// </summary>
-		public readonly int Y;
+		public int Y
+		{
+			get { return _y; }
+		}
 
 		/// <summary>
 		/// Creates a new point
@@ -31,8 +41,8 @@ namespace Frost.Geometry
 		/// <param name="y">Offset along the y-axis</param>
 		public Point2i (int x, int y)
 		{
-			X = x;
-			Y = y;
+			_x = x;
+			_y = y;
 		}
 
 		/// <summary>
@@ -53,8 +63,8 @@ namespace Frost.Geometry
 		/// <returns>Distance between the two points</returns>
 		public double DistanceTo (int x, int y)
 		{
-			var xDist = X - x;
-			var yDist = Y - y;
+			var xDist = _x - x;
+			var yDist = _y - y;
 			return Math.Sqrt((xDist * xDist) + (yDist * yDist));
 		}
 
@@ -67,7 +77,7 @@ namespace Frost.Geometry
 		/// <returns>An SFML 2D <see cref="Vector2i"/></returns>
 		public static implicit operator Vector2i (Point2i point)
 		{
-			return new Vector2i(point.X, point.Y);
+			return new Vector2i(point._x, point._y);
 		}
 
 		/// <summary>
@@ -87,7 +97,7 @@ namespace Frost.Geometry
 		/// <returns>A .NET 2D <see cref="Point"/></returns>
 		public static implicit operator Point (Point2i point)
 		{
-			return new Point(point.X, point.Y);
+			return new Point(point._x, point._y);
 		}
 
 		/// <summary>
@@ -107,7 +117,7 @@ namespace Frost.Geometry
 		/// <returns>A string in the form: (X, Y)</returns>
 		public override string ToString ()
 		{
-			return String.Format("({0}, {1})", X, Y);
+			return String.Format("({0}, {1})", _x, _y);
 		}
 	}
 }
