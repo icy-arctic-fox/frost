@@ -108,8 +108,8 @@ namespace Frost.TntEditor
 			case NodeType.Blob:
 				_nodeEditorControl = new BlobNodeValueControl();
 				break;
-			case NodeType.Xy:
-				_nodeEditorControl = new XyNodeValueControl();
+			case NodeType.Point2i:
+				_nodeEditorControl = new Point2iNodeValueControl();
 				break;
 			case NodeType.Xyz:
 				_nodeEditorControl = new XyzNodeValueControl();

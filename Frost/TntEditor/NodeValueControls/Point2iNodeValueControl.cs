@@ -4,9 +4,9 @@ using Frost.IO.Tnt;
 
 namespace Frost.TntEditor.NodeValueControls
 {
-	public partial class XyNodeValueControl : UserControl, INodeEditorControl
+	public partial class Point2iNodeValueControl : UserControl, INodeEditorControl
 	{
-		public XyNodeValueControl ()
+		public Point2iNodeValueControl ()
 		{
 			InitializeComponent();
 			xNumericUpDown.Minimum = Int32.MinValue;
@@ -23,7 +23,7 @@ namespace Frost.TntEditor.NodeValueControls
 		{
 			var x = (int)xNumericUpDown.Value;
 			var y = (int)yNumericUpDown.Value;
-			return new XyNode(x, y);
+			return new Point2iNode(x, y);
 		}
 
 		/// <summary>
@@ -32,9 +32,9 @@ namespace Frost.TntEditor.NodeValueControls
 		/// <param name="node">Node to pull values from</param>
 		public void FromNode (Node node)
 		{
-			var xy = (XyNode)node;
-			xNumericUpDown.Value = xy.X;
-			yNumericUpDown.Value = xy.Y;
+			var point = (Point2iNode)node;
+			xNumericUpDown.Value = point.X;
+			yNumericUpDown.Value = point.Y;
 		}
 	}
 }

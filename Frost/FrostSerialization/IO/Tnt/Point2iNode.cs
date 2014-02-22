@@ -6,7 +6,7 @@ namespace Frost.IO.Tnt
 	/// X and Y node.
 	/// Contains X and Y integer values for sizes or locations.
 	/// </summary>
-	public class XyNode : Node
+	public class Point2iNode : Node
 	{
 		#region Node properties
 
@@ -14,19 +14,19 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Xy"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Point2i"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Xy; }
+			get { return NodeType.Point2i; }
 		}
 
 		/// <summary>
-		/// X value stored in the node
+		/// X position
 		/// </summary>
 		public int X { get; set; }
 
 		/// <summary>
-		/// Y value stored in the node
+		/// Y position
 		/// </summary>
 		public int Y { get; set; }
 
@@ -40,11 +40,11 @@ namespace Frost.IO.Tnt
 		#endregion
 
 		/// <summary>
-		/// Creates a new x and y node
+		/// Creates a new 2D point node
 		/// </summary>
-		/// <param name="x">X value to store in the node</param>
-		/// <param name="y">Y value to store in the node</param>
-		public XyNode (int x, int y)
+		/// <param name="x">X position</param>
+		/// <param name="y">Y position</param>
+		public Point2iNode (int x, int y)
 		{
 			X = x;
 			Y = y;
@@ -54,9 +54,9 @@ namespace Frost.IO.Tnt
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public XyNode CloneNode ()
+		public Point2iNode CloneNode ()
 		{
-			return new XyNode(X, Y);
+			return new Point2iNode(X, Y);
 		}
 
 		/// <summary>
@@ -71,15 +71,15 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs an x and y node by reading its payload from a stream
+		/// Constructs a 2D point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed x and y node</returns>
-		internal static XyNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed 2D point node</returns>
+		internal static Point2iNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var x = br.ReadInt32();
 			var y = br.ReadInt32();
-			return new XyNode(x, y);
+			return new Point2iNode(x, y);
 		}
 
 		/// <summary>

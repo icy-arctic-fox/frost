@@ -90,7 +90,7 @@
     <Compile Include="IO\Tnt\SByteNode.cs" />
     <Compile Include="IO\Tnt\Node.cs" />
     <Compile Include="IO\Tnt\NodeType.cs" />
-    <Compile Include="IO\Tnt\XyNode.cs" />
+    <Compile Include="IO\Tnt\Point2iNode.cs" />
     <Compile Include="IO\Tnt\XyzNode.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

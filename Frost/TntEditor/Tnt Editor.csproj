@@ -126,11 +126,11 @@
     <Compile Include="NodeValueControls\XyzNodeValueControl.Designer.cs">
       <DependentUpon>XyzNodeValueControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="NodeValueControls\XyNodeValueControl.cs">
+    <Compile Include="NodeValueControls\Point2iNodeValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NodeValueControls\XyNodeValueControl.Designer.cs">
-      <DependentUpon>XyNodeValueControl.cs</DependentUpon>
+    <Compile Include="NodeValueControls\Point2iNodeValueControl.Designer.cs">
+      <DependentUpon>Point2iNodeValueControl.cs</DependentUpon>
     </Compile>
     <Compile Include="NodeValueControls\DateTimeNodeValueControl.cs">
       <SubType>UserControl</SubType>
@@ -200,8 +200,8 @@
     <EmbeddedResource Include="NodeValueControls\XyzNodeValueControl.resx">
       <DependentUpon>XyzNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NodeValueControls\XyNodeValueControl.resx">
-      <DependentUpon>XyNodeValueControl.cs</DependentUpon>
+    <EmbeddedResource Include="NodeValueControls\Point2iNodeValueControl.resx">
+      <DependentUpon>Point2iNodeValueControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeValueControls\DateTimeNodeValueControl.resx">
       <DependentUpon>DateTimeNodeValueControl.cs</DependentUpon>

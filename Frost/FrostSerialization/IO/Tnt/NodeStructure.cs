@@ -28,7 +28,7 @@ namespace Frost.IO.Tnt
 			{typeof(DateTimeNode).FullName, NodeType.DateTime},
 			{typeof(TimeSpanNode).FullName, NodeType.TimeSpan},
 			{typeof(BlobNode).FullName,     NodeType.Blob},
-			{typeof(XyNode).FullName,       NodeType.Xy},
+			{typeof(Point2iNode).FullName,  NodeType.Point2i},
 			{typeof(XyzNode).FullName,      NodeType.Xyz},
 			{typeof(Point2fNode).FullName,  NodeType.Point2f},
 			{typeof(Point3fNode).FullName,  NodeType.Point3f},
@@ -264,19 +264,19 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
-		/// Ensures that a node is an XY node and retrieves its value
+		/// Ensures that a node is a 2D integer point node and retrieves its value
 		/// </summary>
 		/// <param name="node">Node to verify</param>
 		/// <param name="x">The node's x-value</param>
 		/// <param name="y">The node's y-value</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="XyNode"/></exception>
-		public static void ExpectXyNode (this Node node, out int x, out int y)
+		/// <exception cref="InvalidCastException">Thrown if the type for <paramref name="node"/> is not a <see cref="Point2iNode"/></exception>
+		public static void ExpectPoint2iNode (this Node node, out int x, out int y)
 		{
-			ExpectNodeType(node, NodeType.Xy);
-			var xy = (XyNode)node;
-			x = xy.X;
-			y = xy.Y;
+			ExpectNodeType(node, NodeType.Point2i);
+			var point = (Point2iNode)node;
+			x = point.X;
+			y = point.Y;
 		}
 
 		/// <summary>
@@ -654,7 +654,7 @@ namespace Frost.IO.Tnt
 		}
 
 		/// <summary>
-		/// Ensures that a child node is a XY node and retrieves its value
+		/// Ensures that a child node is a 2D integer node and retrieves its value
 		/// </summary>
 		/// <param name="node">Complex node to check</param>
 		/// <param name="name">Name of the child node</param>
@@ -662,10 +662,10 @@ namespace Frost.IO.Tnt
 		/// <param name="y">The child node's y-value</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="node"/> is null</exception>
 		/// <exception cref="FormatException">Thrown if no child exists in <paramref name="node"/> with the name <paramref name="name"/></exception>
-		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="XyNode"/></exception>
-		public static void ExpectXyNode (this ComplexNode node, string name, out int x, out int y)
+		/// <exception cref="InvalidCastException">Thrown if the type for the child node is not a <see cref="Point2iNode"/></exception>
+		public static void ExpectPoint2iNode (this ComplexNode node, string name, out int x, out int y)
 		{
-			var child = ExpectNodeType<XyNode>(node, name);
+			var child = ExpectNodeType<Point2iNode>(node, name);
 			x = child.X;
 			y = child.Y;
 		}

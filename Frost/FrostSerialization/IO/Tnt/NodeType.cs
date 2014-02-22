@@ -94,7 +94,7 @@
 		/// <summary>
 		/// X and Y size or location as an integer
 		/// </summary>
-		Xy = 17,
+		Point2i = 17,
 
 		/// <summary>
 		/// X, Y, and Z size of location as an integer
