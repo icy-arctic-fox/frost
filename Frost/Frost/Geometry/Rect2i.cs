@@ -65,6 +65,46 @@ namespace Frost.Geometry
 		}
 
 		/// <summary>
+		/// Position of the top-left corner of the rectangle
+		/// </summary>
+		public Point2i TopLeft
+		{
+			get { return new Point2i(_x, _y); }
+		}
+
+		/// <summary>
+		/// Position of the top-right corner of the rectangle
+		/// </summary>
+		public Point2i TopRight
+		{
+			get { return new Point2i(_x + _w, _y); }
+		}
+
+		/// <summary>
+		/// Position of the bottom-left corner of the rectangle
+		/// </summary>
+		public Point2i BottomLeft
+		{
+			get { return new Point2i(_x, _y + _h); }
+		}
+
+		/// <summary>
+		/// Position of the bottom-right corner of the rectangle
+		/// </summary>
+		public Point2i BottomRight
+		{
+			get { return new Point2i(_x + _w, _y + _h); }
+		}
+
+		/// <summary>
+		/// Indicates whether the rectangular region has no area
+		/// </summary>
+		public bool IsEmpty
+		{
+			get { return _h == 0 || _w == 0; }
+		}
+
+		/// <summary>
 		/// Creates a new rectangle
 		/// </summary>
 		/// <param name="x">Offset along the x-axis</param>
@@ -113,7 +153,7 @@ namespace Frost.Geometry
 		/// <returns>True if <paramref name="point"/> is inside the rectangular bounds</returns>
 		public bool Contains (Point2i point)
 		{
-			throw new NotImplementedException();
+			return (_x <= point.X && _x + _w >= point.X) && (_y <= point.Y && _y + _h >= point.Y);
 		}
 
 		/// <summary>
@@ -123,7 +163,7 @@ namespace Frost.Geometry
 		/// <returns>True if the rectangle overlaps with <paramref name="rect"/></returns>
 		public bool Intersects (Rect2i rect)
 		{
-			throw new NotImplementedException();
+			return Contains(rect.TopLeft) || Contains(rect.TopRight) || Contains(rect.BottomLeft) || Contains(rect.BottomRight);
 		}
 
 		/// <summary>
@@ -131,10 +171,38 @@ namespace Frost.Geometry
 		/// </summary>
 		/// <param name="rect">Rectangle that overlaps</param>
 		/// <returns>Rectangular bounds for the overlapping region</returns>
-		/// <remarks><see cref="Empty"/> will be returned if the rectangles don't overlap each other.</remarks>
+		/// <remarks><see cref="IsEmpty"/> will be true for the returned rectangle if the rectangles don't overlap each other.</remarks>
 		public Rect2i Intersection (Rect2i rect)
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Increases the bounds of the rectangle outward by a specified amount
+		/// </summary>
+		/// <param name="amount">Amount to inflate the rectangle by on each side</param>
+		/// <returns>An inflated rectangle</returns>
+		public Rect2i Inflate (int amount)
+		{
+			var x = _x - amount;
+			var y = _y - amount;
+			var w = _w + amount + amount;
+			var h = _h + amount + amount;
+			return new Rect2i(x, y, w, h);
+		}
+
+		/// <summary>
+		/// Decreases the bounds of the rectangle inward by a specified amount
+		/// </summary>
+		/// <param name="amount">Amount to deflate the rectangle by on each side</param>
+		/// <returns>A deflated rectangle</returns>
+		public Rect2i Deflate (int amount)
+		{
+			var x = _x + amount;
+			var y = _y + amount;
+			var w = _w - amount - amount;
+			var h = _h - amount - amount;
+			return new Rect2i(x, y, w, h);
 		}
 
 		#region Implicit conversions
