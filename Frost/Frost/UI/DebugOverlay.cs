@@ -14,14 +14,12 @@ namespace Frost.UI
 	/// </summary>
 	public class DebugOverlay : IRenderable
 	{
-		private const float XPosition = 0f;
-		private const float YPosition = 0f;
 		private static readonly SFML.Graphics.Color _backgroundColor = new SFML.Graphics.Color(64, 64, 64, 128);
 		private static readonly Color _textColor = new Color(0xffffff);
 
 		private readonly GameRunner _runner;
 		private readonly SFML.Graphics.Sprite _background;
-		private readonly SimpleText _frameText;
+		private readonly SimpleText _frameText, _stateText;
 
 		/// <summary>
 		/// Creates a new debug overlay
@@ -40,6 +38,7 @@ namespace Frost.UI
 			_runner     = runner;
 			_background = new SFML.Graphics.Sprite();
 			_frameText  = new SimpleText(font, fontSize, _textColor);
+			_stateText  = new SimpleText(font, fontSize, _textColor);
 		}
 
 		/// <summary>
@@ -58,10 +57,20 @@ namespace Frost.UI
 		{
 			// Update the text
 			_frameText.Text = _runner.ToString();
+			_stateText.Text = _runner.Scenes.StateManager.ToString();
+			
+			// Calculate the bounds
 			var bounds = _frameText.Bounds;
-			if(bounds.Width > Bounds.Width || bounds.Height > Bounds.Height)
+			var width  = bounds.Width;
+			var height = bounds.Height;
+			bounds = _stateText.Bounds;
+			if(bounds.Width > width)
+				width = bounds.Width;
+			height += bounds.Height;
+
+			if(width > Bounds.Width || height > Bounds.Height)
 			{// Bounds need to be updated and the background resized
-				Bounds  = bounds;
+				Bounds  = new Rect2f(0f, 0f, width, height);
 				_resize = true;
 			}
 		}
@@ -93,7 +102,10 @@ namespace Frost.UI
 			display.Draw(_background, rs);
 
 			// Draw the text
-			_frameText.Draw(display, XPosition, YPosition);
+			var yPos = bounds.Top;
+			_frameText.Draw(display, bounds.Left, yPos);
+			yPos += _frameText.Bounds.Height;
+			_stateText.Draw(display, bounds.Left, yPos);
 		}
 	}
 }
