@@ -46,7 +46,7 @@ namespace Test_Game
 		public override void Initialize ()
 		{
 			base.Initialize();
-			Window.BackgroundColor = new Color(128, 128, 128);
+			Window.BackgroundColor = new Color(0x33, 0x99, 0xff);
 		}
 	}
 }
