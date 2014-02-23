@@ -34,6 +34,19 @@ namespace Frost.Graphics
 		}
 
 		/// <summary>
+		/// Creates a new color from an integer value
+		/// </summary>
+		/// <param name="value">Integer value containing the color components as RGB</param>
+		/// <param name="alpha">Amount of alpha/opacity (0 - 255).
+		/// 0 is fully transparent and 255 is fully opaque.</param>
+		/// <remarks>A trick to using this constructor is to use hexadecimal when specifying <paramref name="value"/>.
+		/// For example: Color(0x00ff00)</remarks>
+		public Color (int value, byte alpha = 255)
+		{
+			_value = (value & 0x00ffffff) | (alpha << 24);
+		}
+
+		/// <summary>
 		/// Copies an existing color
 		/// </summary>
 		/// <param name="color">Original color</param>
