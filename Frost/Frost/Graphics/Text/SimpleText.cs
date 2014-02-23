@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Geometry;
 using SFML.Graphics;
 using Frost.Utility;
 
@@ -63,6 +64,11 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
+		/// Bounds of the text
+		/// </summary>
+		public Rect2f Bounds { get; private set; }
+
+		/// <summary>
 		/// Updates the vertices that display each glyph
 		/// </summary>
 		private void constructVertices ()
@@ -80,6 +86,9 @@ namespace Frost.Graphics.Text
 				var j = (uint)(i * 4);
 				constructFromGlyph(c, j, ref pos);
 			}
+
+			// Update the bounds
+			Bounds = new Rect2f(0f, 0f, pos, _size);
 
 			// Store the texture
 			_rs.Texture = _font.GetTexture(_size);
