@@ -57,7 +57,7 @@ namespace Frost.UI
 		{
 			// Update the text
 			_frameText.Text = _runner.ToString();
-			_stateText.Text = _runner.Scenes.StateManager.ToString();
+			_stateText.Text = String.Format("Scene: {0} - {1}", _runner.Scenes.CurrentScene.Name, _runner.Scenes.StateManager);
 			
 			// Calculate the bounds
 			var bounds = _frameText.Bounds;
