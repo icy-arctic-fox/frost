@@ -69,7 +69,11 @@ namespace Frost.UI
 			_memoryText.Text = String.Format("{0} used {1} allocated {2} working", toByteString(GC.GetTotalMemory(false)), toByteString(_process.PrivateMemorySize64), toByteString(_process.WorkingSet64));
 
 			// Update the graph
-			_graph.AddMeasurement((_runner.LastUpdateInterval + _runner.LastRenderInterval) / (1d / _runner.TargetUpdateRate));
+			var measurement = _runner.LastUpdateInterval + _runner.LastRenderInterval;
+			var divisor = _runner.TargetUpdateRate + _runner.TargetRenderRate;
+			if(divisor > 0d)
+				measurement /= 1d / divisor;
+			_graph.AddMeasurement(measurement);
 			
 			// Calculate the bounds
 			var bounds = _frameText.Bounds;
