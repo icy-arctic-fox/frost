@@ -16,8 +16,8 @@ namespace Frost
 	/// </summary>
 	public class GameRunner : IFullDisposable
 	{
-		private const string DebugOverlayFontFile = "volter.ttf";
-		private const uint DebugOverlayFontSize   = 9;
+		private const string DebugOverlayFontFile = "crystal.TTF";
+		private const uint DebugOverlayFontSize   = 12;
 
 		/// <summary>
 		/// Display that will be rendered upon
