@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Frost.Display;
 using Frost.Geometry;
 using Frost.Graphics;
@@ -15,6 +12,8 @@ namespace Frost.UI
 	/// </summary>
 	public class PixelGraph : IRenderable
 	{
+		private const int DefaultColor = 0x2eb82e;
+
 		private readonly SFML.Graphics.Sprite _sprite;
 		private readonly RenderTexture _texture;
 		private readonly Vertex[] _verts;
@@ -23,7 +22,27 @@ namespace Frost.UI
 		private readonly uint _width;
 		private float _pos;
 
+		/// <summary>
+		/// Location that the graph will be rendered at when drawn
+		/// </summary>
 		public Point2f Position { get; set; }
+
+		private Graphics.Color _color = new Graphics.Color(DefaultColor);
+
+		/// <summary>
+		/// Color of the bars on the graph
+		/// </summary>
+		public Graphics.Color Color
+		{
+			get { return _color; }
+			set
+			{
+				_color = value;
+				_verts[0].Color = value;
+				_verts[1].Color = new SFML.Graphics.Color(value.Red, value.Green, value.Blue, 0);
+				_verts[2].Color = new SFML.Graphics.Color(0, 0, 0, 0);
+			}
+		}
 
 		/// <summary>
 		/// Creates a new pixel graph
@@ -45,9 +64,9 @@ namespace Frost.UI
 
 			// Construct vertices
 			_verts    = new Vertex[3];
-			_verts[0] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new SFML.Graphics.Color(0x2e, 0xb8, 0x2e));
-			_verts[1] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new SFML.Graphics.Color(0x2e, 0xb8, 0x2e, 0x00));
-			_verts[2] = new Vertex(new SFML.Window.Vector2f(0f, height), new SFML.Graphics.Color(0x00, 0x00, 0x00, 0x00));
+			_verts[0] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new Graphics.Color(DefaultColor));
+			_verts[1] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new Graphics.Color(DefaultColor, 0));
+			_verts[2] = new Vertex(new SFML.Window.Vector2f(0f, height), new Graphics.Color(0, 0, 0, 0));
 		}
 
 		/// <summary>
