@@ -64,9 +64,9 @@ namespace Frost.UI
 
 			// Construct vertices
 			_verts    = new Vertex[3];
-			_verts[0] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new Graphics.Color(DefaultColor));
+			_verts[0] = new Vertex(new SFML.Window.Vector2f(0f, height), new Graphics.Color(DefaultColor));
 			_verts[1] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new Graphics.Color(DefaultColor, 0));
-			_verts[2] = new Vertex(new SFML.Window.Vector2f(0f, height), new Graphics.Color(0, 0, 0, 0));
+			_verts[2] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new Graphics.Color(0, 0, 0, 0));
 		}
 
 		/// <summary>
@@ -76,10 +76,10 @@ namespace Frost.UI
 		public void AddMeasurement (double value)
 		{
 			var height = value / _span * _height;
-			_verts[0].Position = new SFML.Window.Vector2f(_pos, (float)_height);
-			_verts[1].Position = new SFML.Window.Vector2f(_pos, (float)(_height - height));
-			_verts[2].Position = new SFML.Window.Vector2f(_pos, 0f);
-			_texture.Draw(_verts, PrimitiveType.LinesStrip);
+			_verts[1].Position = new SFML.Window.Vector2f(0f, (float)(_height - height)); // Only need to update the y-position of the middle vector
+			var rs = RenderStates.Default;
+			rs.Transform.Translate(_pos, 0f); // Draw the line at the next x-offset
+			_texture.Draw(_verts, PrimitiveType.LinesStrip, rs);
 
 			_pos += 1f;
 			if(_pos > _width)
