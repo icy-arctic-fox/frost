@@ -33,7 +33,7 @@ namespace Test_Game
 			{
 				using(var renderer = new PlainTextRenderer())
 				{
-					renderer.Font = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf");
+					renderer.Font = Font.LoadFromFile("coolvetica.ttf");
 					renderer.Text = String.Join("\n", text, text, text);
 					_sprite = new Sprite(renderer.GetTexture());
 				}
