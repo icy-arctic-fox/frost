@@ -8,6 +8,11 @@ namespace Test_Game
 {
 	class TextScene : Scene
 	{
+		public override string Name
+		{
+			get { return "Text"; }
+		}
+
 		private readonly TextSprite _ts;
 
 		/// <summary>

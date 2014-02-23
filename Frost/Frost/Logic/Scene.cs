@@ -10,6 +10,12 @@ namespace Frost.Logic
 	public abstract class Scene : IStepable, IRenderable
 	{
 		/// <summary>
+		/// Visible name of the scene
+		/// </summary>
+		/// <remarks>This property is used instead of reflection because it is be faster.</remarks>
+		public abstract string Name { get; }
+
+		/// <summary>
 		/// Describes a method that updates the state of the game
 		/// </summary>
 		/// <param name="prev">Index of the previous state that was updated</param>

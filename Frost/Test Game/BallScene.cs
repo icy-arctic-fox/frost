@@ -7,6 +7,11 @@ namespace Test_Game
 {
 	class BallScene : Scene
 	{
+		public override string Name
+		{
+			get { return "Ball"; }
+		}
+
 		private const float Speed = 3f;
 
 		private readonly Ball _ball;
