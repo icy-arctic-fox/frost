@@ -88,7 +88,10 @@ namespace Frost.Graphics.Text
 			}
 
 			// Update the bounds
-			Bounds = new Rect2f(0f, 0f, pos, _size);
+			var cornerVert = _verts[vertCount - 2]; // Bottom-right corner of last quad
+			var width  = cornerVert.Position.X;
+			var height = cornerVert.Position.Y;
+			Bounds = new Rect2f(0f, 0f, width, height);
 
 			// Store the texture
 			_rs.Texture = _font.GetTexture(_size);
@@ -102,13 +105,13 @@ namespace Frost.Graphics.Text
 		/// <param name="pos">X-offset to place the character at and position for the next character after returning</param>
 		private void constructFromGlyph (char c, uint index, ref float pos)
 		{
-			var glyph  = _font.GetGlyph(c, _size, false);
-			var rect   = glyph.TextureRect;
-			var bounds = glyph.Bounds;
+			var glyph   = _font.GetGlyph(c, _size, false);
+			var srcRect = glyph.TextureRect;
+			var bounds  = glyph.Bounds;
 
 			// Calculate vertex positions
-			var h = rect.Height;
-			var w = rect.Width;
+			var h = srcRect.Height;
+			var w = srcRect.Width;
 			var left   = pos + bounds.Left;
 			var right  = left + w;
 			var top    = _spacing + bounds.Top;
@@ -121,9 +124,9 @@ namespace Frost.Graphics.Text
 			var v4 = new SFML.Window.Vector2f(left,  bottom);
 
 			// Calculate texture positions
-			left   = rect.Left;
+			left   = srcRect.Left;
 			right  = left + w;
-			top    = rect.Top;
+			top    = srcRect.Top;
 			bottom = top + h;
 
 			// Texture points
@@ -158,9 +161,11 @@ namespace Frost.Graphics.Text
 		/// Draws the text onto a renderable object
 		/// </summary>
 		/// <param name="target">Render target</param>
-		public void Draw (IRenderTarget target)
+		public void Draw (IRenderTarget target, float x, float y)
 		{
-			target.Draw(_verts, _rs);
+			var rs = _rs;
+			rs.Transform.Translate(x, y);
+			target.Draw(_verts, rs);
 		}
 
 		#region Disposable
