@@ -3,21 +3,21 @@
 namespace Frost.Geometry
 {
 	/// <summary>
-	/// An three-dimensional point with integer values
+	/// An three-dimensional point with floating-point values
 	/// </summary>
-	public struct Point3i
+	public struct Point3f
 	{
 		/// <summary>
 		/// Point at (0, 0, 0)
 		/// </summary>
-		public static readonly Point3i Origin = new Point3i(0, 0, 0);
+		public static readonly Point3f Origin = new Point3f(0, 0, 0);
 
-		private readonly int _x, _y, _z;
+		private readonly float _x, _y, _z;
 
 		/// <summary>
 		/// Offset along the x-axis
 		/// </summary>
-		public int X
+		public float X
 		{
 			get { return _x; }
 		}
@@ -25,7 +25,7 @@ namespace Frost.Geometry
 		/// <summary>
 		/// Offset along the y-axis
 		/// </summary>
-		public int Y
+		public float Y
 		{
 			get { return _y; }
 		}
@@ -33,7 +33,7 @@ namespace Frost.Geometry
 		/// <summary>
 		/// Offset along the z-axis
 		/// </summary>
-		public int Z
+		public float Z
 		{
 			get { return _z; }
 		}
@@ -44,7 +44,7 @@ namespace Frost.Geometry
 		/// <param name="x">Offset along the x-axis</param>
 		/// <param name="y">Offset along the y-axis</param>
 		/// <param name="z">Offset along the z-axis</param>
-		public Point3i (int x, int y, int z)
+		public Point3f (int x, int y, int z)
 		{
 			_x = x;
 			_y = y;
@@ -56,7 +56,7 @@ namespace Frost.Geometry
 		/// </summary>
 		/// <param name="point">Other point</param>
 		/// <returns>Distance between the two points</returns>
-		public double DistanceTo (Point3i point)
+		public double DistanceTo (Point3f point)
 		{
 			return DistanceTo(point._x, point._y, point._z);
 		}
@@ -68,7 +68,7 @@ namespace Frost.Geometry
 		/// <param name="y">Y-coordinate of the other point</param>
 		/// <param name="z">Z-coordinate of the other point</param>
 		/// <returns>Distance between the two points</returns>
-		public double DistanceTo (int x, int y, int z)
+		public double DistanceTo (float x, float y, float z)
 		{
 			var xDist = _x - x;
 			var yDist = _y - y;
@@ -86,9 +86,11 @@ namespace Frost.Geometry
 		/// <param name="right">Second point to compare</param>
 		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are equal</returns>
 		/// <remarks>The points are considered equal if their <see cref="X"/>, <see cref="Y"/>, and <see cref="Z"/> values are the same.</remarks>
-		public static bool operator == (Point3i left, Point3i right)
+		public static bool operator == (Point3f left, Point3f right)
 		{
-			return (left._x == right._x) && (left._y == right._y) && (left._z == right._z);
+			return (Math.Abs(left._x - right._x) < Single.Epsilon) &&
+				(Math.Abs(left._y - right._y) < Single.Epsilon) &&
+				(Math.Abs(left._z - right._z) < Single.Epsilon);
 		}
 
 		/// <summary>
@@ -98,9 +100,11 @@ namespace Frost.Geometry
 		/// <param name="right">Second point to compare</param>
 		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are not equal</returns>
 		/// <remarks>The points are considered not equal if their <see cref="X"/>, <see cref="Y"/>, or <see cref="Z"/> values are different.</remarks>
-		public static bool operator != (Point3i left, Point3i right)
+		public static bool operator != (Point3f left, Point3f right)
 		{
-			return (left._x != right._x) || (left._y != right._y) || (left._z != right._z);
+			return (Math.Abs(left._x - right._x) > Single.Epsilon) ||
+				(Math.Abs(left._y - right._y) > Single.Epsilon) ||
+				(Math.Abs(left._z - right._z) > Single.Epsilon);
 		}
 		#endregion
 
@@ -134,11 +138,11 @@ namespace Frost.Geometry
 		/// </summary>
 		/// <param name="obj">Object to compare against</param>
 		/// <returns>True if <paramref name="obj"/> is considered the same</returns>
-		/// <remarks><paramref name="obj"/> is considered the same if it is a <see cref="Point3i"/> with the same <see cref="X"/>, <see cref="Y"/>, and <see cref="Z"/> values.</remarks>
+		/// <remarks><paramref name="obj"/> is considered the same if it is a <see cref="Point3f"/> with the same <see cref="X"/>, <see cref="Y"/>, and <see cref="Z"/> values.</remarks>
 		public override bool Equals (object obj)
 		{
-			if(obj is Point3i)
-				return this == (Point3i)obj;
+			if(obj is Point3f)
+				return this == (Point3f)obj;
 			return false;
 		}
 
@@ -149,9 +153,9 @@ namespace Frost.Geometry
 		public override int GetHashCode ()
 		{
 			var hash = 17;
-			hash = hash * 31 + _x;
-			hash = hash * 31 + _y;
-			hash = hash * 31 + _z;
+			hash = hash * 31 + _x.GetHashCode();
+			hash = hash * 31 + _y.GetHashCode();
+			hash = hash * 31 + _z.GetHashCode();
 			return hash;
 		}
 	}
