@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frost.Display;
+using Frost.Geometry;
 using Frost.Graphics;
 using SFML.Graphics;
 
@@ -21,6 +22,8 @@ namespace Frost.UI
 		private readonly double _span, _height;
 		private readonly uint _width;
 		private float _pos;
+
+		public Point2f Position { get; set; }
 
 		/// <summary>
 		/// Creates a new pixel graph
@@ -75,7 +78,9 @@ namespace Frost.UI
 		public void Draw (IDisplay display, int state)
 		{
 			_texture.Display();
-			display.Draw(_sprite);
+			var rs = RenderStates.Default;
+			rs.Transform.Translate(Position.X, Position.Y);
+			display.Draw(_sprite, rs);
 		}
 	}
 }
