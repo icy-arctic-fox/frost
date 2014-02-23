@@ -18,8 +18,9 @@ namespace Frost.UI
 		private static readonly Color _textColor = new Color(0xffffff);
 
 		private readonly GameRunner _runner;
+		private readonly System.Diagnostics.Process _process;
 		private readonly SFML.Graphics.Sprite _background;
-		private readonly SimpleText _frameText, _stateText;
+		private readonly SimpleText _frameText, _stateText, _memoryText;
 
 		/// <summary>
 		/// Creates a new debug overlay
@@ -36,9 +37,11 @@ namespace Frost.UI
 				throw new ArgumentNullException("font", "The font used to display the debug information can't be null.");
 
 			_runner     = runner;
+			_process    = System.Diagnostics.Process.GetCurrentProcess();
 			_background = new SFML.Graphics.Sprite();
 			_frameText  = new SimpleText(font, fontSize, _textColor);
 			_stateText  = new SimpleText(font, fontSize, _textColor);
+			_memoryText = new SimpleText(font, fontSize, _textColor);
 		}
 
 		/// <summary>
@@ -56,14 +59,19 @@ namespace Frost.UI
 		public void Update ()
 		{
 			// Update the text
-			_frameText.Text = _runner.ToString();
-			_stateText.Text = String.Format("Scene: {0} - {1}", _runner.Scenes.CurrentScene.Name, _runner.Scenes.StateManager);
+			_frameText.Text  = _runner.ToString();
+			_stateText.Text  = String.Format("Scene: {0} - {1}", _runner.Scenes.CurrentScene.Name, _runner.Scenes.StateManager);
+			_memoryText.Text = String.Format("{0} used {1} allocated {2} working", toByteString(GC.GetTotalMemory(false)), toByteString(_process.PrivateMemorySize64), toByteString(_process.WorkingSet64));
 			
 			// Calculate the bounds
 			var bounds = _frameText.Bounds;
 			var width  = bounds.Width;
 			var height = bounds.Height;
 			bounds = _stateText.Bounds;
+			if(bounds.Width > width)
+				width = bounds.Width;
+			height += bounds.Height;
+			bounds = _memoryText.Bounds;
 			if(bounds.Width > width)
 				width = bounds.Width;
 			height += bounds.Height;
@@ -106,6 +114,28 @@ namespace Frost.UI
 			_frameText.Draw(display, bounds.Left, yPos);
 			yPos += _frameText.Bounds.Height;
 			_stateText.Draw(display, bounds.Left, yPos);
+			yPos += _stateText.Bounds.Height;
+			_memoryText.Draw(display, bounds.Left, yPos);
+		}
+
+		private static readonly string[] _units = new[] {"B", "KB", "MB", "GB", "TB", "PB", "EB"};
+
+		/// <summary>
+		/// Creates a friendly string from a number of bytes
+		/// </summary>
+		/// <param name="bytes">Number of bytes</param>
+		/// <returns>Reduced bytes with units</returns>
+		private static string toByteString (long bytes)
+		{
+			var unitIndex = 0;
+			var b = (double)bytes;
+			while(b > 1000d)
+			{
+				b /= 1024d;
+				++unitIndex;
+			}
+			var unit = _units[unitIndex];
+			return String.Format("{0:0.00} {1}", b, unit);
 		}
 	}
 }
