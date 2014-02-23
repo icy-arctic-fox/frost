@@ -1,4 +1,5 @@
-﻿using Frost.Display;
+﻿using System;
+using Frost.Display;
 using Frost.Geometry;
 using Frost.Graphics;
 using Frost.Graphics.Text;
@@ -17,7 +18,6 @@ namespace Frost.UI
 		private const float YPosition = 0f;
 		private static readonly SFML.Graphics.Color _backgroundColor = new SFML.Graphics.Color(64, 64, 64, 128);
 		private static readonly Color _textColor = new Color(0xffffff);
-		private const uint FontSize = 12;
 
 		private readonly GameRunner _runner;
 		private readonly SFML.Graphics.Sprite _background;
@@ -27,12 +27,19 @@ namespace Frost.UI
 		/// Creates a new debug overlay
 		/// </summary>
 		/// <param name="runner">Game runner to pull information from</param>
-		public DebugOverlay (GameRunner runner)
+		/// <param name="font">Font used to display text</param>
+		/// <param name="fontSize">Font size</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="runner"/> or <paramref name="font"/> is null</exception>
+		public DebugOverlay (GameRunner runner, Font font, uint fontSize)
 		{
+			if(runner == null)
+				throw new ArgumentNullException("runner", "The game runner can't be null.");
+			if(font == null)
+				throw new ArgumentNullException("font", "The font used to display the debug information can't be null.");
+
 			_runner     = runner;
 			_background = new SFML.Graphics.Sprite();
-			var font    = Font.LoadFromFile("../../../../Resources/Fonts/coolvetica.ttf"); // TODO: Replace with parameter
-			_frameText  = new SimpleText(font, FontSize, _textColor);
+			_frameText  = new SimpleText(font, fontSize, _textColor);
 		}
 
 		/// <summary>

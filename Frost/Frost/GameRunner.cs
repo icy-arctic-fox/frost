@@ -16,6 +16,9 @@ namespace Frost
 	/// </summary>
 	public class GameRunner : IFullDisposable
 	{
+		private const string DebugOverlayFontFile = "volter.ttf";
+		private const uint DebugOverlayFontSize   = 9;
+
 		/// <summary>
 		/// Display that will be rendered upon
 		/// </summary>
@@ -56,9 +59,21 @@ namespace Frost
 			if(display == null)
 				throw new ArgumentNullException("display", "The display to render to can't be null.");
 
+			// Try to load the debug overlay font
+			Graphics.Text.Font font;
+			try
+			{
+				font = Graphics.Text.Font.LoadFromFile(DebugOverlayFontFile);
+			}
+			catch(SFML.LoadingFailedException)
+			{
+				// TODO: Report this failure
+				font = null;
+			}
+
 			_display = display;
 			_scenes  = new SceneManager(initialScene, display);
-			_debugOverlay = new DebugOverlay(this);
+			_debugOverlay = (font != null) ? new DebugOverlay(this, font, DebugOverlayFontSize) : null;
 		}
 
 		#region Modules
@@ -349,7 +364,7 @@ namespace Frost
 				// Perform the update
 				for(var i = 0; i < _moduleUpdates.Count; ++i)
 					_moduleUpdates[i]();
-				if(_debug)
+				if(_debug && _debugOverlay != null)
 					_debugOverlay.Update();
 				if(!_scenes.Update())
 					_running = false; // All scenes exited
