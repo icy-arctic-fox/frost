@@ -30,6 +30,14 @@ namespace Frost
 		private readonly SceneManager _scenes;
 
 		/// <summary>
+		/// Game scenes being ran
+		/// </summary>
+		public SceneManager Scenes
+		{
+			get { return _scenes; }
+		}
+
+		/// <summary>
 		/// Debug information
 		/// </summary>
 		private readonly DebugOverlay _debugOverlay;
