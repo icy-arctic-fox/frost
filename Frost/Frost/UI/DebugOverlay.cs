@@ -14,6 +14,9 @@ namespace Frost.UI
 	/// </summary>
 	public class DebugOverlay : IRenderable
 	{
+		private const uint GraphWidth  = 350;
+		private const uint GraphHeight = 30;
+
 		private static readonly SFML.Graphics.Color _backgroundColor = new SFML.Graphics.Color(64, 64, 64, 128);
 		private static readonly Color _textColor = new Color(0xffffff);
 
@@ -21,6 +24,7 @@ namespace Frost.UI
 		private readonly System.Diagnostics.Process _process;
 		private readonly SFML.Graphics.Sprite _background;
 		private readonly SimpleText _frameText, _stateText, _memoryText;
+		private readonly PixelGraph _graph;
 
 		/// <summary>
 		/// Creates a new debug overlay
@@ -42,6 +46,7 @@ namespace Frost.UI
 			_frameText  = new SimpleText(font, fontSize, _textColor);
 			_stateText  = new SimpleText(font, fontSize, _textColor);
 			_memoryText = new SimpleText(font, fontSize, _textColor);
+			_graph      = new PixelGraph(GraphWidth, 3 * (uint)font.UnderlyingFont.GetLineSpacing(fontSize) + GraphHeight, 0d, 2d);
 		}
 
 		/// <summary>
@@ -62,6 +67,9 @@ namespace Frost.UI
 			_frameText.Text  = _runner.ToString();
 			_stateText.Text  = String.Format("Scene: {0} - {1}", _runner.Scenes.CurrentScene.Name, _runner.Scenes.StateManager);
 			_memoryText.Text = String.Format("{0} used {1} allocated {2} working", toByteString(GC.GetTotalMemory(false)), toByteString(_process.PrivateMemorySize64), toByteString(_process.WorkingSet64));
+
+			// Update the graph
+			_graph.AddMeasurement((_runner.LastUpdateInterval + _runner.LastRenderInterval) / (1d / _runner.TargetUpdateRate));
 			
 			// Calculate the bounds
 			var bounds = _frameText.Bounds;
@@ -75,6 +83,9 @@ namespace Frost.UI
 			if(bounds.Width > width)
 				width = bounds.Width;
 			height += bounds.Height;
+			if(GraphWidth > width)
+				width = GraphWidth;
+			height += GraphHeight;
 
 			if(width > Bounds.Width || height > Bounds.Height)
 			{// Bounds need to be updated and the background resized
@@ -108,6 +119,7 @@ namespace Frost.UI
 			var rs = RenderStates.Default;
 			rs.Transform.Translate(bounds.Left, bounds.Top);
 			display.Draw(_background, rs);
+			_graph.Draw(display, state);
 
 			// Draw the text
 			var yPos = bounds.Top;
