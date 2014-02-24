@@ -35,6 +35,7 @@ namespace Frost.Geometry
 		/// </summary>
 		/// <param name="rotation">Rotation measured in degrees</param>
 		/// <param name="length">Length of the vector</param>
+		/// <remarks>Rotation angles larger than 360° or smaller than 0° are automatically corrected.</remarks>
 		public Vector2 (float rotation, float length)
 		{
 			_rot = rotation % 360f;
@@ -66,14 +67,30 @@ namespace Frost.Geometry
 		#region Operators
 		#region Equality
 
+		/// <summary>
+		/// Compares two vectors for equality
+		/// </summary>
+		/// <param name="left">First vector to compare</param>
+		/// <param name="right">Second vector to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are equal vectors</returns>
+		/// <remarks>Vectors are considered equal if their <see cref="Rotation"/> and <see cref="Length"/> properties are the same.</remarks>
 		public static bool operator == (Vector2 left, Vector2 right)
 		{
-			throw new NotImplementedException();
+			return (Math.Abs(left._len - right._len) < Single.Epsilon) &&
+				(Math.Abs(left._rot - right._rot) < Single.Epsilon);
 		}
 
+		/// <summary>
+		/// Compares two vectors for inequality
+		/// </summary>
+		/// <param name="left">First vector to compare</param>
+		/// <param name="right">Second vector to compare</param>
+		/// <returns>True if <paramref name="left"/> and <paramref name="right"/> are not equal vectors</returns>
+		/// <remarks>Vectors are considered equal if their <see cref="Rotation"/> and <see cref="Length"/> properties are the same.</remarks>
 		public static bool operator != (Vector2 left, Vector2 right)
 		{
-			throw new NotImplementedException();
+			return (Math.Abs(left._len - right._len) >= Single.Epsilon) ||
+				(Math.Abs(left._rot - right._rot) >= Single.Epsilon);
 		}
 		#endregion
 
@@ -119,19 +136,42 @@ namespace Frost.Geometry
 		#endregion
 		#endregion
 
-		public override bool Equals (object obj)
-		{
-			return base.Equals(obj);
-		}
-
-		public override int GetHashCode ()
-		{
-			return base.GetHashCode();
-		}
-
+		/// <summary>
+		/// Creates the string representation of the vector
+		/// </summary>
+		/// <returns>A string in the form:
+		/// LENGTH ROTATION°</returns>
 		public override string ToString ()
 		{
-			return base.ToString();
+			return String.Format("{0} {1}°", _len, _rot);
+		}
+
+		/// <summary>
+		/// Determines whether another object is equal to the current vector
+		/// </summary>
+		/// <param name="obj">Object to compare against</param>
+		/// <returns>True if <paramref name="obj"/> is equal</returns>
+		/// <remarks><paramref name="obj"/> is considered equal if it is a <see cref="Vector2"/> with the same <see cref="Rotation"/> and <see cref="Length"/> properties
+		/// or if a <see cref="Vector2"/> formed from a <see cref="Point2f"/> is equivalent.</remarks>
+		public override bool Equals (object obj)
+		{
+			if(obj is Vector2)
+				return this == (Vector2)obj;
+			if(obj is Point2f)
+				return this == (Vector2)(Point2f)obj;
+			return false;
+		}
+
+		/// <summary>
+		/// Creates a hash code from the values of the vector
+		/// </summary>
+		/// <returns>A hash code</returns>
+		public override int GetHashCode ()
+		{
+			var hash = 17;
+			hash = 31 * hash + _rot.GetHashCode();
+			hash = 31 * hash + _len.GetHashCode();
+			return hash;
 		}
 	}
 }
