@@ -154,14 +154,28 @@ namespace Frost.Geometry
 
 		#region Explicit conversions
 
+		/// <summary>
+		/// Converts a two-dimensional <see cref="Point2f"/> to a two-dimensional <see cref="Vector2"/>
+		/// </summary>
+		/// <param name="point">Point to convert</param>
+		/// <returns>A <see cref="Vector2"/> pointing from the origin to <paramref name="point"/></returns>
 		public static explicit operator Vector2 (Point2f point)
 		{
-			throw new NotImplementedException();
+			var angle  = Math.Atan(point.Y / point.X);
+			var length = Math.Sqrt(point.X * point.X + point.Y + point.Y);
+			return new Vector2((float)angle, (float)length);
 		}
 
+		/// <summary>
+		/// Converts a two-dimensional <see cref="Vector2"/> to a two-dimensional <see cref="Point2f"/>
+		/// </summary>
+		/// <param name="vector">Vector to convert</param>
+		/// <returns>A <see cref="Point2f"/> that refers to the point that <paramref name="vector"/> points to</returns>
 		public static explicit operator Point2f (Vector2 vector)
 		{
-			throw new NotImplementedException();
+			var opp = Math.Sin(vector._rot) * vector._len;
+			var adj = Math.Cos(vector._rot) * vector._len;
+			return new Point2f((float)adj, (float)opp);
 		}
 		#endregion
 		#endregion
