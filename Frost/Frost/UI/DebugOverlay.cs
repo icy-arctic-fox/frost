@@ -11,7 +11,8 @@ using Font = Frost.Graphics.Text.Font;
 namespace Frost.UI
 {
 	/// <summary>
-	/// Informational overlay that display useful debugging information
+	/// Informational overlay that displays useful debugging information.
+	/// Lines can be added dynamically to the overlay while the game is running.
 	/// </summary>
 	public class DebugOverlay : IRenderable // TODO: Make disposable
 	{
@@ -28,6 +29,7 @@ namespace Frost.UI
 		private readonly PixelGraph _graph;
 		private readonly Font _font;
 		private readonly uint _fontSize;
+		private readonly object _locker = new object();
 
 		// These are parallel arrays
 		private readonly List<IDebugOverlayLine> _content = new List<IDebugOverlayLine>();
@@ -51,6 +53,55 @@ namespace Frost.UI
 			_fontSize   = fontSize;
 			_background = new SFML.Graphics.Sprite();
 			_graph      = new PixelGraph(GraphWidth, 3 * (uint)font.UnderlyingFont.GetLineSpacing(fontSize) + GraphHeight, 0d, 2d);
+		}
+
+		/// <summary>
+		/// Adds a line to the debug overlay.
+		/// The object is queried every update to get the text that should be displayed.
+		/// </summary>
+		/// <param name="item">Line to add</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null</exception>
+		public void AddLine (IDebugOverlayLine item)
+		{
+			if(item == null)
+				throw new ArgumentNullException("item", "The debug overlay line can't be null.");
+			item.Disposing += content_Disposing;
+
+			var line = new SimpleText(_font, _fontSize, _textColor);
+			lock(_locker)
+			{
+				_content.Add(item);
+				_textLines.Add(line);
+			}
+		}
+
+		/// <summary>
+		/// Removes a line from the debug overlay
+		/// </summary>
+		/// <param name="item">Line to remove</param>
+		/// <returns>True if <paramref name="item"/> was found and removed</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null</exception>
+		public bool RemoveLine (IDebugOverlayLine item)
+		{
+			if(item == null)
+				throw new ArgumentNullException("item", "The debug overlay line can't be null.");
+
+			lock(_locker)
+				return _content.Remove(item);
+		}
+
+		/// <summary>
+		/// Called when content displayed in the overlay is being disposed
+		/// </summary>
+		/// <param name="sender">Object being disposed</param>
+		/// <param name="e">Event arguments (ignored)</param>
+		/// <exception cref="InvalidCastException">Thrown if <paramref name="sender"/> is not a <see cref="IDebugOverlayLine"/></exception>
+		private void content_Disposing (object sender, EventArgs e)
+		{
+			var item = sender as IDebugOverlayLine;
+			if(item == null)
+				throw new InvalidCastException("The sender of the object being disposed must be a debug overlay line.");
+			while(RemoveLine(item)) {} // Remove all instances of the item
 		}
 
 		/// <summary>
@@ -94,25 +145,27 @@ namespace Frost.UI
 
 		private void updateText ()
 		{
-			for(var i = 0; i < _content.Count; ++i)
-			{// Update the text contents of each line
-				var content = _content[i];
-				var line    = _textLines[i];
-				line.Text   = content.ToString();
-			}
+			lock(_locker)
+				for(var i = 0; i < _content.Count; ++i)
+				{// Update the text contents of each line
+					var content = _content[i];
+					var line    = _textLines[i];
+					line.Text   = content.ToString();
+				}
 		}
 
 		private Point2f calculateBounds ()
 		{
 			float width = 0f, height = 0f;
-			for(var i = 0; i < _content.Count; ++i)
-			{// Expand the bounds for each line
-				var line = _textLines[i];
-				var rect = line.Bounds;
-				if(rect.Width > width)
-					width = rect.Width;
-				height += rect.Height;
-			}
+			lock(_locker)
+				for(var i = 0; i < _content.Count; ++i)
+				{// Expand the bounds for each line
+					var line = _textLines[i];
+					var rect = line.Bounds;
+					if(rect.Width > width)
+						width = rect.Width;
+					height += rect.Height;
+				}
 
 			return new Point2f(width, height);
 		}
@@ -145,12 +198,13 @@ namespace Frost.UI
 
 			// Draw each line
 			var yPos = bounds.Top;
-			for(var i = 0; i < _textLines.Count; ++i)
-			{
-				var line = _textLines[i];
-				line.Draw(display, bounds.Left, yPos);
-				yPos += line.Bounds.Height;
-			}
+			lock(_locker)
+				for(var i = 0; i < _textLines.Count; ++i)
+				{
+					var line = _textLines[i];
+					line.Draw(display, bounds.Left, yPos);
+					yPos += line.Bounds.Height;
+				}
 		}
 
 		private static readonly string[] _units = new[] { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
