@@ -110,6 +110,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Text\Font.cs" />
     <Compile Include="UI\DebugOverlay.cs" />
+    <Compile Include="UI\FrameDebugOverlayLine.cs" />
     <Compile Include="UI\IDebugOverlayLine.cs" />
     <Compile Include="UI\Interface.cs" />
     <Compile Include="Graphics\Text\PlainTextRenderer.cs" />
