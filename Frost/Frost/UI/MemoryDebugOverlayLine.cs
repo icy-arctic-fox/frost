@@ -29,15 +29,15 @@ namespace Frost.UI
 		/// <returns>Scene information</returns>
 		public override string ToString ()
 		{
-			var used      = GC.GetTotalMemory(false);
+			var managed   = GC.GetTotalMemory(false);
 			var allocated = _process.PrivateMemorySize64;
 			var working   = _process.WorkingSet64;
 
-			var usedString      = toByteString(used);
+			var managedString   = toByteString(managed);
 			var allocatedString = toByteString(allocated);
 			var workingString   = toByteString(working);
 
-			return String.Format("{0} used {1} allocated {2} working", usedString, allocatedString, workingString);
+			return String.Format("{0} managed {1} allocated {2} working", managedString, allocatedString, workingString);
 		}
 
 		private static readonly string[] _units = new[] { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
