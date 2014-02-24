@@ -119,8 +119,7 @@ namespace Frost.UI
 		public void Update ()
 		{
 			updateText();
-/*			_frameText.Text  = _runner.ToString();
-			_stateText.Text  = String.Format("Scene: {0} - {1}", _runner.Scenes.CurrentScene.Name, _runner.Scenes.StateManager);
+/*			
 			_timeText.Text   = String.Format("Update: {0:0.00} ms Render: {1:0.00} ms", _runner.UpdateInterval * 1000d, _runner.RenderInterval * 1000d);
 			_memoryText.Text = String.Format("{0} used {1} allocated {2} working", toByteString(GC.GetTotalMemory(false)), toByteString(_process.PrivateMemorySize64), toByteString(_process.WorkingSet64));
  */
