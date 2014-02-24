@@ -622,9 +622,9 @@ namespace Frost
 			sb.Append("Frame: ");
 			sb.Append(sm.FrameNumber);
 			sb.Append(" - ");
-			sb.Append(String.Format("{0:0.00}", UpdateRate));
+			sb.AppendFormat("{0:0.00}", UpdateRate);
 			sb.Append(" u/s ");
-			sb.Append(String.Format("{0:0.00}", RenderRate));
+			sb.AppendFormat("{0:0.00}", RenderRate);
 			sb.Append(" f/s (");
 			sb.Append(_scenes.RenderedDuplicateFrames);
 			sb.Append('/');
