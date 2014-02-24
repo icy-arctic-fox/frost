@@ -218,8 +218,8 @@ namespace Frost
 
 			while(_running)
 			{
-				updateTiming(updateStopwatch, ref nextUpdateTime);
-				renderTiming(renderStopwatch, ref nextRenderTime);
+				updateTiming(ref updateStopwatch, ref nextUpdateTime);
+				renderTiming(ref renderStopwatch, ref nextRenderTime);
 
 				// TODO: Do something to reduce high CPU utilization
 			}
@@ -277,6 +277,11 @@ namespace Frost
 		/// Target length of time (in seconds) for each frame update
 		/// </summary>
 		private double _targetUpdateInterval = DefaultTargetUpdateInterval;
+
+		/// <summary>
+		/// Time when the last update was performed
+		/// </summary>
+		private DateTime _lastUpdateTime;
 
 		/// <summary>
 		/// Number of frames updated per second
@@ -347,7 +352,7 @@ namespace Frost
 			while(_running)
 			{
 				if(!ThreadSynchronization || _scenes.StateManager.WaitForRender(timeout))
-					updateTiming(stopwatch, ref nextUpdateTime);
+					updateTiming(ref stopwatch, ref nextUpdateTime);
 
 				// TODO: Do something to reduce high CPU utilization
 			}
@@ -359,7 +364,7 @@ namespace Frost
 		/// </summary>
 		/// <param name="stopwatch">Stopwatch used to calculate when updates should occur</param>
 		/// <param name="nextUpdateTime">Amount of time (in seconds) until the next update should occur</param>
-		private void updateTiming (Stopwatch stopwatch, ref double nextUpdateTime)
+		private void updateTiming (ref Stopwatch stopwatch, ref double nextUpdateTime)
 		{
 			var updatesProcessed = 0;  // Number of updates processed since this method was called
 			var totalUpdateTime  = 0d; // Total time taken to perform all updates since this method was called
@@ -398,6 +403,9 @@ namespace Frost
 				// Reset the stopwatch, since it isn't accurate over longer periods of time.
 				stopwatch.Reset();
 				stopwatch.Start();
+
+				// Store the time when this update occurred so that the renderer can interpolate
+				_lastUpdateTime = DateTime.Now;
 
 				// Allow consecutive updates to occur, but not too many.
 				// This allows the hardware to catch up.
@@ -503,7 +511,7 @@ namespace Frost
 			while(_running)
 			{
 				if(!ThreadSynchronization || _scenes.StateManager.WaitForUpdate(timeout))
-					renderTiming(stopwatch, ref nextRenderTime);
+					renderTiming(ref stopwatch, ref nextRenderTime);
 
 				// TODO: Do something to reduce high CPU utilization
 			}
@@ -515,7 +523,7 @@ namespace Frost
 		/// </summary>
 		/// <param name="stopwatch">Stopwatch used to </param>
 		/// <param name="nextRenderTime">Amount of time remaining (in seconds) until the next render needs to occur</param>
-		private void renderTiming (Stopwatch stopwatch, ref double nextRenderTime)
+		private void renderTiming (ref Stopwatch stopwatch, ref double nextRenderTime)
 		{
 			var time = stopwatch.Elapsed.TotalSeconds;
 			if(time <= 0d)
@@ -539,14 +547,20 @@ namespace Frost
 				{
 					// TODO: Implement adaptive VSync
 
+					// Calculate the amount of interpolation
+					var t = (DateTime.Now - _lastUpdateTime).TotalSeconds / _targetUpdateInterval;
+					_t = t;
+
 					// Record intervals and draw the frame
 					_renderCounter.AddMeasurement(time);
-					_scenes.Render();
+					_scenes.Render(t);
 					LastRenderInterval = stopwatch.Elapsed.TotalSeconds;
 				}
 			}
 		}
 		#endregion
+
+		private double _t;
 
 		#region Disposable
 

@@ -70,6 +70,7 @@ namespace Frost.Logic
 			if(display == null)
 				throw new ArgumentNullException("display", "The display to render to can't be null.");
 
+			RenderDuplicateFrames = true;
 			_display = display;
 			EnterScene(initialScene);
 		}
@@ -197,7 +198,8 @@ namespace Frost.Logic
 		/// <summary>
 		/// Renders the active scene
 		/// </summary>
-		public void Render ()
+		/// <param name="t">Interpolation between frame updates</param>
+		public void Render (double t)
 		{
 			if(ScenesRemaining)
 			{// Only render if there's a scene
@@ -208,9 +210,9 @@ namespace Frost.Logic
 				if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
 				{// Render the frame
 					_display.EnterFrame();
-					CurrentScene.Draw(_display, nextStateIndex, 0d); // TODO: Add interpolation between rendered frames
+					CurrentScene.Draw(_display, nextStateIndex, t); // TODO: Add interpolation between rendered frames
 					for(var i = 0; i < _overlays.Count; ++i)
-						_overlays[i].Draw(_display, nextStateIndex, 0d);
+						_overlays[i].Draw(_display, nextStateIndex, t);
 					_display.ExitFrame();
 
 					if(prevStateIndex == nextStateIndex)

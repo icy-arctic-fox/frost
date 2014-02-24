@@ -31,7 +31,7 @@ namespace Test_Game
 		/// </summary>
 		protected override double UpdateRate
 		{
-			get { return 60d; }
+			get { return 20d; }
 		}
 
 		/// <summary>
