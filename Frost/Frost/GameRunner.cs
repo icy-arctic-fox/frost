@@ -89,6 +89,7 @@ namespace Frost
 				// Default overlay lines
 				_debugOverlay.AddLine(this); // Frame information
 				_debugOverlay.AddLine(new SceneDebugOverlayLine(this)); // Scene information
+				_debugOverlay.AddLine(new MemoryDebugOverlayLine()); // Memory usage information
 			}
 			else
 				_debugOverlay = null; // Font failed to load, can't use the overlay
