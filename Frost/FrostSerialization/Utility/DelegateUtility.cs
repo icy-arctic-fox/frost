@@ -87,7 +87,7 @@ namespace Frost.Utility
 				else
 				{// Event won't be cancelled, invoke every delegate
 					for(var i = 0; i < list.Length; ++i)
-						CallDelegate(list[i], args);
+						CallDelegate(list[i], sender, args);
 				}
 			}
 		}
