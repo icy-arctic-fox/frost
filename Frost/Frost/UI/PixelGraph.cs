@@ -10,7 +10,7 @@ namespace Frost.UI
 	/// A horizontal graph with each bar 1 pixel in size.
 	/// This graph is useful for diagnostics.
 	/// </summary>
-	public class PixelGraph : IRenderable
+	public class PixelGraph : IRenderable // TODO: Make disposable
 	{
 		private const int DefaultColor = 0x2eb82e;
 
