@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Frost.Display;
 using Frost.Geometry;
 using Frost.Graphics;
@@ -14,17 +15,23 @@ namespace Frost.UI
 	/// </summary>
 	public class DebugOverlay : IRenderable // TODO: Make disposable
 	{
-		private const uint GraphWidth  = 350;
-		private const uint GraphHeight = 30;
+		private const uint GraphWidth      = 350;
+		private const uint GraphHeight     = 30;
+		private const int TextColor        = 0xffffff;
+		private const int BackgroundColor  = 0x404040;
+		private const byte BackgroundAlpha = 0x80;
 
-		private static readonly SFML.Graphics.Color _backgroundColor = new SFML.Graphics.Color(64, 64, 64, 128);
-		private static readonly Color _textColor = new Color(0xffffff);
+		private static readonly SFML.Graphics.Color _backgroundColor = new Color(BackgroundColor, BackgroundAlpha);
+		private static readonly Color _textColor = new Color(TextColor);
 
-		private readonly GameRunner _runner;
-		private readonly System.Diagnostics.Process _process;
 		private readonly SFML.Graphics.Sprite _background;
-		private readonly SimpleText _frameText, _stateText, _timeText, _memoryText;
 		private readonly PixelGraph _graph;
+		private readonly Font _font;
+		private readonly uint _fontSize;
+
+		// These are parallel arrays
+		private readonly List<IDebugOverlayLine> _content = new List<IDebugOverlayLine>();
+		private readonly List<SimpleText> _textLines = new List<SimpleText>();
 
 		/// <summary>
 		/// Creates a new debug overlay
@@ -40,13 +47,9 @@ namespace Frost.UI
 			if(font == null)
 				throw new ArgumentNullException("font", "The font used to display the debug information can't be null.");
 
-			_runner     = runner;
-			_process    = System.Diagnostics.Process.GetCurrentProcess();
+			_font       = font;
+			_fontSize   = fontSize;
 			_background = new SFML.Graphics.Sprite();
-			_frameText  = new SimpleText(font, fontSize, _textColor);
-			_stateText  = new SimpleText(font, fontSize, _textColor);
-			_timeText   = new SimpleText(font, fontSize, _textColor);
-			_memoryText = new SimpleText(font, fontSize, _textColor);
 			_graph      = new PixelGraph(GraphWidth, 3 * (uint)font.UnderlyingFont.GetLineSpacing(fontSize) + GraphHeight, 0d, 2d);
 		}
 
@@ -64,48 +67,54 @@ namespace Frost.UI
 		/// </summary>
 		public void Update ()
 		{
-			// Update the text
-			_frameText.Text  = _runner.ToString();
+			updateText();
+/*			_frameText.Text  = _runner.ToString();
 			_stateText.Text  = String.Format("Scene: {0} - {1}", _runner.Scenes.CurrentScene.Name, _runner.Scenes.StateManager);
 			_timeText.Text   = String.Format("Update: {0:0.00} ms Render: {1:0.00} ms", _runner.UpdateInterval * 1000d, _runner.RenderInterval * 1000d);
 			_memoryText.Text = String.Format("{0} used {1} allocated {2} working", toByteString(GC.GetTotalMemory(false)), toByteString(_process.PrivateMemorySize64), toByteString(_process.WorkingSet64));
+ */
 
 			// Update the graph
-			var measurement = _runner.LastUpdateInterval + _runner.LastRenderInterval;
+/*			var measurement = _runner.LastUpdateInterval + _runner.LastRenderInterval;
 			var divisor = _runner.TargetUpdateRate + _runner.TargetRenderRate;
 			if(divisor > 0d)
 				measurement /= 1d / divisor;
 			_graph.AddMeasurement(measurement);
+ */
+			_graph.AddMeasurement(0.5d);
 			
 			// Calculate the bounds
-			var bounds = _frameText.Bounds;
-			var width  = bounds.Width;
-			var height = bounds.Height;
-
-			bounds = _stateText.Bounds;
-			if(bounds.Width > width)
-				width = bounds.Width;
-			height += bounds.Height;
-
-			bounds = _timeText.Bounds;
-			if (bounds.Width > width)
-				width = bounds.Width;
-			height += bounds.Height;
-
-			bounds = _memoryText.Bounds;
-			if(bounds.Width > width)
-				width = bounds.Width;
-			height += bounds.Height;
-
-			if(GraphWidth > width)
-				width = GraphWidth;
-			height += GraphHeight;
-
-			if(width > Bounds.Width || height > Bounds.Height)
+			var point = calculateBounds(); // Point at the bottom-right corner
+			if(point.X > Bounds.Width || point.Y > Bounds.Height)
 			{// Bounds need to be updated and the background resized
-				Bounds  = new Rect2f(0f, 0f, width, height);
+				Bounds  = new Rect2f(0f, 0f, point.X, point.Y);
 				_resize = true;
 			}
+		}
+
+		private void updateText ()
+		{
+			for(var i = 0; i < _content.Count; ++i)
+			{// Update the text contents of each line
+				var content = _content[i];
+				var line    = _textLines[i];
+				line.Text   = content.ToString();
+			}
+		}
+
+		private Point2f calculateBounds ()
+		{
+			float width = 0f, height = 0f;
+			for(var i = 0; i < _content.Count; ++i)
+			{// Expand the bounds for each line
+				var line = _textLines[i];
+				var rect = line.Bounds;
+				if(rect.Width > width)
+					width = rect.Width;
+				height += rect.Height;
+			}
+
+			return new Point2f(width, height);
 		}
 
 		/// <summary>
@@ -113,7 +122,7 @@ namespace Frost.UI
 		/// </summary>
 		/// <param name="display">Display to draw on</param>
 		/// <param name="state">State index (ignored)</param>
-		public void Draw (IDisplay display, int state)
+		public void Draw(IDisplay display, int state)
 		{
 			var bounds = Bounds;
 			if(_background.Texture == null || _resize)
@@ -133,20 +142,18 @@ namespace Frost.UI
 			var rs = RenderStates.Default;
 			rs.Transform.Translate(bounds.Left, bounds.Top);
 			display.Draw(_background, rs);
-			_graph.Draw(display, state);
 
-			// Draw the text
+			// Draw each line
 			var yPos = bounds.Top;
-			_frameText.Draw(display, bounds.Left, yPos);
-			yPos += _frameText.Bounds.Height;
-			_stateText.Draw(display, bounds.Left, yPos);
-			yPos += _stateText.Bounds.Height;
-			_timeText.Draw(display, bounds.Left, yPos);
-			yPos += _timeText.Bounds.Height + GraphHeight;
-			_memoryText.Draw(display, bounds.Left, yPos);
+			for(var i = 0; i < _textLines.Count; ++i)
+			{
+				var line = _textLines[i];
+				line.Draw(display, bounds.Left, yPos);
+				yPos += line.Bounds.Height;
+			}
 		}
 
-		private static readonly string[] _units = new[] {"B", "KB", "MB", "GB", "TB", "PB", "EB"};
+		private static readonly string[] _units = new[] { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
 
 		/// <summary>
 		/// Creates a friendly string from a number of bytes
