@@ -169,16 +169,18 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="display">Display to draw to</param>
 		/// <param name="transform">Transformation to apply to the object</param>
-		protected abstract void DrawObject (IDisplay display, RenderStates transform);
+		/// <param name="t">Interpolation value</param>
+		protected abstract void DrawObject (IDisplay display, RenderStates transform, double t);
 
 		/// <summary>
 		/// Draws a object's state to a display
 		/// </summary>
 		/// <param name="display">Display to draw to</param>
 		/// <param name="state">Index of the state to draw</param>
-		public void Draw (IDisplay display, int state)
+		/// <param name="t">Interpolation value</param>
+		public void Draw (IDisplay display, int state, double t)
 		{
-			DrawObject(display, _states[state]);
+			DrawObject(display, _states[state], t);
 		}
 		#endregion
 	}

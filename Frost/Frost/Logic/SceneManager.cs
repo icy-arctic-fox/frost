@@ -208,9 +208,9 @@ namespace Frost.Logic
 				if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
 				{// Render the frame
 					_display.EnterFrame();
-					CurrentScene.Draw(_display, nextStateIndex); // TODO: Add interpolation between rendered frames
+					CurrentScene.Draw(_display, nextStateIndex, 0d); // TODO: Add interpolation between rendered frames
 					for(var i = 0; i < _overlays.Count; ++i)
-						_overlays[i].Draw(_display, nextStateIndex);
+						_overlays[i].Draw(_display, nextStateIndex, 0d);
 					_display.ExitFrame();
 
 					if(prevStateIndex == nextStateIndex)

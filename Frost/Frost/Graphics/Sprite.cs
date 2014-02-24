@@ -42,7 +42,8 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="display">Display to draw on</param>
 		/// <param name="transform">Transformation to apply to the sprite</param>
-		protected override void DrawObject (IDisplay display, SFML.Graphics.RenderStates transform)
+		/// <param name="t">Interpolation value</param>
+		protected override void DrawObject (IDisplay display, SFML.Graphics.RenderStates transform, double t)
 		{
 			display.Draw(_sprite, transform);
 		}

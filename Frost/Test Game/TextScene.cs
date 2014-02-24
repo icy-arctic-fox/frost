@@ -57,11 +57,12 @@ namespace Test_Game
 			/// </summary>
 			/// <param name="display">Display to draw the state onto</param>
 			/// <param name="state">Index of the state to draw</param>
+			/// <param name="t">Interpolation value (ignored)</param>
 			/// <remarks>None of the game states should be modified by this process - including the state indicated by <paramref name="state"/>.
 			/// Modifying the game state info during this process would corrupt the game state.</remarks>
-			public void Draw (IDisplay display, int state)
+			public void Draw (IDisplay display, int state, double t)
 			{
-				_sprite.Draw(display, state);
+				_sprite.Draw(display, state, t);
 			}
 		}
 	}

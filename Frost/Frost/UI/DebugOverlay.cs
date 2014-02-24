@@ -180,7 +180,8 @@ namespace Frost.UI
 		/// </summary>
 		/// <param name="display">Display to draw on</param>
 		/// <param name="state">State index (ignored)</param>
-		public void Draw (IDisplay display, int state)
+		/// <param name="t">Interpolation value</param>
+		public void Draw (IDisplay display, int state, double t)
 		{
 			var bounds = Bounds;
 			if(_background.Texture == null || _resize)

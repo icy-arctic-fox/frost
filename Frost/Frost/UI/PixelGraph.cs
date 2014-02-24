@@ -97,7 +97,8 @@ namespace Frost.UI
 		/// </summary>
 		/// <param name="display">Display to draw the graph onto</param>
 		/// <param name="state">Index of the state to draw (ignored)</param>
-		public void Draw (IDisplay display, int state)
+		/// <param name="t">Interpolation value (ignored)</param>
+		public void Draw (IDisplay display, int state, double t)
 		{
 			_texture.Display();
 			var rs = RenderStates.Default;

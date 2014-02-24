@@ -25,7 +25,8 @@ namespace Frost.UI
 		/// </summary>
 		/// <param name="display">Display to draw the interface on</param>
 		/// <param name="state">Index of the state to draw</param>
-		public void Draw (IDisplay display, int state)
+		/// <param name="t">Interpolation value</param>
+		public void Draw (IDisplay display, int state, double t)
 		{
 			throw new NotImplementedException();
 		}
