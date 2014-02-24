@@ -121,7 +121,6 @@ namespace Frost.UI
 			updateText();
 /*			
 			_timeText.Text   = String.Format("Update: {0:0.00} ms Render: {1:0.00} ms", _runner.UpdateInterval * 1000d, _runner.RenderInterval * 1000d);
-			_memoryText.Text = String.Format("{0} used {1} allocated {2} working", toByteString(GC.GetTotalMemory(false)), toByteString(_process.PrivateMemorySize64), toByteString(_process.WorkingSet64));
  */
 
 			// Update the graph
@@ -142,6 +141,9 @@ namespace Frost.UI
 			}
 		}
 
+		/// <summary>
+		/// Updates the text displayed in the overlay
+		/// </summary>
 		private void updateText ()
 		{
 			lock(_locker)
@@ -153,6 +155,10 @@ namespace Frost.UI
 				}
 		}
 
+		/// <summary>
+		/// Calculates the bounds of every line
+		/// </summary>
+		/// <returns>Position of the bottom-right corner of the overlay</returns>
 		private Point2f calculateBounds ()
 		{
 			float width = 0f, height = 0f;
@@ -174,7 +180,7 @@ namespace Frost.UI
 		/// </summary>
 		/// <param name="display">Display to draw on</param>
 		/// <param name="state">State index (ignored)</param>
-		public void Draw(IDisplay display, int state)
+		public void Draw (IDisplay display, int state)
 		{
 			var bounds = Bounds;
 			if(_background.Texture == null || _resize)
