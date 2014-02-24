@@ -205,25 +205,5 @@ namespace Frost.UI
 					yPos += line.Bounds.Height;
 				}
 		}
-
-		private static readonly string[] _units = new[] { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
-
-		/// <summary>
-		/// Creates a friendly string from a number of bytes
-		/// </summary>
-		/// <param name="bytes">Number of bytes</param>
-		/// <returns>Reduced bytes with units</returns>
-		private static string toByteString (long bytes)
-		{
-			var unitIndex = 0;
-			var b = (double)bytes;
-			while(b > 1000d)
-			{
-				b /= 1024d;
-				++unitIndex;
-			}
-			var unit = _units[unitIndex];
-			return String.Format("{0:0.00} {1}", b, unit);
-		}
 	}
 }
