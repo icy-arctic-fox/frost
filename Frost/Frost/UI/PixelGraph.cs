@@ -62,6 +62,9 @@ namespace Frost.UI
 			_texture = new RenderTexture(width, height);
 			_sprite  = new SFML.Graphics.Sprite(_texture.Texture);
 
+			// Start at an offset to correct gaps due to rounding errors
+			_pos = 0.1f;
+
 			// Construct vertices
 			_verts    = new Vertex[3];
 			_verts[0] = new Vertex(new SFML.Window.Vector2f(0f, height), new Graphics.Color(DefaultColor));
@@ -84,7 +87,7 @@ namespace Frost.UI
 			_pos += 1f;
 			if(_pos > _width)
 			{// Loop around
-				_pos = 0f;
+				_pos = 0.1f;
 				_texture.Clear(new SFML.Graphics.Color(0, 0, 0, 0));
 			}
 		}
