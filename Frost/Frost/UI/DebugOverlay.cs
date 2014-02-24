@@ -12,7 +12,7 @@ namespace Frost.UI
 	/// <summary>
 	/// Informational overlay that display useful debugging information
 	/// </summary>
-	public class DebugOverlay : IRenderable
+	public class DebugOverlay : IRenderable // TODO: Make disposable
 	{
 		private const uint GraphWidth  = 350;
 		private const uint GraphHeight = 30;
@@ -23,7 +23,7 @@ namespace Frost.UI
 		private readonly GameRunner _runner;
 		private readonly System.Diagnostics.Process _process;
 		private readonly SFML.Graphics.Sprite _background;
-		private readonly SimpleText _frameText, _stateText, _memoryText;
+		private readonly SimpleText _frameText, _stateText, _timeText, _memoryText;
 		private readonly PixelGraph _graph;
 
 		/// <summary>
@@ -45,6 +45,7 @@ namespace Frost.UI
 			_background = new SFML.Graphics.Sprite();
 			_frameText  = new SimpleText(font, fontSize, _textColor);
 			_stateText  = new SimpleText(font, fontSize, _textColor);
+			_timeText   = new SimpleText(font, fontSize, _textColor);
 			_memoryText = new SimpleText(font, fontSize, _textColor);
 			_graph      = new PixelGraph(GraphWidth, 3 * (uint)font.UnderlyingFont.GetLineSpacing(fontSize) + GraphHeight, 0d, 2d);
 		}
@@ -66,6 +67,7 @@ namespace Frost.UI
 			// Update the text
 			_frameText.Text  = _runner.ToString();
 			_stateText.Text  = String.Format("Scene: {0} - {1}", _runner.Scenes.CurrentScene.Name, _runner.Scenes.StateManager);
+			_timeText.Text   = String.Format("Update: {0:0.00} ms Render: {1:0.00} ms", _runner.UpdateInterval * 1000d, _runner.RenderInterval * 1000d);
 			_memoryText.Text = String.Format("{0} used {1} allocated {2} working", toByteString(GC.GetTotalMemory(false)), toByteString(_process.PrivateMemorySize64), toByteString(_process.WorkingSet64));
 
 			// Update the graph
@@ -79,14 +81,22 @@ namespace Frost.UI
 			var bounds = _frameText.Bounds;
 			var width  = bounds.Width;
 			var height = bounds.Height;
+
 			bounds = _stateText.Bounds;
 			if(bounds.Width > width)
 				width = bounds.Width;
 			height += bounds.Height;
+
+			bounds = _timeText.Bounds;
+			if (bounds.Width > width)
+				width = bounds.Width;
+			height += bounds.Height;
+
 			bounds = _memoryText.Bounds;
 			if(bounds.Width > width)
 				width = bounds.Width;
 			height += bounds.Height;
+
 			if(GraphWidth > width)
 				width = GraphWidth;
 			height += GraphHeight;
@@ -131,6 +141,8 @@ namespace Frost.UI
 			yPos += _frameText.Bounds.Height;
 			_stateText.Draw(display, bounds.Left, yPos);
 			yPos += _stateText.Bounds.Height;
+			_timeText.Draw(display, bounds.Left, yPos);
+			yPos += _timeText.Bounds.Height + GraphHeight;
 			_memoryText.Draw(display, bounds.Left, yPos);
 		}
 
