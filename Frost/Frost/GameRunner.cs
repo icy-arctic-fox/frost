@@ -14,7 +14,7 @@ namespace Frost
 	/// <summary>
 	/// Runs the game loop and controls the flow of the game between states and scenes
 	/// </summary>
-	public class GameRunner : IDebugOverlayLine
+	public class GameRunner : IFullDisposable, IDebugOverlayLine
 	{
 		private const string DebugOverlayFontFile = "crystal.TTF";
 		private const uint DebugOverlayFontSize   = 12;
@@ -85,7 +85,10 @@ namespace Frost
 			if(font != null)
 			{// Set up the debug overlay
 				_debugOverlay = new DebugOverlay(this, font, DebugOverlayFontSize);
-				_debugOverlay.AddLine(this);
+
+				// Default overlay lines
+				_debugOverlay.AddLine(this); // Frame information
+				_debugOverlay.AddLine(new SceneDebugOverlayLine(this)); // Scene information
 			}
 			else
 				_debugOverlay = null; // Font failed to load, can't use the overlay
