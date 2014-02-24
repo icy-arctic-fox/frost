@@ -28,6 +28,9 @@ namespace Frost.Graphics
 			get { return _sprite.Texture.Size.Y; }
 		}
 
+		public float SpeedX { get; set; }
+		public float SpeedY { get; set; }
+
 		/// <summary>
 		/// Creates a new sprite
 		/// </summary>
@@ -45,6 +48,9 @@ namespace Frost.Graphics
 		/// <param name="t">Interpolation value</param>
 		protected override void DrawObject (IDisplay display, SFML.Graphics.RenderStates transform, double t)
 		{
+			var xOff = (float)(SpeedX * t);
+			var yOff = (float)(SpeedY * t);
+			transform.Transform.Translate(xOff, yOff);
 			display.Draw(_sprite, transform);
 		}
 	}

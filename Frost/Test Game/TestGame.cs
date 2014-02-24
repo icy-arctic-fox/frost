@@ -1,6 +1,7 @@
 ﻿using Frost;
 using Frost.Graphics;
 using Frost.Logic;
+using Frost.Modules.Input;
 
 namespace Test_Game
 {
@@ -40,7 +41,15 @@ namespace Test_Game
 		/// <returns>A scene</returns>
 		protected override Scene CreateInitialScene ()
 		{
-			return new TextScene();
+			var scene = new BallScene();
+			var controller = new BasicController {
+				LeftArrow  = new InputDescriptor(InputType.Keyboard, (int)Key.Left),
+				RightArrow = new InputDescriptor(InputType.Keyboard, (int)Key.Right),
+				UpArrow    = new InputDescriptor(InputType.Keyboard, (int)Key.Up),
+				DownArrow  = new InputDescriptor(InputType.Keyboard, (int)Key.Down)
+			};
+			scene.SetController(controller);
+			return scene;
 		}
 
 		public override void Initialize ()

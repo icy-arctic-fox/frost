@@ -64,9 +64,17 @@ namespace Test_Game
 		{
 			private readonly Sprite _sprite;
 
-			public float SpeedX { get; set; }
+			public float SpeedX
+			{
+				get { return _sprite.SpeedX; }
+				set { _sprite.SpeedX = value; }
+			}
 
-			public float SpeedY { get; set; }
+			public float SpeedY
+			{
+				get { return _sprite.SpeedY; }
+				set { _sprite.SpeedY = value; }
+			}
 
 			public Ball (Texture texture)
 			{
@@ -98,7 +106,6 @@ namespace Test_Game
 			/// Modifying the game state info during this process would corrupt the game state.</remarks>
 			public void Draw (IDisplay display, int state, double t)
 			{
-				// TODO: Use interpolation
 				_sprite.Draw(display, state, t);
 			}
 		}
