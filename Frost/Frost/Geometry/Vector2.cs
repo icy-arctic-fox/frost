@@ -48,7 +48,7 @@ namespace Frost.Geometry
 		/// Creates a new vector by applying a rotation
 		/// </summary>
 		/// <param name="angle">Angle to add in degrees</param>
-		/// <returns>A rotated vector</returns>
+		/// <returns>Resulting <see cref="Vector2"/></returns>
 		public Vector2 Rotate (float angle)
 		{
 			return new Vector2(_rot + angle, _len);
@@ -58,7 +58,7 @@ namespace Frost.Geometry
 		/// Creates a new vector by scaling the length
 		/// </summary>
 		/// <param name="factor">Scaling factor</param>
-		/// <returns>A scaled vector</returns>
+		/// <returns>Resulting <see cref="Vector2"/></returns>
 		public Vector2 Scale (float factor)
 		{
 			return new Vector2(_rot, _len * factor);
@@ -96,29 +96,59 @@ namespace Frost.Geometry
 
 		#region Mathematical
 
+		/// <summary>
+		/// Adds two vectors together
+		/// </summary>
+		/// <param name="left">First vector</param>
+		/// <param name="right">Second vector</param>
+		/// <returns>Combined <see cref="Vector2"/></returns>
 		public static Vector2 operator + (Vector2 left, Vector2 right)
 		{
-			throw new NotImplementedException();
+			var rot = left._rot + right._rot;
+			var len = left._len + right._len;
+			return new Vector2(rot, len);
 		}
 
+		/// <summary>
+		/// Subtracts one vector from another
+		/// </summary>
+		/// <param name="left">Original vector</param>
+		/// <param name="right"><see cref="Vector2"/> to subtract from <paramref name="left"/></param>
+		/// <returns>Resulting <see cref="Vector2"/></returns>
 		public static Vector2 operator - (Vector2 left, Vector2 right)
 		{
-			throw new NotImplementedException();
+			var rot = left._rot - right._rot;
+			var len = left._len - right._len;
+			return new Vector2(rot, len);
 		}
 
+		/// <summary>
+		/// Scales the length of a vector
+		/// </summary>
+		/// <param name="vector">Original vector</param>
+		/// <param name="factor">Factor to scale <paramref name="vector"/> by</param>
+		/// <returns>Resulting <see cref="Vector2"/></returns>
 		public static Vector2 operator * (Vector2 vector, float factor)
 		{
-			throw new NotImplementedException();
+			var len = vector._len * factor;
+			return new Vector2(vector._rot, len);
 		}
 
+		/// <summary>
+		/// Performs a dot product calculation on two vectors
+		/// </summary>
+		/// <param name="left">First vector</param>
+		/// <param name="right">Second vector</param>
+		/// <returns>Dot product of <paramref name="left"/> * <paramref name="right"/></returns>
 		public static float operator * (Vector2 left, Vector2 right)
 		{
-			throw new NotImplementedException();
-		}
+			var p1 = (Point2f)left;
+			var p2 = (Point2f)right;
 
-		public static Vector2 operator / (Vector2 vector, float factor)
-		{
-			throw new NotImplementedException();
+			var x = p1.X * p2.X;
+			var y = p2.Y * p2.Y;
+
+			return x + y;
 		}
 		#endregion
 
