@@ -549,7 +549,6 @@ namespace Frost
 
 					// Calculate the amount of interpolation
 					var t = (DateTime.Now - _lastUpdateTime).TotalSeconds / _targetUpdateInterval;
-					_t = t;
 
 					// Record intervals and draw the frame
 					_renderCounter.AddMeasurement(time);
@@ -559,8 +558,6 @@ namespace Frost
 			}
 		}
 		#endregion
-
-		private double _t;
 
 		#region Disposable
 
