@@ -67,6 +67,7 @@
     <Compile Include="Geometry\Rect2f.cs" />
     <Compile Include="Geometry\Point3i.cs" />
     <Compile Include="Geometry\Rect2i.cs" />
+    <Compile Include="Geometry\Vector2.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\IDisplayContainer.cs" />
     <Compile Include="Graphics\IRenderTarget.cs" />
