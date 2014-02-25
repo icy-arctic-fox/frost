@@ -20,10 +20,11 @@ namespace Frost.IO.Resources
 		/// Opens a resource package file to start pulling resources from it
 		/// </summary>
 		/// <param name="filepath">Path to the resource file</param>
+		/// <param name="password">Password used to encrypt the resource package</param>
 		/// <exception cref="FileNotFoundException">Thrown if the resource package file wasn't found under <paramref name="filepath"/></exception>
 		/// <exception cref="InvalidDataException">Thrown if the data contained in the resource file is invalid</exception>
 		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called.</remarks>
-		public ResourcePackageReader (string filepath)
+		public ResourcePackageReader (string filepath, string password = null)
 		{
 			// Create the file stream
 			FileStream = new FileStream(filepath, FileMode.Open);
@@ -39,7 +40,7 @@ namespace Frost.IO.Resources
 			NodeContainer header;
 			try
 			{
-				header = readHeader(_br, fileInfo);
+				header = readHeader(_br, fileInfo, password);
 
 				// Store information about the resource package
 				var root = header.Root.ExpectComplexNode();
@@ -56,6 +57,11 @@ namespace Frost.IO.Resources
 			{
 				_br.Dispose();
 				throw new InvalidDataException("The header data is in an unrecognized format.", e);
+			}
+			catch(CryptographicException e)
+			{
+				_br.Dispose();
+				throw new InvalidDataException("Incorrect password.", e);
 			}
 
 			// Calculate how big the header is (and where the data starts)
@@ -82,19 +88,6 @@ namespace Frost.IO.Resources
 			return new HeaderInfo(ver, opts);
 		}
 
-		#region Encryption
-
-		/// <summary>
-		/// Describes a method that retrieves the password needed to decrypt an entry
-		/// </summary>
-		/// <returns></returns>
-		public delegate string PromptPassword ();
-
-		/// <summary>
-		/// Triggered when a password is required to decrypt the resource package header
-		/// </summary>
-		public event PromptPassword PasswordNeeded;
-
 		/// <summary>
 		/// Reads the encryption information from the header
 		/// </summary>
@@ -117,18 +110,18 @@ namespace Frost.IO.Resources
 				return aes.CreateDecryptor();
 			}
 		}
-		#endregion
 
 		/// <summary>
 		/// Reads the header entries from the package header
 		/// </summary>
 		/// <param name="br">Reader used to get data from the file</param>
 		/// <param name="info">File header information</param>
+		/// <param name="password">Password used to encrypt the header entries</param>
 		/// <returns>Header data</returns>
-		private static NodeContainer readHeader (BinaryReader br, HeaderInfo info)
+		private static NodeContainer readHeader (BinaryReader br, HeaderInfo info, string password = null)
 		{
 			var encrypted = (info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader;
-			var decryptor = encrypted ? readEncryptionHeader(br, String.Empty /* TODO */) : null;
+			var decryptor = encrypted ? readEncryptionHeader(br, password ?? String.Empty) : null;
 
 			var headerSize = br.ReadInt32();
 			var headerData = br.ReadBytes(headerSize);

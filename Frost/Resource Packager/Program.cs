@@ -175,6 +175,7 @@ namespace Frost.ResourcePackager
 				opts |= ResourcePackageOptions.EncryptedHeader;
 			using(var writer = new ResourcePackageWriter(filepath, opts, _name, _creator, _description))
 			{
+				writer.Password = _password;
 				foreach(var entry in contents)
 				{
 					var id   = Guid.NewGuid();
@@ -202,7 +203,7 @@ namespace Frost.ResourcePackager
 		/// <returns>A program return code</returns>
 		private static ReturnCode extractResourcePackageFile (string filepath, IEnumerable<KeyValuePair<string, string>> entries)
 		{
-			using(var reader = new ResourcePackageReader(filepath))
+			using(var reader = new ResourcePackageReader(filepath, _password))
 				foreach(var entry in entries)
 				{
 					var name = entry.Key;
@@ -277,7 +278,7 @@ namespace Frost.ResourcePackager
 		/// <returns>A program return code</returns>
 		private static ReturnCode unpackDirectoryContents (string filepath, IEnumerable<KeyValuePair<string, string>> dirs)
 		{
-			using(var reader = new ResourcePackageReader(filepath))
+			using(var reader = new ResourcePackageReader(filepath, _password))
 				foreach(var entry in dirs)
 				{
 					var prefix = String.IsNullOrWhiteSpace(entry.Key) ? String.Empty : entry.Key + "/";
@@ -313,7 +314,7 @@ namespace Frost.ResourcePackager
 		/// <returns>A program return code</returns>
 		private static ReturnCode listResourcePackageContents (string filepath)
 		{
-			using(var reader = new ResourcePackageReader(filepath))
+			using(var reader = new ResourcePackageReader(filepath, _password))
 				foreach(var resource in reader.Resources)
 					Console.WriteLine("{0} {1,9} {2}", resource.Id, formatSize(resource.Size), resource.Name);
 			return ReturnCode.Ok;
@@ -346,7 +347,7 @@ namespace Frost.ResourcePackager
 		/// <returns>A program return code</returns>
 		private static ReturnCode displayPackageInfo (string filepath)
 		{
-			using(var reader = new ResourcePackageReader(filepath))
+			using(var reader = new ResourcePackageReader(filepath, _password))
 			{
 				Console.WriteLine("Name:        {0}", reader.Name);
 				Console.WriteLine("Creator:     {0}", reader.Creator);

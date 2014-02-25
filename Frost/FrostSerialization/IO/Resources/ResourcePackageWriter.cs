@@ -24,6 +24,12 @@ namespace Frost.IO.Resources
 		private readonly BinaryWriter _bw;
 
 		/// <summary>
+		/// Password used to encrypt the resource package
+		/// </summary>
+		/// <remarks>The value null signifies no password.</remarks>
+		public string Password { get; set; }
+
+		/// <summary>
 		/// Opens a resource package file to start storing resources into it
 		/// </summary>
 		/// <param name="filepath">Path to the resource file</param>
@@ -208,7 +214,7 @@ namespace Frost.IO.Resources
 			{
 				if((info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader)
 				{// Encrypt header entries
-					var encryptor = writeEncryptionHeader(_bw, String.Empty /* TODO */);
+					var encryptor = writeEncryptionHeader(_bw, Password);
 					using(var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
 					using(var ds = new DeflateStream(cs, CompressionMode.Compress))
 						container.WriteToStream(ds);
