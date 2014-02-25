@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Frost
 {
@@ -73,6 +71,37 @@ namespace Frost
 					else // This ID is reserved for another entity
 						throw new InvalidOperationException("The ID has been reserved for another entity.");
 				}
+			}
+		}
+
+		/// <summary>
+		/// Retrieves an entity with a specified ID
+		/// </summary>
+		/// <param name="id">The entity's unique identifier</param>
+		/// <returns>The entity if it was found or null if no entity exists with the provided <paramref name="id"/></returns>
+		public Entity this[ulong id]
+		{
+			get
+			{
+				lock(_registeredEntities)
+				{
+					Entity e;
+					if(_registeredEntities.TryGetValue(id, out e))
+						return e;
+				}
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Total number of registered entities
+		/// </summary>
+		public int EntityCount
+		{
+			get
+			{
+				lock(_registeredEntities)
+					return _registeredEntities.Count;
 			}
 		}
 	}
