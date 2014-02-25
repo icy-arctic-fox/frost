@@ -32,7 +32,6 @@
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.packageTreeView = new System.Windows.Forms.TreeView();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
-			this.fileExplorer = new FileExplorer();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
@@ -52,10 +51,6 @@
 			this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer.Location = new System.Drawing.Point(0, 25);
 			this.splitContainer.Name = "splitContainer";
-			// 
-			// splitContainer.Panel1
-			// 
-			this.splitContainer.Panel1.Controls.Add(this.fileExplorer);
 			// 
 			// splitContainer.Panel2
 			// 
@@ -79,14 +74,6 @@
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(624, 25);
 			this.toolStrip.TabIndex = 3;
-			// 
-			// fileExplorer
-			// 
-			this.fileExplorer.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.fileExplorer.Location = new System.Drawing.Point(0, 0);
-			this.fileExplorer.Name = "fileExplorer";
-			this.fileExplorer.Size = new System.Drawing.Size(300, 314);
-			this.fileExplorer.TabIndex = 0;
 			// 
 			// MainForm
 			// 
@@ -113,7 +100,6 @@
 		private System.Windows.Forms.SplitContainer splitContainer;
 		private System.Windows.Forms.TreeView packageTreeView;
 		private System.Windows.Forms.ToolStrip toolStrip;
-		private FileExplorer fileExplorer;
 	}
 }
 
