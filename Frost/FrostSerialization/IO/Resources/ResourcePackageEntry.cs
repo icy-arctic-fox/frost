@@ -62,9 +62,19 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <remarks>This property can be null.
 		/// A null value signifies that the resource is not encrypted.</remarks>
+		/// <seealso cref="Encrypted"/>
 		public byte[] Key
 		{
 			get { return _key; }
+		}
+
+		/// <summary>
+		/// Indicates whether the resource is encrypted with a key
+		/// </summary>
+		/// <seealso cref="Key"/>
+		public bool Encrypted
+		{
+			get { return _key != null; }
 		}
 
 		/// <summary>
