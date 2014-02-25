@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
 using Frost.IO.Tnt;
 using Ionic.Zlib;
 
@@ -10,6 +11,8 @@ namespace Frost.IO.Resources
 	/// </summary>
 	public class ResourcePackageReader : ResourcePackage
 	{
+		private const int SaltSize = 32;
+
 		/// <summary>
 		/// Reader used to pull data from the file
 		/// </summary>
@@ -33,8 +36,6 @@ namespace Frost.IO.Resources
 			Version = fileInfo.Version;
 			Options = fileInfo.Options;
 			Size    = new FileInfo(filepath).Length;
-
-			// TODO: Implement header info encryption
 
 			// Read the resource header information (meta-data for resources in the file)
 			NodeContainer header;
@@ -68,6 +69,7 @@ namespace Frost.IO.Resources
 
 		#region IO
 		#region Load
+		#region Header
 
 		/// <summary>
 		/// Reads resource package header information from the file
@@ -79,8 +81,46 @@ namespace Frost.IO.Resources
 			var ver  = br.ReadByte();
 			var opts = (ResourcePackageOptions)br.ReadUInt16();
 			br.ReadByte(); // Unused
-			return new HeaderInfo(ver, opts);
+
+			var encAlg = ((opts & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader)
+				? readEncryptionHeader(br) : null;
+
+			return new HeaderInfo(ver, opts, encAlg);
 		}
+
+		#region Encryption
+
+		/// <summary>
+		/// Describes a method that retrieves the password needed to decrypt an entry
+		/// </summary>
+		/// <returns></returns>
+		public delegate string PromptPassword ();
+
+		/// <summary>
+		/// Triggered when a password is required to decrypt the resource package header
+		/// </summary>
+		public static event PromptPassword PasswordNeeded;
+
+		/// <summary>
+		/// Reads the encryption information from the header
+		/// </summary>
+		/// <param name="br">Reader used to get data from the file</param>
+		/// <returns>Algorithm used to decrypt the header</returns>
+		private static SymmetricAlgorithm readEncryptionHeader (BinaryReader br)
+		{
+			var salt       = br.ReadBytes(SaltSize);
+			var ivSize     = br.ReadInt32();
+			var iv         = br.ReadBytes(ivSize);
+			var iterations = br.ReadInt32();
+			var passStr    = PasswordNeeded != null ? (PasswordNeeded() ?? String.Empty) : String.Empty;
+			var passBytes  = System.Text.Encoding.UTF8.GetBytes(passStr);
+
+			var aes = new RijndaelManaged {IV = iv};
+			using(var keygen = new Rfc2898DeriveBytes(passBytes, salt, iterations))
+				aes.Key = keygen.GetBytes(aes.KeySize / 8);
+			return aes;
+		}
+		#endregion
 
 		/// <summary>
 		/// Reads the header entries from the package header
@@ -92,7 +132,7 @@ namespace Frost.IO.Resources
 			var headerSize = br.ReadInt32();
 			var headerData = br.ReadBytes(headerSize);
 			using(var ms = new MemoryStream(headerData))
-			using(var ds = new DeflateStream(ms, CompressionMode.Decompress))
+			using(var ds = new DeflateStream(ms, CompressionMode.Decompress)) // TODO: Handle encryption
 				return NodeContainer.ReadFromStream(ds);
 		}
 
@@ -119,6 +159,7 @@ namespace Frost.IO.Resources
 				throw new InvalidDataException("An error occurred while processing the package header", e);
 			}
 		}
+		#endregion
 		#endregion
 
 		#region Access
