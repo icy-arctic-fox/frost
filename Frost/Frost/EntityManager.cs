@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Frost
+{
+	/// <summary>
+	/// Tracks game entities
+	/// </summary>
+	/// <seealso cref="Entity"/>
+	public class EntityManager
+	{
+		private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
+		private ulong _nextId;
+
+		/// <summary>
+		/// Retrieves the next available ID for an entity
+		/// </summary>
+		public ulong NextAvailableId
+		{
+			get
+			{
+				lock(_registeredEntities)
+				{
+					while(_registeredEntities.ContainsKey(_nextId))
+						++_nextId;
+					_registeredEntities.Add(_nextId, null); // Reserve the ID by setting the value to null
+					return _nextId;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Assigns an entity object to its ID so that it can be accessed from the manager
+		/// </summary>
+		/// <param name="e">Entity to register</param>
+		/// <exception cref="InvalidOperationException">Thrown if another entity with the same <see cref="Entity.Id"/> has already been registered</exception>
+		/// <exception cref="ArgumentException">Thrown if the <see cref="Entity.Id"/> of <paramref name="e"/> has not been previously reserved by getting an ID from <see cref="NextAvailableId"/></exception>
+		public void RegisterEntity (Entity e)
+		{
+			var id = e.Id;
+			lock(_registeredEntities)
+			{
+				Entity existing;
+				if(_registeredEntities.TryGetValue(id, out existing))
+				{// ID has been reserved
+					if(ReferenceEquals(existing, null)) // No other entity assigned to this ID, register it
+						_registeredEntities[id] = e;
+					else if(!ReferenceEquals(existing, e)) // Another entity already has this ID
+						throw new InvalidOperationException("The ID is already assigned to another entity.");
+				}
+				else // ID has not been reserved
+					throw new ArgumentException("The entity does not have a reserved ID.");
+			}
+		}
+
+		/// <summary>
+		/// Removes an entity from the manager so that it is no longer tracked
+		/// </summary>
+		/// <param name="e">Entity to deregister</param>
+		/// <exception cref="InvalidOperationException">Thrown if the <see cref="Entity.Id"/> has been registered under a different <see cref="Entity"/></exception>
+		public void DeregisterEntity (Entity e)
+		{
+			var id = e.Id;
+			lock(_registeredEntities)
+			{
+				Entity existing;
+				if(_registeredEntities.TryGetValue(id, out existing))
+				{// ID has been reserved
+					if(ReferenceEquals(e, existing)) // This ID is reserved for e
+						_registeredEntities.Remove(id);
+					else // This ID is reserved for another entity
+						throw new InvalidOperationException("The ID has been reserved for another entity.");
+				}
+			}
+		}
+	}
+}

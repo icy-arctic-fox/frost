@@ -6,6 +6,7 @@
 	/// Entities can have any number of components (<see cref="EntityComponent"/>)
 	/// which define characteristics of that entity.
 	/// </summary>
+	/// <seealso cref="EntityManager"/>
 	public abstract class Entity
 	{
 		private readonly ulong _id;
@@ -21,7 +22,7 @@
 		/// <summary>
 		/// Creates a new entity
 		/// </summary>
-		/// <param name="id">Unique identifier returned from <see cref="EntityManager.GetNextAvailableId"/></param>
+		/// <param name="id">Unique identifier returned from <see cref="EntityManager.NextAvailableId"/></param>
 		protected Entity (ulong id)
 		{
 			_id = id;
