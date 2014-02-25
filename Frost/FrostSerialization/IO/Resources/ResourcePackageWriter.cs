@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using Frost.IO.Tnt;
 using Frost.Utility;
 using Ionic.Zlib;
@@ -110,6 +111,8 @@ namespace Frost.IO.Resources
 		/// <remarks>This event can be subscribed to cross-thread.</remarks>
 		public event EventHandler<ProgressEventArgs> Progress;
 
+		#region Header
+
 		/// <summary>
 		/// Writes the resource package header to the file
 		/// </summary>
@@ -120,6 +123,48 @@ namespace Frost.IO.Resources
 			bw.Write(info.Version);
 			bw.Write((ushort)info.Options);
 			bw.Write((byte)0); // Unused byte
+		}
+
+		private const int MinIterations = 512;
+
+		/// <summary>
+		/// Reads the encryption information from the header
+		/// </summary>
+		/// <param name="bw">Writer used to put data into the file</param>
+		/// <param name="password">Password to protect the header entries with</param>
+		/// <returns>A transformation object used to encrypt the header entries</returns>
+		private static ICryptoTransform writeEncryptionHeader (BinaryWriter bw, string password)
+		{
+			using(var aes = new RijndaelManaged())
+			{
+				aes.GenerateIV();
+
+				var iv     = aes.IV;
+				var ivSize = iv.Length;
+				var salt   = new byte[SaltSize];
+				int iterations;
+				using(var rng = new RNGCryptoServiceProvider())
+				{
+					rng.GetBytes(salt);
+					do
+					{// Guarantee that there are at least MinIterations
+						var iterBytes = new byte[sizeof(int)];
+						rng.GetBytes(iterBytes);
+						iterations = BitConverter.ToInt32(iterBytes, 0);
+					} while(iterations < MinIterations);
+				}
+
+				bw.Write(salt);
+				bw.Write(ivSize);
+				bw.Write(iv);
+				bw.Write(iterations);
+
+				var passBytes = System.Text.Encoding.UTF8.GetBytes(password);
+				using(var keygen = new Rfc2898DeriveBytes(passBytes, salt, iterations))
+					aes.Key = keygen.GetBytes(aes.KeySize / 8);
+
+				return aes.CreateEncryptor();
+			}
 		}
 
 		/// <summary>
@@ -161,13 +206,24 @@ namespace Frost.IO.Resources
 			byte[] headerData;
 			using(var ms = new MemoryStream())
 			{
-				using(var ds = new DeflateStream(ms, CompressionMode.Compress))
-					container.WriteToStream(ds); // TODO: Handle encryption of the header
+				if((info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader)
+				{// Encrypt header entries
+					var encryptor = writeEncryptionHeader(_bw, String.Empty /* TODO */);
+					using(var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+					using(var ds = new DeflateStream(cs, CompressionMode.Compress))
+						container.WriteToStream(ds);
+				}
+				else
+				{// Don't encrypt the header entries
+					using(var ds = new DeflateStream(ms, CompressionMode.Compress))
+						container.WriteToStream(ds);
+				}
 				headerData = ms.ToArray();
 			}
 			_bw.Write(headerData.Length);
 			_bw.Write(headerData, 0, headerData.Length);
 		}
+		#endregion
 
 		/// <summary>
 		/// Writes all of the resources to the package

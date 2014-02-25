@@ -14,6 +14,8 @@ namespace Frost.IO.Resources
 	{
 		protected const int Kilobyte = 1024;
 
+		protected const int SaltSize = 32;
+
 		/// <summary>
 		/// Version of the resource package
 		/// </summary>

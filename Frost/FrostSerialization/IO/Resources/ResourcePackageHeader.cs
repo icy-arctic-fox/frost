@@ -25,27 +25,15 @@
 			get { return _opts; }
 		}
 
-		private readonly System.Security.Cryptography.SymmetricAlgorithm _encAlg;
-
-		/// <summary>
-		/// Encryption algorithm used to read entries from the header
-		/// </summary>
-		public System.Security.Cryptography.SymmetricAlgorithm EncryptionAlgorithm
-		{
-			get { return _encAlg; }
-		}
-
 		/// <summary>
 		/// Creates new header information
 		/// </summary>
 		/// <param name="ver">Version number</param>
 		/// <param name="opts">Options for the resource package</param>
-		/// <param name="encAlg">Encryption algorithm used to read entries from the header</param>
-		public HeaderInfo (byte ver, ResourcePackageOptions opts, System.Security.Cryptography.SymmetricAlgorithm encAlg = null)
+		public HeaderInfo (byte ver, ResourcePackageOptions opts)
 		{
-			_ver    = ver;
-			_opts   = opts;
-			_encAlg = encAlg;
+			_ver  = ver;
+			_opts = opts;
 		}
 	}
 }

@@ -11,8 +11,6 @@ namespace Frost.IO.Resources
 	/// </summary>
 	public class ResourcePackageReader : ResourcePackage
 	{
-		private const int SaltSize = 32;
-
 		/// <summary>
 		/// Reader used to pull data from the file
 		/// </summary>
@@ -81,11 +79,7 @@ namespace Frost.IO.Resources
 			var ver  = br.ReadByte();
 			var opts = (ResourcePackageOptions)br.ReadUInt16();
 			br.ReadByte(); // Unused
-
-			var encAlg = ((opts & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader)
-				? readEncryptionHeader(br) : null;
-
-			return new HeaderInfo(ver, opts, encAlg);
+			return new HeaderInfo(ver, opts);
 		}
 
 		#region Encryption
@@ -105,20 +99,23 @@ namespace Frost.IO.Resources
 		/// Reads the encryption information from the header
 		/// </summary>
 		/// <param name="br">Reader used to get data from the file</param>
-		/// <returns>Algorithm used to decrypt the header</returns>
-		private static SymmetricAlgorithm readEncryptionHeader (BinaryReader br)
+		/// <returns>A transformation object used to decrypt the header entries</returns>
+		private static ICryptoTransform readEncryptionHeader (BinaryReader br)
 		{
-			var salt       = br.ReadBytes(SaltSize);
-			var ivSize     = br.ReadInt32();
-			var iv         = br.ReadBytes(ivSize);
-			var iterations = br.ReadInt32();
-			var passStr    = PasswordNeeded != null ? (PasswordNeeded() ?? String.Empty) : String.Empty;
-			var passBytes  = System.Text.Encoding.UTF8.GetBytes(passStr);
+			using(var aes = new RijndaelManaged())
+			{
+				var salt       = br.ReadBytes(SaltSize);
+				var ivSize     = br.ReadInt32();
+				var iv         = br.ReadBytes(ivSize);
+				var iterations = br.ReadInt32();
+				var passStr    = PasswordNeeded != null ? (PasswordNeeded() ?? String.Empty) : String.Empty;
+				var passBytes  = System.Text.Encoding.UTF8.GetBytes(passStr);
 
-			var aes = new RijndaelManaged {IV = iv};
-			using(var keygen = new Rfc2898DeriveBytes(passBytes, salt, iterations))
-				aes.Key = keygen.GetBytes(aes.KeySize / 8);
-			return aes;
+				aes.IV = iv;
+				using(var keygen = new Rfc2898DeriveBytes(passBytes, salt, iterations))
+					aes.Key = keygen.GetBytes(aes.KeySize / 8);
+				return aes.CreateDecryptor();
+			}
 		}
 		#endregion
 
@@ -134,10 +131,9 @@ namespace Frost.IO.Resources
 			var headerData = br.ReadBytes(headerSize);
 			using(var ms = new MemoryStream(headerData))
 			{
-				if((info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader &&
-					(info.EncryptionAlgorithm != null))
+				if((info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader)
 				{// Header is encrypted
-					var decryptor = info.EncryptionAlgorithm.CreateDecryptor();
+					var decryptor = readEncryptionHeader(br);
 					using(var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
 					using(var ds = new DeflateStream(cs, CompressionMode.Decompress))
 						return NodeContainer.ReadFromStream(ds);
