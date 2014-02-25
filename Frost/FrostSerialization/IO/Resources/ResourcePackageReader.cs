@@ -41,7 +41,7 @@ namespace Frost.IO.Resources
 			NodeContainer header;
 			try
 			{
-				header = readHeader(_br);
+				header = readHeader(_br, fileInfo);
 
 				// Store information about the resource package
 				var root = header.Root.ExpectComplexNode();
@@ -126,14 +126,26 @@ namespace Frost.IO.Resources
 		/// Reads the header entries from the package header
 		/// </summary>
 		/// <param name="br">Reader used to get data from the file</param>
+		/// <param name="info">File header information</param>
 		/// <returns>Header data</returns>
-		private static NodeContainer readHeader (BinaryReader br)
+		private static NodeContainer readHeader (BinaryReader br, HeaderInfo info)
 		{
 			var headerSize = br.ReadInt32();
 			var headerData = br.ReadBytes(headerSize);
 			using(var ms = new MemoryStream(headerData))
-			using(var ds = new DeflateStream(ms, CompressionMode.Decompress)) // TODO: Handle encryption
-				return NodeContainer.ReadFromStream(ds);
+			{
+				if((info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader &&
+					(info.EncryptionAlgorithm != null))
+				{// Header is encrypted
+					var decryptor = info.EncryptionAlgorithm.CreateDecryptor();
+					using(var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+					using(var ds = new DeflateStream(cs, CompressionMode.Decompress))
+						return NodeContainer.ReadFromStream(ds);
+				}
+				// Header is compressed, but not encrypted
+				using(var ds = new DeflateStream(ms, CompressionMode.Decompress))
+					return NodeContainer.ReadFromStream(ds);
+			}
 		}
 
 		/// <summary>
