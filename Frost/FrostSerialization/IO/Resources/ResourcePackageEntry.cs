@@ -54,7 +54,18 @@ namespace Frost.IO.Resources
 		}
 
 		// TODO: Add optional property for checksum (sha256)
-		// TODO: Add optional property for encryption key
+
+		private readonly byte[] _key;
+
+		/// <summary>
+		/// Symmetric key used to encrypt and decrypt the resource
+		/// </summary>
+		/// <remarks>This property can be null.
+		/// A null value signifies that the resource is not encrypted.</remarks>
+		public byte[] Key
+		{
+			get { return _key; }
+		}
 
 		/// <summary>
 		/// Creates information about a resource package entry
@@ -63,11 +74,12 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource</param>
 		/// <param name="offset">Block offset to where the resource's data starts</param>
 		/// <param name="size">Size in bytes of the resource</param>
+		/// <param name="key">Symmetric key used to encrypt and decrypt the resource</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.
 		/// The name of the resource can't be null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> or <paramref name="size"/> are negative.
 		/// The block offset and resource size can't be negative.</exception>
-		public ResourcePackageEntry (Guid id, string name, long offset, int size)
+		public ResourcePackageEntry (Guid id, string name, long offset, int size, byte[] key = null)
 		{
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
@@ -80,6 +92,7 @@ namespace Frost.IO.Resources
 			_name   = name;
 			_offset = offset;
 			_size   = size;
+			_key    = key;
 		}
 
 		#region Node marshal
@@ -88,6 +101,7 @@ namespace Frost.IO.Resources
 		private const string NameNodeName   = "name";
 		private const string OffsetNodeName = "offset";
 		private const string SizeNodeName   = "size";
+		private const string KeyNodeName    = "key";
 
 		/// <summary>
 		/// Creates information about a resource package entry by extracting it from a node.
@@ -101,6 +115,8 @@ namespace Frost.IO.Resources
 			_name    = root.ExpectStringNode(NameNodeName);
 			_offset  = root.ExpectLongNode(OffsetNodeName);
 			_size    = root.ExpectIntNode(SizeNodeName);
+			if(root.ContainsKey(KeyNodeName))
+				_key = root.ExpectBlobNode(KeyNodeName);
 		}
 
 		/// <summary>
@@ -109,12 +125,16 @@ namespace Frost.IO.Resources
 		/// <returns>A node containing information about the resource</returns>
 		public Node ToNode ()
 		{
-			return new ComplexNode {
+			var root = new ComplexNode {
 				{IdNodeName,     new GuidNode(_id)},
 				{NameNodeName,   new StringNode(_name)},
 				{OffsetNodeName, new LongNode(_offset)},
 				{SizeNodeName,   new IntNode(_size)}
 			};
+			if(_key != null)
+				root.Add(KeyNodeName, new BlobNode(_key));
+
+			return root;
 		}
 		#endregion
 	}

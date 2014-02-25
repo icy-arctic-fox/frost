@@ -62,6 +62,7 @@ The structure of the TNT container should be:
 			- (`String`) **name**: Name of the resource (must be unique in the current package file)
 			- (`Long`) **offset**: Index of the byte where the resource data starts offset from the header (first resource after the header has an offset of 0)
 			- (`Int`) **size**: Size in bytes of the packed resource (compressed and encrypted)
+			- (`Blob`) **key**: Array of bytes representing the key used to decrypt the resource. *This entry is optional.*
 
 These are just the minimum expected nodes, additional nodes can be added with no effect.
 
