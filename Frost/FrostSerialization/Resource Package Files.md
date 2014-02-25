@@ -26,12 +26,23 @@ Those bytes represent the following values:
 * byte 4:    Unused byte
 * bytes 5-8: Size (in bytes) of the following resource info
 
+When file header encryption is specified in the options, the following information will also be present:
+
+* bytes 9-40:  32 bytes of password salt
+* bytes 41-44: Integer representing the size of the initialization vector (IV)
+* bytes 45-??: Bytes for the IV (length is specified by previous entry)
+* 1 byte:      Number of iterations used to generate the key     
+
 #### Files Options ####
 
 Resource package files can have the following options:
 
 * `0x0000` - None
 * `0x0001` - Encrypt file header (the resource info following the initial 8 bytes will be encrypted)
+
+### Encryption ###
+
+The [Rijndael](http://msdn.microsoft.com/en-us/library/system.security.cryptography.rijndaelmanaged%28v=vs.100%29.aspx "RijndaelManaged Class") algorithm is used to symmetrically encrypt data.
 
 ### Resource Info ###
 
