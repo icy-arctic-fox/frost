@@ -185,7 +185,7 @@ namespace Frost.IO.Resources
 				if(TryGetResourceInfo(name, out entry))
 				{// Resource exists
 					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
-					return readData(entry.Size, entry.Key);
+					return readData(entry.Size, entry.Secret);
 				}
 			return null;
 		}
@@ -204,7 +204,7 @@ namespace Frost.IO.Resources
 				if(TryGetResourceInfo(id, out entry))
 				{// Resource exists
 					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
-					return readData(entry.Size, entry.Key);
+					return readData(entry.Size, entry.Secret);
 				}
 			return null;
 		}
@@ -227,7 +227,7 @@ namespace Frost.IO.Resources
 				if(TryGetResourceInfo(name, out entry))
 				{// Resource exists
 					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
-					return getDataStream(entry.Size, entry.Key);
+					return getDataStream(entry.Size, entry.Secret);
 				}
 			return null;
 		}
@@ -246,7 +246,7 @@ namespace Frost.IO.Resources
 				if(TryGetResourceInfo(id, out entry))
 				{// Resource exists
 					FileStream.Seek(DataOffset + entry.Offset, SeekOrigin.Begin);
-					return getDataStream(entry.Size, entry.Key);
+					return getDataStream(entry.Size, entry.Secret);
 				}
 			return null;
 		}
@@ -256,7 +256,7 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="s">Stream to read from</param>
 		/// <returns>Array of bytes read from the stream</returns>
-		private byte[] readBytesFromStream (Stream s)
+		private static byte[] readBytesFromStream (Stream s)
 		{
 			const int bufferSize = 4 * Kilobyte;
 
@@ -274,11 +274,31 @@ namespace Frost.IO.Resources
 		}
 
 		/// <summary>
+		/// Extracts a key and IV from a base-64 secret string
+		/// </summary>
+		/// <param name="secret">String containing the key and IV</param>
+		/// <param name="key">Extracted key</param>
+		/// <param name="iv">Extracted IV</param>
+		private static void extractFromSecret (string secret, out byte[] key, out byte[] iv)
+		{
+			var bytes = Convert.FromBase64String(secret);
+			using(var ms = new MemoryStream(bytes))
+			using(var br = new BinaryReader(ms))
+			{
+				var keySize = br.ReadInt32();
+				var ivSize  = br.ReadInt32();
+				key = br.ReadBytes(keySize);
+				iv  = br.ReadBytes(ivSize);
+			}
+		}
+
+		/// <summary>
 		/// Reads data from the current position in the package
 		/// </summary>
 		/// <param name="length">Amount of packed data to read</param>
+		/// <param name="secret">Combination of key and IV used to decrypt the resource (provide null if the resource isn't encrypted)</param>
 		/// <returns>Raw data read from the package (decompressed and decrypted)</returns>
-		private byte[] readData (int length, byte[] key)
+		private byte[] readData (int length, string secret)
 		{
 			// Read in the compressed data
 			var packedData = _br.ReadBytes(length);
@@ -286,14 +306,15 @@ namespace Frost.IO.Resources
 			// Decompress the data
 			using(var ms = new MemoryStream(packedData))
 			{
-				if(key != null)
+				if(secret != null)
 				{// Resource is encrypted
-					var ivSize = _br.ReadInt32();
-					var iv = _br.ReadBytes(ivSize);
+					byte[] key, iv;
+					extractFromSecret(secret, out key, out iv);
 					using(var aes = new RijndaelManaged())
 					using(var decryptor = aes.CreateDecryptor(key, iv))
 					using(var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-						return readBytesFromStream(cs);
+					using(var ds = new DeflateStream(cs, CompressionMode.Decompress))
+						return readBytesFromStream(ds);
 				}
 				// Resource is not encrypted
 				using(var ds = new DeflateStream(ms, CompressionMode.Decompress))
@@ -305,8 +326,9 @@ namespace Frost.IO.Resources
 		/// Reads data from the current position in the package and creates a stream from it
 		/// </summary>
 		/// <param name="length">Amount of packed data to read</param>
+		/// <param name="secret">Combination of key and IV used to decrypt the resource (provide null if the resource isn't encrypted)</param>
 		/// <returns>Raw data read</returns>
-		private Stream getDataStream (int length, byte[] key)
+		private Stream getDataStream (int length, string secret)
 		{
 			// Read in the compressed data
 			var packedData = _br.ReadBytes(length);
@@ -314,10 +336,10 @@ namespace Frost.IO.Resources
 			// Create a stream used to decompress the data
 			Stream s;
 			var ms = new MemoryStream(packedData);
-			if(key != null)
+			if(secret != null)
 			{// Resource is encrypted
-				var ivSize = _br.ReadInt32();
-				var iv = _br.ReadBytes(ivSize);
+				byte[] key, iv;
+				extractFromSecret(secret, out key, out iv);
 				using(var aes = new RijndaelManaged())
 				{
 					var decryptor = aes.CreateDecryptor(key, iv);

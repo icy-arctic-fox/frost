@@ -37,7 +37,8 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource package</param>
 		/// <param name="creator">Information about the creator of the package</param>
 		/// <param name="description">Brief description of what the resource package is for</param>
-		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called.</remarks>
+		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called.
+		/// It is highly recommended that the header is encrypted <see cref="ResourcePackageOptions.EncryptedHeader"/> if any of the resources are encrypted.</remarks>
 		public ResourcePackageWriter (string filepath, ResourcePackageOptions opts = ResourcePackageOptions.None,
 			string name = null, string creator = null, string description = null)
 		{
@@ -64,16 +65,57 @@ namespace Frost.IO.Resources
 		private readonly List<byte[]> _packedResources = new List<byte[]>();
 
 		/// <summary>
-		/// Packs data so that it is in the form that will be written to the package
+		/// Creates a base-64 string that contains a key and IV value
+		/// </summary>
+		/// <param name="key">Symmetric key</param>
+		/// <param name="iv">Initialization vector</param>
+		/// <returns>Secret string</returns>
+		private static string createSecret (byte[] key, byte[] iv)
+		{
+			using(var ms = new MemoryStream())
+			using(var bw = new BinaryWriter(ms))
+			{
+				bw.Write(key.Length);
+				bw.Write(iv.Length);
+				bw.Write(key);
+				bw.Write(iv);
+
+				var bytes = ms.ToArray();
+				return Convert.ToBase64String(bytes);
+			}
+		}
+
+		/// <summary>
+		/// Packs data so that it is in the format that will be written to the package
 		/// </summary>
 		/// <param name="data">Unpacked data</param>
-		/// <returns>Packed data</returns>
-		private static byte[] packData (byte[] data)
+		/// <param name="encrypt">Indicates whether the resource should be encrypted</param>
+		/// <param name="secret">Secret string containing symmetrical encryption information</param>
+		/// <returns>Packed data (compressed and encrypted)</returns>
+		private static byte[] packData (byte[] data, bool encrypt, out string secret)
 		{
 			using(var ms = new MemoryStream())
 			{
-				using(var ds = new DeflateStream(ms, CompressionMode.Compress))
-					ds.Write(data, 0, data.Length);
+				if(encrypt)
+				{// Generate a key for the resource
+					using(var aes = new RijndaelManaged())
+					{
+						aes.GenerateIV();
+						aes.GenerateKey();
+						secret = createSecret(aes.Key, aes.IV);
+						using(var encryptor = aes.CreateEncryptor())
+						using(var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+						using(var ds = new DeflateStream(cs, CompressionMode.Compress))
+							ds.Write(data, 0, data.Length);
+					}
+				}
+				else
+				{// Resource is not encrypted
+					secret = null;
+					using(var ds = new DeflateStream(ms, CompressionMode.Compress))
+						ds.Write(data, 0, data.Length);
+				}
+
 				return ms.ToArray();
 			}
 		}
@@ -84,10 +126,11 @@ namespace Frost.IO.Resources
 		/// <param name="id">Globally unique ID of the resource</param>
 		/// <param name="name">Name of the resource</param>
 		/// <param name="data">Data contained in the resource</param>
+		/// <param name="encrypt">Flag indicating whether the resource should be encrypted</param>
 		/// <exception cref="ObjectDisposedException">Thrown if the package writer has been disposed</exception>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="data"/> are null</exception>
 		/// <exception cref="ArgumentException">Thrown if a resource by the <paramref name="name"/> or <paramref name="id"/> has already been added</exception>
-		public void Add (Guid id, string name, byte[] data) // TODO: Add encryption and other options
+		public void Add (Guid id, string name, byte[] data, bool encrypt = false)
 		{
 			EnsureUndisposed();
 			if(name == null)
@@ -95,12 +138,13 @@ namespace Frost.IO.Resources
 			if(data == null)
 				throw new ArgumentNullException("data", "The raw data for the resource can't be null.");
 
-			var packedData = packData(data);
+			string secret;
+			var packedData = packData(data, encrypt, out secret);
 			var size       = packedData.Length;
 
 			lock(Locker)
 			{
-				var entry = new ResourcePackageEntry(id, name, _curOffset, packedData.Length);
+				var entry = new ResourcePackageEntry(id, name, _curOffset, packedData.Length, secret);
 				AddResource(entry);
 				_packedResources.Add(packedData);
 				_curOffset += size;

@@ -55,26 +55,26 @@ namespace Frost.IO.Resources
 
 		// TODO: Add optional property for checksum (sha256)
 
-		private readonly byte[] _key;
+		private readonly string _secret;
 
 		/// <summary>
-		/// Symmetric key used to encrypt and decrypt the resource
+		/// Symmetric key and IV used to encrypt and decrypt the resource
 		/// </summary>
 		/// <remarks>This property can be null.
 		/// A null value signifies that the resource is not encrypted.</remarks>
 		/// <seealso cref="Encrypted"/>
-		public byte[] Key
+		public string Secret
 		{
-			get { return _key; }
+			get { return _secret; }
 		}
 
 		/// <summary>
 		/// Indicates whether the resource is encrypted with a key
 		/// </summary>
-		/// <seealso cref="Key"/>
+		/// <seealso cref="Secret"/>
 		public bool Encrypted
 		{
-			get { return _key != null; }
+			get { return _secret != null; }
 		}
 
 		/// <summary>
@@ -84,12 +84,12 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource</param>
 		/// <param name="offset">Block offset to where the resource's data starts</param>
 		/// <param name="size">Size in bytes of the resource</param>
-		/// <param name="key">Symmetric key used to encrypt and decrypt the resource</param>
+		/// <param name="secret">Key and IV used for symmetrical encryption</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.
 		/// The name of the resource can't be null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> or <paramref name="size"/> are negative.
 		/// The block offset and resource size can't be negative.</exception>
-		public ResourcePackageEntry (Guid id, string name, long offset, int size, byte[] key = null)
+		public ResourcePackageEntry (Guid id, string name, long offset, int size, string secret = null)
 		{
 			if(name == null)
 				throw new ArgumentNullException("name", "The name of the resource can't be null.");
@@ -102,7 +102,7 @@ namespace Frost.IO.Resources
 			_name   = name;
 			_offset = offset;
 			_size   = size;
-			_key    = key;
+			_secret = secret;
 		}
 
 		#region Node marshal
@@ -111,7 +111,7 @@ namespace Frost.IO.Resources
 		private const string NameNodeName   = "name";
 		private const string OffsetNodeName = "offset";
 		private const string SizeNodeName   = "size";
-		private const string KeyNodeName    = "key";
+		private const string SecretNodeName = "secret";
 
 		/// <summary>
 		/// Creates information about a resource package entry by extracting it from a node.
@@ -125,8 +125,8 @@ namespace Frost.IO.Resources
 			_name    = root.ExpectStringNode(NameNodeName);
 			_offset  = root.ExpectLongNode(OffsetNodeName);
 			_size    = root.ExpectIntNode(SizeNodeName);
-			if(root.ContainsKey(KeyNodeName))
-				_key = root.ExpectBlobNode(KeyNodeName);
+			if(root.ContainsKey(SecretNodeName))
+				_secret = root.ExpectStringNode(SecretNodeName);
 		}
 
 		/// <summary>
@@ -141,8 +141,8 @@ namespace Frost.IO.Resources
 				{OffsetNodeName, new LongNode(_offset)},
 				{SizeNodeName,   new IntNode(_size)}
 			};
-			if(_key != null)
-				root.Add(KeyNodeName, new BlobNode(_key));
+			if(_secret != null)
+				root.Add(SecretNodeName, new StringNode(_secret));
 
 			return root;
 		}
