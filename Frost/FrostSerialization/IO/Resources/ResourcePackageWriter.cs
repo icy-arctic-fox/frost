@@ -27,7 +27,7 @@ namespace Frost.IO.Resources
 		/// Password used to encrypt the resource package
 		/// </summary>
 		/// <remarks>The value null signifies no password.</remarks>
-		public string Password { get; set; }
+		public string Password { private get; set; }
 
 		/// <summary>
 		/// Opens a resource package file to start storing resources into it
