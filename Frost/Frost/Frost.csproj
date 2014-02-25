@@ -59,6 +59,7 @@
     <Compile Include="Display\Window.cs" />
     <Compile Include="Display\IDisplay.cs" />
     <Compile Include="Display\WindowClosingEventArgs.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameConfiguration.cs" />
     <Compile Include="GameRunner.cs" />
