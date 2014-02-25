@@ -8,7 +8,7 @@ namespace Frost.ResourcePackager
 	class Program
 	{
 		private static bool _verbose, _stripExt;
-		private static string _name, _creator, _description;
+		private static string _name, _creator, _description, _password;
 
 		static int Main (string[] args)
 		{
@@ -57,6 +57,13 @@ namespace Frost.ResourcePackager
 					else if(args[index] == "-d" && args.Length > index + 1)
 					{// Set package description
 						_description = args[index + 1];
+						index += 2;
+						matched = true;
+					}
+
+					else if(args[index] == "-p" && args.Length > index + 1)
+					{// Set header password
+						_password = args[index + 1];
 						index += 2;
 						matched = true;
 					}
@@ -132,6 +139,7 @@ namespace Frost.ResourcePackager
 			Console.WriteLine("   -n TEXT - Set the name of the resource package");
 			Console.WriteLine("   -c TEXT - Set the creator of the resource package");
 			Console.WriteLine("   -d TEXT - Set the description of the resource package");
+			Console.WriteLine("   -p PASS - Password used to encrypt or decrypt the resource package");
 			Console.WriteLine();
 
 			Console.WriteLine("Available actions:");
@@ -162,7 +170,10 @@ namespace Frost.ResourcePackager
 		/// <returns>A program return code</returns>
 		private static ReturnCode createResourcePackageFile (string filepath, IEnumerable<KeyValuePair<string, string>> contents)
 		{
-			using(var writer = new ResourcePackageWriter(filepath, ResourcePackageOptions.None, _name, _creator, _description))
+			var opts = ResourcePackageOptions.None;
+			if(!String.IsNullOrWhiteSpace(_password))
+				opts |= ResourcePackageOptions.EncryptedHeader;
+			using(var writer = new ResourcePackageWriter(filepath, opts, _name, _creator, _description))
 			{
 				foreach(var entry in contents)
 				{

@@ -125,7 +125,7 @@ namespace Frost.IO.Resources
 			bw.Write((byte)0); // Unused byte
 		}
 
-		private const int MinIterations = 512;
+		private const int MinIterations = 16;
 
 		/// <summary>
 		/// Reads the encryption information from the header
@@ -148,16 +148,16 @@ namespace Frost.IO.Resources
 					rng.GetBytes(salt);
 					do
 					{// Guarantee that there are at least MinIterations
-						var iterBytes = new byte[sizeof(int)];
+						var iterBytes = new byte[sizeof(byte)];
 						rng.GetBytes(iterBytes);
-						iterations = BitConverter.ToInt32(iterBytes, 0);
+						iterations = iterBytes[0];
 					} while(iterations < MinIterations);
 				}
 
 				bw.Write(salt);
 				bw.Write(ivSize);
 				bw.Write(iv);
-				bw.Write(iterations);
+				bw.Write((byte)iterations);
 
 				var passBytes = System.Text.Encoding.UTF8.GetBytes(password);
 				using(var keygen = new Rfc2898DeriveBytes(passBytes, salt, iterations))
@@ -272,9 +272,9 @@ namespace Frost.IO.Resources
 		{
 			if(!Disposed)
 			{
-				Disposed = true;
 				if(disposing)
 					Close();
+				Disposed = true;
 			}
 		}
 	}

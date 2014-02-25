@@ -93,23 +93,23 @@ namespace Frost.IO.Resources
 		/// <summary>
 		/// Triggered when a password is required to decrypt the resource package header
 		/// </summary>
-		public static event PromptPassword PasswordNeeded;
+		public event PromptPassword PasswordNeeded;
 
 		/// <summary>
 		/// Reads the encryption information from the header
 		/// </summary>
 		/// <param name="br">Reader used to get data from the file</param>
+		/// <param name="password">Password needed to decrypt the header entries</param>
 		/// <returns>A transformation object used to decrypt the header entries</returns>
-		private static ICryptoTransform readEncryptionHeader (BinaryReader br)
+		private static ICryptoTransform readEncryptionHeader (BinaryReader br, string password)
 		{
 			using(var aes = new RijndaelManaged())
 			{
 				var salt       = br.ReadBytes(SaltSize);
 				var ivSize     = br.ReadInt32();
 				var iv         = br.ReadBytes(ivSize);
-				var iterations = br.ReadInt32();
-				var passStr    = PasswordNeeded != null ? (PasswordNeeded() ?? String.Empty) : String.Empty;
-				var passBytes  = System.Text.Encoding.UTF8.GetBytes(passStr);
+				var iterations = br.ReadByte();
+				var passBytes  = System.Text.Encoding.UTF8.GetBytes(password);
 
 				aes.IV = iv;
 				using(var keygen = new Rfc2898DeriveBytes(passBytes, salt, iterations))
@@ -133,7 +133,7 @@ namespace Frost.IO.Resources
 			{
 				if((info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader)
 				{// Header is encrypted
-					var decryptor = readEncryptionHeader(br);
+					var decryptor = readEncryptionHeader(br, String.Empty /* TODO */);
 					using(var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
 					using(var ds = new DeflateStream(cs, CompressionMode.Decompress))
 						return NodeContainer.ReadFromStream(ds);
