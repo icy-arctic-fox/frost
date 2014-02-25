@@ -1,4 +1,4 @@
-﻿namespace Frost
+﻿namespace Frost.Entities
 {
 	/// <summary>
 	/// Base class for all entities.
