@@ -7,7 +7,7 @@ namespace Frost.ResourcePackager
 {
 	class Program
 	{
-		private static bool _verbose, _stripExt;
+		private static bool _verbose, _stripExt, _encrypt;
 		private static string _name, _creator, _description, _password;
 
 		static int Main (string[] args)
@@ -64,6 +64,7 @@ namespace Frost.ResourcePackager
 					else if(args[index] == "-p" && args.Length > index + 1)
 					{// Set header password
 						_password = args[index + 1];
+						_encrypt  = true;
 						index += 2;
 						matched = true;
 					}
@@ -186,7 +187,7 @@ namespace Frost.ResourcePackager
 						Console.WriteLine("{0} => {1}", file, name);
 
 					var data = File.ReadAllBytes(file); // TODO: Make this better by using streams
-					writer.Add(id, name, data); // TODO: Catch duplicate resource names
+					writer.Add(id, name, data, _encrypt); // TODO: Catch duplicate resource names
 				}
 				if(_verbose)
 					Console.WriteLine("Writing contents to file...");
