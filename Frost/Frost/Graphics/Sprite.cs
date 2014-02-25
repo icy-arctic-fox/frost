@@ -17,7 +17,7 @@ namespace Frost.Graphics
 		/// </summary>
 		public override float Width
 		{
-			get { return _sprite.Texture.Size.X; }
+			get { return (_sprite.Texture == null) ? 0f : _sprite.Texture.Size.X; }
 		}
 
 		/// <summary>
@@ -25,11 +25,8 @@ namespace Frost.Graphics
 		/// </summary>
 		public override float Height
 		{
-			get { return _sprite.Texture.Size.Y; }
+			get { return (_sprite.Texture == null) ? 0f : _sprite.Texture.Size.Y; }
 		}
-
-		public float SpeedX { get; set; }
-		public float SpeedY { get; set; }
 
 		/// <summary>
 		/// Creates a new sprite
@@ -48,9 +45,6 @@ namespace Frost.Graphics
 		/// <param name="t">Interpolation value</param>
 		protected override void DrawObject (IDisplay display, SFML.Graphics.RenderStates transform, double t)
 		{
-			var xOff = (float)(SpeedX * t);
-			var yOff = (float)(SpeedY * t);
-			transform.Transform.Translate(xOff, yOff);
 			display.Draw(_sprite, transform);
 		}
 	}

@@ -41,15 +41,7 @@ namespace Test_Game
 		/// <returns>A scene</returns>
 		protected override Scene CreateInitialScene ()
 		{
-			var scene = new BallScene();
-			var controller = new BasicController {
-				LeftArrow  = new InputDescriptor(InputType.Keyboard, (int)Key.Left),
-				RightArrow = new InputDescriptor(InputType.Keyboard, (int)Key.Right),
-				UpArrow    = new InputDescriptor(InputType.Keyboard, (int)Key.Up),
-				DownArrow  = new InputDescriptor(InputType.Keyboard, (int)Key.Down)
-			};
-			scene.SetController(controller);
-			return scene;
+			return new BallScene();
 		}
 
 		public override void Initialize ()
