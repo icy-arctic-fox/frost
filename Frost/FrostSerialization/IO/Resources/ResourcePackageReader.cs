@@ -127,13 +127,15 @@ namespace Frost.IO.Resources
 		/// <returns>Header data</returns>
 		private static NodeContainer readHeader (BinaryReader br, HeaderInfo info)
 		{
+			var encrypted = (info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader;
+			var decryptor = encrypted ? readEncryptionHeader(br, String.Empty /* TODO */) : null;
+
 			var headerSize = br.ReadInt32();
 			var headerData = br.ReadBytes(headerSize);
 			using(var ms = new MemoryStream(headerData))
 			{
-				if((info.Options & ResourcePackageOptions.EncryptedHeader) == ResourcePackageOptions.EncryptedHeader)
+				if(encrypted)
 				{// Header is encrypted
-					var decryptor = readEncryptionHeader(br, String.Empty /* TODO */);
 					using(var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
 					using(var ds = new DeflateStream(cs, CompressionMode.Decompress))
 						return NodeContainer.ReadFromStream(ds);
