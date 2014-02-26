@@ -6,7 +6,7 @@ using Frost.Utility;
 
 namespace Frost.Entities
 {
-	public abstract class EntityComponentState
+	public abstract class EntityComponentState<T>
 	{
 		/// <summary>
 		/// Triggered when any of the properties of a component's state are changed
@@ -23,6 +23,6 @@ namespace Frost.Entities
 			PropertyChanged.NotifySubscribers(this, args);
 		}
 
-		public abstract void Step (EntityComponentState prevState);
+		public abstract void Step (T prevState);
 	}
 }

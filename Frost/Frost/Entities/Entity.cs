@@ -31,7 +31,7 @@ namespace Frost.Entities
 			_id = id;
 		}
 
-		private readonly List<StateSet<EntityComponentState>> _componentStates = new List<StateSet<EntityComponentState>>();
+//		private readonly List<StateSet<EntityComponentState>> _componentStates = new List<StateSet<EntityComponentState>>();
 
 		/// <summary>
 		/// Updates the state of the component by a single step
@@ -43,13 +43,13 @@ namespace Frost.Entities
 		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
 		public void Step (int prev, int next)
 		{
-			for(var i = 0; i < _componentStates.Count; ++i)
+/*			for(var i = 0; i < _componentStates.Count; ++i)
 			{
 				var states = _componentStates[i];
 				var prevState = states[prev];
 				var nextState = states[next];
 				nextState.Step(prevState);
-			}
+			} */
 		}
 	}
 }
