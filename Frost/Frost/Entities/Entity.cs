@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Frost.Logic;
 
 namespace Frost.Entities
@@ -10,7 +11,7 @@ namespace Frost.Entities
 	/// which define characteristics of that entity.
 	/// </summary>
 	/// <seealso cref="EntityManager"/>
-	public abstract class Entity : IStepable
+	public class Entity
 	{
 		private readonly ulong _id;
 
@@ -31,25 +32,16 @@ namespace Frost.Entities
 			_id = id;
 		}
 
-//		private readonly List<StateSet<EntityComponentState>> _componentStates = new List<StateSet<EntityComponentState>>();
+		private readonly List<StateSet<EntityComponentState>> _componentStates = new List<StateSet<EntityComponentState>>();
 
-		/// <summary>
-		/// Updates the state of the component by a single step
-		/// </summary>
-		/// <param name="prev">Index of the previous state that was updated</param>
-		/// <param name="next">Index of the next state that should be updated</param>
-		/// <remarks>The only game state that should be modified during this process is the state indicated by <paramref name="next"/>.
-		/// The state indicated by <paramref name="prev"/> can be used for reference (if needed), but should not be modified.
-		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
-		public void Step (int prev, int next)
+		public void AddComponent<T> (EntityComponent<T> component) where T : EntityComponentState
 		{
-/*			for(var i = 0; i < _componentStates.Count; ++i)
-			{
-				var states = _componentStates[i];
-				var prevState = states[prev];
-				var nextState = states[next];
-				nextState.Step(prevState);
-			} */
+			throw new NotImplementedException();
+		}
+
+		internal StateSet<EntityComponentState> GetComponentStateSet (Type componentType)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

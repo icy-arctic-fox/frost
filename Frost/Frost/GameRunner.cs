@@ -405,7 +405,7 @@ namespace Frost
 				stopwatch.Start();
 
 				// Store the time when this update occurred so that the renderer can interpolate
-				_lastUpdateTime = DateTime.Now;
+				_lastUpdateTime = DateTime.Now; // TODO: Use stopwatch, this allocates memory
 
 				// Allow consecutive updates to occur, but not too many.
 				// This allows the hardware to catch up.
