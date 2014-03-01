@@ -36,6 +36,17 @@ namespace Frost
 		public GameConfiguration Configuration { get; private set; }
 		#endregion
 
+		#region Useful accessors
+
+		/// <summary>
+		/// Current scene being executed
+		/// </summary>
+		public Scene CurrentScene
+		{
+			get { return Runner.Scenes.CurrentScene; }
+		}
+		#endregion
+
 		/// <summary>
 		/// Indicates whether the game has been initialized
 		/// </summary>
