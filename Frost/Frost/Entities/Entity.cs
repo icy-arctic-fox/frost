@@ -27,7 +27,7 @@ namespace Frost.Entities
 		/// Creates a new entity
 		/// </summary>
 		/// <param name="id">Unique identifier returned from <see cref="EntityManager.NextAvailableId"/></param>
-		protected Entity (ulong id)
+		internal Entity (ulong id)
 		{
 			_id = id;
 		}

@@ -12,20 +12,28 @@ namespace Frost.Entities
 		private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
 		private ulong _nextId;
 
+		public Entity CreateEntity ()
+		{
+			lock(_registeredEntities)
+			{
+				var id = getNextAvailableId();
+				var  e = new Entity(id);
+				registerEntity(e);
+				return e;
+			}
+		}
+
 		/// <summary>
 		/// Retrieves the next available ID for an entity
 		/// </summary>
-		public ulong NextAvailableId
+		private ulong getNextAvailableId ()
 		{
-			get
+			lock(_registeredEntities)
 			{
-				lock(_registeredEntities)
-				{
-					while(_registeredEntities.ContainsKey(_nextId))
-						++_nextId;
-					_registeredEntities.Add(_nextId, null); // Reserve the ID by setting the value to null
-					return _nextId;
-				}
+				while(_registeredEntities.ContainsKey(_nextId))
+					++_nextId;
+				_registeredEntities.Add(_nextId, null); // Reserve the ID by setting the value to null
+				return _nextId;
 			}
 		}
 
@@ -35,7 +43,7 @@ namespace Frost.Entities
 		/// <param name="e">Entity to register</param>
 		/// <exception cref="InvalidOperationException">Thrown if another entity with the same <see cref="Entity.Id"/> has already been registered</exception>
 		/// <exception cref="ArgumentException">Thrown if the <see cref="Entity.Id"/> of <paramref name="e"/> has not been previously reserved by getting an ID from <see cref="NextAvailableId"/></exception>
-		public void RegisterEntity (Entity e)
+		private void registerEntity (Entity e)
 		{
 			var id = e.Id;
 			lock(_registeredEntities)
@@ -58,7 +66,8 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="e">Entity to deregister</param>
 		/// <exception cref="InvalidOperationException">Thrown if the <see cref="Entity.Id"/> has been registered under a different <see cref="Entity"/></exception>
-		public void DeregisterEntity (Entity e)
+		/// <remarks>This method is meant to be called from an entity's destructor.</remarks>
+		internal void DeregisterEntity (Entity e)
 		{
 			var id = e.Id;
 			lock(_registeredEntities)
