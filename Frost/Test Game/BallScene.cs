@@ -20,8 +20,6 @@ namespace Test_Game
 		{
 			var texture = new Texture("ball-6x6.png");
 			_ball = new Ball(texture);
-			SetUpdateRoot(_ball);
-			SetRenderRoot(_ball);
 		}
 
 		private class Ball : IStepable, IRenderable

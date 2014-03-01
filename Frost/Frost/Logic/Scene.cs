@@ -1,5 +1,5 @@
-﻿using System;
-using Frost.Display;
+﻿using Frost.Display;
+using Frost.Entities;
 using Frost.Graphics;
 
 namespace Frost.Logic
@@ -15,44 +15,14 @@ namespace Frost.Logic
 		/// <remarks>This property is used instead of reflection because it is be faster.</remarks>
 		public abstract string Name { get; }
 
-		/// <summary>
-		/// Describes a method that updates the state of the game
-		/// </summary>
-		/// <param name="prev">Index of the previous state that was updated</param>
-		/// <param name="next">Index of the next state that should be updated</param>
-		private delegate void UpdateMethod (int prev, int next);
+		private readonly EntityManager _entityManager = new EntityManager();
 
 		/// <summary>
-		/// Describes a method that draws a state to a display
+		/// Provides access to the entities in the scene
 		/// </summary>
-		/// <param name="display">Display to draw the state onto</param>
-		/// <param name="state">Index of the state to draw</param>
-		/// <param name="t">Interpolation value</param>
-		private delegate void DrawMethod (IDisplay display, int state, double t);
-
-		private UpdateMethod _update;
-		private DrawMethod _render;
-
-		/// <summary>
-		/// Sets the root scene object that will be updated every tick
-		/// </summary>
-		/// <param name="updateRoot">Updatable root object</param>
-		protected void SetUpdateRoot (IStepable updateRoot)
+		public EntityManager Entities
 		{
-			if(updateRoot == null)
-				throw new ArgumentNullException("updateRoot", "The root scene update object can't be null.");
-			_update = updateRoot.Step;
-		}
-
-		/// <summary>
-		/// Sets the root scene object that will be rendered every frame
-		/// </summary>
-		/// <param name="renderRoot">Renderable root object</param>
-		protected void SetRenderRoot (IRenderable renderRoot)
-		{
-			if(renderRoot == null)
-				throw new ArgumentNullException("renderRoot", "The root scene render object can't be null.");
-			_render = renderRoot.Draw;
+			get { return _entityManager; }
 		}
 
 		/// <summary>
@@ -65,7 +35,7 @@ namespace Frost.Logic
 		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
 		public virtual void Step (int prev, int next)
 		{
-			_update(prev, next);
+			// TODO: Update all updatable entities
 		}
 
 		/// <summary>
@@ -78,7 +48,7 @@ namespace Frost.Logic
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
 		public virtual void Draw (IDisplay display, int state, double t)
 		{
-			_render(display, state, t);
+			// TODO: Render all drawable entities
 		}
 	}
 }

@@ -21,8 +21,6 @@ namespace Test_Game
 		public TextScene ()
 		{
 			_ts = new TextSprite("Hello!");
-			SetUpdateRoot(_ts);
-			SetRenderRoot(_ts);
 		}
 
 		private class TextSprite : IStepable, IRenderable
