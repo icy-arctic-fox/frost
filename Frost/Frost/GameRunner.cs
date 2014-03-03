@@ -376,7 +376,7 @@ namespace Frost
 				time = MaxUpdateInterval; // Prevent the game from becoming unresponsive
 
 			// Continue performing updates to catch up (if fallen behind)
-			while(nextUpdateTime - time <= 0d && time > 0d)
+			while(nextUpdateTime - time <= 0d && time > 0d) // BUG: When update time exceeds MaxUpdateInterval, this condition is always false (causes game to hang)
 			{// It's time for an update
 				// Schedule the next update
 				nextUpdateTime -= time;
