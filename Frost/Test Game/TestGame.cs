@@ -1,7 +1,6 @@
 ﻿using Frost;
 using Frost.Graphics;
 using Frost.Logic;
-using Frost.Modules.Input;
 
 namespace Test_Game
 {
