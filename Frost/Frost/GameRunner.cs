@@ -216,7 +216,11 @@ namespace Frost
 		/// </summary>
 		private void singleThreadedGameLoop ()
 		{
+			// Indicate that this thread is the main thread
+			Thread.CurrentThread.Name = "Main Thread";
+
 #if DEBUG
+			// Set allowed update and render threads
 			var tid = Thread.CurrentThread.ManagedThreadId;
 			_scenes.UpdateThreadId = tid;
 			_scenes.RenderThreadId = tid;
@@ -231,7 +235,7 @@ namespace Frost
 			renderStopwatch.Start();
 
 			while(_running)
-			{
+			{// Continue execution until told to stop
 				updateTiming(ref updateStopwatch, ref nextUpdateTime);
 				renderTiming(ref renderStopwatch, ref nextRenderTime);
 
@@ -246,6 +250,9 @@ namespace Frost
 		{
 			// Disable rendering on the current thread so that the render thread can do it
 			_display.SetActive(false);
+
+			// Indicate that this thread is the update thread
+			Thread.CurrentThread.Name = "Update Thread";
 
 			// Create and start the render thread
 			var renderThread = new Thread(doRenderLoop) {
