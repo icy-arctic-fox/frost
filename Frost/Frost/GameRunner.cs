@@ -399,7 +399,7 @@ namespace Frost
 				time = MaxUpdateInterval; // Prevent the game from becoming unresponsive
 
 			// Continue performing updates to catch up (if fallen behind)
-			while(nextUpdateTime - time <= 0d && time > 0d) // BUG: When update time exceeds MaxUpdateInterval, this condition is always false (causes game to hang)
+			while(nextUpdateTime - time <= 0d && time > 0d)
 			{// It's time for an update
 				// Schedule the next update
 				nextUpdateTime -= time;
@@ -422,6 +422,8 @@ namespace Frost
 				LastUpdateInterval = time = elapsed - time;
 				nextUpdateTime  -= time;
 				totalUpdateTime += time;
+				if(nextUpdateTime > MaxUpdateInterval)
+					nextUpdateTime = MaxUpdateInterval; // Don't schedule too far in advance or the game will hang
 
 				// Reset the stopwatch, since it isn't accurate over longer periods of time.
 				stopwatch.Reset();
