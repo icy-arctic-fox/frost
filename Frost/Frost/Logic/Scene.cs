@@ -7,8 +7,13 @@ namespace Frost.Logic
 	/// <summary>
 	/// Logically separate section of the game
 	/// </summary>
-	public abstract class Scene : IStepable, IRenderable
+	public abstract partial class Scene : IStepable, IRenderable
 	{
+		/// <summary>
+		/// Manager that owns the scene
+		/// </summary>
+		protected Manager ParentManager { get; private set; }
+
 		/// <summary>
 		/// Visible name of the scene
 		/// </summary>

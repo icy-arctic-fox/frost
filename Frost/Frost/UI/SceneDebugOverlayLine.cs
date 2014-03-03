@@ -5,16 +5,16 @@ using Frost.Utility;
 namespace Frost.UI
 {
 	/// <summary>
-	/// Debug overlay line that displays scene information from a <see cref="SceneManager"/>
+	/// Debug overlay line that displays scene information from a <see cref="Scene.Manager"/>
 	/// </summary>
 	public class SceneDebugOverlayLine : IDebugOverlayLine
 	{
-		private readonly SceneManager _scenes;
+		private readonly Scene.Manager _scenes;
 
 		/// <summary>
 		/// Creates a new scene debug overlay line
 		/// </summary>
-		/// <param name="runner">Game runner to get the <see cref="SceneManager"/> from</param>
+		/// <param name="runner">Game runner to get the <see cref="Scene.Manager"/> from</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="runner"/> is null</exception>
 		public SceneDebugOverlayLine (GameRunner runner)
 		{
