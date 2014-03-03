@@ -134,6 +134,16 @@ namespace Frost
 			get { return _running; }
 		}
 
+		private readonly Stopwatch _gameWatch = new Stopwatch();
+
+		/// <summary>
+		/// Length of time that has elapsed since the game started
+		/// </summary>
+		public TimeSpan GameTime
+		{
+			get { return _gameWatch.Elapsed; }
+		}
+
 		/// <summary>
 		/// Indicates if the update and render threads should stay in sync with each other.
 		/// This option is only valid and works where multi-threaded is enabled and the update and render rates should be the same.
@@ -191,10 +201,14 @@ namespace Frost
 				_scenes.AddOverlay(_debugOverlay);
 
 			_running = true;
+			_gameWatch.Start();
+
 			if(multiThreaded)
 				multiThreadedGameLoop();
 			else
 				singleThreadedGameLoop();
+
+			_gameWatch.Stop();
 		}
 
 		/// <summary>
