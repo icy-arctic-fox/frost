@@ -55,7 +55,7 @@ namespace Frost.Logic
 				get
 				{
 					lock(_locker)
-						return (_sceneStack.Count <= 0) ? null : _curScene.Manager;
+						return (_sceneStack.Count <= 0) ? null : _curScene.StateManager;
 				}
 			}
 
@@ -102,8 +102,8 @@ namespace Frost.Logic
 				scene.ParentManager = this;
 				var entry = new SceneStackEntry(scene);
 #if DEBUG
-				entry.Manager.UpdateThreadId = _updateThreadId;
-				entry.Manager.RenderThreadId = _renderThreadId;
+				entry.StateManager.UpdateThreadId = _updateThreadId;
+				entry.StateManager.RenderThreadId = _renderThreadId;
 #endif
 
 				lock(_locker)
@@ -145,7 +145,7 @@ namespace Frost.Logic
 				set
 				{
 					foreach(var entry in _sceneStack)
-						entry.Manager.UpdateThreadId = value;
+						entry.StateManager.UpdateThreadId = value;
 					_updateThreadId = value;
 				}
 			}
@@ -183,7 +183,7 @@ namespace Frost.Logic
 				set
 				{
 					foreach(var entry in _sceneStack)
-						entry.Manager.RenderThreadId = value;
+						entry.StateManager.RenderThreadId = value;
 					_renderThreadId = value;
 				}
 			}
@@ -243,7 +243,7 @@ namespace Frost.Logic
 				/// <summary>
 				/// Manager that tracks the state to update and render
 				/// </summary>
-				public readonly StateManager Manager;
+				public readonly StateManager StateManager;
 
 				/// <summary>
 				/// Creates a new stack entry
@@ -255,8 +255,8 @@ namespace Frost.Logic
 					if(scene == null)
 						throw new ArgumentNullException("scene");
 
-					Scene   = scene;
-					Manager = new StateManager();
+					Scene        = scene;
+					StateManager = new StateManager();
 				}
 			}
 		}
