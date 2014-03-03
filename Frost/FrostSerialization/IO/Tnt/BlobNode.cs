@@ -25,15 +25,14 @@ namespace Frost.IO.Tnt
 		/// <summary>
 		/// Data stored in the node
 		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown when attempting to set the data to null.
-		/// The byte array cannot be null.</exception>
+		/// <exception cref="ArgumentNullException">Can't set the byte array to null.</exception>
 		public byte[] Data
 		{
 			get { return _data; }
 			set
 			{
 				if(value == null)
-					throw new ArgumentNullException("value", "The data can't be set to a null byte array.");
+					throw new ArgumentNullException("value");
 				_data = value;
 			}
 		}

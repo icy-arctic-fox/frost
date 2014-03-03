@@ -64,13 +64,13 @@ namespace Frost.Logic
 			/// </summary>
 			/// <param name="initialScene">Initial scene</param>
 			/// <param name="display">Display to render scenes to</param>
-			/// <exception cref="ArgumentNullException">Thrown if <paramref name="initialScene"/> or <paramref name="display"/> are null.</exception>
+			/// <exception cref="ArgumentNullException">The initial scene (<paramref name="initialScene"/>) and <paramref name="display"/> display to render can't be null.</exception>
 			public Manager (Scene initialScene, IDisplay display)
 			{
 				if(initialScene == null)
-					throw new ArgumentNullException("initialScene", "The initial scene can't be null.");
+					throw new ArgumentNullException("initialScene");
 				if(display == null)
-					throw new ArgumentNullException("display", "The display to render to can't be null.");
+					throw new ArgumentNullException("display");
 
 				RenderDuplicateFrames = true;
 				_display = display;
@@ -93,10 +93,11 @@ namespace Frost.Logic
 			/// Enters a new scene
 			/// </summary>
 			/// <param name="scene">Scene to enter</param>
+			/// <exception cref="ArgumentNullException">A null scene can't be entered.</exception>
 			public void EnterScene (Scene scene)
 			{
 				if(scene == null)
-					throw new ArgumentNullException("scene", "The scene to enter can't be null.");
+					throw new ArgumentNullException("scene");
 
 				scene.ParentManager = this;
 				var entry = new SceneStackEntry(scene);
@@ -248,10 +249,11 @@ namespace Frost.Logic
 				/// Creates a new stack entry
 				/// </summary>
 				/// <param name="scene">Scene to update and render</param>
+				/// <exception cref="ArgumentNullException">The stored scene can't be null.</exception>
 				public SceneStackEntry (Scene scene)
 				{
 					if(scene == null)
-						throw new ArgumentNullException("scene", "The scene to execute can't be null.");
+						throw new ArgumentNullException("scene");
 
 					Scene   = scene;
 					Manager = new StateManager();

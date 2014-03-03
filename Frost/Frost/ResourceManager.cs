@@ -46,14 +46,14 @@ namespace Frost
 		/// <summary>
 		/// Adds all resource package files contained in a directory
 		/// </summary>
-		/// <param name="path">Path to the directory containing the resources</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="path"/> is null</exception>
+		/// <param name="path">Fully qualified path to the directory containing the resources</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="path"/> to the directory can't be null.</exception>
 		/// <exception cref="ApplicationException">Thrown if a resource was found with an ID that conflicts with an existing resource</exception>
 		/// <exception cref="DirectoryNotFoundException">Thrown if the path to the resource directory doesn't exist</exception>
 		public void AddResourceDirectory (string path)
 		{
 			if(path == null)
-				throw new ArgumentNullException("path", "The path to the resource directory can't be null.");
+				throw new ArgumentNullException("path");
 
 			Exception caught = null;
 			foreach(var filepath in Directory.EnumerateFiles(path, "*.frp", SearchOption.AllDirectories))
@@ -75,12 +75,12 @@ namespace Frost
 		/// Adds a resource package that can be referenced to retrieve resources
 		/// </summary>
 		/// <param name="filepath">Path to the resource package file</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="filepath"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The fully qualified file path (<paramref name="filepath"/>) can't be null.</exception>
 		/// <exception cref="ApplicationException">Thrown if a resource was found with an ID that conflicts with an existing resource</exception>
 		public void AddResourcePackage (string filepath)
 		{
 			if(filepath == null)
-				throw new ArgumentNullException("filepath", "The path to the resource package file can't be null.");
+				throw new ArgumentNullException("filepath");
 
 			var package = new ResourcePackageReader(filepath);
 			AddResourcePackage(package);
@@ -90,12 +90,12 @@ namespace Frost
 		/// Adds a resource package that can be referenced to retrieve resources
 		/// </summary>
 		/// <param name="package">Resource package</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="package"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The new resource <paramref name="package"/> can't be null.</exception>
 		/// <exception cref="ApplicationException">Thrown if a resource was found with an ID that conflicts with an existing resource</exception>
 		public void AddResourcePackage (ResourcePackageReader package)
 		{
 			if(package == null)
-				throw new ArgumentNullException("package", "The package to pull resources from can't be null.");
+				throw new ArgumentNullException("package");
 
 			lock(_locker)
 				if(!_readers.Contains(package))
@@ -142,11 +142,11 @@ namespace Frost
 		/// <param name="allowMod">When true, allows overwritten (modded) resources to be retrieved</param>
 		/// <returns>Raw data for the resource or null if the resource doesn't exist</returns>
 		/// <remarks>This method will not cache resource data.</remarks>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource to retrieve can't be null.</exception>
 		public byte[] GetResource (string name, bool allowMod = true)
 		{
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+				throw new ArgumentNullException("name");
 
 			lock(_locker)
 			{
@@ -180,13 +180,13 @@ namespace Frost
 		/// <remarks>This method will cache the transformed resource before it is returned.
 		/// Caution, a modified resource that has been cached will stay modified the next time it is referenced.
 		/// To prevent this from happening, treat resources as read-only.</remarks>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="transform"/> are null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource to retrieve and the <paramref name="transform"/> method can't be null.</exception>
 		public TResource GetResource<TResource> (string name, ResourceTranformation<TResource> transform, bool allowMod = true) where TResource : class
 		{
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+				throw new ArgumentNullException("name");
 			if(transform == null)
-				throw new ArgumentNullException("transform", "The transformation method can't be null.");
+				throw new ArgumentNullException("transform");
 
 			lock(_locker)
 			{
@@ -236,13 +236,13 @@ namespace Frost
 		/// <remarks>This method will cache the transformed resource before it is returned.
 		/// Caution, a modified resource that has been cached will stay modified the next time it is referenced.
 		/// To prevent this from happening, treat resources as read-only.</remarks>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="transform"/> are null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource to retrieve and the <paramref name="transform"/> method can't be null.</exception>
 		public TResource GetResource<TResource> (string name, ResourceStreamTranformation<TResource> transform, bool allowMod = true) where TResource : class
 		{
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+				throw new ArgumentNullException("name");
 			if(transform == null)
-				throw new ArgumentNullException("transform", "The transformation method can't be null.");
+				throw new ArgumentNullException("transform");
 
 			lock(_locker)
 			{

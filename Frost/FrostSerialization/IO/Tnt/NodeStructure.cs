@@ -63,7 +63,7 @@ namespace Frost.IO.Tnt
 		public static void ExpectNodeType (this Node node, NodeType type)
 		{
 			if(node == null)
-				throw new ArgumentNullException("node", "The node can't be null.");
+				throw new ArgumentNullException("node");
 			if(node.Type != type)
 				throw new InvalidCastException("Expected node type " + type);
 		}
@@ -393,9 +393,9 @@ namespace Frost.IO.Tnt
 		public static void ExpectNodeType (this ComplexNode node, string name, NodeType type)
 		{
 			if(node == null)
-				throw new ArgumentNullException("node", "The node can't be null.");
+				throw new ArgumentNullException("node");
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the child node can't be null.");
+				throw new ArgumentNullException("name");
 			Node child;
 			if(!node.TryGetValue(name, out child))
 				throw new FormatException("The complex node does not contain a child node by the name of '" + name + "'");
@@ -416,9 +416,9 @@ namespace Frost.IO.Tnt
 		public static TChild ExpectNodeType<TChild> (this ComplexNode node, string name) where TChild : Node
 		{
 			if(node == null)
-				throw new ArgumentNullException("node", "The node can't be null.");
+				throw new ArgumentNullException("node");
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the child node can't be null.");
+				throw new ArgumentNullException("name");
 			Node child;
 			if(!node.TryGetValue(name, out child))
 				throw new FormatException("The complex node does not contain a child node by the name of '" + name + "'");

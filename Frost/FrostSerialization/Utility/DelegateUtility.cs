@@ -15,6 +15,7 @@ namespace Frost.Utility
 		/// <param name="ev">Event that occurred</param>
 		/// <param name="sender">Object that the event occurred in (this)</param>
 		/// <param name="args">Arguments related to the event</param>
+		/// <exception cref="ArgumentNullException">The arguments (<paramref name="args"/>) passed to the event subscriber can't be null.</exception>
 		/// <remarks>If <paramref name="args"/> is <see cref="ICancellable"/> (or <see cref="CancellableEventArgs"/>),
 		/// subscribers will stop being called as soon as the event is cancelled.</remarks>
 		/// <seealso cref="ICancellable"/>
@@ -23,7 +24,7 @@ namespace Frost.Utility
 		{
 #if DEBUG
 			if(args == null)
-				throw new ArgumentNullException("args", "The arguments passed to an event can't be null.");
+				throw new ArgumentNullException("args");
 #endif
 
 			if(ev != null)
@@ -55,6 +56,7 @@ namespace Frost.Utility
 		/// <param name="ev">Event that occurred</param>
 		/// <param name="sender">Object that the event occurred in (this)</param>
 		/// <param name="args">Arguments related to the event</param>
+		/// <exception cref="ArgumentNullException">The arguments (<paramref name="args"/>) passed to the event subscriber can't be null.</exception>
 		/// <remarks>If <paramref name="args"/> is <see cref="ICancellable"/> (or <see cref="CancellableEventArgs"/>),
 		/// subscribers will stop being called as soon as the event is cancelled.</remarks>
 		/// <seealso cref="ICancellable"/>
@@ -63,7 +65,7 @@ namespace Frost.Utility
 		{
 #if DEBUG
 			if(args == null)
-				throw new ArgumentNullException("args", "The arguments passed to an event can't be null.");
+				throw new ArgumentNullException("args");
 #endif
 
 			if(ev != null)
@@ -97,13 +99,13 @@ namespace Frost.Utility
 		/// </summary>
 		/// <param name="d">Delegate to call</param>
 		/// <param name="args">Arguments to pass to the delegate</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is null - cannot call a null delegate</exception>
+		/// <exception cref="ArgumentNullException">Cannot call a null delegate <paramref name="d"/>.</exception>
 		/// <remarks>This method handles safely calling a delegate that might want to be invoked on another thread, such as a GUI.</remarks>
 		public static void CallDelegate (this Delegate d, params object[] args)
 		{
 #if DEBUG
 			if(d == null)
-				throw new ArgumentNullException("d", "Cannot call a null delegate.");
+				throw new ArgumentNullException("d");
 #endif
 
 			var sync = d.Target as ISynchronizeInvoke;

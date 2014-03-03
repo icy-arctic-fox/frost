@@ -74,10 +74,11 @@ namespace Frost.TntEditor
 		/// </summary>
 		/// <param name="node">Node to refer to</param>
 		/// <param name="parent">Parent node (if any)</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="node"/> can't be null.</exception>
 		public NodeInfo (Node node, NodeInfo parent = null)
 		{
 			if(node == null)
-				throw new ArgumentNullException("node", "The node to refer to can't be null.");
+				throw new ArgumentNullException("node");
 			_node   = node;
 			_parent = parent;
 		}

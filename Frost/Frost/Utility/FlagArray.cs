@@ -85,13 +85,13 @@ namespace Frost.Utility
 		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the flags copied from the collection.
 		/// The <see cref="T:System.Array"/> must have zero-based indexing.</param>
 		/// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins</param>
-		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="array"/> is null</exception>
-		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="arrayIndex"/> is less than 0</exception>
-		/// <exception cref="T:System.ArgumentException">Thrown if the number of flags in the source list is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="array"/> to copy to can't be null.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="arrayIndex"/> is less than 0</exception>
+		/// <exception cref="ArgumentException">Thrown if the number of flags in the source list is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
 		public void CopyTo (bool[] array, int arrayIndex)
 		{
 			if(array == null)
-				throw new ArgumentNullException("array", "The array to copy to can't be null.");
+				throw new ArgumentNullException("array");
 			if(arrayIndex < 0)
 				throw new ArgumentOutOfRangeException("arrayIndex", "The starting index can't be less than 0.");
 			if(_count > array.Length - arrayIndex)

@@ -15,11 +15,11 @@ namespace Frost.UI
 		/// Creates a new scene debug overlay line
 		/// </summary>
 		/// <param name="runner">Game runner to get the <see cref="Scene.Manager"/> from</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="runner"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The game <paramref name="runner"/> can't be null.</exception>
 		public SceneDebugOverlayLine (GameRunner runner)
 		{
 			if(runner == null)
-				throw new ArgumentNullException("runner", "The game runner can't be null.");
+				throw new ArgumentNullException("runner");
 
 			_scenes = runner.Scenes;
 			runner.Disposing += _runner_Disposing;

@@ -48,13 +48,12 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="br">Reader used to pull data from the stream</param>
 		/// <returns>A node read from the stream or null if an "End" node was read</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null.
-		/// The reader used to pull data from the stream can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The reader (<paramref name="br"/>) used to pull data from the stream can't be null.</exception>
 		/// <exception cref="InvalidDataException">Thrown if the data in the stream is in an unexpected format</exception>
 		internal static Node ReadFromStream (BinaryReader br)
 		{
 			if(br == null)
-				throw new ArgumentNullException("br", "The reader used to pull data from the stream can't be null.");
+				throw new ArgumentNullException("br");
 
 			var type = readHeader(br);
 			if(type == NodeType.End)
@@ -147,12 +146,11 @@ namespace Frost.IO.Tnt
 		/// Writes the node (header and payload) to a stream
 		/// </summary>
 		/// <param name="bw">Writer used to put data on the stream</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="bw"/> is null.
-		/// The writer used to put data on the stream can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The writer (<paramref name="bw"/>) used to put data on the stream can't be null.</exception>
 		internal void WriteToStream (BinaryWriter bw)
 		{
 			if(bw == null)
-				throw new ArgumentNullException("bw", "The writer used to put data on the stream can't be null.");
+				throw new ArgumentNullException("bw");
 
 			writeHeader(bw);
 			WritePayload(bw);

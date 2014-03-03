@@ -194,11 +194,11 @@ namespace Frost.Utility
 		/// <param name="key">Key that represents the cached item</param>
 		/// <param name="missFunc">Function that will get the item if it isn't in the cache</param>
 		/// <returns>Value contained in the cache</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="missFunc"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The cache miss function (<paramref name="missFunc"/>) can't be null.</exception>
 		public TValue GetItem (TKey key, CacheMiss missFunc)
 		{
 			if(null == missFunc)
-				throw new ArgumentNullException("missFunc", "The cache miss function can't be null.");
+				throw new ArgumentNullException("missFunc");
 
 			lock(_cacheEntries)
 			{

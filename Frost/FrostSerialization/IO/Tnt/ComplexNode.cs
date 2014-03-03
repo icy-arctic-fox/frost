@@ -56,13 +56,12 @@ namespace Frost.IO.Tnt
 		/// Creates a new complex node with initial contents
 		/// </summary>
 		/// <param name="nodes">Initial nodes to add</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="nodes"/> is null.
-		/// The initial collection of nodes can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The initial collection of <paramref name="nodes"/> can't be null.</exception>
 		/// <exception cref="ArgumentException">Thrown if one of the nodes in <paramref name="nodes"/> is null or has an invalid name</exception>
 		public ComplexNode (IEnumerable<KeyValuePair<string, Node>> nodes)
 		{
 			if(nodes == null)
-				throw new ArgumentNullException("nodes", "The collection of initial nodes can't be null.");
+				throw new ArgumentNullException("nodes");
 			foreach(var entry in nodes)
 			{
 				var name = entry.Key;
@@ -177,7 +176,7 @@ namespace Frost.IO.Tnt
 		/// <returns>True if <paramref name="item"/> is found in the collection; otherwise, false</returns>
 		/// <param name="item">The node to locate in the collection</param>
 		/// <exception cref="ArgumentException">Thrown if the name of the node is null</exception>
-		/// <exception cref="ArgumentNullException">Thrown if the node to add is null</exception>
+		/// <exception cref="ArgumentNullException">The node (contained in the <see cref="KeyValuePair.Value"/> of <paramref name="item"/>) to look for can't be null</exception>
 		public bool Contains (KeyValuePair<string, Node> item)
 		{
 			var name = item.Key;
@@ -185,7 +184,7 @@ namespace Frost.IO.Tnt
 			if(name == null)
 				throw new ArgumentException("The name of the node can't be null.", "item");
 			if(node == null)
-				throw new ArgumentNullException("item", "The node to add can't be null.");
+				throw new ArgumentNullException("item");
 			return _nodes.ContainsKey(name) && _nodes[name] == node;
 		}
 
@@ -195,13 +194,13 @@ namespace Frost.IO.Tnt
 		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the nodes copied from the collection.
 		/// The <see cref="T:System.Array"/> must have zero-based indexing.</param>
 		/// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins</param>
-		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="array"/> is null</exception>
-		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="arrayIndex"/> is less than 0</exception>
-		/// <exception cref="T:System.ArgumentException">The number of nodes in the source collection is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="array"/> to copy to can't be null.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="arrayIndex"/> is less than 0</exception>
+		/// <exception cref="ArgumentException">The number of nodes in the source collection is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/></exception>
 		public void CopyTo (KeyValuePair<string, Node>[] array, int arrayIndex)
 		{
 			if(array == null)
-				throw new ArgumentNullException("array", "The array to copy nodes to can't be null.");
+				throw new ArgumentNullException("array");
 			if(arrayIndex < 0)
 				throw new ArgumentOutOfRangeException("arrayIndex", "The index to start at in the array can't be less than 0.");
 			if(array.Length - arrayIndex < Count)
@@ -218,6 +217,7 @@ namespace Frost.IO.Tnt
 		/// <returns>True if <paramref name="item"/> was successfully removed from the collection; otherwise, false.
 		/// This method also returns false if <paramref name="item"/> is not found in the original collection.</returns>
 		/// <param name="item">The node to remove from the collection</param>
+		/// <exception cref="ArgumentNullException">The node (item from <see cref="KeyValuePair.Value"/> in <paramref name="item"/>) can't be null.</exception>
 		public bool Remove (KeyValuePair<string, Node> item)
 		{
 			var name = item.Key;
@@ -225,7 +225,7 @@ namespace Frost.IO.Tnt
 			if(name == null)
 				throw new ArgumentException("The name of the node can't be null.", "item");
 			if(node == null)
-				throw new ArgumentNullException("item", "The node to remove can't be null.");
+				throw new ArgumentNullException("item");
 			if(_nodes.ContainsKey(name) && node == _nodes[name])
 				return _nodes.Remove(name);
 			return false;
@@ -237,10 +237,11 @@ namespace Frost.IO.Tnt
 		/// <returns>True if <paramref name="item"/> was successfully removed from the collection; otherwise, false.
 		/// This method also returns false if <paramref name="item"/> is not found in the original collection.</returns>
 		/// <param name="item">The node to remove from the collection</param>
+		/// <exception cref="ArgumentNullException">The node (<paramref name="item"/>) can't be null.</exception>
 		public bool Remove (Node item)
 		{
 			if(item == null)
-				throw new ArgumentNullException("item", "The node to remove can't be null.");
+				throw new ArgumentNullException("item");
 			var name = (from entry in _nodes where entry.Value == item select entry.Key).FirstOrDefault();
 			if(name != null)
 			{// Found the node
@@ -285,14 +286,14 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="key">The name to use for the node to add</param>
 		/// <param name="value">The node to add</param>
-		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="value"/> is null.</exception>
-		/// <exception cref="T:System.ArgumentException">A node with the same name already exists in the collection</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="key"/> and node (<paramref name="value"/>) can't be null.</exception>
+		/// <exception cref="ArgumentException">A node with the same name already exists in the collection</exception>
 		public void Add (string key, Node value)
 		{
 			if(key == null)
 				throw new ArgumentException("The name of the node can't be null.", "key");
 			if(value == null)
-				throw new ArgumentNullException("value", "The node to add can't be null.");
+				throw new ArgumentNullException("value");
 			_nodes.Add(key, value);
 		}
 
@@ -327,21 +328,21 @@ namespace Frost.IO.Tnt
 		/// Gets or sets the node with the specified name
 		/// </summary>
 		/// <param name="key">The name of the node to get or set</param>
-		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> is null.</exception>
-		/// <exception cref="T:System.Collections.Generic.KeyNotFoundException">The property is retrieved and <paramref name="key"/> is not found.</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="key"/> can't be null.</exception>
+		/// <exception cref="KeyNotFoundException">The property is retrieved and <paramref name="key"/> is not found.</exception>
 		/// <exception cref="ArgumentException">Thrown when attempting to set a node to null</exception>
 		public Node this[string key]
 		{
 			get
 			{
 				if(key == null)
-					throw new ArgumentNullException("key", "The name of the node can't be null.");
+					throw new ArgumentNullException("key");
 				return key.Contains(TraversalPathSeperator) ? traverseGet(key) : _nodes[key];
 			}
 			set
 			{
 				if(key == null)
-					throw new ArgumentNullException("key", "The name of the node can't be null.");
+					throw new ArgumentNullException("key");
 				if(key.Contains(TraversalPathSeperator))
 					traverseSet(key, value);
 				else

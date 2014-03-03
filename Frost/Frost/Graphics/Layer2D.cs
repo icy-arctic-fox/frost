@@ -51,11 +51,12 @@ namespace Frost.Graphics
 		/// The <see cref="Object2D"/> will be placed on top of all existing objects.
 		/// </summary>
 		/// <param name="item">The object to add to the layer</param>
+		/// <exception cref="ArgumentNullException">The object to add to the layer can't be null.</exception>
 		public void Add (Object2D item)
 		{
 #if DEBUG
 			if(item == null)
-				throw new ArgumentNullException("item", "The object can't be null.");
+				throw new ArgumentNullException("item");
 #endif
 			_objects.Add(item);
 		}

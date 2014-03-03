@@ -79,11 +79,11 @@ namespace Frost.IO.Resources
 		/// </summary>
 		/// <param name="name">Name of the resource</param>
 		/// <returns>True if the resource exists or false if it doesn't</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource can't be null.</exception>
 		public bool ContainsResource (string name)
 		{
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource to check for can't be null.");
+				throw new ArgumentNullException("name");
 
 			lock(Locker)
 				return _entries.ContainsKey(name);
@@ -104,12 +104,12 @@ namespace Frost.IO.Resources
 		/// Adds information about an entry in the package
 		/// </summary>
 		/// <param name="entry">Resource information</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="entry"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The new <paramref name="entry"/> can't be null.</exception>
 		/// <exception cref="ArgumentException">Thrown if an entry with the same name or ID already exists</exception>
 		protected void AddResource (ResourcePackageEntry entry)
 		{
 			if(entry == null)
-				throw new ArgumentNullException("entry", "The new resource entry can't be null.");
+				throw new ArgumentNullException("entry");
 
 			lock(Locker)
 			{
@@ -132,11 +132,11 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource to retrieve information for</param>
 		/// <param name="entry">Information about the entry</param>
 		/// <returns>True if the resource exists</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource can't be null.</exception>
 		public bool TryGetResourceInfo (string name, out ResourcePackageEntry entry)
 		{
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource to retrieve for can't be null.");
+				throw new ArgumentNullException("name");
 
 			lock(Locker)
 				return _entries.TryGetValue(name, out entry);

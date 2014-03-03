@@ -15,6 +15,7 @@ namespace Frost.Graphics
 		/// <summary>
 		/// Underlying SFML texture
 		/// </summary>
+		/// <exception cref="ArgumentNullException">The internal texture can't be set to null.</exception>
 		internal T InternalTexture
 		{
 			get { return _texture; }
@@ -22,7 +23,7 @@ namespace Frost.Graphics
 			{
 #if DEBUG
 				if(value == null)
-					throw new ArgumentNullException("value", "The new internal texture can't be null.");
+					throw new ArgumentNullException("value");
 #endif
 				_texture = value;
 			}
@@ -32,11 +33,11 @@ namespace Frost.Graphics
 		/// Creates a texture from an existing SFML texture
 		/// </summary>
 		/// <param name="texture">SFML texture</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="texture"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The internal <paramref name="texture"/> can't be null.</exception>
 		internal Texture (T texture)
 		{
 			if(texture == null)
-				throw new ArgumentNullException("texture", "The internal texture can't be null.");
+				throw new ArgumentNullException("texture");
 			_texture = texture;
 		}
 

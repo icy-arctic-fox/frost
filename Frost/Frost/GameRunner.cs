@@ -62,10 +62,11 @@ namespace Frost
 		/// </summary>
 		/// <param name="display">Display to render to</param>
 		/// <param name="initialScene">Initial scene to process</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="display"/> to render to can't be null.</exception>
 		public GameRunner (IDisplay display, Scene initialScene)
 		{
 			if(display == null)
-				throw new ArgumentNullException("display", "The display to render to can't be null.");
+				throw new ArgumentNullException("display");
 
 			// Try to load the debug overlay font
 			Graphics.Text.Font font;
@@ -110,10 +111,11 @@ namespace Frost
 		/// Adds a module to the game which is processed each logic update
 		/// </summary>
 		/// <param name="module">Module to add</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="module"/> can't be null.</exception>
 		internal void AddModule (IModule module)
 		{
 			if(module == null)
-				throw new ArgumentNullException("module", "The module to add for processing can't be null.");
+				throw new ArgumentNullException("module");
 			_moduleUpdates.Add(module.Update);
 		}
 		#endregion

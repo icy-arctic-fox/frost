@@ -24,11 +24,11 @@ namespace Frost.Scripting.Compiler
 		/// Creates a new token lexer
 		/// </summary>
 		/// <param name="s">Stream to read characters from</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="s"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The stream <paramref name="s"/> used to read characters from can't be null.</exception>
 		public Lexer (Stream s)
 		{
 			if(s == null)
-				throw new ArgumentNullException("s", "The stream to read characters from can't be null.");
+				throw new ArgumentNullException("s");
 
 			_pushback = new PushbackStream(s);
 			_br       = new BinaryReader(_pushback);

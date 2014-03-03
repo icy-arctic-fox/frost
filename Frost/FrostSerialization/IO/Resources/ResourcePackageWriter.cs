@@ -128,15 +128,15 @@ namespace Frost.IO.Resources
 		/// <param name="data">Data contained in the resource</param>
 		/// <param name="encrypt">Flag indicating whether the resource should be encrypted</param>
 		/// <exception cref="ObjectDisposedException">Thrown if the package writer has been disposed</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="data"/> are null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource and its <paramref name="data"/> can't be null.</exception>
 		/// <exception cref="ArgumentException">Thrown if a resource by the <paramref name="name"/> or <paramref name="id"/> has already been added</exception>
 		public void Add (Guid id, string name, byte[] data, bool encrypt = false)
 		{
 			EnsureUndisposed();
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+				throw new ArgumentNullException("name");
 			if(data == null)
-				throw new ArgumentNullException("data", "The raw data for the resource can't be null.");
+				throw new ArgumentNullException("data");
 
 			string secret;
 			var packedData = packData(data, encrypt, out secret);

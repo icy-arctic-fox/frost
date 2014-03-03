@@ -18,11 +18,11 @@ namespace Frost.IO
 		/// Creates a new pushback stream decorator
 		/// </summary>
 		/// <param name="s">Underlying stream</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="s"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The underlying stream <paramref name="s"/> can't be null.</exception>
 		public PushbackStream (Stream s)
 		{
 			if(s == null)
-				throw new ArgumentNullException("s", "The underlying stream can't be null.");
+				throw new ArgumentNullException("s");
 			_s = s;
 		}
 
@@ -72,16 +72,16 @@ namespace Frost.IO
 		/// When this method returns, the buffer contains the specified byte array with the values between <paramref name="offset"/> and (<paramref name="offset"/> + <paramref name="count"/> - 1) replaced by the bytes read from the current source.</param>
 		/// <param name="offset">The zero-based byte offset in <paramref name="buffer"/> at which to begin storing the data read from the current stream</param>
 		/// <param name="count">The maximum number of bytes to be read from the current stream</param>
-		/// <exception cref="T:System.ArgumentException">The sum of <paramref name="offset"/> and <paramref name="count"/> is larger than the buffer length</exception>
-		/// <exception cref="T:System.ArgumentNullException"><paramref name="buffer"/> is null</exception>
-		/// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> or <paramref name="count"/> is negative</exception>
-		/// <exception cref="T:System.IO.IOException">An I/O error occurs</exception>
-		/// <exception cref="T:System.NotSupportedException">The stream does not support reading</exception>
-		/// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed</exception>
+		/// <exception cref="ArgumentException">The sum of <paramref name="offset"/> and <paramref name="count"/> is larger than the buffer length</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="buffer"/> to read from can't be null.</exception>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="offset"/> or <paramref name="count"/> is negative</exception>
+		/// <exception cref="IOException">An I/O error occurs</exception>
+		/// <exception cref="NotSupportedException">The stream does not support reading</exception>
+		/// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
 		public override int Read (byte[] buffer, int offset, int count)
 		{
 			if(buffer == null)
-				throw new ArgumentNullException("buffer", "The buffer to read into can't be null.");
+				throw new ArgumentNullException("buffer");
 			if(offset < 0)
 				throw new ArgumentOutOfRangeException("offset", "The starting offset into the buffer can't be less than zero.");
 			if(count < 0)

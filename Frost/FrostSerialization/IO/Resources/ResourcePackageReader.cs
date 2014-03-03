@@ -173,12 +173,12 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource to retrieve</param>
 		/// <returns>The data for the resource or null if no resource by the name <paramref name="name"/> exists</returns>
 		/// <exception cref="ObjectDisposedException">Thrown if the package reader has been disposed</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource can't be null.</exception>
 		public byte[] GetResource (string name)
 		{
 			EnsureUndisposed();
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
+				throw new ArgumentNullException("name");
 
 			ResourcePackageEntry entry;
 			lock(Locker)
@@ -215,12 +215,12 @@ namespace Frost.IO.Resources
 		/// <param name="name">Name of the resource to retrieve</param>
 		/// <returns>A stream that can be used to pull resource data or null if the resource doesn't exist</returns>
 		/// <exception cref="ObjectDisposedException">Thrown if the package reader has been disposed</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource can't be null.</exception>
 		public Stream GetResourceStream (string name)
 		{
 			EnsureUndisposed();
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource to retrieve can't be null.");
+				throw new ArgumentNullException("name");
 
 			ResourcePackageEntry entry;
 			lock(Locker)

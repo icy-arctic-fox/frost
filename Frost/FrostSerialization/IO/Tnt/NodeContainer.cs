@@ -64,12 +64,11 @@ namespace Frost.IO.Tnt
 		/// Creates a new node container
 		/// </summary>
 		/// <param name="root">Root node</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="root"/> is null.
-		/// The root node of the container can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="root"/> node of the container can't be null.</exception>
 		public NodeContainer (Node root)
 		{
 			if(root == null)
-				throw new ArgumentNullException("root", "The root node of the container can't be null.");
+				throw new ArgumentNullException("root");
 			_root = root;
 			_ver  = TypedNodeVersion;
 		}
@@ -86,13 +85,12 @@ namespace Frost.IO.Tnt
 		/// Creates a node container by extracting serialized data
 		/// </summary>
 		/// <param name="data">Marshaled data of the node container (as created by <see cref="Serialize"/>)</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is null.
-		/// The marshaled data can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The marshaled <paramref name="data"/> can't be null.</exception>
 		/// <exception cref="FormatException">Thrown if <paramref name="data"/> contains an unrecognized typed-node version</exception>
 		public NodeContainer (byte[] data)
 		{
 			if(data == null)
-				throw new ArgumentNullException("data", "The marshaled data can't be null.");
+				throw new ArgumentNullException("data");
 
 			using(var ms = new MemoryStream(data))
 			using(var br = new EndianBinaryReader(ms, Endian.Big))
@@ -123,12 +121,11 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="s">Stream to pull data from</param>
 		/// <returns>A constructed node container</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="s"/> is null.
-		/// The stream to pull data from can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The stream (<paramref name="s"/>) used to pull data from can't be null.</exception>
 		public static NodeContainer ReadFromStream (Stream s)
 		{
 			if(s == null)
-				throw new ArgumentNullException("s", "The stream pull node data from can't be null.");
+				throw new ArgumentNullException("s");
 			using(var br = new EndianBinaryReader(s, Endian.Big))
 				return ReadFromStream(br);
 		}
@@ -138,14 +135,13 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="br">Reader used to pull data from the stream</param>
 		/// <returns>A constructed node container</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="br"/> is null.
-		/// The reader used to pull data from the stream can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The reader (<paramref name="br"/>) used to pull data from the stream can't be null.</exception>
 		/// <exception cref="FormatException">Thrown if the data read from the stream uses an unrecognized version</exception>
 		/// <exception cref="InvalidDataException">Thrown if the data read from the stream is in an unrecognized format</exception>
 		public static NodeContainer ReadFromStream (BinaryReader br)
 		{
 			if(br == null)
-				throw new ArgumentNullException("br", "The reader used to pull data from the stream can't be null.");
+				throw new ArgumentNullException("br");
 
 			var ver = br.ReadInt32();
 			if(ver != TypedNodeVersion)
@@ -158,12 +154,11 @@ namespace Frost.IO.Tnt
 		/// Writes the contents of the container to a stream
 		/// </summary>
 		/// <param name="s">Stream to write data to</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="s"/> is null.
-		/// The stream to write data to can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The stream (<paramref name="s"/>) used to write data to can't be null.</exception>
 		public void WriteToStream (Stream s)
 		{
 			if(s == null)
-				throw new ArgumentNullException("s", "The stream to write the container to can't be null.");
+				throw new ArgumentNullException("s");
 			using(var bw = new EndianBinaryWriter(s, Endian.Big))
 				WriteToStream(bw);
 		}
@@ -172,12 +167,11 @@ namespace Frost.IO.Tnt
 		/// Writes the contents of the container to a stream using a stream writer
 		/// </summary>
 		/// <param name="bw">Binary writer to use for writing data to the stream</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="bw"/> is null.
-		/// The writer for putting data on the stream can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The writer (<paramref name="bw"/>) used for putting data on the stream can't be null.</exception>
 		public void WriteToStream (BinaryWriter bw)
 		{
 			if(bw == null)
-				throw new ArgumentNullException("bw", "The writer used to put data on the stream can't be null.");
+				throw new ArgumentNullException("bw");
 
 			bw.Write(_ver);
 			_root.WriteToStream(bw);

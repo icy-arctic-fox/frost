@@ -56,15 +56,14 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="type">Type of each node that will be in the list</param>
 		/// <param name="nodes">Initial collection of nodes</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="nodes"/> is null.
-		/// The initial collection of nodes can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The initial collection of <paramref name="nodes"/> can't be null.</exception>
 		/// <exception cref="ArgumentException">Thrown if a node inside of <paramref name="nodes"/> is null.</exception>
 		/// <exception cref="ArrayTypeMismatchException">Thrown if a node inside of <paramref name="nodes"/> does not match the type given by <paramref name="type"/></exception>
 		public ListNode (NodeType type, IEnumerable<Node> nodes)
 			: this(type)
 		{
 			if(nodes == null)
-				throw new ArgumentNullException("nodes", "The initial collection of nodes can't be null.");
+				throw new ArgumentNullException("nodes");
 			foreach(var node in nodes)
 			{
 				if(node == null)
@@ -152,13 +151,12 @@ namespace Frost.IO.Tnt
 		/// Adds a node to the list
 		/// </summary>
 		/// <param name="item">Node to add to the list</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null.
-		/// The node to add to the list can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The node (<paramref name="item"/>) to add to the list can't be null.</exception>
 		/// <exception cref="ArrayTypeMismatchException">Thrown if the type of node being added does not match the type of the existing nodes in the list</exception>
 		public void Add (Node item)
 		{
 			if(item == null)
-				throw new ArgumentNullException("item", "The node to add can't be null.");
+				throw new ArgumentNullException("item");
 			if(item.Type != _elementType)
 				throw new ArrayTypeMismatchException();
 
@@ -240,14 +238,13 @@ namespace Frost.IO.Tnt
 		/// </summary>
 		/// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted</param>
 		/// <param name="item">The node to insert into the list</param>
-		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index in the node's list</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null.
-		/// The node to insert can't be null.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index in the node's list</exception>
+		/// <exception cref="ArgumentNullException">The node (<paramref name="item"/>) to insert can't be null.</exception>
 		/// <exception cref="ArrayTypeMismatchException">Thrown if the type of node being added does not match the type of the existing nodes in the list</exception>
 		public void Insert (int index, Node item)
 		{
 			if(item == null)
-				throw new ArgumentNullException("item", "The new node being inserted can't be null.");
+				throw new ArgumentNullException("item");
 			if(item.Type != _elementType)
 				throw new ArrayTypeMismatchException();
 			_nodes.Insert(index, item);
@@ -267,8 +264,8 @@ namespace Frost.IO.Tnt
 		/// Gets or sets the node at the specified index
 		/// </summary>
 		/// <param name="index">The zero-based index of the node to get or set</param>
-		/// <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index in the node's list</exception>
-		/// <exception cref="ArgumentNullException">Thrown when attempting to set an element to a null node</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index in the node's list</exception>
+		/// <exception cref="ArgumentNullException">An element in the list can't be set to a null node.</exception>
 		/// <exception cref="ArrayTypeMismatchException">Thrown if the type of node being set does not match the type of the existing nodes in the list</exception>
 		public Node this [int index]
 		{
@@ -276,7 +273,7 @@ namespace Frost.IO.Tnt
 			set
 			{
 				if(value == null)
-					throw new ArgumentNullException("value", "The new node being applied can't be null.");
+					throw new ArgumentNullException("value");
 				if(value.Type != _elementType)
 					throw new ArrayTypeMismatchException();
 				_nodes[index] = value;
@@ -287,7 +284,7 @@ namespace Frost.IO.Tnt
 		/// Gets or sets the node with the specified index
 		/// </summary>
 		/// <param name="key">The index of the node to get or set</param>
-		/// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="key"/> is null.</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="key"/> can't be null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the index in <paramref name="key"/> is outside the bounds of the list</exception>
 		/// <exception cref="ArgumentException">Thrown when attempting to set a node to null</exception>
 		public Node this[string key]
@@ -295,7 +292,7 @@ namespace Frost.IO.Tnt
 			get
 			{
 				if(key == null)
-					throw new ArgumentNullException("key", "The index of the node can't be null");
+					throw new ArgumentNullException("key");
 				if(key.Contains(TraversalPathSeperator))
 					return traverseGet(key);
 				int index;
@@ -310,7 +307,7 @@ namespace Frost.IO.Tnt
 			set
 			{
 				if(key == null)
-					throw new ArgumentNullException("key", "The index of the node can't be null");
+					throw new ArgumentNullException("key");
 				if(key.Contains(TraversalPathSeperator))
 					traverseSet(key, value);
 				else

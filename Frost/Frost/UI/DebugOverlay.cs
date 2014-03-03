@@ -41,13 +41,13 @@ namespace Frost.UI
 		/// <param name="runner">Game runner to pull information from</param>
 		/// <param name="font">Font used to display text</param>
 		/// <param name="fontSize">Font size</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="runner"/> or <paramref name="font"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The game <paramref name="runner"/> and the <paramref name="font"/> used to display the text can't be null.</exception>
 		public DebugOverlay (GameRunner runner, Font font, uint fontSize)
 		{
 			if(runner == null)
-				throw new ArgumentNullException("runner", "The game runner can't be null.");
+				throw new ArgumentNullException("runner");
 			if(font == null)
-				throw new ArgumentNullException("font", "The font used to display the debug information can't be null.");
+				throw new ArgumentNullException("font");
 
 			_font       = font;
 			_fontSize   = fontSize;
@@ -60,11 +60,11 @@ namespace Frost.UI
 		/// The object is queried every update to get the text that should be displayed.
 		/// </summary>
 		/// <param name="item">Line to add</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The new debug line (<paramref name="item"/>) can't be null.</exception>
 		public void AddLine (IDebugOverlayLine item)
 		{
 			if(item == null)
-				throw new ArgumentNullException("item", "The debug overlay line can't be null.");
+				throw new ArgumentNullException("item");
 			item.Disposing += content_Disposing;
 
 			var line = new SimpleText(_font, _fontSize, _textColor);
@@ -80,11 +80,11 @@ namespace Frost.UI
 		/// </summary>
 		/// <param name="item">Line to remove</param>
 		/// <returns>True if <paramref name="item"/> was found and removed</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="item"/> is null</exception>
+		/// <exception cref="ArgumentNullException">The debug line (<paramref name="item"/>) to remove can't be null.</exception>
 		public bool RemoveLine (IDebugOverlayLine item)
 		{
 			if(item == null)
-				throw new ArgumentNullException("item", "The debug overlay line can't be null.");
+				throw new ArgumentNullException("item");
 
 			lock(_locker)
 				return _content.Remove(item);

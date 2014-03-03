@@ -85,14 +85,13 @@ namespace Frost.IO.Resources
 		/// <param name="offset">Block offset to where the resource's data starts</param>
 		/// <param name="size">Size in bytes of the resource</param>
 		/// <param name="secret">Key and IV used for symmetrical encryption</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.
-		/// The name of the resource can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource can't be null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="offset"/> or <paramref name="size"/> are negative.
 		/// The block offset and resource size can't be negative.</exception>
 		public ResourcePackageEntry (Guid id, string name, long offset, int size, string secret = null)
 		{
 			if(name == null)
-				throw new ArgumentNullException("name", "The name of the resource can't be null.");
+				throw new ArgumentNullException("name");
 			if(offset < 0)
 				throw new ArgumentOutOfRangeException("offset", "The block offset can't be negative.");
 			if(size < 0)

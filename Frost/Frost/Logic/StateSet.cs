@@ -20,14 +20,13 @@ namespace Frost.Logic
 		/// Creates a new collection of states
 		/// </summary>
 		/// <param name="initialStates">Initial states</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="initialStates"/> is null.
-		/// The collection of states to initially used cannot be null.</exception>
+		/// <exception cref="ArgumentNullException">The collection of states to initially use cannot be null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="initialStates"/> does not have enough states.
 		/// The collection must have enough states for the <see cref="StateManager"/>.</exception>
 		public StateSet (IList<TStateData> initialStates)
 		{
 			if(null == initialStates)
-				throw new ArgumentNullException("initialStates", "The collection of initial states cannot be null.");
+				throw new ArgumentNullException("initialStates");
 			if(initialStates.Count < _stateData.Length)
 				throw new ArgumentOutOfRangeException("initialStates", initialStates.Count, "The number of initial states should be " + _stateData.Length);
 
