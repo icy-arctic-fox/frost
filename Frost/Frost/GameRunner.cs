@@ -636,7 +636,7 @@ namespace Frost
 		/// Generates a string that represents the status of the game
 		/// </summary>
 		/// <returns>A string in the form:
-		/// Frame: # - # u/s - # f/s (#/# dups, # skipped)</returns>
+		/// Frame: # - # u/s - # f/s (#/# dups, # skips)</returns>
 		public override string ToString ()
 		{
 			var sm = _scenes.StateManager;
@@ -653,7 +653,7 @@ namespace Frost
 			sb.Append(sm.DuplicatedFrames);
 			sb.Append(" dups, ");
 			sb.Append(sm.SkippedFrames);
-			sb.Append(" skipped)");
+			sb.Append(" skips)");
 			return sb.ToString();
 		}
 	}
