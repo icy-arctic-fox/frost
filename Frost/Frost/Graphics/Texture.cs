@@ -80,6 +80,7 @@ namespace Frost.Graphics
 			var tex   = new T(image);
 			return new Texture(tex);
 		}
+
 		#region Disposable
 
 		private volatile bool _disposed;
