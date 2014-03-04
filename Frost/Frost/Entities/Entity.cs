@@ -10,8 +10,8 @@ namespace Frost.Entities
 	/// Entities can have any number of components (<see cref="EntityComponent"/>)
 	/// which define characteristics of that entity.
 	/// </summary>
-	/// <seealso cref="EntityManager"/>
-	public class Entity
+	/// <seealso cref="Manager"/>
+	public partial class Entity
 	{
 		private readonly ulong _id;
 
@@ -26,20 +26,20 @@ namespace Frost.Entities
 		/// <summary>
 		/// Creates a new entity
 		/// </summary>
-		/// <param name="id">Unique identifier returned from <see cref="EntityManager.NextAvailableId"/></param>
+		/// <param name="id">Unique identifier returned from <see cref="Manager.NextAvailableId"/></param>
 		internal Entity (ulong id)
 		{
 			_id = id;
 		}
 
-		private readonly List<StateSet<EntityComponentState>> _componentStates = new List<StateSet<EntityComponentState>>();
+		private readonly List<EntityComponent> _components = new List<EntityComponent>();
 
-		public void AddComponent<T> (EntityComponent<T> component) where T : EntityComponentState
+		public void AddComponent (EntityComponent component)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal StateSet<EntityComponentState> GetComponentStateSet (Type componentType)
+		public EntityComponent GetComponent (Type componentType)
 		{
 			throw new NotImplementedException();
 		}
