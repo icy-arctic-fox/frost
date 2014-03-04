@@ -60,6 +60,7 @@
     <Compile Include="Display\IDisplay.cs" />
     <Compile Include="Display\WindowClosingEventArgs.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\EntityComponentMap.cs" />
     <Compile Include="Entities\EntityComponentState.cs" />
     <Compile Include="Entities\Entity.Manager.cs" />
     <Compile Include="Entities\EntityComponent.cs" />
