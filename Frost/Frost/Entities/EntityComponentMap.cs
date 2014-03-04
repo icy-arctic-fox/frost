@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Frost.Entities
 {
@@ -25,8 +23,12 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="e">Entity to get the component from</param>
 		/// <returns>Component data</returns>
+		/// <exception cref="ArgumentNullException">The entity (<paramref name="e"/>) to get component data from can't be null.</exception>
 		public T GetComponent (Entity e)
 		{
+			if(e == null)
+				throw new ArgumentNullException("e");
+
 			lock(_components)
 			{
 				T component;
@@ -35,10 +37,25 @@ namespace Frost.Entities
 				// Component isn't cached, retrieve it from the entity
 				component = e.GetComponent(_componentType) as T;
 				if(component != null)
+				{
+					e.Disposing += entityDisposing;
 					_components[e] = component;
+				}
 				// TODO: Possibly throw exception if the entity doesn't contain the component
 				return component;
 			}
+		}
+
+		/// <summary>
+		/// Called when an entity that has component data cached in this instance is being disposed
+		/// </summary>
+		/// <param name="sender">Entity being disposed</param>
+		/// <param name="e">Event arguments</param>
+		private void entityDisposing (object sender, EventArgs e)
+		{
+			var entity = (Entity)sender;
+			lock(_components)
+				_components.Remove(entity);
 		}
 	}
 }
