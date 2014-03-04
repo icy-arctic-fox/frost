@@ -120,7 +120,6 @@
     <Compile Include="UI\DebugOverlay.cs" />
     <Compile Include="UI\SceneDebugOverlayLine.cs" />
     <Compile Include="UI\IDebugOverlayLine.cs" />
-    <Compile Include="UI\Interface.cs" />
     <Compile Include="Graphics\Text\PlainTextRenderer.cs" />
     <Compile Include="UI\PixelGraph.cs" />
     <Compile Include="Utility\FlagArray.cs" />

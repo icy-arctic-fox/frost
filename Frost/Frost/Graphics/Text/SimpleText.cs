@@ -94,7 +94,7 @@ namespace Frost.Graphics.Text
 			Bounds = new Rect2f(0f, 0f, width, height);
 
 			// Store the updated texture
-			_rs.Texture = _font.GetTexture(_size); // BUG: Attempting to fetch this texture crashes after the first frame has been rendered
+			_rs.Texture = _font.GetTexture(_size);
 		}
 
 		/// <summary>
