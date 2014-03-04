@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Frost.Entities
+﻿namespace Frost.Entities
 {
-	public class TexturedEntityComponent : EntityComponent<TexturedEntityComponent.State>
+	public class TexturedEntityComponent : EntityComponent
 	{
-		public override State[] GetInitialStates ()
-		{
-			throw new NotImplementedException();
-		}
-
 		public class State : EntityComponentState
 		{
 			

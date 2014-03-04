@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Frost.Logic;
 
 namespace Frost.Entities
 {
@@ -13,23 +12,22 @@ namespace Frost.Entities
 	/// <seealso cref="Manager"/>
 	public partial class Entity
 	{
-		private readonly ulong _id;
+		/// <summary>
+		/// Id of entities that have not been registered
+		/// </summary>
+		private const ulong UnregisteredId = 0uL;
 
 		/// <summary>
 		/// Unique entity identifier
 		/// </summary>
-		public ulong Id
-		{
-			get { return _id; }
-		}
+		public ulong Id { get; private set; }
 
 		/// <summary>
-		/// Creates a new entity
+		/// Indicates whether the entity has been registered
 		/// </summary>
-		/// <param name="id">Unique identifier returned from <see cref="Manager.NextAvailableId"/></param>
-		internal Entity (ulong id)
+		public bool Registered
 		{
-			_id = id;
+			get { return Id != UnregisteredId; }
 		}
 
 		private readonly List<EntityComponent> _components = new List<EntityComponent>();

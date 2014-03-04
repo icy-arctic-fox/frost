@@ -14,14 +14,17 @@ namespace Frost.Entities
 			private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
 			private ulong _nextId;
 
-			public Entity CreateEntity ()
+			public void RegisterEntity (Entity e)
 			{
+				if(e == null)
+					throw new ArgumentNullException("e");
+				if(e.Registered)
+					throw new ArgumentException("The entity is already registered.", "e");
+
 				lock(_registeredEntities)
 				{
-					var id = getNextAvailableId();
-					var e = new Entity(id);
+					e.Id = getNextAvailableId();
 					registerEntity(e);
-					return e;
 				}
 			}
 
@@ -77,8 +80,11 @@ namespace Frost.Entities
 					Entity existing;
 					if(_registeredEntities.TryGetValue(id, out existing))
 					{ // ID has been reserved
-						if(ReferenceEquals(e, existing)) // This ID is reserved for e
+						if(ReferenceEquals(e, existing))
+						{// This ID is reserved for e
 							_registeredEntities.Remove(id);
+							e.Id = UnregisteredId;
+						}
 						else // This ID is reserved for another entity
 							throw new InvalidOperationException("The ID has been reserved for another entity.");
 					}

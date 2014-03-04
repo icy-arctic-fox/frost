@@ -20,12 +20,12 @@ namespace Frost.Logic
 		/// <remarks>This property is used instead of reflection because it is be faster.</remarks>
 		public abstract string Name { get; }
 
-		private readonly EntityManager _entityManager = new EntityManager();
+		private readonly Entity.Manager _entityManager = new Entity.Manager();
 
 		/// <summary>
 		/// Provides access to the entities in the scene
 		/// </summary>
-		public EntityManager Entities
+		public Entity.Manager Entities
 		{
 			get { return _entityManager; }
 		}
