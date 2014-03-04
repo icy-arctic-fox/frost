@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Frost.Entities
 {
@@ -124,13 +125,20 @@ namespace Frost.Entities
 			}
 
 			/// <summary>
-			/// Finds all entities that have a given component
+			/// Finds all entities that have given components
 			/// </summary>
-			/// <param name="componentType">Type of component to look for in each entity</param>
-			/// <returns>A collection of entities that have a component</returns>
-			public IEnumerable<Entity> GetEntitiesWithComponent (Type componentType)
+			/// <param name="componentTypes">Types of components to look for in each entity</param>
+			/// <returns>A collection of entities that have each component</returns>
+			public IEnumerable<Entity> GetEntitiesWith (params Type[] componentTypes)
 			{
-				throw new NotImplementedException();
+				lock(_registeredEntities)
+				{
+					var found = from entity in _registeredEntities.Values
+								let hasComponents = componentTypes.All(entity.HasComponent)
+								where hasComponents
+								select entity;
+					return found;
+				}
 			}
 		}
 	}
