@@ -13,15 +13,55 @@ namespace Frost.Entities
 	/// <seealso cref="Manager"/>
 	public partial class Entity : IFullDisposable
 	{
+		private readonly object _locker = new object();
+
+		#region IDs
+
 		/// <summary>
 		/// Id of entities that have not been registered
 		/// </summary>
 		private const ulong UnregisteredId = 0uL;
 
+		private ulong _id = UnregisteredId;
+
 		/// <summary>
 		/// Unique entity identifier
 		/// </summary>
-		public ulong Id { get; private set; }
+		public ulong Id
+		{
+			get
+			{
+				lock(_locker)
+					return _id;
+			}
+		}
+
+		/// <summary>
+		/// Assigns an ID to the entity.
+		/// This is part of the registration process.
+		/// </summary>
+		/// <param name="id">ID to give the entity</param>
+		private void assignId (ulong id)
+		{
+			if(id == UnregisteredId)
+				throw new ArgumentException("The entity ID can't be set to " + UnregisteredId);
+			lock(_locker)
+			{
+				if(Registered)
+					throw new InvalidOperationException("The entity has already been registered.");
+				_id = id;
+			}
+		}
+
+		/// <summary>
+		/// Unassigns an ID from the entity.
+		/// This is part of the deregistration process.
+		/// </summary>
+		private void unassignId ()
+		{
+			lock(_locker)
+				_id = UnregisteredId;
+		}
 
 		/// <summary>
 		/// Indicates whether the entity has been registered
@@ -30,11 +70,17 @@ namespace Frost.Entities
 		{
 			get { return Id != UnregisteredId; }
 		}
+		#endregion
 
 		private readonly List<EntityComponent> _components = new List<EntityComponent>();
 
 		public void AddComponent (EntityComponent component)
 		{
+			lock(_locker)
+			{
+				if(Registered)
+					throw new InvalidOperationException("Components can not be added to an entity after it has been registered.");
+			}
 			throw new NotImplementedException();
 		}
 

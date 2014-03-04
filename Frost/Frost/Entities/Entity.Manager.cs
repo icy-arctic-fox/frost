@@ -23,7 +23,8 @@ namespace Frost.Entities
 
 				lock(_registeredEntities)
 				{
-					e.Id = getNextAvailableId();
+					var id = getNextAvailableId();
+					e.assignId(id);
 					registerEntity(e);
 				}
 			}
@@ -82,8 +83,8 @@ namespace Frost.Entities
 					{ // ID has been reserved
 						if(ReferenceEquals(e, existing))
 						{// This ID is reserved for e
+							e.unassignId();
 							_registeredEntities.Remove(id);
-							e.Id = UnregisteredId;
 						}
 						else // This ID is reserved for another entity
 							throw new InvalidOperationException("The ID has been reserved for another entity.");
