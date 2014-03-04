@@ -79,12 +79,12 @@ namespace Frost.Graphics.Text
 			if(_verts.VertexCount != vertCount)
 				_verts.Resize(vertCount);
 
-			var pos = 0f;
+			var xPos = 0f;
 			for(var i = 0; i < textLength; ++i)
 			{// Construct each set of 4 vertices for each glyph
 				var c = _text[i];
 				var j = (uint)(i * 4);
-				constructFromGlyph(c, j, ref pos);
+				constructFromGlyph(c, j, ref xPos);
 			}
 
 			// Update the bounds
@@ -102,8 +102,8 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="c">Character to get the texture of</param>
 		/// <param name="index">Index of the first vertex</param>
-		/// <param name="pos">X-offset to place the character at and position for the next character after returning</param>
-		private void constructFromGlyph (char c, uint index, ref float pos)
+		/// <param name="xPos">X-offset to place the character at and position for the next character after returning</param>
+		private void constructFromGlyph (char c, uint index, ref float xPos)
 		{
 			var glyph   = _font.GetGlyph(c, _size, false);
 			var srcRect = glyph.TextureRect;
@@ -112,7 +112,7 @@ namespace Frost.Graphics.Text
 			// Calculate vertex positions
 			var h = srcRect.Height;
 			var w = srcRect.Width;
-			var left   = pos + bounds.Left;
+			var left   = xPos + bounds.Left;
 			var right  = left + w;
 			var top    = _spacing + bounds.Top;
 			var bottom = top + h;
@@ -141,7 +141,7 @@ namespace Frost.Graphics.Text
 			_verts[++index] = new Vertex(v3, _color, t3);
 			_verts[++index] = new Vertex(v4, _color, t4);
 
-			pos += glyph.Advance;
+			xPos += glyph.Advance;
 		}
 
 		/// <summary>
