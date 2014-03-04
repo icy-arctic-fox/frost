@@ -72,10 +72,13 @@ namespace Frost.Entities
 		}
 		#endregion
 
-		private readonly List<EntityComponent> _components = new List<EntityComponent>();
+		private readonly List<Tuple<Type, EntityComponent>> _components = new List<Tuple<Type, EntityComponent>>();
 
 		public void AddComponent (EntityComponent component)
 		{
+			if(_disposed)
+				throw new ObjectDisposedException(GetType().FullName);
+
 			lock(_locker)
 			{
 				if(Registered)
@@ -84,8 +87,19 @@ namespace Frost.Entities
 			throw new NotImplementedException();
 		}
 
+		public bool HasComponent (Type componentType)
+		{
+			if(_disposed)
+				throw new ObjectDisposedException(GetType().FullName);
+
+			throw new NotImplementedException();
+		}
+
 		public EntityComponent GetComponent (Type componentType)
 		{
+			if(_disposed)
+				throw new ObjectDisposedException(GetType().FullName);
+
 			throw new NotImplementedException();
 		}
 
