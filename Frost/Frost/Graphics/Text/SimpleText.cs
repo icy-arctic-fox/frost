@@ -93,8 +93,8 @@ namespace Frost.Graphics.Text
 			var height = cornerVert.Position.Y;
 			Bounds = new Rect2f(0f, 0f, width, height);
 
-			// Store the texture
-			_rs.Texture = _font.GetTexture(_size); // BUG: Attempting to fetch this texture after first frame rendered crashes
+			// Store the updated texture
+			_rs.Texture = _font.GetTexture(_size); // BUG: Attempting to fetch this texture crashes after the first frame has been rendered
 		}
 
 		/// <summary>
@@ -161,6 +161,8 @@ namespace Frost.Graphics.Text
 		/// Draws the text onto a renderable object
 		/// </summary>
 		/// <param name="target">Render target</param>
+		/// <param name="x">Offset along the x-axis to draw the text at</param>
+		/// <param name="y">Offset along the y-axis to draw the text at</param>
 		public void Draw (IRenderTarget target, float x, float y)
 		{
 			var rs = _rs;
@@ -191,6 +193,7 @@ namespace Frost.Graphics.Text
 		public void Dispose ()
 		{
 			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>
