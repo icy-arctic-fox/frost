@@ -89,7 +89,7 @@
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Logic\Scene.cs" />
-    <Compile Include="Logic\SceneManager.cs" />
+    <Compile Include="Logic\Scene.Manager.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\InputModule.cs" />
     <Compile Include="Modules\Input\BasicController.cs" />
