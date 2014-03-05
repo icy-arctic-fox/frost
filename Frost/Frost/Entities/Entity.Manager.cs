@@ -140,6 +140,23 @@ namespace Frost.Entities
 					return found;
 				}
 			}
+
+			private readonly Dictionary<Type, object> _maps = new Dictionary<Type, object>();
+
+			public EntityComponentMap<T> GetComponentMap<T> () where T : EntityComponent
+			{
+				var componentType = typeof(T);
+				lock(_maps)
+				{
+					object o;
+					if(_maps.TryGetValue(componentType, out o)) // Retrieve an existing map if there is one
+						return (EntityComponentMap<T>)o;
+					// else - Map doesn't exist, generate one
+					var map = new EntityComponentMap<T>();
+					_maps[componentType] = map;
+					return map;
+				}
+			}
 		}
 	}
 }
