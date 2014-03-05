@@ -74,6 +74,13 @@ namespace Frost.Entities
 
 		private readonly List<Tuple<Type, EntityComponent>> _components = new List<Tuple<Type, EntityComponent>>();
 
+		/// <summary>
+		/// Adds a component to the entity.
+		/// A component is a piece of information required for some functionality.
+		/// </summary>
+		/// <param name="component">Entity component to add</param>
+		/// <exception cref="ObjectDisposedException">The <see cref="Entity"/> has been disposed.</exception>
+		/// <exception cref="InvalidOperationException">Components can't be added after the entity has been registered.</exception>
 		public void AddComponent (EntityComponent component)
 		{
 			if(_disposed)
@@ -87,6 +94,12 @@ namespace Frost.Entities
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Checks if the entity contains a component
+		/// </summary>
+		/// <param name="componentType">Type of <see cref="EntityComponent"/> to look for</param>
+		/// <returns>True if the entity has the component, false otherwise</returns>
+		/// <exception cref="ObjectDisposedException">A component can't be retrieved after the entity has been disposed.</exception>
 		public bool HasComponent (Type componentType)
 		{
 			if(_disposed)
@@ -95,6 +108,12 @@ namespace Frost.Entities
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Gets the data associated with a component contained in the entity
+		/// </summary>
+		/// <param name="componentType">Type of <see cref="EntityComponent"/> to look for</param>
+		/// <returns>The component data or null if the entity doesn't contain the component specified by <paramref name="componentType"/></returns>
+		/// <exception cref="ObjectDisposedException">A component can't be retrieved after the entity has been disposed.</exception>
 		public EntityComponent GetComponent (Type componentType)
 		{
 			if(_disposed)

@@ -15,6 +15,10 @@ namespace Frost.Entities
 			private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
 			private ulong _nextId;
 
+			/// <summary>
+			/// Adds an entity to the manager so that it can be tracked
+			/// </summary>
+			/// <param name="e">Entity to register</param>
 			public void RegisterEntity (Entity e)
 			{
 				if(e == null)
@@ -49,7 +53,7 @@ namespace Frost.Entities
 			/// </summary>
 			/// <param name="e">Entity to register</param>
 			/// <exception cref="InvalidOperationException">Thrown if another entity with the same <see cref="Entity.Id"/> has already been registered</exception>
-			/// <exception cref="ArgumentException">Thrown if the <see cref="Entity.Id"/> of <paramref name="e"/> has not been previously reserved by getting an ID from <see cref="NextAvailableId"/></exception>
+			/// <exception cref="ArgumentException">Thrown if the <see cref="Entity.Id"/> of <paramref name="e"/> has not been previously reserved by getting an ID from <see cref="getNextAvailableId"/></exception>
 			private void registerEntity (Entity e)
 			{
 				var id = e.Id;
@@ -143,6 +147,11 @@ namespace Frost.Entities
 
 			private readonly Dictionary<Type, object> _maps = new Dictionary<Type, object>();
 
+			/// <summary>
+			/// Gets an <see cref="EntityComponentMap{T}"/> for retrieving component data from an entity
+			/// </summary>
+			/// <typeparam name="T">Type of <see cref="EntityComponent"/> to retrieve data for</typeparam>
+			/// <returns>An object that will retrieve component data for a given type <typeparamref name="T"/></returns>
 			public EntityComponentMap<T> GetComponentMap<T> () where T : EntityComponent
 			{
 				var componentType = typeof(T);
