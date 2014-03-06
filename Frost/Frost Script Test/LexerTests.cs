@@ -166,6 +166,21 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
+		/// Checks if the lexer properly handles binary numbers with a negative prefix
+		/// </summary>
+		[TestMethod]
+		public void NegativeBinaryIntegerTest ()
+		{
+			var lexer = setupLexer("-0b111");
+			var token = lexer.GetNext();
+			assertToken(token, TokenTag.Subtract, 1, 1);
+
+			token = lexer.GetNext();
+			const int value = 7;
+			assertIntegerToken(token, 1, 2, value, IntegerToken.Base.Binary);
+		}
+
+		/// <summary>
 		/// Checks if the lexer properly complains about invalid characters after the binary prefix (0b)
 		/// </summary>
 		[TestMethod]
@@ -318,6 +333,21 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
+		/// Checks if the lexer properly handles octal numbers with a negative prefix
+		/// </summary>
+		[TestMethod]
+		public void NegativeOctalIntegerTest ()
+		{
+			var lexer = setupLexer("-0123");
+			var token = lexer.GetNext();
+			assertToken(token, TokenTag.Subtract, 1, 1);
+
+			token = lexer.GetNext();
+			const int value = 83;
+			assertIntegerToken(token, 1, 2, value, IntegerToken.Base.Octal);
+		}
+
+		/// <summary>
 		/// Checks if the lexer properly complains about invalid characters after the octal prefix (0)
 		/// </summary>
 		[TestMethod]
@@ -448,6 +478,21 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
+		/// Checks if the lexer properly handles hexadecimal numbers with a negative prefix
+		/// </summary>
+		[TestMethod]
+		public void NegativeHexadecimalIntegerTest ()
+		{
+			var lexer = setupLexer("-0xff");
+			var token = lexer.GetNext();
+			assertToken(token, TokenTag.Subtract, 1, 1);
+
+			token = lexer.GetNext();
+			const int value = 0xff;
+			assertIntegerToken(token, 1, 2, value, IntegerToken.Base.Hexadecimal);
+		}
+
+		/// <summary>
 		/// Checks if the lexer properly complains about missing characters after the hexadecimal prefix (0x)
 		/// </summary>
 		[TestMethod]
@@ -573,6 +618,29 @@ namespace Frost_Script_Test
 		public void OverflowDecimalIntegerTest ()
 		{
 			var lexer = setupLexer("9999999999");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(1U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about decimal integers that are too small
+		/// </summary>
+		[TestMethod]
+		public void UnderflowDecimalIntegerTest ()
+		{
+			var lexer = setupLexer("-9999999999");
 			try
 			{
 				lexer.GetNext();
