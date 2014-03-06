@@ -65,7 +65,7 @@ namespace Frost_Script_Test
 			const int expected = 0;
 			var lexer = setupLexer("0");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Decimal);
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace Frost_Script_Test
 			const int expected = 5;
 			var lexer = setupLexer("5");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Decimal);
 		}
 
 		#region Binary integer literal tests
@@ -91,7 +91,7 @@ namespace Frost_Script_Test
 			const int expected = 21845;
 			var lexer = setupLexer("0b0101010101010101");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Binary);
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace Frost_Script_Test
 			const int expected = 21845;
 			var lexer = setupLexer("0b101010101010101");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Binary);
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace Frost_Script_Test
 			const int expected = 0;
 			var lexer = setupLexer("0b0");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Binary);
 		}
 
 		/// <summary>
@@ -127,7 +127,7 @@ namespace Frost_Script_Test
 			const int expected = Int32.MaxValue;
 			var lexer = setupLexer("0b01111111111111111111111111111111");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Binary);
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace Frost_Script_Test
 			const int expected = Int32.MinValue;
 			var lexer = setupLexer("0b10000000000000000000000000000000");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Binary);
 		}
 
 		/// <summary>
@@ -218,7 +218,7 @@ namespace Frost_Script_Test
 			const int expected = 10;
 			var lexer = setupLexer("0b1010+");
 			var token = lexer.GetNext();
-			assertIntegerToken(token, 1, 1, expected);
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Binary);
 		}
 		#endregion
 		#endregion
@@ -244,12 +244,14 @@ namespace Frost_Script_Test
 		/// <param name="line">Line number the token should be on</param>
 		/// <param name="pos">Character position the token should start at</param>
 		/// <param name="value">Expected value of the token</param>
-		private static void assertIntegerToken (Token token, uint line, uint pos, int value)
+		/// <param name="b">Base that the integer was in</param>
+		private static void assertIntegerToken (Token token, uint line, uint pos, int value, IntegerToken.Base b)
 		{
 			Assert.IsInstanceOfType(token, typeof(IntegerToken));
 			Assert.AreEqual(line, token.Line);
 			Assert.AreEqual(pos, token.Character);
 			Assert.AreEqual(value, ((IntegerToken)token).Value);
+			Assert.AreEqual(b, ((IntegerToken)token).OriginalBase);
 		}
 		#endregion
 	}
