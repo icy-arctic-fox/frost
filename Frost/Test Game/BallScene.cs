@@ -1,4 +1,5 @@
 ﻿using Frost.Display;
+using Frost.Entities;
 using Frost.Graphics;
 using Frost.Logic;
 
@@ -11,7 +12,8 @@ namespace Test_Game
 			get { return "Ball"; }
 		}
 
-		private readonly Ball _ball;
+		private readonly Entity[] _balls;
+		private readonly Graphics2DEntityProcessor _processor;
 
 		/// <summary>
 		/// Creates the base of the scene
@@ -19,43 +21,26 @@ namespace Test_Game
 		public BallScene ()
 		{
 			var texture = new Texture("ball-6x6.png");
-			_ball = new Ball(texture);
+			_processor = new Graphics2DEntityProcessor(Entities);
+
+			_balls = new Entity[3];
+			for(var i = 0; i < _balls.Length; ++i)
+			{
+				var entity = new Entity();
+				entity.AddComponent(new Position2DEntityComponent());
+				entity.AddComponent(new TexturedEntityComponent(texture));
+				((Position2DEntityComponent)entity.GetComponent(typeof(Position2DEntityComponent))).States[i].X = 100 * i;
+
+				Entities.RegisterEntity(entity);
+				_balls[i] = entity;
+			}
 		}
 
-		private class Ball : IStepable, IRenderable
+		public override void Draw (IDisplay display, int state, double t)
 		{
-			private readonly Sprite _sprite;
-
-			public Ball (Texture texture)
-			{
-				_sprite = new Sprite(texture);
-			}
-
-			/// <summary>
-			/// Updates the state of the component by a single step
-			/// </summary>
-			/// <param name="prev">Index of the previous state that was updated</param>
-			/// <param name="next">Index of the next state that should be updated</param>
-			/// <remarks>The only game state that should be modified during this process is the state indicated by <paramref name="next"/>.
-			/// The state indicated by <paramref name="prev"/> can be used for reference (if needed), but should not be modified.
-			/// Modifying any other game state info during this process would corrupt the game state.</remarks>
-			public void Step (int prev, int next)
-			{
-				_sprite.Step(prev, next);
-			}
-
-			/// <summary>
-			/// Draws the state of a component
-			/// </summary>
-			/// <param name="display">Display to draw the state onto</param>
-			/// <param name="state">Index of the state to draw</param>
-			/// <param name="t">Interpolation value</param>
-			/// <remarks>None of the game states should be modified by this process - including the state indicated by <paramref name="state"/>.
-			/// Modifying the game state info during this process would corrupt the game state.</remarks>
-			public void Draw (IDisplay display, int state, double t)
-			{
-				_sprite.Draw(display, state, t);
-			}
+			base.Draw(display, state, t);
+			for(var i = 0; i < _balls.Length; ++i)
+				_processor.DrawEntity(_balls[i], display, state, t);
 		}
 	}
 }
