@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Frost.IO;
 using Frost.Utility;
@@ -129,11 +127,19 @@ namespace Frost.Scripting.Compiler
 		/// <returns>Parsed integer value</returns>
 		private int hexadecimalIntegerState ()
 		{
+			var count = 0;
 			char d;
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
 				if(!Char.IsDigit(d) && (d < 'a' || d > 'f') && (d < 'A' || d > 'F'))
-					error(String.Format("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but got '{0}'", d));
+				{// End of constant
+					if(count <= 0) // Unexpected end found
+						error(String.Format("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but got '{0}'", d));
+					else // Reached the end, push the character back
+						pushback(d);
+					break;
+				}
+				++count;
 			}
 			const IntegerToken.Base b = IntegerToken.Base.Hexadecimal;
 			var lexeme = Lexeme.Substring(2); // Remove 0x prefix
@@ -146,11 +152,19 @@ namespace Frost.Scripting.Compiler
 		/// <returns>Parsed integer value</returns>
 		private int binaryIntegerState ()
 		{
+			var count = 0;
 			char d;
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
 				if(d != '0' && d != '1')
-					error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
+				{// End of constant
+					if(count <= 0) // Unexpected end found
+						error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
+					else // Reached the end, push the character back
+						pushback(d);
+					break;
+				}
+				++count;
 			}
 			const IntegerToken.Base b = IntegerToken.Base.Binary;
 			var lexeme = Lexeme.Substring(2); // Remove 0b prefix
@@ -166,8 +180,10 @@ namespace Frost.Scripting.Compiler
 			char d;
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
-				if(d < '0' || d > '7')
-					error(String.Format("Expected 0-7 digit in octal numerical literal, but got '{0}'", d));
+				if(d < '0' || d > '7') // End of constant
+					break;
+				// Octal digits don't need to be checked here because there's always at least one digit.
+				// The digit was pushed back in the digit0State() method.
 			}
 			const IntegerToken.Base b = IntegerToken.Base.Octal;
 			return Convert.ToInt32(Lexeme, (int)b);
