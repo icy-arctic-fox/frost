@@ -74,8 +74,8 @@ namespace Frost.Scripting.Compiler
 		/// <summary>
 		/// State when the character parsed is a digit
 		/// </summary>
-		/// <param name="c"></param>
-		/// <returns></returns>
+		/// <param name="c">First digit character</param>
+		/// <returns>A numerical token</returns>
 		private Token digitState (char c)
 		{
 			return (c == '0') ? digit0State() : numberState();
