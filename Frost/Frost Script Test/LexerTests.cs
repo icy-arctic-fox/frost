@@ -351,6 +351,126 @@ namespace Frost_Script_Test
 			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Octal);
 		}
 		#endregion
+
+		#region Hexadecimal integer literal tests
+
+		/// <summary>
+		/// Checks if the lexer handles hexadecimal integers starting with 0
+		/// </summary>
+		[TestMethod]
+		public void HexadecimalIntegerTest ()
+		{
+			const int expected = 5;
+			var lexer = setupLexer("0x05");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Hexadecimal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer handles a hexadecimal 0 value
+		/// </summary>
+		[TestMethod]
+		public void Hexadecimal0IntegerTest ()
+		{
+			const int expected = 0;
+			var lexer = setupLexer("0x0");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Hexadecimal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly handles maximum hexadecimal values
+		/// </summary>
+		[TestMethod]
+		public void MaxHexadecimalIntegerTest ()
+		{
+			const int expected = Int32.MaxValue;
+			var lexer = setupLexer("0x7FFFFFFF");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Hexadecimal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly handles minimum hexadecimal values
+		/// </summary>
+		[TestMethod]
+		public void MinHexadecimalIntegerTest ()
+		{
+			const int expected = Int32.MinValue;
+			var lexer = setupLexer("0x80000000");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Hexadecimal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about hexadecimal integers that are too large
+		/// </summary>
+		[TestMethod]
+		public void OverflowHexadecimalIntegerTest ()
+		{
+			var lexer = setupLexer("0xffffffffff");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(1U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about invalid characters after the hexadecimal prefix (0x)
+		/// </summary>
+		[TestMethod]
+		public void InvalidHexadecimalIntegerTest ()
+		{
+			var lexer = setupLexer("0xzzz");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(3U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks that the lexer properly handles a hexadecimal integer terminated by a symbol
+		/// </summary>
+		[TestMethod]
+		public void HexadecimalIntegerStopSymbolTest ()
+		{
+			const int expected = 0xaabbcc;
+			var lexer = setupLexer("0xaabbcc+");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Hexadecimal);
+		}
+
+		/// <summary>
+		/// Checks that the lexer properly handles a hexadecimal integer terminated by a symbol
+		/// </summary>
+		[TestMethod]
+		public void HexadecimalMixedCaseTest ()
+		{
+			const int expected = 0x7abcde;
+			var lexer = setupLexer("0x7AbCdE");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Hexadecimal);
+		}
+		#endregion
 		#endregion
 
 		#region Utility methods
