@@ -86,7 +86,7 @@ namespace Frost_Script_Test
 		/// Checks if the lexer handles binary integers starting with 0
 		/// </summary>
 		[TestMethod]
-		public void BinaryIntegerTest ()
+		public void BinaryIntegerLeading0Test ()
 		{
 			const int expected = 21845;
 			var lexer = setupLexer("0b0101010101010101");
@@ -98,7 +98,7 @@ namespace Frost_Script_Test
 		/// Checks if the lexer handles binary integers starting with 1
 		/// </summary>
 		[TestMethod]
-		public void BinaryIntegerTest2 ()
+		public void BinaryIntegerTest ()
 		{
 			const int expected = 21845;
 			var lexer = setupLexer("0b101010101010101");
@@ -169,7 +169,29 @@ namespace Frost_Script_Test
 		/// Checks if the lexer properly complains about invalid characters after the binary prefix (0b)
 		/// </summary>
 		[TestMethod]
-		public void InvalidBinaryIntegerTest ()
+		public void InvalidBinaryIntegerDigitTest ()
+		{
+			var lexer = setupLexer("0b2");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(3U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about invalid characters after the binary prefix (0b)
+		/// </summary>
+		[TestMethod]
+		public void InvalidBinaryIntegerCharTest ()
 		{
 			var lexer = setupLexer("0babc");
 			try
@@ -191,7 +213,7 @@ namespace Frost_Script_Test
 		/// Checks if the lexer properly complains about missing characters after the binary prefix (0b)
 		/// </summary>
 		[TestMethod]
-		public void InvalidBinaryIntegerTest2 ()
+		public void InvalidBinaryIntegerTest ()
 		{
 			var lexer = setupLexer("0b");
 			try
@@ -213,7 +235,7 @@ namespace Frost_Script_Test
 		/// Checks that the lexer properly handles a binary integer terminated by a symbol
 		/// </summary>
 		[TestMethod]
-		public void BinaryIntegerStopSymbol ()
+		public void BinaryIntegerStopSymbolTest ()
 		{
 			const int expected = 10;
 			var lexer = setupLexer("0b1010+");
@@ -321,7 +343,7 @@ namespace Frost_Script_Test
 		/// Checks if the lexer properly complains about invalid numbers after the octal prefix (0)
 		/// </summary>
 		[TestMethod]
-		public void InvalidOctalIntegerTest2 ()
+		public void InvalidOctalIntegerDigitTest ()
 		{
 			var lexer = setupLexer("089");
 			try
@@ -343,7 +365,7 @@ namespace Frost_Script_Test
 		/// Checks that the lexer properly handles an octal integer terminated by a symbol
 		/// </summary>
 		[TestMethod]
-		public void OctalIntegerStopSymbol ()
+		public void OctalIntegerStopSymbolTest ()
 		{
 			const int expected = 342391;
 			var lexer = setupLexer("01234567+");
