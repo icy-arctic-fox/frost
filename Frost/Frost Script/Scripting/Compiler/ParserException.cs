@@ -50,6 +50,20 @@ namespace Frost.Scripting.Compiler
 		}
 
 		/// <summary>
+		/// Creates a new parser exception
+		/// </summary>
+		/// <param name="message">Reason for the parser error</param>
+		/// <param name="line">Line number that the error occurred on</param>
+		/// <param name="pos">Character position on the line where the error occurred</param>
+		/// <param name="inner">Inner exception that lead to the parsing error</param>
+		public ParserException (string message, uint line, uint pos, Exception inner)
+			: base(message, inner)
+		{
+			_line = line;
+			_char = pos;
+		}
+
+		/// <summary>
 		/// Creates a string representation of the error
 		/// </summary>
 		/// <returns>A string in the form:

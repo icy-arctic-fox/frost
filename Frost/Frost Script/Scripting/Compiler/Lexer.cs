@@ -386,6 +386,17 @@ namespace Frost.Scripting.Compiler
 		{
 			throw new ParserException(message, _line, _char);
 		}
+
+		/// <summary>
+		/// Throws a parser exception for the current position in the stream
+		/// </summary>
+		/// <param name="message">Informational message</param>
+		/// <param name="inner">Inner exception</param>
+		/// <exception cref="ParserException">It's what this method does</exception>
+		private void error (string message, Exception inner)
+		{
+			throw new ParserException(message, _line, _char, inner);
+		}
 		#endregion
 
 		#region Disposable
