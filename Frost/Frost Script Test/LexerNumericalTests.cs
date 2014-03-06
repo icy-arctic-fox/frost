@@ -673,6 +673,28 @@ namespace Frost_Script_Test
 			var token = lexer.GetNext();
 			LexerTestUtility.AssertFloatToken(token, 1, 1, expected);
 		}
+
+		/// <summary>
+		/// Checks that the lexer complains about a floating-point number containing multiple decimal points
+		/// </summary>
+		[TestMethod, TestCategory("Lexer")]
+		public void FloatDoubleDotTest ()
+		{
+			var lexer = LexerTestUtility.SetupLexer("123.456.789");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(8U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
 		#endregion
 	}
 }
