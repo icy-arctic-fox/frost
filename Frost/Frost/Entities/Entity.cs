@@ -81,17 +81,22 @@ namespace Frost.Entities
 		/// <param name="component">Entity component to add</param>
 		/// <exception cref="ObjectDisposedException">The <see cref="Entity"/> has been disposed.</exception>
 		/// <exception cref="InvalidOperationException">Components can't be added after the entity has been registered.</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="component"/> to add can't be null.</exception>
 		public void AddComponent (EntityComponent component)
 		{
 			if(_disposed)
 				throw new ObjectDisposedException(GetType().FullName);
+			if(component == null)
+				throw new ArgumentNullException("component");
 
+			var componentType = component.GetType();
+			var tuple = new Tuple<Type, EntityComponent>(componentType, component);
 			lock(_locker)
 			{
 				if(Registered)
 					throw new InvalidOperationException("Components can not be added to an entity after it has been registered.");
+				_components.Add(tuple);
 			}
-			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -100,12 +105,21 @@ namespace Frost.Entities
 		/// <param name="componentType">Type of <see cref="EntityComponent"/> to look for</param>
 		/// <returns>True if the entity has the component, false otherwise</returns>
 		/// <exception cref="ObjectDisposedException">A component can't be retrieved after the entity has been disposed.</exception>
+		/// <exception cref="ArgumentNullException">The type of component (<paramref name="componentType"/>) to look for can't be null.</exception>
 		public bool HasComponent (Type componentType)
 		{
 			if(_disposed)
 				throw new ObjectDisposedException(GetType().FullName);
+			if(componentType == null)
+				throw new ArgumentNullException("componentType");
 
-			throw new NotImplementedException();
+			lock(_locker)
+			{
+				foreach(var tuple in _components)
+					if(tuple.Item1 == componentType) // TODO: Handle Mono
+						return true;
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -114,12 +128,21 @@ namespace Frost.Entities
 		/// <param name="componentType">Type of <see cref="EntityComponent"/> to look for</param>
 		/// <returns>The component data or null if the entity doesn't contain the component specified by <paramref name="componentType"/></returns>
 		/// <exception cref="ObjectDisposedException">A component can't be retrieved after the entity has been disposed.</exception>
+		/// <exception cref="ArgumentNullException">The type of component (<paramref name="componentType"/>) to retrieve can't be null.</exception>
 		public EntityComponent GetComponent (Type componentType)
 		{
 			if(_disposed)
 				throw new ObjectDisposedException(GetType().FullName);
+			if(componentType == null)
+				throw new ArgumentNullException("componentType");
 
-			throw new NotImplementedException();
+			lock(_locker)
+			{
+				foreach(var tuple in _components)
+					if(tuple.Item1 == componentType) // TODO: Handle Mono
+						return tuple.Item2;
+			}
+			return null;
 		}
 
 		#region Disposable
