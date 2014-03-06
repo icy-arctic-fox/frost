@@ -448,10 +448,32 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
-		/// Checks if the lexer properly complains about invalid characters after the hexadecimal prefix (0x)
+		/// Checks if the lexer properly complains about missing characters after the hexadecimal prefix (0x)
 		/// </summary>
 		[TestMethod]
 		public void InvalidHexadecimalIntegerTest ()
+		{
+			var lexer = setupLexer("0x");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(2U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about invalid characters after the hexadecimal prefix (0x)
+		/// </summary>
+		[TestMethod]
+		public void InvalidHexadecimalIntegerDigitTest ()
 		{
 			var lexer = setupLexer("0xzzz");
 			try
@@ -491,6 +513,80 @@ namespace Frost_Script_Test
 			var lexer = setupLexer("0x7AbCdE");
 			var token = lexer.GetNext();
 			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Hexadecimal);
+		}
+		#endregion
+
+		#region Decimal integer literal tests
+
+		/// <summary>
+		/// Checks that the lexer properly handles a decimal integer with multiple digits
+		/// </summary>
+		[TestMethod]
+		public void DecimalIntegerTest ()
+		{
+			const int expected = 1234567890;
+			var lexer = setupLexer("1234567890");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Decimal);
+		}
+
+		/// <summary>
+		/// Checks that the lexer properly handles a decimal integer terminated by a symbol
+		/// </summary>
+		[TestMethod]
+		public void DecimalIntegerStopSymbolTest ()
+		{
+			const int expected = 555;
+			var lexer = setupLexer("555+");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Decimal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly handles maximum decimal values
+		/// </summary>
+		[TestMethod]
+		public void MaxDecimalIntegerTest ()
+		{
+			const int expected = Int32.MaxValue;
+			var lexer = setupLexer("2147483647");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Decimal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly handles minimum decimal values
+		/// </summary>
+		[TestMethod]
+		public void MinDecimalIntegerTest ()
+		{
+			const int expected = Int32.MinValue;
+			var lexer = setupLexer("-2147483648");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Decimal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about decimal integers that are too large
+		/// </summary>
+		[TestMethod]
+		public void OverflowDecimalIntegerTest ()
+		{
+			var lexer = setupLexer("9999999999");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(1U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
 		}
 		#endregion
 		#endregion
