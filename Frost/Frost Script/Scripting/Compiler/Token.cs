@@ -14,7 +14,7 @@ namespace Frost.Scripting.Compiler
 		/// <summary>
 		/// Type of token the lexer produced
 		/// </summary>
-		private TokenTag Tag
+		public TokenTag Tag
 		{
 			get { return _tag; }
 		}
