@@ -138,8 +138,8 @@ namespace Frost.Scripting.Compiler
 		/// <remarks>Any number not in base-10 can't be negative, so return a dash token and then a positive number</remarks>
 		private Token goBackNegativeNonBase10 (char t)
 		{
-			pushback(t);
 			pushback('0');
+			pushback(t);
 			return new Token(TokenTag.Subtract, _line, _char);
 		}
 
