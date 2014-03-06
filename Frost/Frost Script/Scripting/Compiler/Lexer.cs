@@ -148,7 +148,17 @@ namespace Frost.Scripting.Compiler
 			// Valid hexadecimal value
 			const IntegerToken.Base b = IntegerToken.Base.Hexadecimal;
 			var lexeme = Lexeme.Substring(2); // Remove 0x prefix
-			return Convert.ToInt32(lexeme, (int)b);
+			var value = 0;
+			try
+			{
+				value = Convert.ToInt32(lexeme, (int)b);
+			}
+			catch(OverflowException e)
+			{
+				_char = TokenStartPosition;
+				error("Integer value too large (overflow)", e);
+			}
+			return value;
 		}
 
 		/// <summary>
@@ -178,7 +188,17 @@ namespace Frost.Scripting.Compiler
 			// Valid binary value
 			const IntegerToken.Base b = IntegerToken.Base.Binary;
 			var lexeme = Lexeme.Substring(2); // Remove 0b prefix
-			return Convert.ToInt32(lexeme, (int)b);
+			var value = 0;
+			try
+			{
+				value = Convert.ToInt32(lexeme, (int)b);
+			}
+			catch(OverflowException e)
+			{
+				_char = TokenStartPosition;
+				error("Integer value too large (overflow)", e);
+			}
+			return value;
 		}
 
 		/// <summary>
@@ -199,7 +219,17 @@ namespace Frost.Scripting.Compiler
 				// The digit was pushed back in the digit0State() method.
 			}
 			const IntegerToken.Base b = IntegerToken.Base.Octal;
-			return Convert.ToInt32(Lexeme, (int)b);
+			var value = 0;
+			try
+			{
+				value = Convert.ToInt32(Lexeme, (int)b);
+			}
+			catch(OverflowException e)
+			{
+				_char = TokenStartPosition;
+				error("Integer value too large (overflow)", e);
+			}
+			return value;
 		}
 
 		/// <summary>
@@ -235,7 +265,16 @@ namespace Frost.Scripting.Compiler
 			else
 			{// Integer token found
 				const IntegerToken.Base b = IntegerToken.Base.Decimal;
-				var value = Convert.ToInt32(Lexeme, (int)b);
+				var value = 0;
+				try
+				{
+					value = Convert.ToInt32(Lexeme, (int)b);
+				}
+				catch(OverflowException e)
+				{
+					_char = TokenStartPosition;
+					error("Integer value too large (overflow)", e);
+				}
 				return new IntegerToken(value, b, _line, TokenStartPosition);
 			}
 		}
