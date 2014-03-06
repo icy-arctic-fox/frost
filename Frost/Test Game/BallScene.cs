@@ -29,7 +29,8 @@ namespace Test_Game
 				var entity = new Entity();
 				entity.AddComponent(new Position2DEntityComponent());
 				entity.AddComponent(new TexturedEntityComponent(texture));
-				((Position2DEntityComponent)entity.GetComponent(typeof(Position2DEntityComponent))).States[i].X = 100 * i;
+				for(var j = 0; j < StateManager.StateCount; ++j)
+					((Position2DEntityComponent)entity.GetComponent(typeof(Position2DEntityComponent))).States[j].X = 100 * i;
 
 				Entities.RegisterEntity(entity);
 				_balls[i] = entity;
