@@ -267,7 +267,7 @@ namespace Frost_Script_Test
 		public void MinOctalIntegerTest ()
 		{
 			const int expected = Int32.MinValue;
-			var lexer = setupLexer("0b20000000000");
+			var lexer = setupLexer("020000000000");
 			var token = lexer.GetNext();
 			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Octal);
 		}
