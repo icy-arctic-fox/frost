@@ -106,6 +106,7 @@ namespace Frost.Scripting.Compiler
 				default:
 					if(Char.IsDigit(t))
 					{// Octal
+						pushback(t);
 						b = IntegerToken.Base.Octal;
 						value = octalIntegerState();
 					}
@@ -210,7 +211,7 @@ namespace Frost.Scripting.Compiler
 			char d;
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
-				if(d < '0' && d > '7')
+				if(d < '0' || d > '7')
 				{// End of numerical value
 					pushback(d);
 					break;
@@ -219,10 +220,11 @@ namespace Frost.Scripting.Compiler
 				// The digit was pushed back in the digit0State() method.
 			}
 			const IntegerToken.Base b = IntegerToken.Base.Octal;
+			var lexeme = Lexeme.Substring(1); // Remove 0 prefix
 			var value = 0;
 			try
 			{
-				value = Convert.ToInt32(Lexeme, (int)b);
+				value = Convert.ToInt32(lexeme, (int)b);
 			}
 			catch(OverflowException e)
 			{
@@ -296,7 +298,7 @@ namespace Frost.Scripting.Compiler
 		/// <param name="c">Character to push</param>
 		private void pushback (char c)
 		{
-			var bytes = BitConverter.GetBytes(c);
+			var bytes = Encoding.UTF8.GetBytes(new[] {c});
 			_pushback.Write(bytes, 0, bytes.Length);
 			_lexeme.Remove(_lexeme.Length - 1, 1); // Remove last character from lexeme
 			--_char;
