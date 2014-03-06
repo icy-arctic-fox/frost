@@ -172,7 +172,12 @@ namespace Frost.Scripting.Compiler
 			char d;
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
-				if(d != '0' && d != '1')
+				if(Char.IsDigit(d))
+				{
+					if(d != '0' && d != '1')
+						error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
+				}
+				else
 				{// End of numerical value
 					if(count <= 0) // Unexpected reached the end
 						error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
