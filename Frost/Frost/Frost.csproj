@@ -64,6 +64,7 @@
     <Compile Include="Entities\EntityComponentState.cs" />
     <Compile Include="Entities\Entity.Manager.cs" />
     <Compile Include="Entities\EntityComponent.cs" />
+    <Compile Include="Entities\IEntityProcessor.cs" />
     <Compile Include="Entities\Position2DEntityComponent.cs" />
     <Compile Include="Entities\TexturedEntityComponent.cs" />
     <Compile Include="Game.cs" />
