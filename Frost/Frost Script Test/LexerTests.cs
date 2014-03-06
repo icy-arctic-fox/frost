@@ -166,12 +166,12 @@ namespace Frost_Script_Test
 		}
 
 		/// <summary>
-		/// Checks if the lexer properly complains about invalid characters in binary integers
+		/// Checks if the lexer properly complains about invalid characters after the binary prefix (0b)
 		/// </summary>
 		[TestMethod]
 		public void InvalidBinaryIntegerTest ()
 		{
-			var lexer = setupLexer("0b10abc");
+			var lexer = setupLexer("0babc");
 			try
 			{
 				lexer.GetNext();
@@ -181,7 +181,29 @@ namespace Frost_Script_Test
 				Assert.IsInstanceOfType(e, typeof(ParserException));
 				var pe = (ParserException)e;
 				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(5U, pe.Character);
+				Assert.AreEqual(3U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about missing characters after the binary prefix (0b)
+		/// </summary>
+		[TestMethod]
+		public void InvalidBinaryIntegerTest2 ()
+		{
+			var lexer = setupLexer("0b");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(2U, pe.Character);
 				return;
 			}
 			Assert.Fail("The lexer did not throw an exception.");
