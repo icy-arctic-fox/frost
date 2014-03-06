@@ -63,6 +63,8 @@ namespace Frost.Scripting.Compiler
 		{
 			if(Char.IsDigit(c))
 				return digitState(c);
+			if(c == '-')
+				return dashState();
 
 			// else - Character doesn't match anything known of
 			error(String.Format("Unrecognized character '{0}'", c));
@@ -289,6 +291,24 @@ namespace Frost.Scripting.Compiler
 				}
 				return new IntegerToken(value, b, _line, TokenStartPosition);
 			}
+		}
+
+		/// <summary>
+		/// State when a hyphen (-) is read
+		/// </summary>
+		/// <returns>Some type of token</returns>
+		private Token dashState ()
+		{
+			char c;
+			if(getNextChar(out c))
+			{
+				if(Char.IsDigit(c)) // Start of a negative number
+					return digitState(c);
+				pushback(c);
+			}
+
+			// else - Just a hyphen
+			return new Token(TokenTag.Subtract, _line, TokenStartPosition);
 		}
 		#endregion
 
