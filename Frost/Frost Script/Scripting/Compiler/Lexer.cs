@@ -260,6 +260,7 @@ namespace Frost.Scripting.Compiler
 			var bytes = BitConverter.GetBytes(c);
 			_pushback.Write(bytes, 0, bytes.Length);
 			_lexeme.Remove(_lexeme.Length - 1, 1); // Remove last character from lexeme
+			--_char;
 		}
 
 		/// <summary>
