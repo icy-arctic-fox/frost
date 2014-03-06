@@ -95,10 +95,14 @@ namespace Frost.Scripting.Compiler
 				switch(t)
 				{
 				case 'x':
+					if(Lexeme[0] == '-')
+						return goBackNegativeNonBase10(t);
 					b = IntegerToken.Base.Hexadecimal;
 					value = hexadecimalIntegerState();
 					break;
 				case 'b':
+					if(Lexeme[0] == '-')
+						return goBackNegativeNonBase10(t);
 					b = IntegerToken.Base.Binary;
 					value = binaryIntegerState();
 					break;
@@ -108,6 +112,8 @@ namespace Frost.Scripting.Compiler
 				default:
 					if(Char.IsDigit(t))
 					{// Octal
+						if(Lexeme[0] == '-')
+							return goBackNegativeNonBase10(t);
 						pushback(t);
 						b = IntegerToken.Base.Octal;
 						value = octalIntegerState();
@@ -122,6 +128,19 @@ namespace Frost.Scripting.Compiler
 			
 			// End of stream, just a 0 by itself
 			return new IntegerToken(0, IntegerToken.Base.Decimal, _line, TokenStartPosition);
+		}
+
+		/// <summary>
+		/// Goes back in the stream before a non-decimal (base-10) number was encountered
+		/// </summary>
+		/// <param name="t">Non-decimal indicator character (b, x)</param>
+		/// <returns>A dash token</returns>
+		/// <remarks>Any number not in base-10 can't be negative, so return a dash token and then a positive number</remarks>
+		private Token goBackNegativeNonBase10 (char t)
+		{
+			pushback(t);
+			pushback('0');
+			return new Token(TokenTag.Subtract, _line, _char);
 		}
 
 		/// <summary>
