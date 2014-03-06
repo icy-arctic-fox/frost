@@ -278,7 +278,7 @@ namespace Frost_Script_Test
 		[TestMethod]
 		public void OverflowOctalIntegerTest ()
 		{
-			var lexer = setupLexer("012345678901234567890");
+			var lexer = setupLexer("0123456701234567");
 			try
 			{
 				lexer.GetNext();
