@@ -5,7 +5,7 @@ namespace Frost.Entities
 	/// <summary>
 	/// Draws 2D graphical entities
 	/// </summary>
-	public class Graphics2DEntityProcessor : IEntityProcessor
+	public class Graphics2DEntityProcessor : IEntityRenderer
 	{
 		private readonly EntityComponentMap<Position2DEntityComponent> _position2DMap;
 		private readonly EntityComponentMap<TexturedEntityComponent> _texturedMap;
@@ -28,7 +28,9 @@ namespace Frost.Entities
 		/// Draws a 2D entity
 		/// </summary>
 		/// <param name="e">Entity to process</param>
-		public void ProcessEntity (Entity e)
+		/// <param name="stateIndex">Index of the entity state to draw</param>
+		/// <param name="t">Amount of interpolation</param>
+		public void DrawEntity (Entity e, int stateIndex, double t)
 		{
 			var pos = _position2DMap.GetComponent(e);
 			var tex = _texturedMap.GetComponent(e);
