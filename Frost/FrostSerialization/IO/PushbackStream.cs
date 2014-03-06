@@ -110,7 +110,10 @@ namespace Frost.IO
 		/// <param name="count">The number of bytes to be written to the current stream</param>
 		public override void Write (byte[] buffer, int offset, int count)
 		{
-			_ms.Write(buffer, offset, count);
+			var pos = _ms.Position; // Store the stream position
+			_ms.Seek(0L, SeekOrigin.End); // and move to the end to append data.
+			_ms.Write(buffer, offset, count); // Writing data advances the stream,
+			_ms.Seek(pos, SeekOrigin.Begin); // so seek back to where the stream was before.
 		}
 
 		/// <summary>
