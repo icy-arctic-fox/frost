@@ -186,6 +186,18 @@ namespace Frost_Script_Test
 			}
 			Assert.Fail("The lexer did not throw an exception.");
 		}
+
+		/// <summary>
+		/// Checks that the lexer properly handles a binary integer terminated by a symbol
+		/// </summary>
+		[TestMethod]
+		public void BinaryIntegerStopSymbol ()
+		{
+			const int expected = 10;
+			var lexer = setupLexer("0b1010+");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected);
+		}
 		#endregion
 		#endregion
 
