@@ -13,7 +13,7 @@ namespace Frost.Entities
 		public class Manager
 		{
 			private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
-			private ulong _nextId;
+			private ulong _nextId = UnregisteredId + 1;
 
 			/// <summary>
 			/// Adds an entity to the manager so that it can be tracked
