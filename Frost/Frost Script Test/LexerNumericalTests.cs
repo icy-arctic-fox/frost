@@ -611,5 +611,68 @@ namespace Frost_Script_Test
 			Assert.Fail("The lexer did not throw an exception.");
 		}
 		#endregion
+
+		#region Floating-point literal tests
+
+		/// <summary>
+		/// Checks that the lexer handles a typical floating-point number
+		/// </summary>
+		[TestMethod, TestCategory("Lexer")]
+		public void FloatTest ()
+		{
+			const float expected = 123.456f;
+			var lexer = LexerTestUtility.SetupLexer("123.456");
+			var token = lexer.GetNext();
+			LexerTestUtility.AssertFloatToken(token, 1, 1, expected);
+		}
+
+		/// <summary>
+		/// Checks that the lexer handles a floating-point number with a value of 0
+		/// </summary>
+		[TestMethod, TestCategory("Lexer")]
+		public void FloatZeroTest ()
+		{
+			const float expected = 0f;
+			var lexer = LexerTestUtility.SetupLexer("0.0");
+			var token = lexer.GetNext();
+			LexerTestUtility.AssertFloatToken(token, 1, 1, expected);
+		}
+
+		/// <summary>
+		/// Checks that the lexer handles a floating-point number that ends with a dot
+		/// </summary>
+		[TestMethod, TestCategory("Lexer")]
+		public void FloatEndingDotTest ()
+		{
+			const float expected = 4f;
+			var lexer = LexerTestUtility.SetupLexer("4.");
+			var token = lexer.GetNext();
+			LexerTestUtility.AssertFloatToken(token, 1, 1, expected);
+		}
+
+		/// <summary>
+		/// Checks that the lexer handles a negative floating-point number
+		/// </summary>
+		[TestMethod, TestCategory("Lexer")]
+		public void NegativeFloatTest ()
+		{
+			const float expected = -1.23f;
+			var lexer = LexerTestUtility.SetupLexer("-1.23");
+			var token = lexer.GetNext();
+			LexerTestUtility.AssertFloatToken(token, 1, 1, expected);
+		}
+
+		/// <summary>
+		/// Checks that the lexer properly handles a floating-point number terminated by a symbol
+		/// </summary>
+		[TestMethod, TestCategory("Lexer")]
+		public void FloatStopSymbolTest ()
+		{
+			const float expected = 567.89f;
+			var lexer = LexerTestUtility.SetupLexer("567.89+");
+			var token = lexer.GetNext();
+			LexerTestUtility.AssertFloatToken(token, 1, 1, expected);
+		}
+		#endregion
 	}
 }

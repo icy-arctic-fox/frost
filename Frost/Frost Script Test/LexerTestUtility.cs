@@ -54,5 +54,21 @@ namespace Frost_Script_Test
 			Assert.AreEqual(value, ((IntegerToken)token).Value);
 			Assert.AreEqual(b, ((IntegerToken)token).OriginalBase);
 		}
+
+		/// <summary>
+		/// Asserts that a token is a floating-point token and has a given value
+		/// </summary>
+		/// <param name="token">Token to validate</param>
+		/// <param name="line">Line number that the token should be on</param>
+		/// <param name="pos">Character position that the token should start at</param>
+		/// <param name="value">Expected value of the token</param>
+		public static void AssertFloatToken (Token token, uint line, uint pos, float value)
+		{
+			Assert.IsInstanceOfType(token, typeof(FloatToken));
+			Assert.AreEqual(TokenTag.Float, token.Tag);
+			Assert.AreEqual(line, token.Line);
+			Assert.AreEqual(pos, token.Character);
+			Assert.AreEqual(value, ((FloatToken)token).Value);
+		}
 	}
 }
