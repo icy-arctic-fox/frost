@@ -133,7 +133,7 @@ namespace Frost.Scripting.Compiler
 			{// Getting an end of stream is fine, that signifies that the number completed
 				if(!Char.IsDigit(d) && (d < 'a' || d > 'f') && (d < 'A' || d > 'F'))
 				{// End of numerical value
-					if(count <= 0) // Unexpected end found
+					if(count <= 0 || Char.IsLetterOrDigit(d)) // Unexpected end found
 						error(String.Format("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but got '{0}'", d));
 					else // Reached the end, push the character back
 						pushback(d);
@@ -163,7 +163,7 @@ namespace Frost.Scripting.Compiler
 			{// Getting an end of stream is fine, that signifies that the number completed
 				if(d != '0' && d != '1')
 				{// End of numerical value
-					if(count <= 0) // Unexpected end found
+					if(count <= 0 || Char.IsLetterOrDigit(d)) // Unexpected end found
 						error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
 					else // Reached the end, push the character back
 						pushback(d);
@@ -219,11 +219,13 @@ namespace Frost.Scripting.Compiler
 					else
 						decimalFound = true;
 				}
-				else if(d < '0' && d > '9')
+				else if(!Char.IsLetterOrDigit(d))
 				{// End of numerical value
 					pushback(d);
 					break;
 				}
+				else
+					error(String.Format("Expected digit in numerical literal, but got '{0}'", d));
 			}
 
 			if(decimalFound)
