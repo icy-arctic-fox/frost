@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Frost.Entities
 {
+	// TODO: Speed up access to entity components by fixing their position in an array
+
 	/// <summary>
 	/// Maps component types to their collection of states (component data)
 	/// </summary>
