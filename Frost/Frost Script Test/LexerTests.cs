@@ -122,7 +122,7 @@ namespace Frost_Script_Test
 		/// Checks if the lexer properly handles maximum binary values
 		/// </summary>
 		[TestMethod]
-		public void BigBinaryIntegerTest ()
+		public void MaxBinaryIntegerTest ()
 		{
 			const int expected = Int32.MaxValue;
 			var lexer = setupLexer("0b01111111111111111111111111111111");
@@ -134,7 +134,7 @@ namespace Frost_Script_Test
 		/// Checks if the lexer properly handles minimum binary values
 		/// </summary>
 		[TestMethod]
-		public void SmallBinaryIntegerTest ()
+		public void MinBinaryIntegerTest ()
 		{
 			const int expected = Int32.MinValue;
 			var lexer = setupLexer("0b10000000000000000000000000000000");
@@ -219,6 +219,136 @@ namespace Frost_Script_Test
 			var lexer = setupLexer("0b1010+");
 			var token = lexer.GetNext();
 			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Binary);
+		}
+		#endregion
+
+		#region Octal integer literal tests
+
+		/// <summary>
+		/// Checks if the lexer handles octal integers starting with 0
+		/// </summary>
+		[TestMethod]
+		public void OctalIntegerTest ()
+		{
+			const int expected = 5;
+			var lexer = setupLexer("005");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Octal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer handles an octal 0 value
+		/// </summary>
+		[TestMethod]
+		public void Octal0IntegerTest ()
+		{
+			const int expected = 0;
+			var lexer = setupLexer("00");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Octal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly handles maximum octal values
+		/// </summary>
+		[TestMethod]
+		public void MaxOctalIntegerTest ()
+		{
+			const int expected = Int32.MaxValue;
+			var lexer = setupLexer("017777777777");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Octal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly handles minimum octal values
+		/// </summary>
+		[TestMethod]
+		public void MinOctalIntegerTest ()
+		{
+			const int expected = Int32.MinValue;
+			var lexer = setupLexer("0b20000000000");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Octal);
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about octal integers that are too large
+		/// </summary>
+		[TestMethod]
+		public void OverflowOctalIntegerTest ()
+		{
+			var lexer = setupLexer("012345678901234567890");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(1U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about invalid characters after the octal prefix (0)
+		/// </summary>
+		[TestMethod]
+		public void InvalidOctalIntegerTest ()
+		{
+			var lexer = setupLexer("0abc");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(2U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks if the lexer properly complains about invalid numbers after the octal prefix (0)
+		/// </summary>
+		[TestMethod]
+		public void InvalidOctalIntegerTest2 ()
+		{
+			var lexer = setupLexer("089");
+			try
+			{
+				lexer.GetNext();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(1U, pe.Line);
+				Assert.AreEqual(2U, pe.Character);
+				return;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+		}
+
+		/// <summary>
+		/// Checks that the lexer properly handles an octal integer terminated by a symbol
+		/// </summary>
+		[TestMethod]
+		public void OctalIntegerStopSymbol ()
+		{
+			const int expected = 342391;
+			var lexer = setupLexer("01234567+");
+			var token = lexer.GetNext();
+			assertIntegerToken(token, 1, 1, expected, IntegerToken.Base.Octal);
 		}
 		#endregion
 		#endregion
