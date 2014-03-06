@@ -13,7 +13,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the constructor throws an exception when given a null stream
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void NullStreamTest ()
 		{
 			try
@@ -33,7 +33,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer returns null for an empty string/stream
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void EmptyTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer(String.Empty);
@@ -44,7 +44,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer returns null for a string containing only whitespace
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void WhitespaceTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer(" \t\n\r\n ");

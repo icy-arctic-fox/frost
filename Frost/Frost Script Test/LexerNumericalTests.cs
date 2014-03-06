@@ -4,12 +4,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Frost_Script_Test
 {
-	class LexerNumericalTests
+	/// <summary>
+	/// Tests the numerical constant functionality of <see cref="Lexer"/>
+	/// </summary>
+	[TestClass]
+	public class LexerNumericalTests
 	{
 		/// <summary>
 		/// Checks if the lexer gives a correct token for just the character 0
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void ZeroTest ()
 		{
 			const int expected = 0;
@@ -21,7 +25,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer gives a correct token for a single digit number
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void SingleDigitIntegerTest ()
 		{
 			const int expected = 5;
@@ -35,7 +39,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer handles binary integers starting with 0
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void BinaryIntegerLeading0Test ()
 		{
 			const int expected = 21845;
@@ -47,7 +51,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer handles binary integers starting with 1
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void BinaryIntegerTest ()
 		{
 			const int expected = 21845;
@@ -59,7 +63,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer handles a binary 0 value
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void Binary0IntegerTest ()
 		{
 			const int expected = 0;
@@ -71,7 +75,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles maximum binary values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MaxBinaryIntegerTest ()
 		{
 			const int expected = Int32.MaxValue;
@@ -83,7 +87,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles minimum binary values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MinBinaryIntegerTest ()
 		{
 			const int expected = Int32.MinValue;
@@ -95,7 +99,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about binary integers that are too large
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void OverflowBinaryIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0b1010101010101010101010101010101010101010101010101010101010101010");
@@ -118,7 +122,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles binary numbers with a negative prefix
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void NegativeBinaryIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("-0b111");
@@ -133,7 +137,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about invalid characters after the binary prefix (0b)
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void InvalidBinaryIntegerDigitTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0b2");
@@ -155,7 +159,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about invalid characters after the binary prefix (0b)
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void InvalidBinaryIntegerCharTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0babc");
@@ -177,7 +181,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about missing characters after the binary prefix (0b)
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void InvalidBinaryIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0b");
@@ -199,7 +203,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks that the lexer properly handles a binary integer terminated by a symbol
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void BinaryIntegerStopSymbolTest ()
 		{
 			const int expected = 10;
@@ -214,7 +218,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer handles octal integers starting with 0
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void OctalIntegerTest ()
 		{
 			const int expected = 5;
@@ -226,7 +230,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer handles an octal 0 value
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void Octal0IntegerTest ()
 		{
 			const int expected = 0;
@@ -238,7 +242,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles maximum octal values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MaxOctalIntegerTest ()
 		{
 			const int expected = Int32.MaxValue;
@@ -250,7 +254,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles minimum octal values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MinOctalIntegerTest ()
 		{
 			const int expected = Int32.MinValue;
@@ -262,7 +266,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about octal integers that are too large
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void OverflowOctalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0123456701234567");
@@ -285,7 +289,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles octal numbers with a negative prefix
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void NegativeOctalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("-0123");
@@ -300,7 +304,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about invalid characters after the octal prefix (0)
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void InvalidOctalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0abc");
@@ -322,7 +326,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about invalid numbers after the octal prefix (0)
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void InvalidOctalIntegerDigitTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("089");
@@ -344,7 +348,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks that the lexer properly handles an octal integer terminated by a symbol
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void OctalIntegerStopSymbolTest ()
 		{
 			const int expected = 342391;
@@ -359,7 +363,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer handles hexadecimal integers starting with 0
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void HexadecimalIntegerTest ()
 		{
 			const int expected = 5;
@@ -371,7 +375,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer handles a hexadecimal 0 value
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void Hexadecimal0IntegerTest ()
 		{
 			const int expected = 0;
@@ -383,7 +387,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles maximum hexadecimal values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MaxHexadecimalIntegerTest ()
 		{
 			const int expected = Int32.MaxValue;
@@ -395,7 +399,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles minimum hexadecimal values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MinHexadecimalIntegerTest ()
 		{
 			const int expected = Int32.MinValue;
@@ -407,7 +411,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about hexadecimal integers that are too large
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void OverflowHexadecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0xffffffffff");
@@ -430,7 +434,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles hexadecimal numbers with a negative prefix
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void NegativeHexadecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("-0xff");
@@ -445,7 +449,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about missing characters after the hexadecimal prefix (0x)
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void InvalidHexadecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0x");
@@ -467,7 +471,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about invalid characters after the hexadecimal prefix (0x)
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void InvalidHexadecimalIntegerDigitTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0xzzz");
@@ -489,7 +493,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks that the lexer properly handles a hexadecimal integer terminated by a symbol
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void HexadecimalIntegerStopSymbolTest ()
 		{
 			const int expected = 0xaabbcc;
@@ -501,7 +505,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks that the lexer properly handles a hexadecimal integer terminated by a symbol
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void HexadecimalMixedCaseTest ()
 		{
 			const int expected = 0x7abcde;
@@ -516,7 +520,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks that the lexer properly handles a decimal integer with multiple digits
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void DecimalIntegerTest ()
 		{
 			const int expected = 1234567890;
@@ -528,7 +532,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks that the lexer properly handles a decimal integer terminated by a symbol
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void DecimalIntegerStopSymbolTest ()
 		{
 			const int expected = 555;
@@ -540,7 +544,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles maximum decimal values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MaxDecimalIntegerTest ()
 		{
 			const int expected = Int32.MaxValue;
@@ -552,7 +556,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly handles minimum decimal values
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void MinDecimalIntegerTest ()
 		{
 			const int expected = Int32.MinValue;
@@ -564,7 +568,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about decimal integers that are too large
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void OverflowDecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("9999999999");
@@ -587,7 +591,7 @@ namespace Frost_Script_Test
 		/// <summary>
 		/// Checks if the lexer properly complains about decimal integers that are too small
 		/// </summary>
-		[TestMethod]
+		[TestMethod, TestCategory("Lexer")]
 		public void UnderflowDecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("-9999999999");
