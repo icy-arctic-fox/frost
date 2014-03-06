@@ -233,7 +233,13 @@ namespace Frost.Scripting.Compiler
 				}
 			}
 
-			throw new NotImplementedException();
+			if(decimalFound)
+				throw new NotImplementedException();
+			
+			// else - Integer token found
+			const IntegerToken.Base b = IntegerToken.Base.Decimal;
+			var value = Convert.ToInt32(Lexeme, (int)b);
+			return new IntegerToken(value, b, _line, TokenStartPosition);
 		}
 		#endregion
 
