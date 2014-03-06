@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripting\Compiler\FloatToken.cs" />
     <Compile Include="Scripting\Compiler\IntegerToken.cs" />
     <Compile Include="Scripting\Compiler\Lexer.cs" />
     <Compile Include="Scripting\Compiler\ParserException.cs" />
