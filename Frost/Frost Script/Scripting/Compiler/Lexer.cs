@@ -132,7 +132,7 @@ namespace Frost.Scripting.Compiler
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
 				if(!Char.IsDigit(d) && (d < 'a' || d > 'f') && (d < 'A' || d > 'F'))
-				{// End of constant
+				{// End of numerical value
 					if(count <= 0) // Unexpected end found
 						error(String.Format("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but got '{0}'", d));
 					else // Reached the end, push the character back
@@ -165,7 +165,7 @@ namespace Frost.Scripting.Compiler
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
 				if(d != '0' && d != '1')
-				{// End of constant
+				{// End of numerical value
 					if(count <= 0) // Unexpected end found
 						error(String.Format("Expected 0 or 1 digit in binary numerical literal, but got '{0}'", d));
 					else // Reached the end, push the character back
@@ -196,8 +196,11 @@ namespace Frost.Scripting.Compiler
 			char d;
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
-				if(d < '0' || d > '7') // End of constant
+				if(d < '0' && d > '7')
+				{// End of numerical value
+					pushback(d);
 					break;
+				}
 				// Octal digits don't need to be checked here because there's always at least one digit.
 				// The digit was pushed back in the digit0State() method.
 			}
@@ -212,6 +215,24 @@ namespace Frost.Scripting.Compiler
 		/// <returns>A numerical token</returns>
 		private Token numberState (char c)
 		{
+			var decimalFound = false;
+			char d;
+			while(getNextChar(out d))
+			{// Getting an end of stream is fine, that signifies that the number completed
+				if(d == '.')
+				{// Found a decimal point
+					if(decimalFound)
+						error("Unexpected duplicate decimal point found in floating-point number");
+					else
+						decimalFound = true;
+				}
+				else if(d < '0' && d > '9' && d != '.')
+				{// End of numerical value
+					pushback(d);
+					break;
+				}
+			}
+
 			throw new NotImplementedException();
 		}
 		#endregion
