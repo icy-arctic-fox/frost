@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using Frost.Scripting.Compiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -69,6 +70,46 @@ namespace Frost_Script_Test
 			Assert.AreEqual(line, token.Line);
 			Assert.AreEqual(pos, token.Character);
 			Assert.AreEqual(value, ((FloatToken)token).Value);
+		}
+
+		/// <summary>
+		/// Asserts that some code throws a <see cref="ParserException"/>
+		/// </summary>
+		/// <param name="line">Line number that contains the lexing error</param>
+		/// <param name="pos">Character position on the line that contains the lexing error</param>
+		/// <param name="code">Code that should throw a <see cref="ParserException"/></param>
+		/// <returns>The exception that was thrown</returns>
+		public static ParserException AssertException (uint line, uint pos, Action code)
+		{
+			try
+			{
+				code();
+			}
+			catch(Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ParserException));
+				var pe = (ParserException)e;
+				Assert.AreEqual(line, pe.Line);
+				Assert.AreEqual(pos, pe.Character);
+				return pe;
+			}
+			Assert.Fail("The lexer did not throw an exception.");
+			return null;
+		}
+
+		/// <summary>
+		/// Asserts that some code throws a <see cref="ParserException"/>
+		/// </summary>
+		/// <param name="line">Line number that contains the lexing error</param>
+		/// <param name="pos">Character position on the line that contains the lexing error</param>
+		/// <param name="code">Code that should throw a <see cref="ParserException"/></param>
+		/// <typeparam name="TInner">Type of the inner exception (<see cref="Exception.InnerException"/>)</typeparam>
+		/// <returns>The exception that was thrown</returns>
+		public static ParserException AssertException<TInner> (uint line, uint pos, Action code)
+		{
+			var pe = AssertException(line, pos, code);
+			Assert.IsInstanceOfType(pe.InnerException, typeof(TInner));
+			return pe;
 		}
 	}
 }

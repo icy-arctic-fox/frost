@@ -103,20 +103,7 @@ namespace Frost_Script_Test
 		public void OverflowBinaryIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0b1010101010101010101010101010101010101010101010101010101010101010");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(1U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException<OverflowException>(1U, 1U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -141,19 +128,7 @@ namespace Frost_Script_Test
 		public void InvalidBinaryIntegerDigitTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0b2");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(3U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 3U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -163,19 +138,7 @@ namespace Frost_Script_Test
 		public void InvalidBinaryIntegerCharTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0babc");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(3U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 3U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -185,19 +148,7 @@ namespace Frost_Script_Test
 		public void InvalidBinaryIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0b");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(2U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 2U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -270,20 +221,7 @@ namespace Frost_Script_Test
 		public void OverflowOctalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0123456701234567");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(1U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException<OverflowException>(1U, 1U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -308,19 +246,7 @@ namespace Frost_Script_Test
 		public void InvalidOctalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0abc");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(2U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 2U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -330,19 +256,7 @@ namespace Frost_Script_Test
 		public void InvalidOctalIntegerDigitTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("089");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(2U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 2U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -415,20 +329,7 @@ namespace Frost_Script_Test
 		public void OverflowHexadecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0xffffffffff");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(1U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException<OverflowException>(1U, 1U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -453,19 +354,7 @@ namespace Frost_Script_Test
 		public void InvalidHexadecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0x");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(2U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 2U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -475,19 +364,7 @@ namespace Frost_Script_Test
 		public void InvalidHexadecimalIntegerDigitTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("0xzzz");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(3U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 3U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -572,20 +449,7 @@ namespace Frost_Script_Test
 		public void OverflowDecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("9999999999");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(1U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException<OverflowException>(1U, 1U, () => lexer.GetNext());
 		}
 
 		/// <summary>
@@ -595,20 +459,7 @@ namespace Frost_Script_Test
 		public void UnderflowDecimalIntegerTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("-9999999999");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(1U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException<OverflowException>(1U, 1U, () => lexer.GetNext());
 		}
 		#endregion
 
@@ -681,19 +532,7 @@ namespace Frost_Script_Test
 		public void FloatDoubleDotTest ()
 		{
 			var lexer = LexerTestUtility.SetupLexer("123.456.789");
-			try
-			{
-				lexer.GetNext();
-			}
-			catch(Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(ParserException));
-				var pe = (ParserException)e;
-				Assert.AreEqual(1U, pe.Line);
-				Assert.AreEqual(8U, pe.Character);
-				return;
-			}
-			Assert.Fail("The lexer did not throw an exception.");
+			LexerTestUtility.AssertException(1U, 8U, () => lexer.GetNext());
 		}
 		#endregion
 	}
