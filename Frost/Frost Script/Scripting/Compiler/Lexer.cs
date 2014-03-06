@@ -211,7 +211,12 @@ namespace Frost.Scripting.Compiler
 			char d;
 			while(getNextChar(out d))
 			{// Getting an end of stream is fine, that signifies that the number completed
-				if(d < '0' || d > '7')
+				if(Char.IsDigit(d))
+				{
+					if(d < '0' || d > '7')
+						error(String.Format("Expected 0-7 digit in octal numerical literal, but got '{0}'", d));
+				}
+				else
 				{// End of numerical value
 					pushback(d);
 					break;
