@@ -76,7 +76,7 @@ namespace Frost.Scripting.Compiler
 		/// <returns></returns>
 		private Token digitState (char c)
 		{
-			return (c == '0') ? digit0State() : numberState(c);
+			return (c == '0') ? digit0State() : numberState();
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace Frost.Scripting.Compiler
 					break;
 				case '.':
 					pushback(t);
-					return numberState('0');
+					return numberState();
 				default:
 					if(Char.IsDigit(t))
 					{// Octal
@@ -142,11 +142,8 @@ namespace Frost.Scripting.Compiler
 				++count;
 			}
 
-			if(count <= 0)
-			{// Unexpected end of stream
+			if(count <= 0) // Unexpected end of stream
 				error("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but end of file reached");
-				return 0;
-			}
 
 			// Valid hexadecimal value
 			const IntegerToken.Base b = IntegerToken.Base.Hexadecimal;
@@ -175,11 +172,8 @@ namespace Frost.Scripting.Compiler
 				++count;
 			}
 
-			if(count <= 0)
-			{// Unexpected end of stream
+			if(count <= 0) // Unexpected end of stream
 				error("Expected 0 or 1 digit in binary numerical literal, but end of file reached");
-				return 0;
-			}
 
 			// Valid binary value
 			const IntegerToken.Base b = IntegerToken.Base.Binary;
@@ -211,9 +205,8 @@ namespace Frost.Scripting.Compiler
 		/// <summary>
 		/// State when parsing a base 10 numerical value (integer or decimal)
 		/// </summary>
-		/// <param name="c">First character in the number</param>
 		/// <returns>A numerical token</returns>
-		private Token numberState (char c)
+		private Token numberState ()
 		{
 			var decimalFound = false;
 			char d;
@@ -226,7 +219,7 @@ namespace Frost.Scripting.Compiler
 					else
 						decimalFound = true;
 				}
-				else if(d < '0' && d > '9' && d != '.')
+				else if(d < '0' && d > '9')
 				{// End of numerical value
 					pushback(d);
 					break;
