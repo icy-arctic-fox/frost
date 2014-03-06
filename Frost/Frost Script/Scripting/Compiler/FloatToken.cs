@@ -24,7 +24,7 @@ namespace Frost.Scripting.Compiler
 		/// <param name="line">Line number the token appeared on</param>
 		/// <param name="pos">Position of the first character on the line where the token starts</param>
 		public FloatToken (float value, uint line, uint pos)
-			: base(TokenTag.Integer, line, pos)
+			: base(TokenTag.Float, line, pos)
 		{
 			_value = value;
 		}
