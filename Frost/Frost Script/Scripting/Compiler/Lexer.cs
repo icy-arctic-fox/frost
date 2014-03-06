@@ -141,6 +141,14 @@ namespace Frost.Scripting.Compiler
 				}
 				++count;
 			}
+
+			if(count <= 0)
+			{// Unexpected end of stream
+				error("Expected 0-9, a-f, or A-F digit in hexadecimal numerical literal, but end of file reached");
+				return 0;
+			}
+
+			// Valid hexadecimal value
 			const IntegerToken.Base b = IntegerToken.Base.Hexadecimal;
 			var lexeme = Lexeme.Substring(2); // Remove 0x prefix
 			return Convert.ToInt32(lexeme, (int)b);
@@ -166,6 +174,14 @@ namespace Frost.Scripting.Compiler
 				}
 				++count;
 			}
+
+			if(count <= 0)
+			{// Unexpected end of stream
+				error("Expected 0 or 1 digit in binary numerical literal, but end of file reached");
+				return 0;
+			}
+
+			// Valid binary value
 			const IntegerToken.Base b = IntegerToken.Base.Binary;
 			var lexeme = Lexeme.Substring(2); // Remove 0b prefix
 			return Convert.ToInt32(lexeme, (int)b);
