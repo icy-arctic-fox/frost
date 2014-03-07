@@ -23,6 +23,7 @@ namespace Frost.IO.Resources
 		/// <param name="password">Password used to encrypt the resource package</param>
 		/// <exception cref="FileNotFoundException">Thrown if the resource package file wasn't found under <paramref name="filepath"/></exception>
 		/// <exception cref="InvalidDataException">Thrown if the data contained in the resource file is invalid</exception>
+		/// <exception cref="CryptographicException">Thrown if the password provided was incorrect</exception>
 		/// <remarks>The file will remain open until <see cref="Close"/> or <see cref="Dispose"/> is called.</remarks>
 		public ResourcePackageReader (string filepath, string password = null)
 		{
@@ -61,7 +62,7 @@ namespace Frost.IO.Resources
 			catch(CryptographicException e)
 			{
 				_br.Dispose();
-				throw new InvalidDataException("Incorrect password.", e);
+				throw new CryptographicException("Incorrect password.", e);
 			}
 
 			// Calculate how big the header is (and where the data starts)
