@@ -27,16 +27,16 @@ namespace Frost.ResourcePackagerGui
 
 		public void DisplayPackageContents (ResourcePackage package)
 		{
-			var root = constructTree(package.Resources, treeView.PathSeparator[0]);
+			var root = constructTree(package, treeView.PathSeparator[0]);
 			treeView.Nodes.Add(root);
 		}
 
 		#region Tree construction
 
-		private static TreeNode constructTree (IEnumerable<ResourcePackageEntry> resources, char separator)
+		private static TreeNode constructTree (ResourcePackage package, char separator)
 		{
-			var root = constructRootNode();
-			foreach(var resource in resources)
+			var root = constructRootNode(package);
+			foreach(var resource in package.Resources)
 			{
 				var node = constructNode(resource, separator);
 				insertNodeIntoTree(root, node, separator);
@@ -44,21 +44,20 @@ namespace Frost.ResourcePackagerGui
 			return root;
 		}
 
-		private static TreeNode constructRootNode ()
+		private static TreeNode constructRootNode (ResourcePackage package)
 		{
-			return new TreeNode();
+			return new TreeNode {Text = package.ToString()};
 		}
 
 		private static TreeNode constructNode (ResourcePackageEntry entry, char separator)
 		{
 			var index = entry.Name.LastIndexOf(separator);
 			var text  = (index < 0) ? entry.Name : entry.Name.Substring(index + 1);
-			var node  = new TreeNode {
+			return new TreeNode {
 				Name = entry.Name,
 				Text = text,
 				Tag  = entry
 			};
-			return node;
 		}
 
 		private static void insertNodeIntoTree (TreeNode root, TreeNode node, char separator)
