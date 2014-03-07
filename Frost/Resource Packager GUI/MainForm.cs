@@ -20,24 +20,33 @@ namespace Frost.ResourcePackagerGui
 		{
 			ResourcePackage package = null;
 			string password = null;
-			var loaded = false;
-			var errorText = String.Empty;
+			var tryAgain = false;
 			do
 			{
 				try
 				{
 					package = new ResourcePackageReader(filename, password);
-					loaded = true;
 				}
 				catch(CryptographicException)
 				{// Password is incorrect
-					// TODO: Prompt for password
+					var passwordPrompt = new PasswordPromptDialog();
+					if(passwordPrompt.ShowDialog() == DialogResult.OK)
+					{
+						password = passwordPrompt.Password;
+						tryAgain = true;
+						continue; // Try with new password
+					}
+					const string errorText = "The resource package requires a package to open it.";
+					tryAgain = (MessageBox.Show(errorText, "Incorrect Password", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) ==
+								DialogResult.Retry);
 				}
 				catch(Exception e)
 				{
-					errorText = String.Format("An error was encountered while attempting to load the resource package.\n\n{0}", e.Message);
+					var errorText = String.Format("An error was encountered while attempting to load the resource package.\n\n{0}", e.Message);
+					tryAgain = (MessageBox.Show(errorText, "Load Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) ==
+								DialogResult.Retry);
 				}
-			} while(!loaded && MessageBox.Show(errorText, "Load Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry);
+			} while(package == null && tryAgain);
 			return package;
 		}
 		#endregion
