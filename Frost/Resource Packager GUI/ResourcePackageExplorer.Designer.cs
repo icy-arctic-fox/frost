@@ -62,6 +62,7 @@
 			this.treeView.PathSeparator = "/";
 			this.treeView.Size = new System.Drawing.Size(332, 374);
 			this.treeView.TabIndex = 1;
+			this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
 			// 
 			// pathTextBox
 			// 

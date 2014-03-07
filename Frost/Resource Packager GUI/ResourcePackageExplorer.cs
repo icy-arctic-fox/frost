@@ -35,13 +35,18 @@ namespace Frost.ResourcePackagerGui
 
 		private static TreeNode constructTree (IEnumerable<ResourcePackageEntry> resources, char separator)
 		{
-			var root = new TreeNode();
+			var root = constructRootNode();
 			foreach(var resource in resources)
 			{
 				var node = constructNode(resource, separator);
 				insertNodeIntoTree(root, node, separator);
 			}
 			return root;
+		}
+
+		private static TreeNode constructRootNode ()
+		{
+			return new TreeNode();
 		}
 
 		private static TreeNode constructNode (ResourcePackageEntry entry, char separator)
@@ -86,5 +91,11 @@ namespace Frost.ResourcePackagerGui
 			return nodes.Cast<TreeNode>().FirstOrDefault(node => node.Name == name);
 		}
 		#endregion
+
+		private void treeView_AfterSelect (object sender, TreeViewEventArgs e)
+		{
+			var node = e.Node;
+			pathTextBox.Text = node.Name;
+		}
 	}
 }
