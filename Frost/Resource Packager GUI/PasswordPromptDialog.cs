@@ -11,9 +11,24 @@ namespace Frost.ResourcePackagerGui
 {
 	public partial class PasswordPromptDialog : Form
 	{
+		public string Password
+		{
+			get { return passwordTextBox.Text; }
+		}
+
 		public PasswordPromptDialog ()
 		{
 			InitializeComponent();
+		}
+
+		private void okButton_Click (object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.OK;
+		}
+
+		private void cancelButton_Click (object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 	}
 }
