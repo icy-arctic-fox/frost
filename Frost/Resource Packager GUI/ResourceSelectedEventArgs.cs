@@ -6,7 +6,7 @@ using Frost.IO.Resources;
 
 namespace Frost.ResourcePackagerGui
 {
-	class ResourceSelectedEventArgs : EventArgs
+	public class ResourceSelectedEventArgs : EventArgs
 	{
 		private readonly ResourcePackageEntry _entry;
 

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Frost.IO.Resources;
+using Frost.Utility;
 
 namespace Frost.ResourcePackagerGui
 {
@@ -31,6 +32,8 @@ namespace Frost.ResourcePackagerGui
 			var root = constructTree(package, treeView.PathSeparator[0]);
 			treeView.Nodes.Add(root);
 		}
+
+		public event EventHandler<ResourceSelectedEventArgs> ResourceSelected;
 
 		#region Tree construction
 
@@ -96,6 +99,12 @@ namespace Frost.ResourcePackagerGui
 		{
 			var node = e.Node;
 			pathTextBox.Text = node.Name;
+			var entry = node.Tag as ResourcePackageEntry;
+			if(entry != null)
+			{
+				var args = new ResourceSelectedEventArgs(entry);
+				ResourceSelected.NotifyThreadedSubscribers(this, args);
+			}
 		}
 	}
 }
