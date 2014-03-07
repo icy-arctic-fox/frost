@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using Frost.IO.Resources;
@@ -15,6 +16,16 @@ namespace Frost.ResourcePackagerGui
 		}
 
 		#region Save and load
+
+		private static ResourcePackageReader savePackage (string filename, IEnumerable<ResourcePackageEntry> entries)
+		{
+			using(var writer = new ResourcePackageWriter(filename /* TODO: Add other parameters */))
+				foreach(var entry in entries)
+				{
+					// TODO
+				}
+			return new ResourcePackageReader(filename);
+		}
 
 		private static ResourcePackage loadPackage (string filename)
 		{
