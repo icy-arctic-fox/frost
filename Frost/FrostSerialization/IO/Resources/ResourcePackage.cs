@@ -240,5 +240,15 @@ namespace Frost.IO.Resources
 				throw new ObjectDisposedException(GetType().FullName);
 		}
 		#endregion
+
+		/// <summary>
+		/// Creates a string representation of the resource package
+		/// </summary>
+		/// <returns>A string containing information about the package in the form:
+		/// ResourcePackage: Name</returns>
+		public override string ToString ()
+		{
+			return String.Format("ResourcePackage: {0}", Name);
+		}
 	}
 }
