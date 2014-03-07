@@ -30,10 +30,9 @@
 		{
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.packageTreeView = new System.Windows.Forms.TreeView();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
+			this.resourcePackageExplorer1 = new Frost.ResourcePackagerGui.ResourcePackageExplorer();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
-			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
 			this.SuspendLayout();
@@ -54,18 +53,10 @@
 			// 
 			// splitContainer.Panel2
 			// 
-			this.splitContainer.Panel2.Controls.Add(this.packageTreeView);
+			this.splitContainer.Panel2.Controls.Add(this.resourcePackageExplorer1);
 			this.splitContainer.Size = new System.Drawing.Size(624, 314);
 			this.splitContainer.SplitterDistance = 300;
 			this.splitContainer.TabIndex = 2;
-			// 
-			// packageTreeView
-			// 
-			this.packageTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.packageTreeView.Location = new System.Drawing.Point(0, 0);
-			this.packageTreeView.Name = "packageTreeView";
-			this.packageTreeView.Size = new System.Drawing.Size(320, 314);
-			this.packageTreeView.TabIndex = 0;
 			// 
 			// toolStrip
 			// 
@@ -74,6 +65,14 @@
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(624, 25);
 			this.toolStrip.TabIndex = 3;
+			// 
+			// resourcePackageExplorer1
+			// 
+			this.resourcePackageExplorer1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.resourcePackageExplorer1.Location = new System.Drawing.Point(0, 0);
+			this.resourcePackageExplorer1.Name = "resourcePackageExplorer1";
+			this.resourcePackageExplorer1.Size = new System.Drawing.Size(320, 314);
+			this.resourcePackageExplorer1.TabIndex = 0;
 			// 
 			// MainForm
 			// 
@@ -85,7 +84,6 @@
 			this.Controls.Add(this.statusStrip);
 			this.Name = "MainForm";
 			this.Text = "Resource Packager";
-			this.splitContainer.Panel1.ResumeLayout(false);
 			this.splitContainer.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
 			this.splitContainer.ResumeLayout(false);
@@ -98,8 +96,8 @@
 
 		private System.Windows.Forms.StatusStrip statusStrip;
 		private System.Windows.Forms.SplitContainer splitContainer;
-		private System.Windows.Forms.TreeView packageTreeView;
 		private System.Windows.Forms.ToolStrip toolStrip;
+		private ResourcePackageExplorer resourcePackageExplorer1;
 	}
 }
 
