@@ -166,6 +166,16 @@ namespace Frost.Entities
 					return map;
 				}
 			}
+
+			/// <summary>
+			/// Creates a string representation of the entity manager
+			/// </summary>
+			/// <returns>A string in the format:
+			/// Entities: #</returns>
+			public override string ToString ()
+			{
+				return String.Format("Entities: {0}", EntityCount);
+			}
 		}
 	}
 }

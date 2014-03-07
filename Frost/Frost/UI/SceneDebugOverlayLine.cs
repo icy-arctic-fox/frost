@@ -46,7 +46,12 @@ namespace Frost.UI
 		/// <returns>Scene information</returns>
 		public override string ToString ()
 		{
-			return String.Format("Scene: {0} - {1}", _scenes.CurrentScene.Name, _scenes.StateManager);
+			var scenes    = _scenes;
+			var curScene  = scenes.CurrentScene;
+			var sceneName = curScene.Name;
+			var manager   = scenes.StateManager;
+			var entities  = curScene.Entities;
+			return String.Format("Scene: {0} - {1} {2}", sceneName, manager, entities);
 		}
 	}
 }
