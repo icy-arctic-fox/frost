@@ -27,6 +27,7 @@ namespace Frost.ResourcePackagerGui
 
 		public void DisplayPackageContents (ResourcePackage package)
 		{
+			treeView.Nodes.Clear();
 			var root = constructTree(package, treeView.PathSeparator[0]);
 			treeView.Nodes.Add(root);
 		}
