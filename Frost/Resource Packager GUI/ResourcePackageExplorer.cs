@@ -62,14 +62,19 @@ namespace Frost.ResourcePackagerGui
 			var levels = entry.Name.Split(separator);
 			var name = String.Empty;
 			var curNode = root;
-			for(var i = 1; i < levels.Length; ++i)
+			for(var i = 0; i < levels.Length - 1; ++i)
 			{
+				if(name != String.Empty)
+					name += separator;
 				name += levels[i];
 				var parent = findNodeByName(curNode.Nodes, name);
 				if(parent == null)
 				{// Create the container node
-					var container = new TreeNode {Name = name};
-					curNode.Nodes.Add(container);
+					parent = new TreeNode {
+						Name = name,
+						Text = levels[i]
+					};
+					curNode.Nodes.Add(parent);
 				}
 				curNode = parent;
 			}
