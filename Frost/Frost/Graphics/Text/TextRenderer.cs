@@ -56,22 +56,22 @@ namespace Frost.Graphics.Text
 			}
 		}
 
-		private uint _wrapLength;
+		private uint _wrapWidth;
 
 		/// <summary>
 		/// Width of text (in pixels) to wrap each line by
 		/// </summary>
 		/// <remarks>There must be at least one word per line.
 		/// It is possible to go over this length if the first word on a line has a pixel length greater than this value.</remarks>
-		public uint WrapLength
+		public uint WrapWidth
 		{
-			get { return _wrapLength; }
+			get { return _wrapWidth; }
 			set
 			{
-				if(value != _wrapLength)
+				if(value != _wrapWidth)
 				{
-					Prepared    = false;
-					_wrapLength = value;
+					Prepared   = false;
+					_wrapWidth = value;
 				}
 			}
 		}
