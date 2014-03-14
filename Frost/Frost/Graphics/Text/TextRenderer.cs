@@ -90,6 +90,21 @@ namespace Frost.Graphics.Text
 			}
 		}
 
+		private TextAlignment _align;
+
+		/// <summary>
+		/// Horizontal alignment of the text within the bounds
+		/// </summary>
+		public TextAlignment Alignment
+		{
+			get { return _align; }
+			set
+			{
+				Prepared = false;
+				_align   = value;
+			}
+		}
+
 		/// <summary>
 		/// Underlying texture used to draw text on
 		/// </summary>
