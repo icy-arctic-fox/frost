@@ -22,10 +22,17 @@ namespace Test_Game
 		{
 			using(var renderer = new PlainTextRenderer())
 			{
+				renderer.WrapWidth = 200;
 				renderer.Font = Font.LoadFromFile("coolvetica.ttf");
 				renderer.Text = "Hello!\nThis is a test of the text rendering system.";
 				_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
 			}
+		}
+
+		public override void Step (int prev, int next)
+		{
+			base.Step(prev, next);
+			_sprite.Step(prev, next);
 		}
 
 		public override void Draw (IDisplay display, int state, double t)
