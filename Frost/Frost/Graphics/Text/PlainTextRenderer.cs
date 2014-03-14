@@ -48,7 +48,7 @@ namespace Frost.Graphics.Text
 
 		#region Word Wrap
 
-		private static readonly Regex _newlineRegex    = new Regex(@"\r?\n", RegexOptions.Compiled);
+		private static readonly Regex _newlineRegex = new Regex(@"\r?\n", RegexOptions.Compiled);
 
 		/// <summary>
 		/// Draws the text using word wrapping
@@ -59,7 +59,7 @@ namespace Frost.Graphics.Text
 			// Perform the word wrapping
 			SFML.Graphics.FloatRect rect;
 			var lines = splitTextIntoWords(text);
-			var words = applyWordWrap(lines, TextObject, out rect);
+			var words = applyWordWrap(lines, TextObject, WrapWidth, out rect);
 
 			// Prepare the texture
 			var width  = (uint)(rect.Width  + rect.Left) + 1;
@@ -129,35 +129,56 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="textLines">List of lines with each element containing a list of words</param>
 		/// <param name="t">Text object used to calculate the bounds</param>
+		/// <param name="wrapWidth">Width of the box to wrap text to</param>
 		/// <param name="rect">Bounding box for all words</param>
-		private static IEnumerable<IEnumerable<Word>> applyWordWrap (IEnumerable<IEnumerable<string>> textLines, SFML.Graphics.Text t, out SFML.Graphics.FloatRect rect)
+		private static IEnumerable<IEnumerable<Word>> applyWordWrap (IEnumerable<IEnumerable<string>> textLines, SFML.Graphics.Text t, uint wrapWidth, out SFML.Graphics.FloatRect rect)
 		{
-			var lines = new LinkedList<LinkedList<Word>>();
-			float width = 0f, height = 0f;
+			var lines = new List<List<Word>>();
+			float rectWidth = 0f, y = 0f;
+			var lineSpacing = t.Font.GetLineSpacing(t.CharacterSize);
+
 			foreach(var lineText in textLines)
 			{
-				var line = new LinkedList<Word>();
-				var x    = 0f;
-				var max  = 0f;
+				var line = new List<Word>();
+				var wrapped = false;
+				var x = 0f;
+
 				foreach(var wordText in lineText)
 				{
 					// Calculate the bounds of the word
 					var bounds = getTextBounds(wordText, t);
-					var word   = new Word(wordText, x, height);
-					line.AddLast(word);
+					var word   = new Word(wordText, x, y);
+					line.Add(word); // This guarantees at least one word per line.
+					// Otherwise, there could be infinite blank lines.
 
 					// Advance the position for the next word
-					x += bounds.Width + bounds.Left; // TODO: Add whitespace
-					if(bounds.Height + bounds.Top > max)
-						max = bounds.Height + bounds.Top;
-					if(x > width)
-						width = x;
+					x += bounds.Width + bounds.Left;
+					if(x > rectWidth) // Expand the width of the text bounds
+						rectWidth = x;
+
+					if(x >= wrapWidth)
+					{// Wrap to the next line
+						lines.Add(line);
+						line = new List<Word>();
+						wrapped = true;
+
+						// Reset position to start of next line
+						x  = 0f;
+						y += lineSpacing;
+					}
+					else
+						wrapped = false;
 				}
-				height += max;
-				lines.AddLast(line);
+
+				if(line.Count > 0 || !wrapped)
+				{// Add the line if it wasn't blank, or if the line wasn't wrapped and was blank
+					y += lineSpacing; // Expand the height of the text bounds to accommodate the previous line
+					lines.Add(line);
+				}
 			}
 
-			rect = new SFML.Graphics.FloatRect(0f, 0f, width, height);
+			var rectHeight = lineSpacing * lines.Count;
+			rect = new SFML.Graphics.FloatRect(0f, 0f, rectWidth, rectHeight);
 			return lines;
 		}
 
