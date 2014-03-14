@@ -49,7 +49,6 @@ namespace Frost.Graphics.Text
 		#region Word Wrap
 
 		private static readonly Regex _newlineRegex    = new Regex(@"\r?\n", RegexOptions.Compiled);
-		private static readonly Regex _whitespaceRegex = new Regex(@"\s+", RegexOptions.Compiled);
 
 		/// <summary>
 		/// Draws the text using word wrapping
@@ -59,7 +58,7 @@ namespace Frost.Graphics.Text
 		{
 			// Perform the word wrapping
 			SFML.Graphics.FloatRect rect;
-			var lines = breakTextIntoWords(text);
+			var lines = splitTextIntoWords(text);
 			var words = applyWordWrap(lines, TextObject, out rect);
 
 			// Prepare the texture
@@ -76,21 +75,53 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="text">Text to break apart</param>
 		/// <returns>A list of lines with each element containing a list of words</returns>
-		private static IEnumerable<IEnumerable<string>> breakTextIntoWords (string text)
+		private static IEnumerable<IEnumerable<string>> splitTextIntoWords (string text)
 		{
 			// Break apart the string at existing line breaks
 			var textLines = _newlineRegex.Split(text);
-			var lines     = new string[textLines.Length][];
+			var lineCount = textLines.Length;
+			var lines     = new List<IEnumerable<string>>(lineCount);
 
 			// Break each line apart into words
-			for(var i = 0; i < lines.Length; ++i)
+			for(var i = 0; i < lineCount; ++i)
 			{
 				var lineText = textLines[i];
-				var words    = _whitespaceRegex.Split(lineText);
-				lines[i]     = words;
+				var words    = splitLineIntoWords(lineText);
+				lines.Add(words);
 			}
 
 			return lines;
+		}
+
+		/// <summary>
+		/// Splits a line into words
+		/// </summary>
+		/// <param name="lineText">Line of text to split</param>
+		/// <returns>Words obtained from splitting the line</returns>
+		private static IEnumerable<string> splitLineIntoWords (string lineText)
+		{
+			var words = new List<string>();
+			var whitespaceFound = false;
+			var startIndex = 0;
+			for(var i = 0; i < lineText.Length; ++i)
+			{// Iterate through each character, split on whitespace -> non-whitespace boundary
+				var c = lineText[i];
+				if(Char.IsWhiteSpace(c))
+					whitespaceFound = true;
+				else if(whitespaceFound)
+				{// End of whitespace, starting new word
+					var word = lineText.Substring(startIndex, i - startIndex);
+					words.Add(word);
+					startIndex = i;
+					whitespaceFound = false;
+				}
+			}
+
+			// Add the last word
+			var lastWord = lineText.Substring(startIndex);
+			words.Add(lastWord);
+
+			return words;
 		}
 
 		/// <summary>
