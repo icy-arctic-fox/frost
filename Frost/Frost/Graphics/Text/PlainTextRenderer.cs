@@ -40,9 +40,9 @@ namespace Frost.Graphics.Text
 			}
 
 			if(WordWrap)
-				PrepareWordWrap(text);
+				prepareWordWrap(text);
 			else
-				PrepareNoWrap(text);
+				prepareNoWrap(text);
 			Prepared = true;
 		}
 
@@ -54,7 +54,7 @@ namespace Frost.Graphics.Text
 		/// Draws the text using word wrapping
 		/// </summary>
 		/// <param name="text">Text to render</param>
-		protected void PrepareWordWrap (string text)
+		private void prepareWordWrap (string text)
 		{
 			// Perform the word wrapping
 			SFML.Graphics.FloatRect rect;
@@ -234,7 +234,7 @@ namespace Frost.Graphics.Text
 		/// Draws the text not using word wrapping
 		/// </summary>
 		/// <param name="text">Text to render</param>
-		protected void PrepareNoWrap (string text)
+		private void prepareNoWrap (string text)
 		{
 			// Calculate the size of the text
 			TextObject.DisplayedString = text;
