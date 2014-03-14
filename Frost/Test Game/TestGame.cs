@@ -40,7 +40,7 @@ namespace Test_Game
 		/// <returns>A scene</returns>
 		protected override Scene CreateInitialScene ()
 		{
-			return new BallScene();
+			return new TextScene();
 		}
 
 		public override void Initialize ()

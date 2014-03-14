@@ -13,55 +13,25 @@ namespace Test_Game
 			get { return "Text"; }
 		}
 
-		private readonly TextSprite _ts;
+		private readonly Sprite _sprite;
 
 		/// <summary>
 		/// Creates the base of the scene
 		/// </summary>
 		public TextScene ()
 		{
-			_ts = new TextSprite("Hello!");
+			using(var renderer = new PlainTextRenderer())
+			{
+				renderer.Font = Font.LoadFromFile("coolvetica.ttf");
+				renderer.Text = "Hello!\nThis is a test of the text rendering system.";
+				_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
+			}
 		}
 
-		private class TextSprite : IStepable, IRenderable
+		public override void Draw (IDisplay display, int state, double t)
 		{
-			private readonly Sprite _sprite;
-
-			public TextSprite (string text)
-			{
-				using(var renderer = new PlainTextRenderer())
-				{
-					renderer.Font = Font.LoadFromFile("coolvetica.ttf");
-					renderer.Text = String.Join("\n", text, text, text);
-					_sprite = new Sprite(renderer.GetTexture());
-				}
-			}
-
-			/// <summary>
-			/// Updates the state of the component by a single step
-			/// </summary>
-			/// <param name="prev">Index of the previous state that was updated</param>
-			/// <param name="next">Index of the next state that should be updated</param>
-			/// <remarks>The only game state that should be modified during this process is the state indicated by <paramref name="next"/>.
-			/// The state indicated by <paramref name="prev"/> can be used for reference (if needed), but should not be modified.
-			/// Modifying any other game state info during this process would corrupt the game state.</remarks>
-			public void Step (int prev, int next)
-			{
-				_sprite.Step(prev, next);
-			}
-
-			/// <summary>
-			/// Draws the state of a component
-			/// </summary>
-			/// <param name="display">Display to draw the state onto</param>
-			/// <param name="state">Index of the state to draw</param>
-			/// <param name="t">Interpolation value (ignored)</param>
-			/// <remarks>None of the game states should be modified by this process - including the state indicated by <paramref name="state"/>.
-			/// Modifying the game state info during this process would corrupt the game state.</remarks>
-			public void Draw (IDisplay display, int state, double t)
-			{
-				_sprite.Draw(display, state, t);
-			}
+			base.Draw(display, state, t);
+			_sprite.Draw(display, state, t);
 		}
 	}
 }
