@@ -1,4 +1,6 @@
 ﻿using System;
+using SFML.Graphics;
+using SFML.Window;
 
 namespace Frost.Graphics.Text
 {
@@ -10,10 +12,19 @@ namespace Frost.Graphics.Text
 	public class LiveTextRenderer : TextRenderer
 	{
 		/// <summary>
-		/// Prepares the text for drawing.
-		/// This method renders the text internally so that it is ready to be quickly drawn.
+		/// Calculates the bounds of the space that the text will occupy
 		/// </summary>
-		public override void Prepare ()
+		/// <returns>Width and height of the bounds</returns>
+		protected override Vector2u CalculateBounds ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Draws the text onto a texture
+		/// </summary>
+		/// <param name="target">Texture to render to</param>
+		protected override void Draw (RenderTexture target)
 		{
 			throw new NotImplementedException();
 		}

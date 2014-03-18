@@ -13,68 +13,30 @@ namespace Frost.Graphics.Text
 		#region Underlying text objects
 
 		/// <summary>
-		/// Tracks the current state of the text
+		/// Tracks the current state of the text to be rendered
 		/// </summary>
 		protected readonly T TextObject = new T();
 
 		private Font _font;
 		#endregion
 
-		private bool _multiLine = true,
-			_wordWrap = true;
-
 		/// <summary>
 		/// Indicates whether the text is allowed to span multiple lines and can contain newlines
 		/// </summary>
 		/// <remarks>Newlines (\n) and carriage-returns (\r) will be ignored if this property is false.</remarks>
-		public bool MultiLine
-		{
-			get { return _multiLine; }
-			set
-			{
-				if(value != _multiLine)
-				{
-					Prepared   = false;
-					_multiLine = value;
-				}
-			}
-		}
+		public bool MultiLine { get; set; }
 
 		/// <summary>
 		/// Indicates whether words automatically wrap to the next line if the text becomes longer than a specified length
 		/// </summary>
-		public bool WordWrap
-		{
-			get { return _wordWrap; }
-			set
-			{
-				if(value != _wordWrap)
-				{
-					Prepared  = false;
-					_wordWrap = value;
-				}
-			}
-		}
-
-		private uint _wrapWidth;
+		public bool WordWrap { get; set; }
 
 		/// <summary>
 		/// Width of text (in pixels) to wrap each line by
 		/// </summary>
 		/// <remarks>There must be at least one word per line.
 		/// It is possible to go over this length if the first word on a line has a pixel length greater than this value.</remarks>
-		public uint WrapWidth
-		{
-			get { return _wrapWidth; }
-			set
-			{
-				if(value != _wrapWidth)
-				{
-					Prepared   = false;
-					_wrapWidth = value;
-				}
-			}
-		}
+		public uint WrapWidth { get; set; }
 
 		/// <summary>
 		/// Current font that determines the appearance of the text
@@ -84,112 +46,53 @@ namespace Frost.Graphics.Text
 			get { return _font; }
 			set
 			{
-				Prepared = false;
 				_font = value;
 				TextObject.Font = value.UnderlyingFont;
 			}
 		}
 
-		private TextAlignment _align;
-
 		/// <summary>
 		/// Horizontal alignment of the text within the bounds
 		/// </summary>
-		public TextAlignment Alignment
-		{
-			get { return _align; }
-			set
-			{
-				Prepared = false;
-				_align   = value;
-			}
-		}
-
-		/// <summary>
-		/// Underlying texture used to draw text on
-		/// </summary>
-		private RenderTexture _buffer;
-
-		/// <summary>
-		/// Texture that is returned after drawing
-		/// </summary>
-		private Texture _texture;
-
-		/// <summary>
-		/// Underlying texture to draw the text onto when preparing
-		/// </summary>
-		protected RenderTarget Buffer
-		{
-			get { return _buffer; }
-		}
+		public TextAlignment Alignment { get; set; }
 
 		#region Rendering
 
 		/// <summary>
-		/// Indicates whether the text has been prepared (rendered) internally so that is is ready to be quickly drawn
+		/// Calculates the bounds of the space that the text will occupy
 		/// </summary>
-		public bool Prepared { get; protected set; }
+		/// <returns>Width and height of the bounds</returns>
+		protected abstract SFML.Window.Vector2u CalculateBounds ();
 
 		/// <summary>
-		/// Disposes of the old underlying texture that text was draw on.
-		/// This should be called whenever a textual property has been changed.
+		/// Draws the text onto a texture
 		/// </summary>
-		protected void ResetTexture ()
-		{
-			if(_buffer != null)
-			{
-				_buffer.Dispose();
-				_buffer = null;
-
-				if(_texture != null)
-					_texture.InternalTexture.Dispose();
-			}
-		}
-
-		/// <summary>
-		/// Prepares the underlying texture to be drawn on.
-		/// This must be called as part of the <see cref="Prepare"/> process.
-		/// </summary>
-		/// <param name="width">Width of the texture in pixels</param>
-		/// <param name="height">Height of the texture in pixels</param>
-		protected void PrepareTexture (uint width, uint height)
-		{
-			if(_buffer != null)
-				_buffer.Dispose();
-			_buffer = new RenderTexture(width, height);
-
-			if(_texture == null)
-				_texture = new Texture(_buffer.Texture);
-			else
-				_texture.InternalTexture = _buffer.Texture;
-		}
-
-		/// <summary>
-		/// Prepares the text for drawing.
-		/// This method renders the text internally so that it is ready to be quickly drawn.
-		/// </summary>
-		public abstract void Prepare ();
+		/// <param name="target">Texture to render to</param>
+		protected abstract void Draw (RenderTexture target);
 
 		/// <summary>
 		/// Draws and retrieves the texture that contains the text
 		/// </summary>
 		/// <returns>A texture containing the rendered text</returns>
-		/// <remarks>If the text hasn't been prepared by <see cref="Prepare"/> prior to calling this method,
-		/// <see cref="Prepare"/> will be called before drawing the text.
-		/// However, if it has been, then no drawing needs to be done.
-		/// The texture only needs to be redrawn when a property is changed.</remarks>
 		public Texture GetTexture ()
 		{
-			if(!Prepared)
-			{
-				Prepare();
-#if DEBUG
-				if(_texture == null) // Would be nice to check if the internal texture was disposed
-					throw new ApplicationException("The text renderer implementation did not prepare the underlying texture.");
-#endif
-				_buffer.Display();
-			}
-			return _texture.Clone();
+			var bounds = CalculateBounds();
+			var target = new RenderTexture(bounds.X, bounds.Y);
+			Draw(target);
+			return new Texture(target.Texture);
+		}
+
+		/// <summary>
+		/// Draws and retrieves a texture with a predetermined size that contains the text
+		/// </summary>
+		/// <param name="width">Width of the texture in pixels</param>
+		/// <param name="height">Height of the texture in pixels</param>
+		/// <returns>A texture containing the rendered text</returns>
+		public Texture GetTexture (uint width, uint height)
+		{
+			var target = new RenderTexture(width, height);
+			Draw(target);
+			return new Texture(target.Texture);
 		}
 		#endregion
 
@@ -240,8 +143,7 @@ namespace Frost.Graphics.Text
 
 				if(disposing)
 				{// Dispose of the internal resources
-					if(Prepared)
-						_buffer.Texture.Dispose();
+					TextObject.Dispose();
 				}
 			}
 		}
