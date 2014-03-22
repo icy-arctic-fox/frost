@@ -10,16 +10,6 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public abstract class TextRenderer : IFullDisposable
 	{
-		#region Underlying text objects
-
-		/// <summary>
-		/// Tracks the current state of the text to be rendered
-		/// </summary>
-		protected readonly T TextObject = new T();
-
-		private Font _font;
-		#endregion
-
 		/// <summary>
 		/// Indicates whether the text is allowed to span multiple lines and can contain newlines
 		/// </summary>
@@ -41,15 +31,7 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Current font that determines the appearance of the text
 		/// </summary>
-		public Font Font
-		{
-			get { return _font; }
-			set
-			{
-				_font = value;
-				TextObject.Font = value.UnderlyingFont;
-			}
-		}
+		public Font Font { get; set; }
 
 		/// <summary>
 		/// Horizontal alignment of the text within the bounds
@@ -140,11 +122,6 @@ namespace Frost.Graphics.Text
 			{
 				_disposed = true;
 				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
-
-				if(disposing)
-				{// Dispose of the internal resources
-					TextObject.Dispose();
-				}
 			}
 		}
 		#endregion
