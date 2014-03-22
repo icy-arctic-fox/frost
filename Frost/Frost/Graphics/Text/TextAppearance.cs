@@ -8,6 +8,7 @@ namespace Frost.Graphics.Text
 	public class TextAppearance
 	{
 		private const uint DefaultSize = 10;
+		private static readonly Color DefaultColor = new Color(0, 0, 0);
 
 		/// <summary>
 		/// Height of each character in pixels
@@ -31,6 +32,11 @@ namespace Frost.Graphics.Text
 			}
 		}
 
+		/// <summary>
+		/// Base color of the text
+		/// </summary>
+		public Color Color { get; set; }
+
 		// TODO: Bold, Underline, Italics flags
 		// TODO: Outline Thickness, Outline Color
 		// TODO: Horizontal alignment
@@ -48,6 +54,7 @@ namespace Frost.Graphics.Text
 
 			_font = font;
 			Size  = size;
+			Color = DefaultColor;
 		}
 	}
 }
