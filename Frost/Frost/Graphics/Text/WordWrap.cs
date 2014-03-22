@@ -40,9 +40,28 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Lines of text after wrapping has been applied
 		/// </summary>
-		public IEnumerable<Word<T>[]> Lines
+		public Word<T>[][] Lines
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				// Convert _lines from LL<LL<W<T>>> to W<T>[][]
+				var lines   = new Word<T>[LineCount][];
+				var curLine = _lines.First;
+				for(var i = 0; i < lines.Length && curLine != null; ++i)
+				{
+					var lineList = curLine.Value;
+					var line     = new Word<T>[lineList.Count];
+					var curWord  = lineList.First;
+					for(var j = 0; j < line.Length && curWord != null; ++j)
+					{
+						line[j] = curWord.Value;
+						curWord = curWord.Next;
+					}
+					lines[i] = line;
+					curLine  = curLine.Next;
+				}
+				return lines;
+			}
 		}
 
 		/// <summary>
@@ -75,6 +94,7 @@ namespace Frost.Graphics.Text
 				_curLine   = new LinkedList<Word<T>>();
 				_lines.AddLast(_curLine);
 			}
+
 			else
 			{// Stay on the same line
 				if(height > _curHeight)
