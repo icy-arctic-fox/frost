@@ -12,6 +12,17 @@ namespace Frost.Graphics.Text
 	public class LiveTextRenderer : TextRenderer
 	{
 		/// <summary>
+		/// Creates a new live text renderer
+		/// </summary>
+		/// <param name="appearance">Initial (default) visual appearance of the text</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		public LiveTextRenderer (TextAppearance appearance)
+			: base(appearance)
+		{
+			// ...
+		}
+
+		/// <summary>
 		/// Calculates the bounds of the space that the text will occupy
 		/// </summary>
 		/// <returns>Width and height of the bounds</returns>

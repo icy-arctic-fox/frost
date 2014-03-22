@@ -28,15 +28,27 @@ namespace Frost.Graphics.Text
 		/// It is possible to go over this length if the first word on a line has a pixel length greater than this value.</remarks>
 		public uint WrapWidth { get; set; }
 
-		/// <summary>
-		/// Current font that determines the appearance of the text
-		/// </summary>
-		public Font Font { get; set; }
+		private readonly TextAppearance _appearance;
 
 		/// <summary>
-		/// Horizontal alignment of the text within the bounds
+		/// Appearance of the rendered text
 		/// </summary>
-		public TextAlignment Alignment { get; set; }
+		public TextAppearance Appearance
+		{
+			get { return _appearance; }
+		}
+
+		/// <summary>
+		/// Creates a text renderer
+		/// </summary>
+		/// <param name="appearance">Visual appearance of the text</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		protected TextRenderer (TextAppearance appearance)
+		{
+			if(appearance == null)
+				throw new ArgumentNullException("appearance");
+			_appearance = appearance;
+		}
 
 		#region Rendering
 
