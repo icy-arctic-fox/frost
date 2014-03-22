@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SFML.Graphics;
 
 namespace Frost.Graphics.Text
@@ -16,8 +15,6 @@ namespace Frost.Graphics.Text
 
 		private readonly LinkedList<LinkedList<Word<T>>> _lines = new LinkedList<LinkedList<Word<T>>>();
 		private LinkedList<Word<T>> _curLine = new LinkedList<Word<T>>();
-
-		// TODO: Add computation for horizontal alignment (left, center, right)
 
 		/// <summary>
 		/// Creates a new word wrap processor
