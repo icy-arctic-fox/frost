@@ -5,12 +5,16 @@ using SFML.Graphics;
 namespace Frost.Graphics.Text
 {
 	/// <summary>
-	/// Computes where line breaks should appear in a block of text
+	/// Computes where line breaks should appear in a block of text.
+	/// The bounds of each segment/word are updated after each call to <see cref="Append"/>.
 	/// </summary>
-	internal class WordWrap<T>
+	internal class WordWrap<T> where T : ITextSize
 	{
 		private readonly int _width;
 		private IntRect _bounds;
+		private readonly LinkedList<LinkedList<T>> _lines = new LinkedList<LinkedList<T>>();
+
+		// TODO: Add computation for horizontal alignment (left, center, right)
 
 		/// <summary>
 		/// Creates a new word wrap processor
@@ -18,7 +22,7 @@ namespace Frost.Graphics.Text
 		/// <param name="width">Width to wrap each line to</param>
 		public WordWrap (int width)
 		{
-			throw new NotImplementedException();
+			_width = width;
 		}
 
 		/// <summary>
@@ -45,7 +49,7 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Adds a unbreakable segment to the end of the text
 		/// </summary>
-		/// <param name="word">Segment to </param>
+		/// <param name="word">Segment to append to the text block</param>
 		public void Append (T word)
 		{
 			throw new NotImplementedException();
