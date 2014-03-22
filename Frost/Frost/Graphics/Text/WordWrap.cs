@@ -14,8 +14,8 @@ namespace Frost.Graphics.Text
 		private int _curWidth, _curHeight; // Sizes of the current line
 		private IntRect _bounds;
 
-		private readonly LinkedList<LinkedList<T>> _lines = new LinkedList<LinkedList<T>>();
-		private LinkedList<T> _curLine = new LinkedList<T>();
+		private readonly LinkedList<LinkedList<Word<T>>> _lines = new LinkedList<LinkedList<Word<T>>>();
+		private LinkedList<Word<T>> _curLine = new LinkedList<Word<T>>();
 
 		// TODO: Add computation for horizontal alignment (left, center, right)
 
@@ -62,17 +62,17 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Adds a unbreakable segment to the end of the text
 		/// </summary>
-		/// <param name="word">Segment to append to the text block</param>
-		public void Append (T word)
+		/// <param name="segment">Segment to append to the text block</param>
+		public void Append (T segment)
 		{
-			var width  = word.GetWidth();
-			var height = word.GetHeight();
+			var width  = segment.GetWidth();
+			var height = segment.GetHeight();
 
 			if(_curWidth > 0 && _curWidth + width > _targetWidth)
 			{// Move to the next line, out of space on the current one
-				_curWidth = 0;
+				_curWidth  = 0;
 				_curHeight = height;
-				_curLine = new LinkedList<T>();
+				_curLine   = new LinkedList<Word<T>>();
 				_lines.AddLast(_curLine);
 			}
 			else
@@ -82,10 +82,27 @@ namespace Frost.Graphics.Text
 					var diff = _curHeight - height;
 					_bounds.Height += diff;
 					_curHeight = height;
+
+					// Shift the previous segments on the line down
+					var curNode = _curLine.First;
+					while(curNode != null)
+					{
+						var w  = curNode.Value;
+						var b  = w.Bounds;
+						b.Top += diff;
+						curNode.Value = new Word<T>(w.Value, b);
+						curNode = curNode.Next;
+					}
 				}
 			}
 
+			// Calculate the position of the word
+			var x = _curWidth;
+			var y = _bounds.Height - height;
+
 			// Add the word to the current line
+			var bounds = new IntRect(x, y, width, height);
+			var word   = new Word<T>(segment, bounds);
 			_curLine.AddLast(word);
 
 			// Extend the width of the line
