@@ -85,6 +85,7 @@
     <Compile Include="Graphics\Text\ITextSize.cs" />
     <Compile Include="Graphics\Text\SimpleText.cs" />
     <Compile Include="Graphics\Text\TextAlignment.cs" />
+    <Compile Include="Graphics\Text\TextAppearance.cs" />
     <Compile Include="Graphics\Text\TextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextSegment.cs" />
