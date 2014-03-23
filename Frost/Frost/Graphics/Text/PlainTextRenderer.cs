@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -79,7 +81,32 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateWrappedBounds (string text, int width, TextAppearance appearance)
 		{
-			throw new NotImplementedException();
+			// Split the text into words
+			var unbrokenLines = SplitTextOnLinebreaks(text);
+			var lines = unbrokenLines.Select(SplitTextIntoWords);
+
+			using(var t = new SFML.Graphics.Text())
+			{
+				t.Font = appearance.Font.UnderlyingFont;
+				t.CharacterSize = appearance.Size;
+
+				// Construct WrappedWord objects for each word
+				var words = (from line in lines from word in line select new WrappedWord(t, word));
+
+				// Perform word wrapping
+				var wordWrap = new WordWrap<WrappedWord>(width);
+				foreach(var ww in words)
+					wordWrap.Append(ww);
+
+				// Compute the bounds
+				var bounds = wordWrap.Bounds;
+				var textWidth   = bounds.Width  - bounds.Left;
+				var textHeight  = bounds.Height - bounds.Top;
+				var finalWidth  = textWidth  < 0 ? 0U : (uint)textWidth;
+				var finalHeight = textHeight < 0 ? 0U : (uint)textHeight;
+
+				return new Vector2u(finalWidth, finalHeight);
+			}
 		}
 
 		/// <summary>
@@ -119,6 +146,53 @@ namespace Frost.Graphics.Text
 		private static void drawWrappedText (RenderTexture target, string text, int width, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// This class is used to calculate the size of each word.
+		/// Instances of this class are passed to <see cref="WordWrap{T}"/>.
+		/// </summary>
+		private class WrappedWord : ITextSize
+		{
+			private readonly SFML.Graphics.Text _t;
+			private readonly string _word;
+
+			/// <summary>
+			/// Creates a new word in a word wrapped text block
+			/// </summary>
+			/// <param name="t">Text object that will compute the bounds</param>
+			/// <param name="word">Word string</param>
+			public WrappedWord (SFML.Graphics.Text t, string word)
+			{
+				_t    = t;
+				_word = word;
+			}
+
+			/// <summary>
+			/// Computes the width and height of the word
+			/// </summary>
+			/// <param name="width">Width</param>
+			/// <param name="height">Height</param>
+			public void GetSize (out int width, out int height)
+			{
+				_t.DisplayedString = _word;
+				var bounds = _t.GetLocalBounds();
+				width  = (int)Math.Ceiling(bounds.Width  - bounds.Left);
+				height = (int)Math.Ceiling(bounds.Height - bounds.Top);
+			}
+
+			/// <summary>
+			/// Computes the width and height of the word after trimming trailing whitespace
+			/// </summary>
+			/// <param name="width">Width</param>
+			/// <param name="height">Height</param>
+			public void GetTrimmedSize (out int width, out int height)
+			{
+				_t.DisplayedString = _word.TrimEnd();
+				var bounds = _t.GetLocalBounds();
+				width  = (int)Math.Ceiling(bounds.Width  - bounds.Left);
+				height = (int)Math.Ceiling(bounds.Height - bounds.Top);
+			}
 		}
 	}
 }
