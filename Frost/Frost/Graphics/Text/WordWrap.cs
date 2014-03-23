@@ -87,6 +87,7 @@ namespace Frost.Graphics.Text
 			if(_curWidth > 0 && _curWidth + width > _targetWidth)
 			{// Move to the next line, out of space on the current one
 				segment.GetSize(out width, out height); // Update width and height to include trailing whitespace
+				_bounds.Height += _curHeight;
 				_curWidth  = 0;
 				_curHeight = height;
 				_curLine   = new LinkedList<Word<T>>();
@@ -97,7 +98,7 @@ namespace Frost.Graphics.Text
 			{// Stay on the same line
 				if(height > _curHeight)
 				{// Extend the height of the bounds
-					var diff = _curHeight - height;
+					var diff = height - _curHeight;
 					_bounds.Height += diff;
 					_curHeight = height;
 
