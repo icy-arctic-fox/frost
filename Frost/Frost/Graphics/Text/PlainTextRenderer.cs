@@ -77,7 +77,7 @@ namespace Frost.Graphics.Text
 		/// <param name="width">Target width to wrap lines by</param>
 		/// <param name="appearance">Information about the appearance of the text</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateWrappedBounds (string text, uint width, TextAppearance appearance)
+		private static Vector2u calculateWrappedBounds (string text, int width, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
@@ -116,7 +116,7 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Text to render</param>
 		/// <param name="width">Target width to wrap lines by</param>
 		/// <param name="appearance">Information about the appearance of the text</param>
-		private static void drawWrappedText (RenderTexture target, string text, uint width, TextAppearance appearance)
+		private static void drawWrappedText (RenderTexture target, string text, int width, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}

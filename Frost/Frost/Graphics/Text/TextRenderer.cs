@@ -28,7 +28,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <remarks>There must be at least one word per line.
 		/// It is possible to go over this length if the first word on a line has a pixel length greater than this value.</remarks>
-		public uint WrapWidth { get; set; }
+		public int WrapWidth { get; set; }
 
 		private readonly TextAppearance _appearance;
 
