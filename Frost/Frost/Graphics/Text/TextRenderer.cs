@@ -129,6 +129,7 @@ namespace Frost.Graphics.Text
 			var bounds = CalculateBounds();
 			var target = new RenderTexture(bounds.X, bounds.Y);
 			Draw(target);
+			target.Display();
 			return new Texture(target.Texture);
 		}
 
@@ -142,6 +143,7 @@ namespace Frost.Graphics.Text
 		{
 			var target = new RenderTexture(width, height);
 			Draw(target);
+			target.Display();
 			return new Texture(target.Texture);
 		}
 		#endregion
