@@ -82,10 +82,11 @@ namespace Frost.Graphics.Text
 		public void Append (T segment)
 		{
 			int width, height;
-			segment.GetSize(out width, out height);
+			segment.GetTrimmedSize(out width, out height);
 
 			if(_curWidth > 0 && _curWidth + width > _targetWidth)
 			{// Move to the next line, out of space on the current one
+				segment.GetSize(out width, out height); // Update width and height to include trailing whitespace
 				_curWidth  = 0;
 				_curHeight = height;
 				_curLine   = new LinkedList<Word<T>>();
@@ -100,7 +101,7 @@ namespace Frost.Graphics.Text
 					_bounds.Height += diff;
 					_curHeight = height;
 
-					// Shift the previous segments on the line down
+					// Shift the previous segments downward on the line
 					var curNode = _curLine.First;
 					while(curNode != null)
 					{
