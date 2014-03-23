@@ -242,7 +242,7 @@ namespace Frost.Graphics.Text
 				_t.DisplayedString = word;
 				var bounds = _t.GetLocalBounds();
 				width  = (int)Math.Ceiling(bounds.Width  + bounds.Left);
-				height = (int)Math.Ceiling(bounds.Height + bounds.Top);
+				height = _t.Font.GetLineSpacing(_t.CharacterSize);
 			}
 		}
 	}
