@@ -62,11 +62,17 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateBounds (string text, TextAppearance appearance)
 		{
-			using(var t = new SFML.Graphics.Text(text, appearance.Font.UnderlyingFont, appearance.Size))
+			using(var t = new SFML.Graphics.Text())
 			{
+				// Prepare the text
+				t.DisplayedString = text;
+				appearance.ApplyTo(t);
+
+				// Compute the bounds
 				var bounds = t.GetLocalBounds();
 				var width  = (uint)Math.Ceiling(bounds.Width  + bounds.Left);
 				var height = (uint)Math.Ceiling(bounds.Height + bounds.Top);
+
 				return new Vector2u(width, height);
 			}
 		}
@@ -83,9 +89,7 @@ namespace Frost.Graphics.Text
 			using(var t = new SFML.Graphics.Text())
 			{
 				// Prepare the text object
-				t.Font = appearance.Font.UnderlyingFont;
-				t.CharacterSize = appearance.Size;
-
+				appearance.ApplyTo(t);
 				var wordWrap = performWordWrap(text, width, t);
 
 				// Compute the bounds
@@ -122,8 +126,12 @@ namespace Frost.Graphics.Text
 		/// <param name="appearance">Information about the appearance of the text</param>
 		private static void drawText (RenderTarget target, string text, TextAppearance appearance)
 		{
-			using(var t = new SFML.Graphics.Text(text, appearance.Font.UnderlyingFont, appearance.Size))
+			using(var t = new SFML.Graphics.Text())
+			{
+				t.DisplayedString = text;
+				appearance.ApplyTo(t);
 				target.Draw(t);
+			}
 		}
 
 		/// <summary>
@@ -137,10 +145,8 @@ namespace Frost.Graphics.Text
 		{
 			using(var t = new SFML.Graphics.Text())
 			{
-				// Prepare the text object
-				t.Font = appearance.Font.UnderlyingFont;
-				t.CharacterSize = appearance.Size;
-
+				// Prepare the text
+				appearance.ApplyTo(t);
 				var wordWrap = performWordWrap(text, width, t);
 
 				// Draw each word

@@ -89,5 +89,16 @@ namespace Frost.Graphics.Text
 		{
 			return CloneTextAppearance();
 		}
+
+		/// <summary>
+		/// Applies the appearance properties to a text object
+		/// </summary>
+		/// <param name="t">Text object to update</param>
+		internal void ApplyTo (SFML.Graphics.Text t)
+		{
+			t.CharacterSize = Size;
+			t.Font = _font.UnderlyingFont;
+			t.Color = Color;
+		}
 	}
 }
