@@ -145,8 +145,15 @@ namespace Frost.Graphics.Text
 		/// <returns>Texture</returns>
 		private Texture draw (RenderTexture target)
 		{
+			// Clear the back color to a transparent font color.
+			// This fixes font smoothing issues blending to black.
+			var backColor = new Color(_appearance.Color, 0);
+			target.Clear(backColor);
+
+			// Draw and finalize the texture
 			Draw(target);
 			target.Display();
+
 			return new Texture(target.Texture).Clone();
 		}
 		#endregion
