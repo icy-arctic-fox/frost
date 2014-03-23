@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Frost.Utility;
 using SFML.Graphics;
 using T = SFML.Graphics.Text;
@@ -49,6 +51,60 @@ namespace Frost.Graphics.Text
 				throw new ArgumentNullException("appearance");
 			_appearance = appearance;
 		}
+
+		#region Text operations
+
+		/// <summary>
+		/// Regex that matches new line characters
+		/// </summary>
+		private static readonly Regex NewlinesRegex = new Regex(@"(\r\n|\n|\r)", RegexOptions.Compiled);
+
+		/// <summary>
+		/// Splits text on newlines
+		/// </summary>
+		/// <param name="text">Text string to split</param>
+		/// <returns>Array of lines of text</returns>
+		protected static string[] SplitTextOnLinebreaks (string text)
+		{
+			return NewlinesRegex.Split(text);
+		}
+
+		/// <summary>
+		/// Splits text apart into words.
+		/// The text is split where it changes from whitespace to non-whitespace.
+		/// This keeps whitespace at the end of the word to maintain spacing for non-wrapped portions of the text.
+		/// </summary>
+		/// <param name="text">Text string to split</param>
+		/// <returns>Collection of words from the text</returns>
+		protected static IEnumerable<string> SplitTextIntoWords (string text)
+		{
+			var words = new List<string>();
+
+			var whitespace = false;
+			var start = 0;
+			for(var i = 0; i < text.Length; ++i)
+			{// Iterate over each character
+				var c = text[i];
+				if(Char.IsWhiteSpace(c))
+					whitespace = true;
+
+				else if(whitespace)
+				{// Transition from whitespace to non-whitespace, break here
+					var word = text.Substring(start, i - start);
+					words.Add(word);
+
+					start = i;
+					whitespace = false;
+				}
+			}
+
+			// Add final word
+			var last = text.Substring(start);
+			words.Add(last);
+
+			return words;
+		}
+		#endregion
 
 		#region Rendering
 
