@@ -55,18 +55,13 @@ namespace Frost.Graphics.Text
 		#region Text operations
 
 		/// <summary>
-		/// Regex that matches new line characters
-		/// </summary>
-		private static readonly Regex NewlinesRegex = new Regex(@"(\r\n|\n|\r)", RegexOptions.Compiled);
-
-		/// <summary>
 		/// Splits text on newlines
 		/// </summary>
 		/// <param name="text">Text string to split</param>
 		/// <returns>Array of lines of text</returns>
-		protected static string[] SplitTextOnLinebreaks (string text)
+		protected static IEnumerable<string> SplitTextOnLinebreaks (string text)
 		{
-			return NewlinesRegex.Split(text);
+			return text.Split(new[] {"\n", "\r\n"}, StringSplitOptions.None);
 		}
 
 		/// <summary>
