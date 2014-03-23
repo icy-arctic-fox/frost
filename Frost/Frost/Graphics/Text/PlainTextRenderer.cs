@@ -26,8 +26,8 @@ namespace Frost.Graphics.Text
 			var text = Text ?? String.Empty;
 			if(!MultiLine)
 			{// Strip newline characters
-				text = text.Replace("\r", "");
-				text = text.Replace("\n", "");
+				text = text.Replace("\r", " ");
+				text = text.Replace("\n", " ");
 			}
 			return text;
 		}
