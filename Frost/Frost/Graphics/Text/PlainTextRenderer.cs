@@ -135,7 +135,24 @@ namespace Frost.Graphics.Text
 		/// <param name="appearance">Information about the appearance of the text</param>
 		private static void drawWrappedText (RenderTexture target, string text, int width, TextAppearance appearance)
 		{
-			throw new NotImplementedException();
+			using(var t = new SFML.Graphics.Text())
+			{
+				// Prepare the text object
+				t.Font = appearance.Font.UnderlyingFont;
+				t.CharacterSize = appearance.Size;
+
+				var wordWrap = performWordWrap(text, width, t);
+
+				// Draw each word
+				foreach(var line in wordWrap.Lines)
+					foreach(var word in line)
+					{
+						t.DisplayedString = word.Value.WordString;
+						var states = RenderStates.Default;
+						states.Transform.Translate(word.Bounds.Left, word.Bounds.Top);
+						target.Draw(t, states);
+					}
+			}
 		}
 
 		/// <summary>
@@ -180,6 +197,14 @@ namespace Frost.Graphics.Text
 			{
 				_t    = t;
 				_word = word;
+			}
+
+			/// <summary>
+			/// String containing the word
+			/// </summary>
+			public string WordString
+			{
+				get { return _word; }
 			}
 
 			/// <summary>
