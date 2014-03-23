@@ -85,13 +85,10 @@ namespace Frost.Graphics.Text
 			segment.GetTrimmedSize(out width, out height);
 
 			if(_curWidth > 0 && _curWidth + width > _targetWidth)
-			{// Move to the next line, out of space on the current one
-				segment.GetSize(out width, out height); // Update width and height to include trailing whitespace
-				NextLine();
-			}
+				NextLine(); // Move to the next line, out of space on the current one
 
 			else
-			{// Stay on the same line
+			{// Stay on the same line, there's enough space for the word
 				if(height > _curHeight)
 				{// Extend the height of the bounds
 					var diff = height - _curHeight;
@@ -110,6 +107,9 @@ namespace Frost.Graphics.Text
 					}
 				}
 			}
+
+			// Update width and height to include trailing whitespace
+			segment.GetSize(out width, out height);
 
 			// Calculate the position of the word
 			var x = _curWidth;
