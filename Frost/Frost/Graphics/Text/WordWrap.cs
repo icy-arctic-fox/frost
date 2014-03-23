@@ -81,8 +81,8 @@ namespace Frost.Graphics.Text
 		/// <param name="segment">Segment to append to the text block</param>
 		public void Append (T segment)
 		{
-			var width  = segment.GetWidth();
-			var height = segment.GetHeight();
+			int width, height;
+			segment.GetSize(out width, out height);
 
 			if(_curWidth > 0 && _curWidth + width > _targetWidth)
 			{// Move to the next line, out of space on the current one

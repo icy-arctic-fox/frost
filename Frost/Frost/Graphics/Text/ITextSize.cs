@@ -6,15 +6,17 @@
 	internal interface ITextSize
 	{
 		/// <summary>
-		/// Computes the width of the text segment
+		/// Computes the width and height of the text segment
 		/// </summary>
-		/// <returns>Width</returns>
-		int GetWidth ();
+		/// <param name="width">Width</param>
+		/// <param name="height">Height</param>
+		void GetSize (out int width, out int height);
 
 		/// <summary>
-		/// Computes the height of the text segment
+		/// Computes the width and height of the text segment after trimming trailing whitespace
 		/// </summary>
-		/// <returns>Height</returns>
-		int GetHeight ();
+		/// <param name="width">Width</param>
+		/// <param name="height">Height</param>
+		void GetTrimmedSize (out int width, out int height);
 	}
 }
