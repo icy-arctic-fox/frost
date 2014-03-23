@@ -49,15 +49,17 @@ namespace Frost.Graphics.Text
 		protected override Vector2u CalculateBounds ()
 		{
 			var text = getFixedText();
-			return WordWrap ? calculateWrappedBounds(text, WrapWidth) : calculateBounds(text);
+			var appearance = Appearance.CloneTextAppearance();
+			return WordWrap ? calculateWrappedBounds(text, WrapWidth, appearance) : calculateBounds(text, appearance);
 		}
 
 		/// <summary>
 		/// Calculates the bounds of some text that does not wrap multiple lines
 		/// </summary>
 		/// <param name="text">Text to calculate the bounds of</param>
+		/// <param name="appearance">Information about the appearance of the text</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateBounds (string text)
+		private static Vector2u calculateBounds (string text, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
@@ -67,8 +69,9 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="text">Text to calculate the bounds of</param>
 		/// <param name="width">Target width to wrap lines by</param>
+		/// <param name="appearance">Information about the appearance of the text</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateWrappedBounds (string text, uint width)
+		private static Vector2u calculateWrappedBounds (string text, uint width, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
@@ -80,10 +83,12 @@ namespace Frost.Graphics.Text
 		protected override void Draw (RenderTexture target)
 		{
 			var text = getFixedText();
+			var appearance = Appearance.CloneTextAppearance();
+
 			if(WordWrap)
-				drawWrappedText(target, text, WrapWidth);
+				drawWrappedText(target, text, WrapWidth, appearance);
 			else
-				drawText(target, text);
+				drawText(target, text, appearance);
 		}
 
 		/// <summary>
@@ -91,7 +96,8 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="text">Text to render</param>
-		private static void drawText (RenderTexture target, string text)
+		/// <param name="appearance">Information about the appearance of the text</param>
+		private static void drawText (RenderTexture target, string text, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
@@ -102,7 +108,8 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="text">Text to render</param>
 		/// <param name="width">Target width to wrap lines by</param>
-		private static void drawWrappedText (RenderTexture target, string text, uint width)
+		/// <param name="appearance">Information about the appearance of the text</param>
+		private static void drawWrappedText (RenderTexture target, string text, uint width, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
