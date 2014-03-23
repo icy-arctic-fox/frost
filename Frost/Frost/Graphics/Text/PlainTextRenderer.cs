@@ -61,7 +61,13 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateBounds (string text, TextAppearance appearance)
 		{
-			throw new NotImplementedException();
+			using(var t = new SFML.Graphics.Text(text, appearance.Font.UnderlyingFont, appearance.Size))
+			{
+				var bounds = t.GetLocalBounds();
+				var width  = (uint)Math.Ceiling(bounds.Width  - bounds.Left);
+				var height = (uint)Math.Ceiling(bounds.Height - bounds.Top);
+				return new Vector2u(width, height);
+			}
 		}
 
 		/// <summary>
@@ -99,7 +105,8 @@ namespace Frost.Graphics.Text
 		/// <param name="appearance">Information about the appearance of the text</param>
 		private static void drawText (RenderTexture target, string text, TextAppearance appearance)
 		{
-			throw new NotImplementedException();
+			using(var t = new SFML.Graphics.Text(text, appearance.Font.UnderlyingFont, appearance.Size))
+				target.Draw(t);
 		}
 
 		/// <summary>
