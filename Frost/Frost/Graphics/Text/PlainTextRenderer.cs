@@ -214,10 +214,7 @@ namespace Frost.Graphics.Text
 			/// <param name="height">Height</param>
 			public void GetSize (out int width, out int height)
 			{
-				_t.DisplayedString = _word;
-				var bounds = _t.GetLocalBounds();
-				width  = (int)Math.Ceiling(bounds.Width  + bounds.Left);
-				height = (int)Math.Ceiling(bounds.Height + bounds.Top);
+				computeBounds(_word, out width, out height);
 			}
 
 			/// <summary>
@@ -227,7 +224,18 @@ namespace Frost.Graphics.Text
 			/// <param name="height">Height</param>
 			public void GetTrimmedSize (out int width, out int height)
 			{
-				_t.DisplayedString = _word.TrimEnd();
+				computeBounds(_word.TrimEnd(), out width, out height);
+			}
+
+			/// <summary>
+			/// Actually performs the computation of the text bounds
+			/// </summary>
+			/// <param name="word">Text to gets the bounds of</param>
+			/// <param name="width">Width</param>
+			/// <param name="height">Height</param>
+			private void computeBounds (string word, out int width, out int height)
+			{
+				_t.DisplayedString = word;
 				var bounds = _t.GetLocalBounds();
 				width  = (int)Math.Ceiling(bounds.Width  + bounds.Left);
 				height = (int)Math.Ceiling(bounds.Height + bounds.Top);
