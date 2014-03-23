@@ -120,7 +120,7 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="text">Text to render</param>
 		/// <param name="appearance">Information about the appearance of the text</param>
-		private static void drawText (RenderTexture target, string text, TextAppearance appearance)
+		private static void drawText (RenderTarget target, string text, TextAppearance appearance)
 		{
 			using(var t = new SFML.Graphics.Text(text, appearance.Font.UnderlyingFont, appearance.Size))
 				target.Draw(t);
@@ -133,7 +133,7 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Text to render</param>
 		/// <param name="width">Target width to wrap lines by</param>
 		/// <param name="appearance">Information about the appearance of the text</param>
-		private static void drawWrappedText (RenderTexture target, string text, int width, TextAppearance appearance)
+		private static void drawWrappedText (RenderTarget target, string text, int width, TextAppearance appearance)
 		{
 			using(var t = new SFML.Graphics.Text())
 			{
