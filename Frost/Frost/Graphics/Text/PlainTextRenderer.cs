@@ -65,8 +65,8 @@ namespace Frost.Graphics.Text
 			using(var t = new SFML.Graphics.Text(text, appearance.Font.UnderlyingFont, appearance.Size))
 			{
 				var bounds = t.GetLocalBounds();
-				var width  = (uint)Math.Ceiling(bounds.Width  - bounds.Left);
-				var height = (uint)Math.Ceiling(bounds.Height - bounds.Top);
+				var width  = (uint)Math.Ceiling(bounds.Width  + bounds.Left);
+				var height = (uint)Math.Ceiling(bounds.Height + bounds.Top);
 				return new Vector2u(width, height);
 			}
 		}
@@ -90,8 +90,8 @@ namespace Frost.Graphics.Text
 
 				// Compute the bounds
 				var bounds = wordWrap.Bounds;
-				var textWidth   = bounds.Width  - bounds.Left;
-				var textHeight  = bounds.Height - bounds.Top;
+				var textWidth   = bounds.Width  + bounds.Left;
+				var textHeight  = bounds.Height + bounds.Top;
 				var finalWidth  = textWidth  < 0 ? 0U : (uint)textWidth;
 				var finalHeight = textHeight < 0 ? 0U : (uint)textHeight;
 
@@ -216,8 +216,8 @@ namespace Frost.Graphics.Text
 			{
 				_t.DisplayedString = _word;
 				var bounds = _t.GetLocalBounds();
-				width  = (int)Math.Ceiling(bounds.Width  - bounds.Left);
-				height = (int)Math.Ceiling(bounds.Height - bounds.Top);
+				width  = (int)Math.Ceiling(bounds.Width  + bounds.Left);
+				height = (int)Math.Ceiling(bounds.Height + bounds.Top);
 			}
 
 			/// <summary>
@@ -229,8 +229,8 @@ namespace Frost.Graphics.Text
 			{
 				_t.DisplayedString = _word.TrimEnd();
 				var bounds = _t.GetLocalBounds();
-				width  = (int)Math.Ceiling(bounds.Width  - bounds.Left);
-				height = (int)Math.Ceiling(bounds.Height - bounds.Top);
+				width  = (int)Math.Ceiling(bounds.Width  + bounds.Left);
+				height = (int)Math.Ceiling(bounds.Height + bounds.Top);
 			}
 		}
 	}
