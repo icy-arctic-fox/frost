@@ -128,9 +128,7 @@ namespace Frost.Graphics.Text
 		{
 			var bounds = CalculateBounds();
 			var target = new RenderTexture(bounds.X, bounds.Y);
-			Draw(target);
-			target.Display();
-			return new Texture(target.Texture);
+			return draw(target);
 		}
 
 		/// <summary>
@@ -142,6 +140,16 @@ namespace Frost.Graphics.Text
 		public Texture GetTexture (uint width, uint height)
 		{
 			var target = new RenderTexture(width, height);
+			return draw(target);
+		}
+
+		/// <summary>
+		/// Draws the text onto a texture
+		/// </summary>
+		/// <param name="target">Texture to draw on</param>
+		/// <returns>Texture</returns>
+		private Texture draw (RenderTexture target)
+		{
 			Draw(target);
 			target.Display();
 			return new Texture(target.Texture);
