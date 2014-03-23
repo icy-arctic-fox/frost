@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using SFML.Graphics;
 using SFML.Window;
@@ -81,22 +80,13 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateWrappedBounds (string text, int width, TextAppearance appearance)
 		{
-			// Split the text into words
-			var unbrokenLines = SplitTextOnLinebreaks(text);
-			var lines = unbrokenLines.Select(SplitTextIntoWords);
-
 			using(var t = new SFML.Graphics.Text())
 			{
+				// Prepare the text object
 				t.Font = appearance.Font.UnderlyingFont;
 				t.CharacterSize = appearance.Size;
 
-				// Construct WrappedWord objects for each word
-				var words = (from line in lines from word in line select new WrappedWord(t, word));
-
-				// Perform word wrapping
-				var wordWrap = new WordWrap<WrappedWord>(width);
-				foreach(var ww in words)
-					wordWrap.Append(ww);
+				var wordWrap = performWordWrap(text, width, t);
 
 				// Compute the bounds
 				var bounds = wordWrap.Bounds;
@@ -146,6 +136,30 @@ namespace Frost.Graphics.Text
 		private static void drawWrappedText (RenderTexture target, string text, int width, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Performs word wrapping on a block of text
+		/// </summary>
+		/// <param name="text">Text to apply word wrapping to</param>
+		/// <param name="width">Target width to wrap lines by</param>
+		/// <param name="t">Prepared text object that will calculate word sizes</param>
+		/// <returns>Word wrapping information</returns>
+		private static WordWrap<WrappedWord> performWordWrap (string text, int width, SFML.Graphics.Text t)
+		{
+			// Split the text into words
+			var unbrokenLines = SplitTextOnLinebreaks(text);
+			var lines = unbrokenLines.Select(SplitTextIntoWords);
+
+			// Construct WrappedWord objects for each word
+			var words = from line in lines from word in line select new WrappedWord(t, word);
+
+			// Perform word wrapping
+			var wordWrap = new WordWrap<WrappedWord>(width);
+			foreach(var ww in words)
+				wordWrap.Append(ww);
+
+			return wordWrap;
 		}
 
 		/// <summary>
