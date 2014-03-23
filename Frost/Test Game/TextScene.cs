@@ -23,6 +23,8 @@ namespace Test_Game
 			using(var font = Font.LoadFromFile("coolvetica.ttf"))
 			using(var renderer = new PlainTextRenderer(new TextAppearance(font)))
 			{
+				renderer.MultiLine = true;
+				renderer.WordWrap  = true;
 				renderer.WrapWidth = 200;
 				renderer.Text = "Hello!\nThis is a test of the text rendering system.";
 				_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
