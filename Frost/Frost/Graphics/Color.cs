@@ -56,6 +56,17 @@ namespace Frost.Graphics
 		}
 
 		/// <summary>
+		/// Copies an existing color, but modifies the amount of alpha
+		/// </summary>
+		/// <param name="color">Original color</param>
+		/// <param name="alpha">Amount of alpha/opacity (0 - 255).
+		/// 0 is fully transparent and 255 is fully opaque.</param>
+		public Color (Color color, byte alpha)
+		{
+			_value = (color._value & 0x00ffffff) | (alpha << 24);
+		}
+
+		/// <summary>
 		/// Copies color values from a .net color
 		/// </summary>
 		/// <param name="color">.net color</param>
