@@ -131,7 +131,6 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public void NextLine ()
 		{
-			_bounds.Height += _curHeight;
 			_curWidth  = 0;
 			_curHeight = 0;
 			_curLine   = new LinkedList<Word<T>>();
