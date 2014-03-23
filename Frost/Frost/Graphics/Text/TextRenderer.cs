@@ -147,7 +147,7 @@ namespace Frost.Graphics.Text
 		{
 			Draw(target);
 			target.Display();
-			return new Texture(target.Texture);
+			return new Texture(target.Texture).Clone();
 		}
 		#endregion
 
