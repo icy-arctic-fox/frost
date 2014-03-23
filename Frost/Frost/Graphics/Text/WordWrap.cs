@@ -87,11 +87,7 @@ namespace Frost.Graphics.Text
 			if(_curWidth > 0 && _curWidth + width > _targetWidth)
 			{// Move to the next line, out of space on the current one
 				segment.GetSize(out width, out height); // Update width and height to include trailing whitespace
-				_bounds.Height += _curHeight;
-				_curWidth  = 0;
-				_curHeight = height;
-				_curLine   = new LinkedList<Word<T>>();
-				_lines.AddLast(_curLine);
+				NextLine();
 			}
 
 			else
@@ -128,6 +124,18 @@ namespace Frost.Graphics.Text
 			_curWidth += width;
 			if(_curWidth > _bounds.Width)
 				_bounds.Width = _curWidth;
+		}
+
+		/// <summary>
+		/// Advances the word wrap to the next line
+		/// </summary>
+		public void NextLine ()
+		{
+			_bounds.Height += _curHeight;
+			_curWidth  = 0;
+			_curHeight = 0;
+			_curLine   = new LinkedList<Word<T>>();
+			_lines.AddLast(_curLine);
 		}
 	}
 }

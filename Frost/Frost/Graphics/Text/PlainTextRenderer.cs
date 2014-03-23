@@ -168,13 +168,17 @@ namespace Frost.Graphics.Text
 			var unbrokenLines = SplitTextOnLinebreaks(text);
 			var lines = unbrokenLines.Select(SplitTextIntoWords);
 
-			// Construct WrappedWord objects for each word
-			var words = from line in lines from word in line select new WrappedWord(t, word);
-
 			// Perform word wrapping
 			var wordWrap = new WordWrap<WrappedWord>(width);
-			foreach(var ww in words)
-				wordWrap.Append(ww);
+			foreach(var line in lines)
+			{// Iterate through each line
+				foreach(var word in line)
+				{// Iterate through word on the line
+					var ww = new WrappedWord(t, word);
+					wordWrap.Append(ww);
+				}
+				wordWrap.NextLine();
+			}
 
 			return wordWrap;
 		}
