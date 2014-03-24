@@ -185,10 +185,10 @@ namespace Frost.Graphics.Text
 		/// Draws the text without applying any word wrapping to it
 		/// </summary>
 		/// <param name="target">Texture to draw the text onto</param>
-		/// <param name="text">Text to render</param>
+		/// <param name="liveText">Text to render</param>
 		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
 		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
-		private static void drawText (RenderTarget target, LiveTextString text, bool multiLine, TextAppearance appearance)
+		private static void drawText (RenderTarget target, LiveTextString liveText, bool multiLine, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
