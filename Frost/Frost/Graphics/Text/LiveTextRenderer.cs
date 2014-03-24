@@ -119,6 +119,38 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to render to</param>
 		protected override void Draw (RenderTexture target)
 		{
+			var liveText = Text ?? new LiveTextString();
+			var appearance = Appearance.CloneTextAppearance();
+
+			if(WordWrap)
+				drawWrappedText(target, liveText, MultiLine, WrapWidth, appearance);
+			else
+				drawText(target, liveText, MultiLine, appearance);
+		}
+
+		/// <summary>
+		/// Draws the text without applying any word wrapping to it
+		/// </summary>
+		/// <param name="target">Texture to draw the text onto</param>
+		/// <param name="text">Text to render</param>
+		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
+		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
+		private static void drawText (RenderTarget target, LiveTextString text, bool multiLine, TextAppearance appearance)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Draws the text and applies word wrapping to it
+		/// </summary>
+		/// <param name="target">Texture to draw the text onto</param>
+		/// <param name="liveText">Text to render</param>
+		/// <param name="multiLine">Flag indicating whether the original newlines are allowed</param>
+		/// <param name="width">Target width to wrap lines by</param>
+		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
+		private static void drawWrappedText (RenderTarget target, LiveTextString liveText, bool multiLine, int width,
+											TextAppearance appearance)
+		{
 			throw new NotImplementedException();
 		}
 	}
