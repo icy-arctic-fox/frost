@@ -51,9 +51,14 @@ namespace Frost.Graphics.Text
 		/// Creates a live text string from existing segments
 		/// </summary>
 		/// <param name="segments">Collection of segments</param>
-		private LiveTextString (IEnumerable<LiveTextSegment> segments)
+		public LiveTextString (IEnumerable<LiveTextSegment> segments)
 		{
-			_segments.AddRange(segments);
+			if(segments != null)
+				foreach(var segment in segments)
+				{
+					var toAdd = segment ?? new StringSegment(NullSegmentString);
+					_segments.Add(toAdd);
+				}
 		}
 
 		/// <summary>
