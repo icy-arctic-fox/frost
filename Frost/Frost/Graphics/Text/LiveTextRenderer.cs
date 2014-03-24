@@ -96,7 +96,60 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateBounds (LiveTextString liveText, bool multiLine, TextAppearance appearance)
 		{
-			throw new NotImplementedException();
+			using(var t = new SFML.Graphics.Text())
+			{
+				// Prepare the text
+				appearance.ApplyTo(t);
+
+				float x = 0f, y = 0f, maxWidth = 0f, lineHeight = 0f;
+				foreach(var segment in liveText)
+				{
+					// Get text and appearance changes from the segment
+					var text = segment.Apply(ref appearance);
+					appearance.ApplyTo(t);
+
+					// Get the lines of text
+					var lines = new List<string>();
+					if(text != null)
+					{
+						if(multiLine) // Add each line
+							lines.AddRange(SplitTextOnLinebreaks(text));
+						else
+						{// Strip newline characters and add one line
+							text = text.Replace('\r', ' ');
+							text = text.Replace('\n', ' ');
+							lines.Add(text);
+						}
+					}
+
+					// Calculate the bounds of each line
+					foreach(var line in lines)
+					{
+						// Advance to the next line
+						y += lineHeight; // lineHeight is 0f on first iteration,
+						lineHeight = 0f; // these two lines do nothing on the first line
+
+						// Set the text to calculate bounds of
+						t.DisplayedString = line;
+
+						// Compute the bounds
+						var bounds = t.GetLocalBounds();
+						var width  = bounds.Width  + bounds.Left;
+						var height = bounds.Height + bounds.Top;
+
+						// Update the position and max bounds
+						x += width;
+						if(x > maxWidth)
+							maxWidth = x;
+						if(height > lineHeight)
+							lineHeight = height;
+					}
+				}
+
+				var finalWidth  = (uint)Math.Ceiling(maxWidth);
+				var finalHeight = (uint)Math.Ceiling(y + lineHeight);
+				return new Vector2u(finalWidth, finalHeight);
+			}
 		}
 
 		/// <summary>
