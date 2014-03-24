@@ -7,6 +7,21 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class StringSegment : LiveTextSegment
 	{
+		private readonly string _text;
+
+		/// <summary>
+		/// Creates a new string segment in a live text string
+		/// </summary>
+		/// <param name="text">String value</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="text"/> can't be null.</exception>
+		public StringSegment (string text)
+		{
+			if(text == null)
+				throw new ArgumentNullException("text");
+
+			_text = text;
+		}
+
 		/// <summary>
 		/// Applies the segment to the renderer state
 		/// </summary>
