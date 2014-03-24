@@ -132,6 +132,9 @@ namespace Frost.Graphics.Text
 				case IncreaseFontSizeSegment.FormattingChar:
 					++index;
 					return new IncreaseFontSizeSegment();
+				case DecreaseFontSizeSegment.FormattingChar:
+					++index;
+					return new DecreaseFontSizeSegment();
 				case FormattingChar: // Escape sequence
 					++index;
 					return new StringSegment(FormattingCharString);
