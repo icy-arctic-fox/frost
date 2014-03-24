@@ -129,6 +129,9 @@ namespace Frost.Graphics.Text
 				var c = text[index];
 				switch(c)
 				{// Check against known formatting codes
+				case IncreaseFontSizeSegment.FormattingChar:
+					++index;
+					return new IncreaseFontSizeSegment();
 				case FormattingChar: // Escape sequence
 					++index;
 					return new StringSegment(FormattingCharString);
