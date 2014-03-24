@@ -18,8 +18,8 @@
 		/// <summary>
 		/// Applies the segment to the renderer state
 		/// </summary>
-		/// <param name="appearance">Unused - no modifications are made to the appearance</param>
-		/// <returns>Text in the segment</returns>
+		/// <param name="appearance">Appearance to increase the font size of</param>
+		/// <returns>Unused - null is returned</returns>
 		public override string Apply (ref TextAppearance appearance)
 		{
 			appearance.Size += SizeIncrease;
