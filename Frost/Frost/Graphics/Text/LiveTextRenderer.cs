@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -24,11 +25,11 @@ namespace Frost.Graphics.Text
 		{
 			if(Text != null)
 			{
-				var originalText = Text;
+				var liveText = Text;
 				if(!MultiLine)
 				{// Strip newline characters
-					var strippedText = new LiveTextString();
-					foreach(var segment in originalText)
+					var segments = new List<LiveTextSegment>();
+					foreach(var segment in liveText)
 					{
 						var stringSegment = segment as StringSegment;
 						if(stringSegment != null)
@@ -36,14 +37,14 @@ namespace Frost.Graphics.Text
 							var text = stringSegment.Value;
 							text = text.Replace('\r', ' ');
 							text = text.Replace('\n', ' ');
-							strippedText += new StringSegment(text);
+							segments.Add(new StringSegment(text));
 						}
 						else // Not a string, just append it
-							strippedText += segment;
+							segments.Add(segment);
 					}
-					originalText = strippedText;
+					liveText = new LiveTextString(segments);
 				}
-				return originalText;
+				return liveText;
 			}
 
 			// Empty string
