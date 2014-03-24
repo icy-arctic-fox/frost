@@ -14,6 +14,8 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public const char FormattingChar = '\\';
 
+		private const string FormattingCharString = @"\";
+
 		private readonly List<LiveTextSegment> _segments = new List<LiveTextSegment>();
 
 		/// <summary>
@@ -108,7 +110,19 @@ namespace Frost.Graphics.Text
 		/// <remarks>If the formatting code is invalid, a <see cref="StringSegment"/> is returned containing <see cref="FormattingChar"/>.</remarks>
 		private static LiveTextSegment parseFormattingCode (string text, ref int index)
 		{
-			throw new NotImplementedException();
+			if(++index < text.Length)
+			{// There are character after the current position
+				var c = text[index];
+				switch(c)
+				{// Check against known formatting codes
+				case FormattingChar: // Escape sequence
+					++index;
+					return new StringSegment(FormattingCharString);
+				}
+			}
+
+			// Not a valid formatting code
+			return new StringSegment(FormattingCharString);
 		}
 
 		#region Operators
