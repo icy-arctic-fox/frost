@@ -61,38 +61,38 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Parses a live text string and extracts the segments
 		/// </summary>
-		/// <param name="text"></param>
-		/// <returns></returns>
-		/// <exception cref="ArgumentNullException">The <paramref name="text"/> to parse can't be null.</exception>
+		/// <param name="text">String to parse and extract segments from</param>
+		/// <returns>Collection of <see cref="LiveTextSegment"/> extracted from <paramref name="text"/></returns>
 		public static IEnumerable<LiveTextSegment> Parse (string text)
 		{
-			if(text == null)
-				throw new ArgumentNullException("text");
-
 			var segments = new List<LiveTextSegment>();
-			var start = 0;
-			for(var i = 0; i < text.Length; ++i)
-			{// Iterate through each character
-				var c = text[i];
-				if(c == FormattingChar)
-				{// Start of a formatting code
-					if(start < i)
-					{// There was a string prior to this
-						var prevString = text.Substring(start, i - start);
-						segments.Add(new StringSegment(prevString));
+
+			if(!String.IsNullOrEmpty(text))
+			{// There is text to parse
+				var start = 0;
+				for(var i = 0; i < text.Length; ++i)
+				{// Iterate through each character
+					var c = text[i];
+					if(c == FormattingChar)
+					{// Start of a formatting code
+						if(start < i)
+						{// There was a string prior to this
+							var prevString = text.Substring(start, i - start);
+							segments.Add(new StringSegment(prevString));
+						}
+
+						// Parse the formatting code and add the extracted segment
+						var segment = parseFormattingCode(text, ref i);
+						segments.Add(segment);
+						start = i;
 					}
-
-					// Parse the formatting code and add the extracted segment
-					var segment = parseFormattingCode(text, ref i);
-					segments.Add(segment);
-					start = i;
 				}
-			}
 
-			if(start < text.Length - 1)
-			{// There's text left over
-				var remaining = text.Substring(start);
-				segments.Add(new StringSegment(remaining));
+				if(start < text.Length - 1)
+				{// There's text left over
+					var remaining = text.Substring(start);
+					segments.Add(new StringSegment(remaining));
+				}
 			}
 
 			return segments.AsReadOnly();
