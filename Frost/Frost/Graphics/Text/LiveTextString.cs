@@ -16,6 +16,11 @@ namespace Frost.Graphics.Text
 
 		private const string FormattingCharString = @"\";
 
+		/// <summary>
+		/// String that appears when null is encountered in a <see cref="LiveTextString"/>
+		/// </summary>
+		public const string NullSegmentString = "null";
+
 		private readonly List<LiveTextSegment> _segments = new List<LiveTextSegment>();
 
 		/// <summary>
@@ -40,6 +45,15 @@ namespace Frost.Graphics.Text
 			}
 			else if(!String.IsNullOrEmpty(text))
 				_segments.Add(new StringSegment(text));
+		}
+
+		/// <summary>
+		/// Creates a live text string from existing segments
+		/// </summary>
+		/// <param name="segments">Collection of segments</param>
+		private LiveTextString (IEnumerable<LiveTextSegment> segments)
+		{
+			_segments.AddRange(segments);
 		}
 
 		/// <summary>
@@ -133,9 +147,15 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Original live text</param>
 		/// <param name="other">String to append to the live text</param>
 		/// <returns>Concatenated live text string</returns>
-		public static LiveTextString operator +(LiveTextString text, string other)
+		public static LiveTextString operator + (LiveTextString text, string other)
 		{
-			throw new NotImplementedException();
+			if(other == null) // Replace with null value
+				other = NullSegmentString;
+
+			// Create new live text and append string to it
+			var liveText = new LiveTextString(text._segments);
+			liveText._segments.Add(new StringSegment(other));
+			return liveText;
 		}
 
 		/// <summary>
@@ -146,7 +166,13 @@ namespace Frost.Graphics.Text
 		/// <returns>Concatenated live text string</returns>
 		public static LiveTextString operator + (LiveTextString text, LiveTextSegment other)
 		{
-			throw new NotImplementedException();
+			if(other == null) // Replace with null value
+				other = new StringSegment(NullSegmentString);
+
+			// Create new live text and append segment to it
+			var liveText = new LiveTextString(text._segments);
+			liveText._segments.Add(other);
+			return liveText;
 		}
 
 		/// <summary>
@@ -157,7 +183,13 @@ namespace Frost.Graphics.Text
 		/// <returns>Concatenated live text string</returns>
 		public static LiveTextString operator + (LiveTextString text, LiveTextString other)
 		{
-			throw new NotImplementedException();
+			if(other == null) // Replace with null value
+				return text + new StringSegment(NullSegmentString);
+
+			// Create new live text and append segments to it
+			var liveText = new LiveTextString(text._segments);
+			liveText._segments.AddRange(other._segments);
+			return liveText;
 		}
 		#endregion
 	}
