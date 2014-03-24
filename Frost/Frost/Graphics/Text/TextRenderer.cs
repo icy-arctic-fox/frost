@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Frost.Utility;
 using SFML.Graphics;
-using T = SFML.Graphics.Text;
 
 namespace Frost.Graphics.Text
 {
