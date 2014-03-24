@@ -9,6 +9,11 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class LiveTextString : IEnumerable<LiveTextSegment>
 	{
+		/// <summary>
+		/// Character used to mark the start of a formatting code
+		/// </summary>
+		public const char FormattingChar = '\\';
+
 		private readonly List<LiveTextSegment> _segments = new List<LiveTextSegment>();
 
 		/// <summary>
@@ -47,6 +52,59 @@ namespace Frost.Graphics.Text
 			return GetEnumerator();
 		}
 
+		/// <summary>
+		/// Parses a live text string and extracts the segments
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException">The <paramref name="text"/> to parse can't be null.</exception>
+		public static IEnumerable<LiveTextSegment> Parse (string text)
+		{
+			if(text == null)
+				throw new ArgumentNullException("text");
+
+			var segments = new List<LiveTextSegment>();
+			var start = 0;
+			for(var i = 0; i < text.Length; ++i)
+			{// Iterate through each character
+				var c = text[i];
+				if(c == FormattingChar)
+				{// Start of a formatting code
+					if(start < i)
+					{// There was a string prior to this
+						var prevString = text.Substring(start, i - start);
+						segments.Add(new StringSegment(prevString));
+					}
+
+					// Parse the formatting code and add the extracted segment
+					var segment = parseFormattingCode(text, ref i);
+					segments.Add(segment);
+					start = i;
+				}
+			}
+
+			if(start < text.Length - 1)
+			{// There's text left over
+				var remaining = text.Substring(start);
+				segments.Add(new StringSegment(remaining));
+			}
+
+			return segments.AsReadOnly();
+		}
+
+		/// <summary>
+		/// Parses a string to get a formatting code and create a live text segment from it
+		/// </summary>
+		/// <param name="text">String to parse</param>
+		/// <param name="index">Index of the first character (index of <see cref="FormattingChar"/>).
+		/// After the call, this will be the index of the first character after the formatting code.</param>
+		/// <returns>Extracted live text string</returns>
+		/// <remarks>If the formatting code is invalid, a <see cref="StringSegment"/> is returned containing <see cref="FormattingChar"/>.</remarks>
+		private static LiveTextSegment parseFormattingCode (string text, ref int index)
+		{
+			throw new NotImplementedException();
+		}
+
 		#region Operators
 
 		/// <summary>
@@ -55,7 +113,7 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Original live text</param>
 		/// <param name="other">String to append to the live text</param>
 		/// <returns>Concatenated live text string</returns>
-		public static LiveTextString operator + (LiveTextString text, string other)
+		public static LiveTextString operator +(LiveTextString text, string other)
 		{
 			throw new NotImplementedException();
 		}
