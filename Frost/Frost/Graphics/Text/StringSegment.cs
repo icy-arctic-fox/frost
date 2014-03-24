@@ -10,6 +10,14 @@ namespace Frost.Graphics.Text
 		private readonly string _text;
 
 		/// <summary>
+		/// String value
+		/// </summary>
+		public string Value
+		{
+			get { return _text; }
+		}
+
+		/// <summary>
 		/// Creates a new string segment in a live text string
 		/// </summary>
 		/// <param name="text">String value</param>
