@@ -17,6 +17,40 @@ namespace Frost.Graphics.Text
 		public LiveTextString Text { get; set; }
 
 		/// <summary>
+		/// Retrieves the text to render and corrects it based on rendering properties
+		/// </summary>
+		/// <returns>Fixed live text</returns>
+		private LiveTextString getFixedText ()
+		{
+			if(Text != null)
+			{
+				var originalText = Text;
+				if(!MultiLine)
+				{// Strip newline characters
+					var strippedText = new LiveTextString();
+					foreach(var segment in originalText)
+					{
+						var stringSegment = segment as StringSegment;
+						if(stringSegment != null)
+						{// Current segment is a string, strip newlines from it
+							var text = stringSegment.Value;
+							text = text.Replace('\r', ' ');
+							text = text.Replace('\n', ' ');
+							strippedText += new StringSegment(text);
+						}
+						else // Not a string, just append it
+							strippedText += segment;
+					}
+					originalText = strippedText;
+				}
+				return originalText;
+			}
+
+			// Empty string
+			return new LiveTextString();
+		}
+
+		/// <summary>
 		/// Creates a new live text renderer
 		/// </summary>
 		/// <param name="appearance">Initial (default) visual appearance of the text</param>
