@@ -80,6 +80,36 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		protected override Vector2u CalculateBounds ()
 		{
+			var liveText = Text ?? new LiveTextString();
+			var appearance = Appearance.CloneTextAppearance();
+			return WordWrap
+						? calculateWrappedBounds(liveText, MultiLine, WrapWidth, appearance)
+						: calculateBounds(liveText, MultiLine, appearance);
+		}
+
+		/// <summary>
+		/// Calculates the bounds of some live text that does not wrap multiple lines
+		/// </summary>
+		/// <param name="liveText">Text to calculate the bounds of</param>
+		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
+		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
+		/// <returns>Width and height of the bounds</returns>
+		private static Vector2u calculateBounds (LiveTextString liveText, bool multiLine, TextAppearance appearance)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Calculates the bounds of some text that has word wrapping applied to it
+		/// </summary>
+		/// <param name="liveText">Text to calculate the bounds of</param>
+		/// <param name="multiLine">Flag indicating whether the original newlines are allowed</param>
+		/// <param name="width">Target width to wrap lines by</param>
+		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
+		/// <returns>Width and height of the bounds</returns>
+		private static Vector2u calculateWrappedBounds (LiveTextString liveText, bool multiLine, int width,
+														TextAppearance appearance)
+		{
 			throw new NotImplementedException();
 		}
 
