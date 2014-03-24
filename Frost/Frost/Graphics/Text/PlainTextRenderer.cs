@@ -23,13 +23,17 @@ namespace Frost.Graphics.Text
 		/// <returns>Fixed text string</returns>
 		private string getFixedText ()
 		{
-			var text = Text ?? String.Empty;
-			if(!MultiLine)
-			{// Strip newline characters
-				text = text.Replace('\r', ' ');
-				text = text.Replace('\n', ' ');
+			if(Text != null)
+			{
+				var text = Text;
+				if(!MultiLine)
+				{// Strip newline characters
+					text = text.Replace('\r', ' ');
+					text = text.Replace('\n', ' ');
+				}
+				return text;
 			}
-			return text;
+			return String.Empty;
 		}
 
 		/// <summary>
