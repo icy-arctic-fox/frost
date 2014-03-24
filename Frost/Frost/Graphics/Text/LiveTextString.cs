@@ -31,7 +31,13 @@ namespace Frost.Graphics.Text
 		/// <param name="formatted">True to interpret any formatting codes contained in <paramref name="text"/></param>
 		public LiveTextString (string text, bool formatted = true)
 		{
-			throw new NotImplementedException();
+			if(formatted)
+			{// Parse the string and store the segments
+				var segments = Parse(text);
+				_segments.AddRange(segments);
+			}
+			else if(!String.IsNullOrEmpty(text))
+				_segments.Add(new StringSegment(text));
 		}
 
 		/// <summary>
@@ -40,7 +46,7 @@ namespace Frost.Graphics.Text
 		/// <returns>An enumerator object that can be used to iterate through the segments</returns>
 		public IEnumerator<LiveTextSegment> GetEnumerator ()
 		{
-			throw new NotImplementedException();
+			return _segments.GetEnumerator();
 		}
 
 		/// <summary>
