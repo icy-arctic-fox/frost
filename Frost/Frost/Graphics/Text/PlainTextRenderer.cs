@@ -44,6 +44,18 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
+		/// Creates a new plain text renderer
+		/// </summary>
+		/// <param name="text">Initial text</param>
+		/// <param name="appearance">Visual appearance of the text</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		public PlainTextRenderer (string text, TextAppearance appearance)
+			: base(appearance)
+		{
+			Text = text;
+		}
+
+		/// <summary>
 		/// Calculates the bounds of the space that the text will occupy
 		/// </summary>
 		/// <returns>Width and height of the bounds</returns>
