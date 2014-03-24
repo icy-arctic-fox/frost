@@ -197,6 +197,16 @@ namespace Frost.Graphics.Text
 			liveText._segments.AddRange(other._segments);
 			return liveText;
 		}
+
+		/// <summary>
+		/// Converts a <see cref="String"/> to a <see cref="LiveTextString"/>
+		/// </summary>
+		/// <param name="text">String to convert</param>
+		/// <returns>A live text string that has formatting codes applied</returns>
+		public static implicit operator LiveTextString (string text)
+		{
+			return new LiveTextString(text);
+		}
 		#endregion
 	}
 }
