@@ -12,6 +12,11 @@ namespace Frost.Graphics.Text
 	public class LiveTextRenderer : TextRenderer
 	{
 		/// <summary>
+		/// Text to render
+		/// </summary>
+		public LiveTextString Text { get; set; }
+
+		/// <summary>
 		/// Creates a new live text renderer
 		/// </summary>
 		/// <param name="appearance">Initial (default) visual appearance of the text</param>
@@ -20,6 +25,18 @@ namespace Frost.Graphics.Text
 			: base(appearance)
 		{
 			// ...
+		}
+
+		/// <summary>
+		/// Creates a new live text renderer
+		/// </summary>
+		/// <param name="text">Text to render</param>
+		/// <param name="appearance">Initial (default) visual appearance of the text</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		public LiveTextRenderer (LiveTextString text, TextAppearance appearance)
+			: base(appearance)
+		{
+			Text = text;
 		}
 
 		/// <summary>
