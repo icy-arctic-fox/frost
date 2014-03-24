@@ -123,11 +123,15 @@ namespace Frost.Graphics.Text
 					}
 
 					// Calculate the bounds of each line
-					foreach(var line in lines)
+					for(var i = 0; i < lines.Count; ++i)
 					{
-						// Advance to the next line
-						y += lineHeight; // lineHeight is 0f on first iteration,
-						lineHeight = 0f; // these two lines do nothing on the first line
+						var line = lines[i];
+
+						if(i > 0)
+						{// Advance to the next line
+							y += lineHeight;
+							lineHeight = 0f;
+						}
 
 						// Set the text to calculate bounds of
 						t.DisplayedString = line;
