@@ -29,7 +29,7 @@ namespace Frost.Graphics.Text
 		/// <returns>Text in the segment</returns>
 		public override string Apply (ref TextAppearance appearance)
 		{
-			throw new NotImplementedException();
+			return _text;
 		}
 	}
 }
