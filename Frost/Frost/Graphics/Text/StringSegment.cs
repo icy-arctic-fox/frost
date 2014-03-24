@@ -39,5 +39,14 @@ namespace Frost.Graphics.Text
 		{
 			return _text;
 		}
+
+		/// <summary>
+		/// Retrieves the string value of the segment
+		/// </summary>
+		/// <returns>A string (same as <see cref="Value"/>)</returns>
+		public override string ToString ()
+		{
+			return _text;
+		}
 	}
 }

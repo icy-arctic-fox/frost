@@ -1,4 +1,6 @@
-﻿namespace Frost.Graphics.Text
+﻿using System;
+
+namespace Frost.Graphics.Text
 {
 	/// <summary>
 	/// Increases the size of the font
@@ -24,6 +26,15 @@
 		{
 			appearance.Size += SizeIncrease;
 			return null;
+		}
+
+		/// <summary>
+		/// Gets the formatting code that represents the segment
+		/// </summary>
+		/// <returns>A formatting code string</returns>
+		public override string ToString ()
+		{
+			return new String(new[] { LiveTextString.FormattingChar, FormattingChar });
 		}
 	}
 }
