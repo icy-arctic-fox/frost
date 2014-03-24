@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Frost.Utility;
 using SFML.Graphics;
 using T = SFML.Graphics.Text;
