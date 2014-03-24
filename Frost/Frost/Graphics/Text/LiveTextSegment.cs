@@ -8,7 +8,8 @@
 		/// <summary>
 		/// Applies the segment to the renderer state
 		/// </summary>
-		/// <param name="renderer">Renderer that tracks the status of the live text</param>
-		public abstract void Apply (LiveTextRenderer renderer);
+		/// <param name="appearance">Make modifications to the appearance of the text with this object</param>
+		/// <returns>Text for the segment or null if there is none (only appearance is modified)</returns>
+		public abstract string Apply (ref TextAppearance appearance);
 	}
 }

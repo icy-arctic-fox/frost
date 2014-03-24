@@ -10,8 +10,9 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Applies the segment to the renderer state
 		/// </summary>
-		/// <param name="renderer">Renderer that tracks the status of the live text</param>
-		public override void Apply (LiveTextRenderer renderer)
+		/// <param name="appearance">Unused - no modifications are made to the appearance</param>
+		/// <returns>Text in the segment</returns>
+		public override string Apply (ref TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
