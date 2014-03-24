@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Frost.Graphics.Text
 {
@@ -213,5 +214,17 @@ namespace Frost.Graphics.Text
 			return new LiveTextString(text);
 		}
 		#endregion
+
+		/// <summary>
+		/// Generates the string representation of the live text
+		/// </summary>
+		/// <returns>Live text containing the strings and formatting codes</returns>
+		public override string ToString ()
+		{
+			var sb = new StringBuilder();
+			foreach(var segment in _segments)
+				sb.Append(segment == null ? NullSegmentString : segment.ToString());
+			return sb.ToString();
+		}
 	}
 }
