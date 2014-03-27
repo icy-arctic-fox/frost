@@ -26,7 +26,7 @@ namespace Frost.Graphics.Text
 		/// Gets the next token from the stream
 		/// </summary>
 		/// <returns>Next token or null if there aren't any token remaining</returns>
-		public object /* LiveTextToken */ GetNext ()
+		public LiveTextToken GetNext ()
 		{
 			if(!EndOfString)
 			{// There are characters remaining
@@ -45,7 +45,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="c">First character</param>
 		/// <returns>A live text token</returns>
-		private object /* LiveTextToken */ initialState (char c)
+		private LiveTextToken initialState (char c)
 		{
 			throw new NotImplementedException();
 		}
