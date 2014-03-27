@@ -13,6 +13,7 @@ namespace Frost.Graphics.Text
 		/// Creates a live text token
 		/// </summary>
 		/// <param name="value">String value of the token</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="value"/> of the token can't be null.</exception>
 		public LiveTextToken (string value)
 		{
 			if(value == null)
