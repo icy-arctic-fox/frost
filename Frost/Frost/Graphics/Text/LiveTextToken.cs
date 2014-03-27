@@ -7,18 +7,18 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	internal class LiveTextToken
 	{
-		private readonly string _value;
+		private readonly string _token;
 
 		/// <summary>
 		/// Creates a live text token
 		/// </summary>
-		/// <param name="value">String value of the token</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="value"/> of the token can't be null.</exception>
-		public LiveTextToken (string value)
+		/// <param name="token">String representation of the entire token</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="token"/> of the token can't be null.</exception>
+		public LiveTextToken (string token)
 		{
-			if(value == null)
-				throw new ArgumentNullException("value");
-			_value = value;
+			if(token == null)
+				throw new ArgumentNullException("token");
+			_token = token;
 		}
 
 		/// <summary>
@@ -27,7 +27,7 @@ namespace Frost.Graphics.Text
 		/// <returns>Token's string value</returns>
 		public override string ToString ()
 		{
-			return _value;
+			return _token;
 		}
 	}
 }
