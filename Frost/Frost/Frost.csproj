@@ -86,6 +86,7 @@
     <Compile Include="Graphics\Text\IncreaseFontSizeSegment.cs" />
     <Compile Include="Graphics\Text\ITextSize.cs" />
     <Compile Include="Graphics\Text\LiveTextLexer.cs" />
+    <Compile Include="Graphics\Text\LiveTextToken.cs" />
     <Compile Include="Graphics\Text\SimpleText.cs" />
     <Compile Include="Graphics\Text\TextAlignment.cs" />
     <Compile Include="Graphics\Text\TextAppearance.cs" />
