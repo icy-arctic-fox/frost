@@ -70,8 +70,7 @@ namespace Frost.Graphics.Text
 			var c = getNextChar();
 			if(c == '\\')
 			{// Escape slash \\
-				goBack();
-				++_pos; // Skip over second slash
+				applyEscapeSequence();
 				return otherState();
 			}
 
@@ -158,6 +157,14 @@ namespace Frost.Graphics.Text
 		{
 			_lexeme.Remove(_lexeme.Length - 1, 1); // Remove last character from lexeme
 			--_pos;
+		}
+
+		/// <summary>
+		/// Goes back and remove the escape character
+		/// </summary>
+		private void applyEscapeSequence ()
+		{
+			_lexeme.Remove(_lexeme.Length - 2, 1); // Remove \ which is the second-to-last character
 		}
 
 		/// <summary>
