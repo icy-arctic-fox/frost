@@ -149,8 +149,22 @@ namespace Frost.Graphics.Text
 			while(!EndOfString)
 			{// Gobble up any non-special characters
 				var c = getNextChar();
-				if(c == '\\' || c == '}')
-				{// Special character found
+				if(c == '\\')
+				{// Start of escape sequence or formatter
+					if(!EndOfString)
+					{
+						c = getNextChar();
+						if(c == '\\' || c == '{') // Continue the text, escape sequence
+							applyEscapeSequence();
+						else
+						{// This looks like a formatter
+							goBack();
+							return escapeState();
+						}
+					}
+				}
+				else if(c == '}')
+				{// Special character found (end formatter)
 					goBack();
 					break;
 				}
