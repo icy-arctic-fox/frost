@@ -91,64 +91,32 @@ namespace Frost.Graphics.Text
 
 			if(!String.IsNullOrEmpty(text))
 			{// There is text to parse
-				var start = 0;
-				for(var i = 0; i < text.Length; ++i)
-				{// Iterate through each character
-					var c = text[i];
-					if(c == FormattingChar)
-					{// Start of a formatting code
-						if(start < i)
-						{// There was a string prior to this
-							var prevString = text.Substring(start, i - start);
-							segments.Add(new StringSegment(prevString));
-						}
-
-						// Parse the formatting code and add the extracted segment
-						var segment = parseFormattingCode(text, ref i);
-						segments.Add(segment);
-						start = i;
+				var lexer = new LiveTextLexer(text);
+				LiveTextToken token;
+				while((token = lexer.GetNext()) != null)
+				{
+					var startFormatToken = token as LiveTextStartFormatToken;
+					if(startFormatToken != null)
+					{// Start of a formatter
+						throw new NotImplementedException(); // TODO: Push format state
 					}
-				}
-
-				if(start < text.Length - 1)
-				{// There's text left over
-					var remaining = text.Substring(start);
-					segments.Add(new StringSegment(remaining));
+					else
+					{
+						var endFormatToken = token as LiveTextEndFormatToken;
+						if(endFormatToken != null)
+						{// End of a formatter
+							throw new NotImplementedException(); // TODO: Pop format state
+						}
+						else
+						{// Plain text token
+							var stringSegment = new StringSegment(token.ToString());
+							segments.Add(stringSegment);
+						}
+					}
 				}
 			}
 
 			return segments.AsReadOnly();
-		}
-
-		/// <summary>
-		/// Parses a string to get a formatting code and create a live text segment from it
-		/// </summary>
-		/// <param name="text">String to parse</param>
-		/// <param name="index">Index of the first character (index of <see cref="FormattingChar"/>).
-		/// After the call, this will be the index of the first character after the formatting code.</param>
-		/// <returns>Extracted live text string</returns>
-		/// <remarks>If the formatting code is invalid, a <see cref="StringSegment"/> is returned containing <see cref="FormattingChar"/>.</remarks>
-		private static LiveTextSegment parseFormattingCode (string text, ref int index)
-		{
-			if(++index < text.Length)
-			{// There are character after the current position
-				var c = text[index];
-				switch(c)
-				{// Check against known formatting codes
-				case IncreaseFontSizeSegment.FormattingChar:
-					++index;
-					return new IncreaseFontSizeSegment();
-				case DecreaseFontSizeSegment.FormattingChar:
-					++index;
-					return new DecreaseFontSizeSegment();
-				case FormattingChar: // Escape sequence
-					++index;
-					return new StringSegment(FormattingCharString);
-				}
-			}
-
-			// Not a valid formatting code
-			return new StringSegment(FormattingCharString);
 		}
 
 		#region Operators
