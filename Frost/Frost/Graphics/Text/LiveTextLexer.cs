@@ -148,7 +148,12 @@ namespace Frost.Graphics.Text
 		{
 			while(!EndOfString)
 			{// Gobble up any non-special characters
-				
+				var c = getNextChar();
+				if(c == '\\' || c == '}')
+				{// Special character found
+					goBack();
+					break;
+				}
 			}
 
 			return new LiveTextToken(Lexeme);
