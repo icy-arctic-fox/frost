@@ -74,8 +74,11 @@ namespace Frost.Graphics.Text
 				return otherState();
 			}
 
-			if(c == '}') // Escape end format \}
-				return new LiveTextToken("}");
+			if(c == '}')
+			{// Escape end format \}
+				applyEscapeSequence();
+				return otherState();
+			}
 
 			// Start of formatting token
 			var sb = new StringBuilder();
@@ -143,7 +146,12 @@ namespace Frost.Graphics.Text
 		/// <returns>A live text token</returns>
 		private LiveTextToken otherState ()
 		{
-			throw new NotImplementedException();
+			while(!EndOfString)
+			{// Gobble up any non-special characters
+				
+			}
+
+			return new LiveTextToken(Lexeme);
 		}
 		#endregion
 
