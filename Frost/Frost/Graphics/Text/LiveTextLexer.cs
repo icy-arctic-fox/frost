@@ -107,7 +107,25 @@ namespace Frost.Graphics.Text
 		/// <returns>Additional information for formatting (text between [ and ])</returns>
 		private string extraFormatInfoState ()
 		{
-			throw new NotImplementedException();
+			var sb = new StringBuilder();
+			var escapeSequence = false;
+			while(!EndOfString)
+			{
+				var c = getNextChar();
+				if(c == '\\' && !escapeSequence)
+					escapeSequence = true;
+				else if(c == ']' && !escapeSequence)
+					return sb.ToString(); // End of extra information
+				else
+				{
+					sb.Append(c);
+					escapeSequence = false;
+				}
+			}
+
+			if(escapeSequence)
+				sb.Append('\\'); // Append trailing escape character if the string ended with \
+			return sb.ToString(); // Reached the end of the string before ] was found
 		}
 
 		/// <summary>
