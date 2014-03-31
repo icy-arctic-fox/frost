@@ -134,7 +134,7 @@ namespace Frost.Graphics.Text
 		/// <returns>A live text token</returns>
 		private LiveTextToken endFormatState ()
 		{
-			throw new NotImplementedException();
+			return new LiveTextEndFormatToken("}");
 		}
 
 		/// <summary>
