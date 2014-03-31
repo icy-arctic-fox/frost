@@ -47,6 +47,42 @@ namespace Frost.Graphics.Text
 		/// <returns>A live text token</returns>
 		private LiveTextToken initialState (char c)
 		{
+			switch(c)
+			{
+			case '\\':
+				return escapeState();
+			case '}':
+				return endFormatState();
+			default:
+				return otherState(c);
+			}
+		}
+
+		/// <summary>
+		/// State when an escape character (\) is encountered
+		/// </summary>
+		/// <returns>A live text token</returns>
+		private LiveTextToken escapeState ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// State when a format terminating character (}) is encountered
+		/// </summary>
+		/// <returns>A live text token</returns>
+		private LiveTextToken endFormatState ()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// State when any non-special character is encountered
+		/// </summary>
+		/// <param name="c">Character encountered</param>
+		/// <returns>A live text token</returns>
+		private LiveTextToken otherState (char c)
+		{
 			throw new NotImplementedException();
 		}
 		#endregion
