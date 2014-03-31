@@ -54,7 +54,7 @@ namespace Frost.Graphics.Text
 			case '}':
 				return endFormatState();
 			default:
-				return otherState(c);
+				return otherState();
 			}
 		}
 
@@ -63,6 +63,50 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <returns>A live text token</returns>
 		private LiveTextToken escapeState ()
+		{
+			if(EndOfString) // Nothing after \
+				return new LiveTextToken(Lexeme);
+			
+			var c = getNextChar();
+			if(c == '\\')
+			{// Escape slash \\
+				goBack();
+				++_pos; // Skip over second slash
+				return otherState();
+			}
+
+			if(c == '}') // Escape end format \}
+				return new LiveTextToken("}");
+
+			// Start of formatting token
+			var sb = new StringBuilder();
+			while(!EndOfString)
+			{ // Continue until a { is found
+				c = getNextChar();
+				switch(c)
+				{
+				case '{':
+					return new LiveTextStartFormatToken(Lexeme, sb.ToString(), null);
+				case '[':
+					var extra = extraFormatInfoState();
+					if(EndOfString || getNextChar() != '{')
+						return endFormatState(); // Invalid formatter, transform into a string
+					return new LiveTextStartFormatToken(Lexeme, sb.ToString(), extra);
+				default:
+					sb.Append(c);
+					break;
+				}
+			}
+
+			return otherState(); // A { was never found, not a valid formatter
+		}
+
+		/// <summary>
+		/// State when a formatter has been found and extra information about formatting is being supplied.
+		/// \foo[ &lt;-- HERE
+		/// </summary>
+		/// <returns>Additional information for formatting (text between [ and ])</returns>
+		private string extraFormatInfoState ()
 		{
 			throw new NotImplementedException();
 		}
@@ -79,9 +123,8 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// State when any non-special character is encountered
 		/// </summary>
-		/// <param name="c">Character encountered</param>
 		/// <returns>A live text token</returns>
-		private LiveTextToken otherState (char c)
+		private LiveTextToken otherState ()
 		{
 			throw new NotImplementedException();
 		}
