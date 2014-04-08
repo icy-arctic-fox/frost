@@ -95,28 +95,45 @@ namespace Frost.Graphics.Text
 				LiveTextToken token;
 				while((token = lexer.GetNext()) != null)
 				{
-					var startFormatToken = token as LiveTextStartFormatToken;
-					if(startFormatToken != null)
-					{// Start of a formatter
-						throw new NotImplementedException(); // TODO: Push format state
-					}
-					else
-					{
-						var endFormatToken = token as LiveTextEndFormatToken;
-						if(endFormatToken != null)
-						{// End of a formatter
-							throw new NotImplementedException(); // TODO: Pop format state
-						}
-						else
-						{// Plain text token
-							var stringSegment = new StringSegment(token.ToString());
-							segments.Add(stringSegment);
-						}
-					}
+					var segment = convertTokenIntoSegment(token);
+					if(segment != null)
+						segments.Add(segment);
 				}
 			}
 
 			return segments.AsReadOnly();
+		}
+
+		/// <summary>
+		/// Gets a live text segment from a token
+		/// </summary>
+		/// <param name="token">Token to parse</param>
+		/// <returns>A live text segment</returns>
+		private static LiveTextSegment convertTokenIntoSegment (LiveTextToken token)
+		{
+			// Check for LiveTextStartFormatToken
+			var startFormatToken = token as LiveTextStartFormatToken;
+			if(startFormatToken != null) // Start of a formatter
+				return parseStartFormatToken(startFormatToken);
+
+			// Check for LiveTextEndFormatToken
+			var endFormatToken = token as LiveTextEndFormatToken;
+			if(endFormatToken != null) // End of a formatter
+				throw new NotImplementedException();
+
+			// else - default to string segment
+			return new StringSegment(token.ToString());
+		}
+
+		/// <summary>
+		/// Attempts to find a formatter segment for a token
+		/// </summary>
+		/// <param name="token">Token to parse</param>
+		/// <returns>The corresponding formatter segment for <paramref name="token"/></returns>
+		/// <remarks>A string segment containing the original formatting code will be returned if the formatting code is unknown.</remarks>
+		private static LiveTextSegment parseStartFormatToken (LiveTextStartFormatToken token)
+		{
+			throw new NotImplementedException();
 		}
 
 		#region Operators
