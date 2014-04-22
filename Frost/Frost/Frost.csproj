@@ -85,6 +85,7 @@
     <Compile Include="Graphics\Text\ITextSize.cs" />
     <Compile Include="Graphics\Text\LiveTextEndFormatToken.cs" />
     <Compile Include="Graphics\Text\LiveTextLexer.cs" />
+    <Compile Include="Graphics\Text\LiveTextSegmentToken.cs" />
     <Compile Include="Graphics\Text\LiveTextStartFormatToken.cs" />
     <Compile Include="Graphics\Text\LiveTextToken.cs" />
     <Compile Include="Graphics\Text\SimpleText.cs" />
