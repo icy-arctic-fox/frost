@@ -89,11 +89,19 @@ namespace Frost.Graphics.Text
 				{
 				case '{':
 					return new LiveTextStartFormatToken(Lexeme, sb.ToString(), null);
+
 				case '[':
 					var extra = extraFormatInfoState();
-					if(EndOfString || getNextChar() != '{')
-						return endFormatState(); // Invalid formatter, transform into a string
+					var end   = EndOfString;
+					if(end || getNextChar() != '{')
+					{// No text associated with this formatter
+						if(!end) // Was not the end of the string...
+							goBack(); // ... go back a character to before where { could have been
+						return null; // TODO: Return segment token
+					}
+					// else - There is text associated with this formatter
 					return new LiveTextStartFormatToken(Lexeme, sb.ToString(), extra);
+
 				default:
 					sb.Append(c);
 					break;
