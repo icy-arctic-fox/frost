@@ -82,8 +82,6 @@
     <Compile Include="Graphics\IRenderTarget.cs" />
     <Compile Include="Graphics\Object2D.cs" />
     <Compile Include="Graphics\Layer2D.cs" />
-    <Compile Include="Graphics\Text\DecreaseFontSizeSegment.cs" />
-    <Compile Include="Graphics\Text\IncreaseFontSizeSegment.cs" />
     <Compile Include="Graphics\Text\ITextSize.cs" />
     <Compile Include="Graphics\Text\LiveTextEndFormatToken.cs" />
     <Compile Include="Graphics\Text\LiveTextLexer.cs" />
