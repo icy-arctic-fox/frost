@@ -44,8 +44,9 @@ namespace Frost.Graphics.Text
 				var segments = Parse(text);
 				_segments.AddRange(segments);
 			}
-			else if(!String.IsNullOrEmpty(text))
-				_segments.Add(new StringSegment(text));
+			// TODO: Add string segment
+/*			else if(!String.IsNullOrEmpty(text))
+				_segments.Add(new StringSegment(text)); */
 		}
 
 		/// <summary>
@@ -54,12 +55,13 @@ namespace Frost.Graphics.Text
 		/// <param name="segments">Collection of segments</param>
 		public LiveTextString (IEnumerable<LiveTextSegment> segments)
 		{
-			if(segments != null)
+			throw new NotImplementedException();
+			/*			if(segments != null)
 				foreach(var segment in segments)
 				{
 					var toAdd = segment ?? new StringSegment(NullSegmentString);
 					_segments.Add(toAdd);
-				}
+				}*/
 		}
 
 		/// <summary>
@@ -122,7 +124,8 @@ namespace Frost.Graphics.Text
 				throw new NotImplementedException();
 
 			// else - default to string segment
-			return new StringSegment(token.ToString());
+			throw new NotImplementedException();
+// TODO:			return new StringSegment(token.ToString());
 		}
 
 		/// <summary>
@@ -151,7 +154,7 @@ namespace Frost.Graphics.Text
 
 			// Create new live text and append string to it
 			var liveText = new LiveTextString(text._segments);
-			liveText._segments.Add(new StringSegment(other));
+			// TODO: liveText._segments.Add(new StringSegment(other));
 			return liveText;
 		}
 
@@ -163,8 +166,9 @@ namespace Frost.Graphics.Text
 		/// <returns>Concatenated live text string</returns>
 		public static LiveTextString operator + (LiveTextString text, LiveTextSegment other)
 		{
-			if(other == null) // Replace with null value
-				other = new StringSegment(NullSegmentString);
+			// TODO: Handle null
+			/* if(other == null) // Replace with null value
+				other = new StringSegment(NullSegmentString); */
 
 			// Create new live text and append segment to it
 			var liveText = new LiveTextString(text._segments);
@@ -180,8 +184,9 @@ namespace Frost.Graphics.Text
 		/// <returns>Concatenated live text string</returns>
 		public static LiveTextString operator + (LiveTextString text, LiveTextString other)
 		{
-			if(other == null) // Replace with null value
-				return text + new StringSegment(NullSegmentString);
+			// TODO: Handle null
+			/* if(other == null) // Replace with null value
+				return text + new StringSegment(NullSegmentString); */
 
 			// Create new live text and append segments to it
 			var liveText = new LiveTextString(text._segments);

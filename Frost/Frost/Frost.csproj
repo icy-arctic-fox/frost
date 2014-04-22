@@ -94,7 +94,6 @@
     <Compile Include="Graphics\Text\LiveTextRenderer.cs" />
     <Compile Include="Graphics\Text\LiveTextSegment.cs" />
     <Compile Include="Graphics\Text\LiveTextString.cs" />
-    <Compile Include="Graphics\Text\StringSegment.cs" />
     <Compile Include="Graphics\Text\Word.cs" />
     <Compile Include="Graphics\Text\WordWrap.cs" />
     <Compile Include="ResourceLoader.cs" />

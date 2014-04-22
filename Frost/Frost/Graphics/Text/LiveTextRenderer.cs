@@ -18,40 +18,6 @@ namespace Frost.Graphics.Text
 		public LiveTextString Text { get; set; }
 
 		/// <summary>
-		/// Retrieves the text to render and corrects it based on rendering properties
-		/// </summary>
-		/// <returns>Fixed live text</returns>
-		private LiveTextString getFixedText ()
-		{
-			if(Text != null)
-			{
-				var liveText = Text;
-				if(!MultiLine)
-				{// Strip newline characters
-					var segments = new List<LiveTextSegment>();
-					foreach(var segment in liveText)
-					{
-						var stringSegment = segment as StringSegment;
-						if(stringSegment != null)
-						{// Current segment is a string, strip newlines from it
-							var text = stringSegment.Value;
-							text = text.Replace('\r', ' ');
-							text = text.Replace('\n', ' ');
-							segments.Add(new StringSegment(text));
-						}
-						else // Not a string, just append it
-							segments.Add(segment);
-					}
-					liveText = new LiveTextString(segments);
-				}
-				return liveText;
-			}
-
-			// Empty string
-			return new LiveTextString();
-		}
-
-		/// <summary>
 		/// Creates a new live text renderer
 		/// </summary>
 		/// <param name="appearance">Initial (default) visual appearance of the text</param>
@@ -96,64 +62,7 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateBounds (LiveTextString liveText, bool multiLine, TextAppearance appearance)
 		{
-			using(var t = new SFML.Graphics.Text())
-			{
-				// Prepare the text
-				appearance.ApplyTo(t);
-
-				float x = 0f, y = 0f, maxWidth = 0f, lineHeight = 0f;
-				foreach(var segment in liveText)
-				{
-					// Get text and appearance changes from the segment
-					var text = segment.Apply(ref appearance);
-					appearance.ApplyTo(t);
-
-					// Get the lines of text
-					var lines = new List<string>();
-					if(text != null)
-					{
-						if(multiLine) // Add each line
-							lines.AddRange(SplitTextOnLinebreaks(text));
-						else
-						{// Strip newline characters and add one line
-							text = text.Replace('\r', ' ');
-							text = text.Replace('\n', ' ');
-							lines.Add(text);
-						}
-					}
-
-					// Calculate the bounds of each line
-					for(var i = 0; i < lines.Count; ++i)
-					{
-						var line = lines[i];
-
-						if(i > 0)
-						{// Advance to the next line
-							y += lineHeight;
-							lineHeight = 0f;
-						}
-
-						// Set the text to calculate bounds of
-						t.DisplayedString = line;
-
-						// Compute the bounds
-						var bounds = t.GetLocalBounds();
-						var width  = bounds.Width  + bounds.Left;
-						var height = bounds.Height + bounds.Top;
-
-						// Update the position and max bounds
-						x += width;
-						if(x > maxWidth)
-							maxWidth = x;
-						if(height > lineHeight)
-							lineHeight = height;
-					}
-				}
-
-				var finalWidth  = (uint)Math.Ceiling(maxWidth);
-				var finalHeight = (uint)Math.Ceiling(y + lineHeight);
-				return new Vector2u(finalWidth, finalHeight);
-			}
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
