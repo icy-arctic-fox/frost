@@ -4,6 +4,7 @@ namespace Frost.Graphics.Text
 {
 	/// <summary>
 	/// Live text token that symbolizes a formatting code (start of a formatted segment)
+	/// with associated text (a string that follows that will be formatted)
 	/// </summary>
 	internal class LiveTextStartFormatToken : LiveTextToken
 	{
@@ -20,6 +21,7 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Additional information used in formatting
 		/// </summary>
+		/// <remarks>This property can be null</remarks>
 		public string ExtraInfo
 		{
 			get { return _extra; }
