@@ -97,7 +97,7 @@ namespace Frost.Graphics.Text
 					{// No text associated with this formatter
 						if(!end) // Was not the end of the string...
 							goBack(); // ... go back a character to before where { could have been
-						return null; // TODO: Return segment token
+						return new LiveTextSegmentToken(Lexeme, extra);
 					}
 					// else - There is text associated with this formatter
 					return new LiveTextStartFormatToken(Lexeme, sb.ToString(), extra);
