@@ -10,16 +10,6 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public abstract class LiveTextSegment
 	{
-		private readonly TextAppearance _appearance;
-
-		/// <summary>
-		/// Appearance of the text for this segment
-		/// </summary>
-		public TextAppearance Appearance
-		{
-			get { return _appearance; }
-		}
-
 		/// <summary>
 		/// Indicates whether the segment can be broken into smaller segments
 		/// </summary>
@@ -35,19 +25,6 @@ namespace Frost.Graphics.Text
 		/// <exception cref="NotSupportedException">The segment does not support being broken apart.
 		/// <see cref="Breakable"/> should be false in this instance.</exception>
 		public abstract IEnumerable<LiveTextSegment> BreakApart ();
-
-		/// <summary>
-		/// Creates the base of the live text segment
-		/// </summary>
-		/// <param name="appearance">Appearance of the text for the segment</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		protected LiveTextSegment (TextAppearance appearance)
-		{
-			if(appearance == null)
-				throw new ArgumentNullException("appearance");
-
-			_appearance = appearance;
-		}
 
 		/// <summary>
 		/// Calculates the needed size of the live text segment

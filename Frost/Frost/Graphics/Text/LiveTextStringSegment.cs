@@ -22,6 +22,16 @@ namespace Frost.Graphics.Text
 			get { return _text; }
 		}
 
+		private readonly TextAppearance _appearance;
+
+		/// <summary>
+		/// Visual appearance of the text
+		/// </summary>
+		public TextAppearance Appearance
+		{
+			get { return _appearance; }
+		}
+
 		/// <summary>
 		/// Creates the base of the live text segment
 		/// </summary>
@@ -29,9 +39,12 @@ namespace Frost.Graphics.Text
 		/// <param name="appearance">Appearance of the text for the segment</param>
 		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
 		public LiveTextStringSegment (string text, TextAppearance appearance)
-			: base(appearance)
 		{
+			if(appearance == null)
+				throw new ArgumentNullException("appearance");
+
 			_text = text ?? NullTextReprsentation;
+			_appearance = appearance;
 		}
 
 		/// <summary>
