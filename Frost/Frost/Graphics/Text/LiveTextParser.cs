@@ -67,7 +67,7 @@ namespace Frost.Graphics.Text
 				{
 					var endToken = token as LiveTextEndFormatToken;
 					if(endToken != null)
-						parseEndToken(endToken);
+						parseEndToken(endToken, segments);
 					else
 					{
 						var segmentToken = token as LiveTextSegmentToken;
@@ -91,9 +91,10 @@ namespace Frost.Graphics.Text
 		private void parseStartToken (LiveTextStartFormatToken token, FormattingCodeTranslator translator,
 									List<LiveTextSegment> segments)
 		{
+			var before = _appearanceStack.Peek();
+
 			if(translator != null)
 			{// A translator is available, use it to generate the change in appearance
-				var before  = _appearanceStack.Peek();
 				var current = translator(token.FormatName, token.ExtraInfo, before);
 				if(current != null)
 				{// Only add it if a change was made
@@ -102,19 +103,31 @@ namespace Frost.Graphics.Text
 				}
 				// else - fallthrough...
 			}
-			// TODO: else - unrecognized formatter or no translator, put the literal text in
+
+			// else - unrecognized formatter or no translator, put the literal text in
+			var appearance     = _appearanceStack.Peek();
+			var literalText    = token.ToString();
+			var literalSegment = new LiveTextStringSegment(literalText, appearance);
+			segments.Add(literalSegment);
 		}
 
 		/// <summary>
 		/// Handles the logic for when a end formatting token is encountered
 		/// </summary>
 		/// <param name="token">Token to get information from</param>
-		private void parseEndToken (LiveTextEndFormatToken token)
+		/// <param name="segments">List of segments to append to</param>
+		private void parseEndToken (LiveTextEndFormatToken token, List<LiveTextSegment> segments)
 		{
 			// Pop off the top of the appearance stack
 			if(_appearanceStack.Count > 1) // ... but don't pop off the default appearance
 				_appearanceStack.Pop();
-			// TODO: else - put a literal }
+			else
+			{// Extra closing formatter, use the literal text
+				var appearance     = _appearanceStack.Peek();
+				var literalText    = token.ToString();
+				var literalSegment = new LiveTextStringSegment(literalText, appearance);
+				segments.Add(literalSegment);
+			}
 		}
 
 		/// <summary>
@@ -136,7 +149,12 @@ namespace Frost.Graphics.Text
 				}
 				// else - fallthrough...
 			}
-			// TODO: else - unrecognized formatter or no translator, put the literal text in
+
+			// else - unrecognized formatter or no translator, put the literal text in
+			var appearance     = _appearanceStack.Peek();
+			var literalText    = token.ToString();
+			var literalSegment = new LiveTextStringSegment(literalText, appearance);
+			segments.Add(literalSegment);
 		}
 
 		/// <summary>
