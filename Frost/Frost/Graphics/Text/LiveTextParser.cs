@@ -105,10 +105,8 @@ namespace Frost.Graphics.Text
 			}
 
 			// else - unrecognized formatter or no translator, put the literal text in
-			var appearance     = _appearanceStack.Peek();
-			var literalText    = token.ToString();
-			var literalSegment = new LiveTextStringSegment(literalText, appearance);
-			segments.Add(literalSegment);
+			var literal = createLiteralSegment(token);
+			segments.Add(literal);
 		}
 
 		/// <summary>
@@ -123,10 +121,8 @@ namespace Frost.Graphics.Text
 				_appearanceStack.Pop();
 			else
 			{// Extra closing formatter, use the literal text
-				var appearance     = _appearanceStack.Peek();
-				var literalText    = token.ToString();
-				var literalSegment = new LiveTextStringSegment(literalText, appearance);
-				segments.Add(literalSegment);
+				var literal = createLiteralSegment(token);
+				segments.Add(literal);
 			}
 		}
 
@@ -151,10 +147,8 @@ namespace Frost.Graphics.Text
 			}
 
 			// else - unrecognized formatter or no translator, put the literal text in
-			var appearance     = _appearanceStack.Peek();
-			var literalText    = token.ToString();
-			var literalSegment = new LiveTextStringSegment(literalText, appearance);
-			segments.Add(literalSegment);
+			var literal = createLiteralSegment(token);
+			segments.Add(literal);
 		}
 
 		/// <summary>
@@ -164,6 +158,18 @@ namespace Frost.Graphics.Text
 		private void parseStringToken (LiveTextToken token)
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates a string segment that contains the literal text of a token
+		/// </summary>
+		/// <param name="token">Token to use the literal value of</param>
+		/// <returns>A live text string segment containing the literal value of the token</returns>
+		private LiveTextSegment createLiteralSegment (LiveTextToken token)
+		{
+			var appearance  = _appearanceStack.Peek();
+			var literalText = token.ToString();
+			return new LiveTextStringSegment(literalText, appearance); 
 		}
 	}
 }
