@@ -53,43 +53,77 @@ namespace Frost.Graphics.Text
 			{
 				var startToken = token as LiveTextStartFormatToken;
 				if(startToken != null)
-				{// Start formatting, push the applied change onto the appearance stack
-					if(translator != null)
-					{// A translator is available, use it to generate the change in appearance
-						var before = _appearanceStack.Peek();
-						var current = translator(startToken.FormatName, startToken.ExtraInfo, before);
-						if(current != null)
-						{// Only add it if a change was made
-							_appearanceStack.Push(current);
-							continue;
-						}
-						// else - fallthrough...
-					}
-					// TODO: else - unrecognized formatter or no translator, put the literal text in
-				}
+					parseStartToken(startToken, translator, segments);
 				else
 				{
 					var endToken = token as LiveTextEndFormatToken;
 					if(endToken != null)
-					{// End formatting, pop off the top of the appearance stack
-						if(_appearanceStack.Count > 1) // ... but don't pop off the default appearance
-							_appearanceStack.Pop();
-					}
+						parseEndToken(endToken);
 					else
 					{
 						var segmentToken = token as LiveTextSegmentToken;
 						if(segmentToken != null)
-							throw new NotImplementedException();
-						else
-						{
-							// String, nothing special
-							throw new NotImplementedException();
-						}
+							parseSegmentToken(segmentToken);
+						else // String, nothing special
+							parseStringToken(token);
 					}
 				}
 			}
 
 			return segments.AsReadOnly();
+		}
+
+		/// <summary>
+		/// Handles translating a start formatting token into a text appearance change
+		/// </summary>
+		/// <param name="token">Token to get formatting information from</param>
+		/// <param name="translator">Method that will apply text appearance changes</param>
+		/// <param name="segments">List of segments to append to</param>
+		private void parseStartToken (LiveTextStartFormatToken token, FormattingCodeTranslator translator,
+									List<LiveTextSegment> segments)
+		{
+			if(translator != null)
+			{// A translator is available, use it to generate the change in appearance
+				var before  = _appearanceStack.Peek();
+				var current = translator(token.FormatName, token.ExtraInfo, before);
+				if(current != null)
+				{// Only add it if a change was made
+					_appearanceStack.Push(current);
+					return;
+				}
+				// else - fallthrough...
+			}
+			// TODO: else - unrecognized formatter or no translator, put the literal text in
+		}
+
+		/// <summary>
+		/// Handles the logic for when a end formatting token is encountered
+		/// </summary>
+		/// <param name="token">Token to get information from</param>
+		private void parseEndToken (LiveTextEndFormatToken token)
+		{
+			// Pop off the top of the appearance stack
+			if(_appearanceStack.Count > 1) // ... but don't pop off the default appearance
+				_appearanceStack.Pop();
+			// TODO: else - put a literal }
+		}
+
+		/// <summary>
+		/// Handles translating a standalone segment token
+		/// </summary>
+		/// <param name="token">Token to get segment information from</param>
+		private void parseSegmentToken (LiveTextSegmentToken token)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Handles a plain string token
+		/// </summary>
+		/// <param name="token">Token to get information from</param>
+		private void parseStringToken (LiveTextToken token)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
