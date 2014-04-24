@@ -25,6 +25,14 @@ namespace Frost.Graphics.Text
 		public delegate TextAppearance FormattingCodeTranslator (string type, string extra, TextAppearance before);
 
 		/// <summary>
+		/// Describes a method that translates segment formatting code information into a live text segment
+		/// </summary>
+		/// <param name="type">Name of the formatter</param>
+		/// <param name="info">Information required for the formatter</param>
+		/// <returns>Live text segment constructed from the formatter</returns>
+		public delegate LiveTextSegment SegmentCodeTranslator (string type, string info);
+
+		/// <summary>
 		/// Creates a new live text string parser
 		/// </summary>
 		/// <param name="text">Text containing the live text with formatting codes</param>
@@ -42,9 +50,10 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Parses the string that contains live text formatters and constructs a collection of segments that make up the live text
 		/// </summary>
-		/// <param name="translator">Method that will apply text appearance changes</param>
+		/// <param name="appearanceTranslator">Method that will apply text appearance changes</param>
+		/// <param name="segmentTranslator">Method that will translate formatting codes into segments</param>
 		/// <returns>Live text segments pulled from the string</returns>
-		public IEnumerable<LiveTextSegment> Parse (FormattingCodeTranslator translator)
+		public IEnumerable<LiveTextSegment> Parse (FormattingCodeTranslator appearanceTranslator, SegmentCodeTranslator segmentTranslator)
 		{
 			var segments = new List<LiveTextSegment>();
 
@@ -53,7 +62,7 @@ namespace Frost.Graphics.Text
 			{
 				var startToken = token as LiveTextStartFormatToken;
 				if(startToken != null)
-					parseStartToken(startToken, translator, segments);
+					parseStartToken(startToken, appearanceTranslator, segments);
 				else
 				{
 					var endToken = token as LiveTextEndFormatToken;
@@ -63,7 +72,7 @@ namespace Frost.Graphics.Text
 					{
 						var segmentToken = token as LiveTextSegmentToken;
 						if(segmentToken != null)
-							parseSegmentToken(segmentToken);
+							parseSegmentToken(segmentToken, segmentTranslator, segments);
 						else // String, nothing special
 							parseStringToken(token);
 					}
@@ -112,9 +121,22 @@ namespace Frost.Graphics.Text
 		/// Handles translating a standalone segment token
 		/// </summary>
 		/// <param name="token">Token to get segment information from</param>
-		private void parseSegmentToken (LiveTextSegmentToken token)
+		/// <param name="translator">Method that will translate formatting codes into segments</param>
+		/// <param name="segments">List of segments to append to</param>
+		private void parseSegmentToken (LiveTextSegmentToken token, SegmentCodeTranslator translator,
+										List<LiveTextSegment> segments)
 		{
-			throw new NotImplementedException();
+			if(translator != null)
+			{// A translator is available, use it to generate the segment
+				var segment = translator(null /* TODO */, token.Info);
+				if(segment != null)
+				{// Only add the segment if it's valid
+					segments.Add(segment);
+					return;
+				}
+				// else - fallthrough...
+			}
+			// TODO: else - unrecognized formatter or no translator, put the literal text in
 		}
 
 		/// <summary>
