@@ -54,7 +54,7 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
-		/// Calculates the bounds of some live text that does not wrap multiple lines
+		/// Calculates the bounds of some live text that does not wrap onto new lines
 		/// </summary>
 		/// <param name="liveText">Text to calculate the bounds of</param>
 		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
