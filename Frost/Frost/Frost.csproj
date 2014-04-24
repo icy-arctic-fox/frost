@@ -88,6 +88,7 @@
     <Compile Include="Graphics\Text\LiveTextParser.cs" />
     <Compile Include="Graphics\Text\LiveTextSegmentToken.cs" />
     <Compile Include="Graphics\Text\LiveTextStartFormatToken.cs" />
+    <Compile Include="Graphics\Text\LiveTextStringSegment.cs" />
     <Compile Include="Graphics\Text\LiveTextToken.cs" />
     <Compile Include="Graphics\Text\SimpleText.cs" />
     <Compile Include="Graphics\Text\TextAlignment.cs" />
