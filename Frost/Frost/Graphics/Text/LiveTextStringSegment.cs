@@ -10,7 +10,7 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class LiveTextStringSegment : ILiveTextStringSegment
 	{
-		internal const string NullTextReprsentation = "nil";
+		private const string NullTextReprsentation = "nil";
 
 		private readonly string _text;
 
