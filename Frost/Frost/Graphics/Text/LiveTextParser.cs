@@ -74,7 +74,7 @@ namespace Frost.Graphics.Text
 						if(segmentToken != null)
 							parseSegmentToken(segmentToken, segmentTranslator, segments);
 						else // String, nothing special
-							parseStringToken(token);
+							parseStringToken(token, segments);
 					}
 				}
 			}
@@ -155,9 +155,11 @@ namespace Frost.Graphics.Text
 		/// Handles a plain string token
 		/// </summary>
 		/// <param name="token">Token to get information from</param>
-		private void parseStringToken (LiveTextToken token)
+		/// <param name="segments">List of segments to append to</param>
+		private void parseStringToken (LiveTextToken token, List<ILiveTextSegment> segments)
 		{
-			throw new NotImplementedException();
+			var literal = createLiteralSegment(token);
+			segments.Add(literal);
 		}
 
 		/// <summary>
