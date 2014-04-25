@@ -8,7 +8,7 @@ namespace Frost.Graphics.Text
 	/// <summary>
 	/// A string of text that can have formatting codes mixed throughout it to change the appearance
 	/// </summary>
-	public class LiveTextString : IEnumerable<LiveTextSegment>
+	public class LiveTextString : IEnumerable<ILiveTextSegment>
 	{
 		/// <summary>
 		/// Character used to mark the start of a formatting code
@@ -22,7 +22,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public const string NullSegmentString = "null";
 
-		private readonly List<LiveTextSegment> _segments = new List<LiveTextSegment>();
+		private readonly List<ILiveTextSegment> _segments = new List<ILiveTextSegment>();
 
 		/// <summary>
 		/// Creates an empty live text string
@@ -53,7 +53,7 @@ namespace Frost.Graphics.Text
 		/// Creates a live text string from existing segments
 		/// </summary>
 		/// <param name="segments">Collection of segments</param>
-		public LiveTextString (IEnumerable<LiveTextSegment> segments)
+		public LiveTextString (IEnumerable<ILiveTextSegment> segments)
 		{
 			throw new NotImplementedException();
 			/*			if(segments != null)
@@ -68,7 +68,7 @@ namespace Frost.Graphics.Text
 		/// Returns an enumerator that iterates through the text segments
 		/// </summary>
 		/// <returns>An enumerator object that can be used to iterate through the segments</returns>
-		public IEnumerator<LiveTextSegment> GetEnumerator ()
+		public IEnumerator<ILiveTextSegment> GetEnumerator ()
 		{
 			return _segments.GetEnumerator();
 		}
@@ -86,10 +86,10 @@ namespace Frost.Graphics.Text
 		/// Parses a live text string and extracts the segments
 		/// </summary>
 		/// <param name="text">String to parse and extract segments from</param>
-		/// <returns>Collection of <see cref="LiveTextSegment"/> extracted from <paramref name="text"/></returns>
-		public static IEnumerable<LiveTextSegment> Parse (string text)
+		/// <returns>Collection of <see cref="ILiveTextSegment"/> extracted from <paramref name="text"/></returns>
+		public static IEnumerable<ILiveTextSegment> Parse (string text)
 		{
-			var segments = new List<LiveTextSegment>();
+			var segments = new List<ILiveTextSegment>();
 
 			if(!String.IsNullOrEmpty(text))
 			{// There is text to parse
@@ -111,7 +111,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="token">Token to parse</param>
 		/// <returns>A live text segment</returns>
-		private static LiveTextSegment convertTokenIntoSegment (LiveTextToken token)
+		private static ILiveTextSegment convertTokenIntoSegment (LiveTextToken token)
 		{
 			// Check for LiveTextStartFormatToken
 			var startFormatToken = token as LiveTextStartFormatToken;
@@ -134,7 +134,7 @@ namespace Frost.Graphics.Text
 		/// <param name="token">Token to parse</param>
 		/// <returns>The corresponding formatter segment for <paramref name="token"/></returns>
 		/// <remarks>A string segment containing the original formatting code will be returned if the formatting code is unknown.</remarks>
-		private static LiveTextSegment parseStartFormatToken (LiveTextStartFormatToken token)
+		private static ILiveTextSegment parseStartFormatToken (LiveTextStartFormatToken token)
 		{
 			throw new NotImplementedException();
 		}
@@ -164,7 +164,7 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Original live text</param>
 		/// <param name="other">Segment to append to the live text</param>
 		/// <returns>Concatenated live text string</returns>
-		public static LiveTextString operator + (LiveTextString text, LiveTextSegment other)
+		public static LiveTextString operator + (LiveTextString text, ILiveTextSegment other)
 		{
 			// TODO: Handle null
 			/* if(other == null) // Replace with null value

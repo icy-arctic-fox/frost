@@ -30,7 +30,7 @@ namespace Frost.Graphics.Text
 		/// <param name="type">Name of the formatter</param>
 		/// <param name="info">Information required for the formatter</param>
 		/// <returns>Live text segment constructed from the formatter</returns>
-		public delegate LiveTextSegment SegmentCodeTranslator (string type, string info);
+		public delegate ILiveTextSegment SegmentCodeTranslator (string type, string info);
 
 		/// <summary>
 		/// Creates a new live text string parser
@@ -53,9 +53,9 @@ namespace Frost.Graphics.Text
 		/// <param name="appearanceTranslator">Method that will apply text appearance changes</param>
 		/// <param name="segmentTranslator">Method that will translate formatting codes into segments</param>
 		/// <returns>Live text segments pulled from the string</returns>
-		public IEnumerable<LiveTextSegment> Parse (FormattingCodeTranslator appearanceTranslator, SegmentCodeTranslator segmentTranslator)
+		public IEnumerable<ILiveTextSegment> Parse (FormattingCodeTranslator appearanceTranslator, SegmentCodeTranslator segmentTranslator)
 		{
-			var segments = new List<LiveTextSegment>();
+			var segments = new List<ILiveTextSegment>();
 
 			LiveTextToken token;
 			while((token = _lexer.GetNext()) != null)
@@ -89,7 +89,7 @@ namespace Frost.Graphics.Text
 		/// <param name="translator">Method that will apply text appearance changes</param>
 		/// <param name="segments">List of segments to append to</param>
 		private void parseStartToken (LiveTextStartFormatToken token, FormattingCodeTranslator translator,
-									List<LiveTextSegment> segments)
+									List<ILiveTextSegment> segments)
 		{
 			var before = _appearanceStack.Peek();
 
@@ -114,7 +114,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="token">Token to get information from</param>
 		/// <param name="segments">List of segments to append to</param>
-		private void parseEndToken (LiveTextEndFormatToken token, List<LiveTextSegment> segments)
+		private void parseEndToken (LiveTextEndFormatToken token, List<ILiveTextSegment> segments)
 		{
 			// Pop off the top of the appearance stack
 			if(_appearanceStack.Count > 1) // ... but don't pop off the default appearance
@@ -133,7 +133,7 @@ namespace Frost.Graphics.Text
 		/// <param name="translator">Method that will translate formatting codes into segments</param>
 		/// <param name="segments">List of segments to append to</param>
 		private void parseSegmentToken (LiveTextSegmentToken token, SegmentCodeTranslator translator,
-										List<LiveTextSegment> segments)
+										List<ILiveTextSegment> segments)
 		{
 			if(translator != null)
 			{// A translator is available, use it to generate the segment
@@ -165,7 +165,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="token">Token to use the literal value of</param>
 		/// <returns>A live text string segment containing the literal value of the token</returns>
-		private LiveTextSegment createLiteralSegment (LiveTextToken token)
+		private ILiveTextSegment createLiteralSegment (LiveTextToken token)
 		{
 			var appearance  = _appearanceStack.Peek();
 			var literalText = token.ToString();

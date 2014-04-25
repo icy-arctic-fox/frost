@@ -6,16 +6,16 @@ using SFML.Window;
 namespace Frost.Graphics.Text
 {
 	/// <summary>
-	/// A unit of live text
+	/// Something can represent itself in a block of live text
 	/// </summary>
-	public abstract class LiveTextSegment
+	public interface ILiveTextSegment
 	{
 		/// <summary>
 		/// Indicates whether the segment can be broken into smaller segments
 		/// </summary>
-		/// <remarks>A false value for this property implies that <see cref="BreakApart"/>
+		/// <remarks>A false value for this property implies that <see cref="BreakSegmentApart"/>
 		/// will throw a <see cref="NotSupportedException"/>, but it may just return a single segment equivalent to itself.</remarks>
-		public abstract bool Breakable { get; }
+		bool IsSegmentBreakable { get; }
 
 		/// <summary>
 		/// Breaks the segment into smaller segments.
@@ -23,20 +23,20 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <returns>Collection of smaller segments</returns>
 		/// <exception cref="NotSupportedException">The segment does not support being broken apart.
-		/// <see cref="Breakable"/> should be false in this instance.</exception>
-		public abstract IEnumerable<LiveTextSegment> BreakApart ();
+		/// <see cref="IsSegmentBreakable"/> should be false in this instance.</exception>
+		IEnumerable<ILiveTextSegment> BreakSegmentApart ();
 
 		/// <summary>
 		/// Calculates the needed size of the live text segment
 		/// </summary>
 		/// <returns>Width (<see cref="Vector2f.X"/>) and height (<see cref="Vector2f.Y"/>) of the bounds needed</returns>
-		public abstract Vector2f CalculateBounds ();
+		Vector2f CalculateSegmentBounds ();
 
 		/// <summary>
 		/// Draws the live text segment onto a texture
 		/// </summary>
 		/// <param name="target">Texture to draw the segment to</param>
 		/// <param name="position">Position of the top-left corner of the segment</param>
-		public abstract void Draw (RenderTexture target, Vector2f position);
+		void DrawSegment (RenderTexture target, Vector2f position);
 	}
 }

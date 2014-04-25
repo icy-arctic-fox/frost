@@ -8,7 +8,7 @@ namespace Frost.Graphics.Text
 	/// <summary>
 	/// Simple live text segment that contains just text
 	/// </summary>
-	public class LiveTextStringSegment : LiveTextSegment
+	public class LiveTextStringSegment : ILiveTextSegment
 	{
 		private const string NullTextReprsentation = "nil";
 
@@ -50,9 +50,9 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Indicates whether the segment can be broken into smaller segments
 		/// </summary>
-		/// <remarks>A false value for this property implies that <see cref="LiveTextSegment.BreakApart"/>
+		/// <remarks>A false value for this property implies that <see cref="ILiveTextSegment.BreakSegmentApart"/>
 		/// will throw a <see cref="NotSupportedException"/>, but it may just return a single segment equivalent to itself.</remarks>
-		public override bool Breakable
+		public bool IsSegmentBreakable
 		{
 			get { throw new NotImplementedException(); }
 		}
@@ -63,8 +63,8 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <returns>Collection of smaller segments</returns>
 		/// <exception cref="NotSupportedException">The segment does not support being broken apart.
-		/// <see cref="LiveTextSegment.Breakable"/> should be false in this instance.</exception>
-		public override IEnumerable<LiveTextSegment> BreakApart ()
+		/// <see cref="ILiveTextSegment.IsSegmentBreakable"/> should be false in this instance.</exception>
+		public IEnumerable<ILiveTextSegment> BreakSegmentApart ()
 		{
 			throw new NotImplementedException();
 		}
@@ -73,7 +73,7 @@ namespace Frost.Graphics.Text
 		/// Calculates the needed size of the live text segment
 		/// </summary>
 		/// <returns>Width (<see cref="Vector2f.X"/>) and height (<see cref="Vector2f.Y"/>) of the bounds needed</returns>
-		public override Vector2f CalculateBounds ()
+		public Vector2f CalculateSegmentBounds ()
 		{
 			throw new NotImplementedException();
 		}
@@ -83,7 +83,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="target">Texture to draw the segment to</param>
 		/// <param name="position">Position of the top-left corner of the segment</param>
-		public override void Draw (RenderTexture target, Vector2f position)
+		public void DrawSegment (RenderTexture target, Vector2f position)
 		{
 			throw new NotImplementedException();
 		}
