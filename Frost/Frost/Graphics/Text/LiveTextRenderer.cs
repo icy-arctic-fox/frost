@@ -46,7 +46,7 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		protected override Vector2u CalculateBounds ()
 		{
-			var liveText = Text ?? new LiveTextString();
+			var liveText = Text ?? new LiveTextString(Appearance);
 			var appearance = Appearance.CloneTextAppearance();
 			return WordWrap
 						? calculateWrappedBounds(liveText, MultiLine, WrapWidth, appearance)
@@ -85,7 +85,7 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to render to</param>
 		protected override void Draw (RenderTexture target)
 		{
-			var liveText = Text ?? new LiveTextString();
+			var liveText = Text ?? new LiveTextString(Appearance);
 			var appearance = Appearance.CloneTextAppearance();
 
 			if(WordWrap)
