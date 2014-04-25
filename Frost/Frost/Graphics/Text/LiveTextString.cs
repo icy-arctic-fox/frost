@@ -11,25 +11,37 @@ namespace Frost.Graphics.Text
 	public class LiveTextString : IEnumerable<ILiveTextSegment>
 	{
 		private readonly List<ILiveTextSegment> _segments = new List<ILiveTextSegment>();
+		private readonly TextAppearance _appearance;
 
 		/// <summary>
 		/// Creates an empty live text string
 		/// </summary>
-		public LiveTextString ()
+		/// <param name="appearance">Default appearance of the text</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		public LiveTextString (TextAppearance appearance)
 		{
-			// ...
+			if(appearance == null)
+				throw new ArgumentNullException("appearance");
+
+			_appearance = appearance;
 		}
 
 		/// <summary>
 		/// Creates a live text string from some existing text
 		/// </summary>
 		/// <param name="text">Text to create the live text string from</param>
+		/// <param name="appearance">Default appearance of the text</param>
 		/// <param name="formatted">True to interpret any formatting codes contained in <paramref name="text"/></param>
-		public LiveTextString (string text, bool formatted = true)
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		public LiveTextString (string text, TextAppearance appearance, bool formatted = true)
 		{
+			if(appearance == null)
+				throw new ArgumentNullException("appearance");
+
+			_appearance = appearance;
 			if(formatted)
 			{// Parse the string and store the segments
-				var segments = Parse(text);
+				var segments = Parse(text, appearance);
 				_segments.AddRange(segments);
 			}
 			// TODO: Add string segment
@@ -41,8 +53,14 @@ namespace Frost.Graphics.Text
 		/// Creates a live text string from existing segments
 		/// </summary>
 		/// <param name="segments">Collection of segments</param>
-		public LiveTextString (IEnumerable<ILiveTextSegment> segments)
+		/// <param name="appearance">Default appearance of the text</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		public LiveTextString (IEnumerable<ILiveTextSegment> segments, TextAppearance appearance)
 		{
+			if(appearance == null)
+				throw new ArgumentNullException("appearance");
+
+			_appearance = appearance;
 			throw new NotImplementedException();
 			/*			if(segments != null)
 				foreach(var segment in segments)
@@ -74,9 +92,14 @@ namespace Frost.Graphics.Text
 		/// Parses a live text string and extracts the segments
 		/// </summary>
 		/// <param name="text">String to parse and extract segments from</param>
+		/// <param name="appearance">Default appearance of the text</param>
 		/// <returns>Collection of <see cref="ILiveTextSegment"/> extracted from <paramref name="text"/></returns>
-		public static IEnumerable<ILiveTextSegment> Parse (string text)
+		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		public static IEnumerable<ILiveTextSegment> Parse (string text, TextAppearance appearance)
 		{
+			if(appearance == null)
+				throw new ArgumentNullException("appearance");
+
 			var parser = new LiveTextParser(text, null /* TODO: Appearance parameter is needed */);
 			return parser.Parse(null /* TODO: Create appearance translator */, null /* TODO: Create segment translator */);
 		}
@@ -93,7 +116,7 @@ namespace Frost.Graphics.Text
 		public static LiveTextString operator + (LiveTextString text, string other)
 		{
 			// Create new live text and append string to it
-			var liveText = new LiveTextString(text._segments);
+			var liveText = new LiveTextString(text._segments, text._appearance);
 			// TODO: liveText._segments.Add(new StringSegment(other));
 			return liveText;
 		}
@@ -112,7 +135,7 @@ namespace Frost.Graphics.Text
 				other = new StringSegment(NullSegmentString); */
 
 			// Create new live text and append segment to it
-			var liveText = new LiveTextString(text._segments);
+			var liveText = new LiveTextString(text._segments, text._appearance);
 			liveText._segments.Add(other);
 			return liveText;
 		}
@@ -131,19 +154,9 @@ namespace Frost.Graphics.Text
 				return text + new StringSegment(NullSegmentString); */
 
 			// Create new live text and append segments to it
-			var liveText = new LiveTextString(text._segments);
+			var liveText = new LiveTextString(text._segments, text._appearance);
 			liveText._segments.AddRange(other._segments);
 			return liveText;
-		}
-
-		/// <summary>
-		/// Converts a <see cref="String"/> to a <see cref="LiveTextString"/>
-		/// </summary>
-		/// <param name="text">String to convert</param>
-		/// <returns>A live text string that has formatting codes applied</returns>
-		public static implicit operator LiveTextString (string text)
-		{
-			return new LiveTextString(text);
 		}
 		#endregion
 
