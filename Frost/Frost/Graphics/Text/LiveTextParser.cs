@@ -27,8 +27,9 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="type">Name of the formatter</param>
 		/// <param name="info">Information required for the formatter</param>
+		/// <param name="appearance">Current appearance of the text when the segment was encountered</param>
 		/// <returns>Live text segment constructed from the formatter</returns>
-		public delegate ILiveTextSegment SegmentCodeTranslator (string type, string info);
+		public delegate ILiveTextSegment SegmentCodeTranslator (string type, string info, TextAppearance appearance);
 
 		/// <summary>
 		/// Creates a new live text string parser
@@ -135,7 +136,8 @@ namespace Frost.Graphics.Text
 		{
 			if(translator != null)
 			{// A translator is available, use it to generate the segment
-				var segment = translator(token.Type, token.Info);
+				var appearance = _appearanceStack.Peek();
+				var segment    = translator(token.Type, token.Info, appearance);
 				if(segment != null)
 				{// Only add the segment if it's valid
 					segments.Add(segment);
