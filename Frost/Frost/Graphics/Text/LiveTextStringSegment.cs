@@ -8,7 +8,7 @@ namespace Frost.Graphics.Text
 	/// <summary>
 	/// Simple live text segment that contains just text
 	/// </summary>
-	public class LiveTextStringSegment : ILiveTextSegment
+	public class LiveTextStringSegment : ILiveTextStringSegment
 	{
 		internal const string NullTextReprsentation = "nil";
 
