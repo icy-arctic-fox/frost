@@ -89,6 +89,7 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Original live text</param>
 		/// <param name="other">String to append to the live text</param>
 		/// <returns>Concatenated live text string</returns>
+		/// <remarks>The use of this operator is not recommended since it duplicates the segments.</remarks>
 		public static LiveTextString operator + (LiveTextString text, string other)
 		{
 			// Create new live text and append string to it
@@ -103,6 +104,7 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Original live text</param>
 		/// <param name="other">Segment to append to the live text</param>
 		/// <returns>Concatenated live text string</returns>
+		/// <remarks>The use of this operator is not recommended since it duplicates the segments.</remarks>
 		public static LiveTextString operator + (LiveTextString text, ILiveTextSegment other)
 		{
 			// TODO: Handle null
@@ -121,6 +123,7 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Original live text</param>
 		/// <param name="other">Other live text to concatenate</param>
 		/// <returns>Concatenated live text string</returns>
+		/// <remarks>The use of this operator is not recommended since it duplicates the segments.</remarks>
 		public static LiveTextString operator + (LiveTextString text, LiveTextString other)
 		{
 			// TODO: Handle null
