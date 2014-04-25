@@ -44,9 +44,8 @@ namespace Frost.Graphics.Text
 				var segments = Parse(text, appearance);
 				_segments.AddRange(segments);
 			}
-			// TODO: Add string segment
-/*			else if(!String.IsNullOrEmpty(text))
-				_segments.Add(new StringSegment(text)); */
+			else if(!String.IsNullOrEmpty(text)) // No formatting and not blank
+				_segments.Add(new LiveTextStringSegment(text, appearance));
 		}
 
 		/// <summary>
@@ -61,13 +60,12 @@ namespace Frost.Graphics.Text
 				throw new ArgumentNullException("appearance");
 
 			_appearance = appearance;
-			throw new NotImplementedException();
-			/*			if(segments != null)
+			if(segments != null)
 				foreach(var segment in segments)
 				{
-					var toAdd = segment ?? new StringSegment(NullSegmentString);
+					var toAdd = segment ?? new LiveTextStringSegment(null, appearance);
 					_segments.Add(toAdd);
-				}*/
+				}
 		}
 
 		/// <summary>
@@ -100,7 +98,7 @@ namespace Frost.Graphics.Text
 			if(appearance == null)
 				throw new ArgumentNullException("appearance");
 
-			var parser = new LiveTextParser(text, null /* TODO: Appearance parameter is needed */);
+			var parser = new LiveTextParser(text, appearance);
 			return parser.Parse(null /* TODO: Create appearance translator */, null /* TODO: Create segment translator */);
 		}
 
@@ -117,7 +115,7 @@ namespace Frost.Graphics.Text
 		{
 			// Create new live text and append string to it
 			var liveText = new LiveTextString(text._segments, text._appearance);
-			// TODO: liveText._segments.Add(new StringSegment(other));
+			liveText._segments.Add(new LiveTextStringSegment(other, text._appearance));
 			return liveText;
 		}
 
@@ -130,9 +128,8 @@ namespace Frost.Graphics.Text
 		/// <remarks>The use of this operator is not recommended since it duplicates the segments.</remarks>
 		public static LiveTextString operator + (LiveTextString text, ILiveTextSegment other)
 		{
-			// TODO: Handle null
-			/* if(other == null) // Replace with null value
-				other = new StringSegment(NullSegmentString); */
+			if(other == null) // Replace with null value
+				other = new LiveTextStringSegment(null, text._appearance);
 
 			// Create new live text and append segment to it
 			var liveText = new LiveTextString(text._segments, text._appearance);
@@ -149,9 +146,8 @@ namespace Frost.Graphics.Text
 		/// <remarks>The use of this operator is not recommended since it duplicates the segments.</remarks>
 		public static LiveTextString operator + (LiveTextString text, LiveTextString other)
 		{
-			// TODO: Handle null
-			/* if(other == null) // Replace with null value
-				return text + new StringSegment(NullSegmentString); */
+			if(other == null) // Replace with null value
+				return text + new LiveTextStringSegment(null, text._appearance);
 
 			// Create new live text and append segments to it
 			var liveText = new LiveTextString(text._segments, text._appearance);
