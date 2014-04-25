@@ -10,11 +10,6 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class LiveTextString : IEnumerable<ILiveTextSegment>
 	{
-		/// <summary>
-		/// String that appears when null is encountered in a <see cref="LiveTextString"/>
-		/// </summary>
-		public const string NullSegmentString = "null";
-
 		private readonly List<ILiveTextSegment> _segments = new List<ILiveTextSegment>();
 
 		/// <summary>
@@ -96,9 +91,6 @@ namespace Frost.Graphics.Text
 		/// <returns>Concatenated live text string</returns>
 		public static LiveTextString operator + (LiveTextString text, string other)
 		{
-			if(other == null) // Replace with null value
-				other = NullSegmentString;
-
 			// Create new live text and append string to it
 			var liveText = new LiveTextString(text._segments);
 			// TODO: liveText._segments.Add(new StringSegment(other));
@@ -160,7 +152,7 @@ namespace Frost.Graphics.Text
 		{
 			var sb = new StringBuilder();
 			foreach(var segment in _segments)
-				sb.Append(segment == null ? NullSegmentString : segment.ToString());
+				sb.Append(segment == null ? LiveTextStringSegment.NullTextReprsentation : segment.ToString());
 			return sb.ToString();
 		}
 	}
