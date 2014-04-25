@@ -135,7 +135,7 @@ namespace Frost.Graphics.Text
 		{
 			if(translator != null)
 			{// A translator is available, use it to generate the segment
-				var segment = translator(null /* TODO */, token.Info);
+				var segment = translator(token.Type, token.Info);
 				if(segment != null)
 				{// Only add the segment if it's valid
 					segments.Add(segment);
