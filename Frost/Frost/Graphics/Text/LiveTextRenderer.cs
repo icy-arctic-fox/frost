@@ -47,10 +47,9 @@ namespace Frost.Graphics.Text
 		protected override Vector2u CalculateBounds ()
 		{
 			var liveText = Text ?? new LiveTextString(Appearance);
-			var appearance = Appearance.CloneTextAppearance();
 			return WordWrap
-						? calculateWrappedBounds(liveText, MultiLine, WrapWidth, appearance)
-						: calculateBounds(liveText, MultiLine, appearance);
+						? calculateWrappedBounds(liveText, MultiLine, WrapWidth)
+						: calculateBounds(liveText, MultiLine);
 		}
 
 		/// <summary>
@@ -58,9 +57,8 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="liveText">Text to calculate the bounds of</param>
 		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
-		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateBounds (LiveTextString liveText, bool multiLine, TextAppearance appearance)
+		private static Vector2u calculateBounds (LiveTextString liveText, bool multiLine)
 		{
 			throw new NotImplementedException();
 		}
@@ -71,10 +69,8 @@ namespace Frost.Graphics.Text
 		/// <param name="liveText">Text to calculate the bounds of</param>
 		/// <param name="multiLine">Flag indicating whether the original newlines are allowed</param>
 		/// <param name="width">Target width to wrap lines by</param>
-		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateWrappedBounds (LiveTextString liveText, bool multiLine, int width,
-														TextAppearance appearance)
+		private static Vector2u calculateWrappedBounds (LiveTextString liveText, bool multiLine, int width)
 		{
 			throw new NotImplementedException();
 		}
@@ -86,12 +82,10 @@ namespace Frost.Graphics.Text
 		protected override void Draw (RenderTexture target)
 		{
 			var liveText = Text ?? new LiveTextString(Appearance);
-			var appearance = Appearance.CloneTextAppearance();
-
 			if(WordWrap)
-				drawWrappedText(target, liveText, MultiLine, WrapWidth, appearance);
+				drawWrappedText(target, liveText, MultiLine, WrapWidth);
 			else
-				drawText(target, liveText, MultiLine, appearance);
+				drawText(target, liveText, MultiLine);
 		}
 
 		/// <summary>
@@ -100,8 +94,7 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="liveText">Text to render</param>
 		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
-		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
-		private static void drawText (RenderTarget target, LiveTextString liveText, bool multiLine, TextAppearance appearance)
+		private static void drawText (RenderTarget target, LiveTextString liveText, bool multiLine)
 		{
 			throw new NotImplementedException();
 		}
@@ -113,9 +106,7 @@ namespace Frost.Graphics.Text
 		/// <param name="liveText">Text to render</param>
 		/// <param name="multiLine">Flag indicating whether the original newlines are allowed</param>
 		/// <param name="width">Target width to wrap lines by</param>
-		/// <param name="appearance">Information about the initial (default) appearance of the text</param>
-		private static void drawWrappedText (RenderTarget target, LiveTextString liveText, bool multiLine, int width,
-											TextAppearance appearance)
+		private static void drawWrappedText (RenderTarget target, LiveTextString liveText, bool multiLine, int width)
 		{
 			throw new NotImplementedException();
 		}
