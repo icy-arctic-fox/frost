@@ -41,24 +41,51 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
+		/// Retrieves a list of segments that have been corrected to account for null and multi-line
+		/// </summary>
+		/// <returns>List of segments</returns>
+		private IEnumerable<ILiveTextSegment> getSegments ()
+		{
+			var segments = Text ?? (IEnumerable<ILiveTextSegment>)new List<ILiveTextSegment>(0);
+
+			if(!MultiLine)
+			{// Strip any newline characters
+				var newSegments = new List<ILiveTextSegment>();
+				foreach(var segment in segments)
+				{
+					var stringSegment = segment as LiveTextStringSegment;
+					if(stringSegment != null)
+					{// This is a segment that can have newlines
+						var text = stringSegment.Text.Replace('\r', ' ').Replace('\n', ' ');
+						newSegments.Add(new LiveTextStringSegment(text, stringSegment.Appearance));
+					}
+					else // Segment that probably can't have newlines
+						newSegments.Add(segment);
+				}
+				segments = newSegments;
+			}
+
+			return segments;
+		}
+
+		/// <summary>
 		/// Calculates the bounds of the space that the text will occupy
 		/// </summary>
 		/// <returns>Width and height of the bounds</returns>
 		protected override Vector2u CalculateBounds ()
 		{
-			var liveText = Text ?? new LiveTextString(Appearance);
+			var segments = getSegments();
 			return WordWrap
-						? calculateWrappedBounds(liveText, MultiLine, WrapWidth)
-						: calculateBounds(liveText, MultiLine);
+						? calculateWrappedBounds(segments, WrapWidth)
+						: calculateBounds(segments);
 		}
 
 		/// <summary>
 		/// Calculates the bounds of some live text that does not wrap onto new lines
 		/// </summary>
 		/// <param name="liveText">Text to calculate the bounds of</param>
-		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateBounds (LiveTextString liveText, bool multiLine)
+		private static Vector2u calculateBounds (IEnumerable<ILiveTextSegment> liveText)
 		{
 			throw new NotImplementedException();
 		}
@@ -67,10 +94,9 @@ namespace Frost.Graphics.Text
 		/// Calculates the bounds of some text that has word wrapping applied to it
 		/// </summary>
 		/// <param name="liveText">Text to calculate the bounds of</param>
-		/// <param name="multiLine">Flag indicating whether the original newlines are allowed</param>
 		/// <param name="width">Target width to wrap lines by</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateWrappedBounds (LiveTextString liveText, bool multiLine, int width)
+		private static Vector2u calculateWrappedBounds (IEnumerable<ILiveTextSegment> liveText, int width)
 		{
 			throw new NotImplementedException();
 		}
@@ -81,11 +107,11 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to render to</param>
 		protected override void Draw (RenderTexture target)
 		{
-			var liveText = Text ?? new LiveTextString(Appearance);
+			var segments = getSegments();
 			if(WordWrap)
-				drawWrappedText(target, liveText, MultiLine, WrapWidth);
+				drawWrappedText(target, segments, WrapWidth);
 			else
-				drawText(target, liveText, MultiLine);
+				drawText(target, segments);
 		}
 
 		/// <summary>
@@ -93,8 +119,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="liveText">Text to render</param>
-		/// <param name="multiLine">Flag indicating whether newlines are allowed</param>
-		private static void drawText (RenderTarget target, LiveTextString liveText, bool multiLine)
+		private static void drawText (RenderTarget target, IEnumerable<ILiveTextSegment> liveText)
 		{
 			throw new NotImplementedException();
 		}
@@ -104,9 +129,8 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="liveText">Text to render</param>
-		/// <param name="multiLine">Flag indicating whether the original newlines are allowed</param>
 		/// <param name="width">Target width to wrap lines by</param>
-		private static void drawWrappedText (RenderTarget target, LiveTextString liveText, bool multiLine, int width)
+		private static void drawWrappedText (RenderTarget target, IEnumerable<ILiveTextSegment> liveText, int width)
 		{
 			throw new NotImplementedException();
 		}
