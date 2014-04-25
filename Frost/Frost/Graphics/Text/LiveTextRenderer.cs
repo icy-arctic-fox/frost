@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -48,7 +49,24 @@ namespace Frost.Graphics.Text
 		{
 			var segments = Text ?? (IEnumerable<ILiveTextSegment>)new List<ILiveTextSegment>(0);
 
-			if(!MultiLine)
+			if(MultiLine)
+			{// Break segments that contain newlines into multiple segments
+				var newSegments = new List<ILiveTextSegment>();
+				foreach(var segment in segments)
+				{
+					var stringSegment = segment as LiveTextStringSegment;
+					if(stringSegment != null)
+					{// This is a segment that can have newlines
+						var text = SplitTextOnLinebreaks(stringSegment.Text);
+						newSegments.AddRange(text.Select(line => new LiveTextStringSegment(line, stringSegment.Appearance)));
+					}
+					else // Segment that probably can't have newlines
+						newSegments.Add(segment);
+				}
+				segments = newSegments;
+			}
+
+			else
 			{// Strip any newline characters
 				var newSegments = new List<ILiveTextSegment>();
 				foreach(var segment in segments)
