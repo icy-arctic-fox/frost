@@ -42,48 +42,57 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
+		/// Gets a collection of segments which have text segments with newlines segments broken apart
+		/// </summary>
+		/// <param name="originalSegments">Original collection of segments</param>
+		/// <returns>New collection of segments</returns>
+		private static IEnumerable<ILiveTextSegment> getMultiLineSegments (IEnumerable<ILiveTextSegment> originalSegments)
+		{
+			var segments = new List<ILiveTextSegment>();
+			foreach(var segment in originalSegments)
+			{
+				var stringSegment = segment as LiveTextStringSegment;
+				if(stringSegment != null)
+				{// This is a segment that can have newlines
+					var text = SplitTextOnLinebreaks(stringSegment.Text);
+					segments.AddRange(text.Select(line => new LiveTextStringSegment(line, stringSegment.Appearance)));
+				}
+				else // Segment that probably can't have newlines
+					segments.Add(segment);
+			}
+			return segments;
+		}
+
+		/// <summary>
+		/// Gets a collection of segments which have text segments stripped of newline characters
+		/// </summary>
+		/// <param name="originalSegments">Original collection of segments</param>
+		/// <returns>New collection of segments</returns>
+		private static IEnumerable<ILiveTextSegment> getStrippedSegments (IEnumerable<ILiveTextSegment> originalSegments)
+		{
+			var segments = new List<ILiveTextSegment>();
+			foreach(var segment in originalSegments)
+			{
+				var stringSegment = segment as LiveTextStringSegment;
+				if(stringSegment != null)
+				{// This is a segment that can have newlines
+					var text = stringSegment.Text.Replace('\r', ' ').Replace('\n', ' ');
+					segments.Add(new LiveTextStringSegment(text, stringSegment.Appearance));
+				}
+				else // Segment that probably can't have newlines
+					segments.Add(segment);
+			}
+			return segments;
+		}
+
+		/// <summary>
 		/// Retrieves a list of segments that have been corrected to account for null and multi-line
 		/// </summary>
 		/// <returns>List of segments</returns>
 		private IEnumerable<ILiveTextSegment> getSegments ()
 		{
 			var segments = Text ?? (IEnumerable<ILiveTextSegment>)new List<ILiveTextSegment>(0);
-
-			if(MultiLine)
-			{// Break segments that contain newlines into multiple segments
-				var newSegments = new List<ILiveTextSegment>();
-				foreach(var segment in segments)
-				{
-					var stringSegment = segment as LiveTextStringSegment;
-					if(stringSegment != null)
-					{// This is a segment that can have newlines
-						var text = SplitTextOnLinebreaks(stringSegment.Text);
-						newSegments.AddRange(text.Select(line => new LiveTextStringSegment(line, stringSegment.Appearance)));
-					}
-					else // Segment that probably can't have newlines
-						newSegments.Add(segment);
-				}
-				segments = newSegments;
-			}
-
-			else
-			{// Strip any newline characters
-				var newSegments = new List<ILiveTextSegment>();
-				foreach(var segment in segments)
-				{
-					var stringSegment = segment as LiveTextStringSegment;
-					if(stringSegment != null)
-					{// This is a segment that can have newlines
-						var text = stringSegment.Text.Replace('\r', ' ').Replace('\n', ' ');
-						newSegments.Add(new LiveTextStringSegment(text, stringSegment.Appearance));
-					}
-					else // Segment that probably can't have newlines
-						newSegments.Add(segment);
-				}
-				segments = newSegments;
-			}
-
-			return segments;
+			return MultiLine ? getMultiLineSegments(segments) : getStrippedSegments(segments);
 		}
 
 		/// <summary>
