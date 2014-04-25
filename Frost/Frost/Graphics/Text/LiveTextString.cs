@@ -11,13 +11,6 @@ namespace Frost.Graphics.Text
 	public class LiveTextString : IEnumerable<ILiveTextSegment>
 	{
 		/// <summary>
-		/// Character used to mark the start of a formatting code
-		/// </summary>
-		public const char FormattingChar = '\\';
-
-		private const string FormattingCharString = @"\";
-
-		/// <summary>
 		/// String that appears when null is encountered in a <see cref="LiveTextString"/>
 		/// </summary>
 		public const string NullSegmentString = "null";
@@ -89,54 +82,8 @@ namespace Frost.Graphics.Text
 		/// <returns>Collection of <see cref="ILiveTextSegment"/> extracted from <paramref name="text"/></returns>
 		public static IEnumerable<ILiveTextSegment> Parse (string text)
 		{
-			var segments = new List<ILiveTextSegment>();
-
-			if(!String.IsNullOrEmpty(text))
-			{// There is text to parse
-				var lexer = new LiveTextLexer(text);
-				LiveTextToken token;
-				while((token = lexer.GetNext()) != null)
-				{
-					var segment = convertTokenIntoSegment(token);
-					if(segment != null)
-						segments.Add(segment);
-				}
-			}
-
-			return segments.AsReadOnly();
-		}
-
-		/// <summary>
-		/// Gets a live text segment from a token
-		/// </summary>
-		/// <param name="token">Token to parse</param>
-		/// <returns>A live text segment</returns>
-		private static ILiveTextSegment convertTokenIntoSegment (LiveTextToken token)
-		{
-			// Check for LiveTextStartFormatToken
-			var startFormatToken = token as LiveTextStartFormatToken;
-			if(startFormatToken != null) // Start of a formatter
-				return parseStartFormatToken(startFormatToken);
-
-			// Check for LiveTextEndFormatToken
-			var endFormatToken = token as LiveTextEndFormatToken;
-			if(endFormatToken != null) // End of a formatter
-				throw new NotImplementedException();
-
-			// else - default to string segment
-			throw new NotImplementedException();
-// TODO:			return new StringSegment(token.ToString());
-		}
-
-		/// <summary>
-		/// Attempts to find a formatter segment for a token
-		/// </summary>
-		/// <param name="token">Token to parse</param>
-		/// <returns>The corresponding formatter segment for <paramref name="token"/></returns>
-		/// <remarks>A string segment containing the original formatting code will be returned if the formatting code is unknown.</remarks>
-		private static ILiveTextSegment parseStartFormatToken (LiveTextStartFormatToken token)
-		{
-			throw new NotImplementedException();
+			var parser = new LiveTextParser(text, null /* TODO: Appearance parameter is needed */);
+			return parser.Parse(null /* TODO: Create appearance translator */, null /* TODO: Create segment translator */);
 		}
 
 		#region Operators
