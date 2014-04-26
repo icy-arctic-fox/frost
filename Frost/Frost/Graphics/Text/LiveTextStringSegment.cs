@@ -75,7 +75,7 @@ namespace Frost.Graphics.Text
 		/// will throw a <see cref="NotSupportedException"/>, but it may just return a single segment equivalent to itself.</remarks>
 		public bool IsSegmentBreakable
 		{
-			get { throw new NotImplementedException(); }
+			get { return _text.Any(Char.IsWhiteSpace); }
 		}
 
 		/// <summary>
