@@ -167,7 +167,22 @@ namespace Frost.Graphics.Text
 		/// <param name="lines">Lines of live text segments to render</param>
 		private static void drawText (RenderTarget target, IEnumerable<IEnumerable<ILiveTextSegment>> lines)
 		{
-			throw new NotImplementedException();
+			var y = 0f;
+			foreach(var line in lines)
+			{// Iterate through each line
+				var x = 0f;
+				foreach(var segment in line)
+				{// Iterate through each segment on the line
+					// Draw the segment
+					var position = new Vector2f(x, y);
+					segment.DrawSegment(null /* TODO */, position);
+
+					// Calculate the bounds and advance the position
+					var bounds = segment.CalculateSegmentBounds();
+					x += bounds.X;
+					y += bounds.Y;
+				}
+			}
 		}
 
 		/// <summary>
