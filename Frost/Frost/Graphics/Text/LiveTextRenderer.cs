@@ -144,7 +144,16 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateWrappedBounds (IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
 		{
-			throw new NotImplementedException();
+			var wordWrap = performWordWrap(lines, width);
+
+			// Compute the bounds
+			var bounds = wordWrap.Bounds;
+			var textWidth   = bounds.Width  + bounds.Left;
+			var textHeight  = bounds.Height + bounds.Top;
+			var finalWidth  = textWidth  < 0 ? 0U : (uint)textWidth;
+			var finalHeight = textHeight < 0 ? 0U : (uint)textHeight;
+
+			return new Vector2u(finalWidth, finalHeight);
 		}
 
 		/// <summary>
@@ -194,6 +203,93 @@ namespace Frost.Graphics.Text
 		private static void drawWrappedText (RenderTexture target, IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Performs word wrapping on live text segments
+		/// </summary>
+		/// <param name="lines">Lines of live text segments to wrap</param>
+		/// <param name="width">Target width to wrap lines by</param>
+		/// <returns>Word wrapping information</returns>
+		private static WordWrap<WrappedSegment> performWordWrap (IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
+		{
+			// Perform word wrapping
+			var wordWrap = new WordWrap<WrappedSegment>(width);
+			foreach(var line in lines)
+			{// Iterate through each line
+				foreach(var segment in line)
+				{// Iterate through each segment on the line
+					if(segment.IsSegmentBreakable)
+					{// Break the segment apart
+						var smallerSegments = segment.BreakSegmentApart();
+						foreach(var smallerSegment in smallerSegments)
+							wordWrap.Append(new WrappedSegment(smallerSegment));
+					}
+					else // Unbreakable
+						wordWrap.Append(new WrappedSegment(segment));
+				}
+				wordWrap.NextLine(); // Force new line
+			}
+
+			return wordWrap;
+		}
+
+		/// <summary>
+		/// This class is used to calculate the size of each segment.
+		/// Instances of this class are passed to <see cref="WordWrap{T}"/>.
+		/// </summary>
+		private class WrappedSegment : ITextSize
+		{
+			private readonly ILiveTextSegment _segment;
+
+			/// <summary>
+			/// Creates a new segment in a word wrapped text block
+			/// </summary>
+			/// <param name="segment">Segment to be wrapped</param>
+			public WrappedSegment (ILiveTextSegment segment)
+			{
+				_segment = segment;
+			}
+
+			/// <summary>
+			/// Wrapped segment
+			/// </summary>
+			public ILiveTextSegment Segment
+			{
+				get { return _segment; }
+			}
+
+			/// <summary>
+			/// Computes the width and height of the segment
+			/// </summary>
+			/// <param name="width">Width</param>
+			/// <param name="height">Height</param>
+			public void GetSize (out int width, out int height)
+			{
+				computeBounds(out width, out height);
+			}
+
+			/// <summary>
+			/// Computes the width and height of the word after trimming trailing whitespace
+			/// </summary>
+			/// <param name="width">Width</param>
+			/// <param name="height">Height</param>
+			public void GetTrimmedSize (out int width, out int height)
+			{
+				GetSize(out width, out height); // TODO: Trim whitespace from the segment
+			}
+
+			/// <summary>
+			/// Actually performs the computation of the text bounds
+			/// </summary>
+			/// <param name="width">Width</param>
+			/// <param name="height">Height</param>
+			private void computeBounds (out int width, out int height)
+			{
+				var bounds = _segment.CalculateSegmentBounds();
+				width  = (int)Math.Ceiling(bounds.X);
+				height = (int)Math.Ceiling(bounds.Y);
+			}
 		}
 	}
 }
