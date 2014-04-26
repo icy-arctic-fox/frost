@@ -21,13 +21,16 @@ namespace Test_Game
 		public TextScene ()
 		{
 			using(var font = Font.LoadFromFile("coolvetica.ttf"))
-			using(var renderer = new PlainTextRenderer(new TextAppearance(font)))
 			{
-				renderer.MultiLine = true;
-				renderer.WordWrap  = true;
-				renderer.WrapWidth = 200;
-				renderer.Text = "Hello!\nThis is a test of the text rendering system.";
-				_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
+				var appearance = new TextAppearance(font);
+				using(var renderer = new LiveTextRenderer(appearance))
+				{
+					renderer.MultiLine = true;
+					renderer.WordWrap  = true;
+					renderer.WrapWidth = 200;
+					renderer.Text = new LiveTextString("Hello!\nThis is a test of the text rendering system.", appearance);
+					_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
+				}
 			}
 		}
 
