@@ -114,6 +114,12 @@ namespace Frost.Graphics.Text
 		/// <param name="position">Position of the top-left corner of the segment</param>
 		public void DrawSegment (RenderTexture target, Vector2f position)
 		{
+			using(var t = new SFML.Graphics.Text())
+			{
+				t.DisplayedString = _text;
+				_appearance.ApplyTo(t);
+				t.Draw(null /* TODO */, RenderStates.Default);
+			}
 		}
 	}
 }
