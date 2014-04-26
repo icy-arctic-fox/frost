@@ -202,7 +202,22 @@ namespace Frost.Graphics.Text
 		/// <param name="width">Target width to wrap lines by</param>
 		private static void drawWrappedText (RenderTexture target, IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
 		{
-			throw new NotImplementedException();
+			var wordWrap = performWordWrap(lines, width);
+
+			// Draw each segment
+			foreach(var line in wordWrap.Lines)
+			{// Iterate through each line
+				foreach(var ws in line)
+				{// Iterate through each segment on the line
+					// Get the information we need
+					var segment  = ws.Value.Segment;
+					var bounds   = ws.Bounds;
+					var position = new Vector2f(bounds.Left, bounds.Top);
+
+					// Draw the segment
+					segment.DrawSegment(target, position);
+				}
+			}
 		}
 
 		/// <summary>
