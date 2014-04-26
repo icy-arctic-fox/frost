@@ -45,36 +45,52 @@ namespace Frost.Graphics.Text
 		/// Gets a collection of segments which have text segments with newlines segments broken apart
 		/// </summary>
 		/// <param name="originalSegments">Original collection of segments</param>
-		/// <returns>New collection of segments</returns>
-		private static IEnumerable<ILiveTextSegment> getMultiLineSegments (IEnumerable<ILiveTextSegment> originalSegments)
+		/// <returns>Collection of lines of segments</returns>
+		private static IEnumerable<IEnumerable<ILiveTextSegment>> getMultiLineSegments (IEnumerable<ILiveTextSegment> originalSegments)
 		{
-			var segments = new List<ILiveTextSegment>();
+			var lines   = new List<IEnumerable<ILiveTextSegment>>();
+			var curLine = new List<ILiveTextSegment>();
+			lines.Add(curLine);
+
 			foreach(var segment in originalSegments)
 			{
 				var stringSegment = segment as ILiveTextStringSegment;
-				if(stringSegment != null) // This is a segment that can have newlines
-					segments.AddRange(stringSegment.SplitOnLineBreaks());
+				if(stringSegment != null)
+				{// This is a segment that can have newlines
+					var segments = stringSegment.SplitOnLineBreaks();
+					foreach(var lineSegment in segments)
+					{// Add the first one to the current line and advance to the next line
+						curLine.Add(lineSegment);
+						curLine = new List<ILiveTextSegment>();
+						lines.Add(curLine);
+					}
+				}
 				else // Segment that probably can't have newlines
-					segments.Add(segment);
+					curLine.Add(segment);
 			}
-			return segments;
+
+			return lines;
 		}
 
 		/// <summary>
 		/// Gets a collection of segments which have text segments stripped of newline characters
 		/// </summary>
 		/// <param name="originalSegments">Original collection of segments</param>
-		/// <returns>New collection of segments</returns>
-		private static IEnumerable<ILiveTextSegment> getStrippedSegments (IEnumerable<ILiveTextSegment> originalSegments)
+		/// <returns>Collection of lines of segments</returns>
+		private static IEnumerable<IEnumerable<ILiveTextSegment>> getStrippedSegments (IEnumerable<ILiveTextSegment> originalSegments)
 		{
-			return (from segment in originalSegments let stringSegment = segment as ILiveTextStringSegment select stringSegment != null ? stringSegment.StripLineBreaks() : segment);
+			var line = from segment in originalSegments
+						let stringSegment = segment as ILiveTextStringSegment
+						select stringSegment != null ? stringSegment.StripLineBreaks() : segment;
+			var lines = new List<IEnumerable<ILiveTextSegment>>(1) {line};
+			return lines;
 		}
 
 		/// <summary>
 		/// Retrieves a list of segments that have been corrected to account for null and multi-line
 		/// </summary>
-		/// <returns>List of segments</returns>
-		private IEnumerable<ILiveTextSegment> getSegments ()
+		/// <returns>Collection of lines of segments</returns>
+		private IEnumerable<IEnumerable<ILiveTextSegment>> getSegments ()
 		{
 			var segments = Text ?? (IEnumerable<ILiveTextSegment>)new List<ILiveTextSegment>(0);
 			return MultiLine ? getMultiLineSegments(segments) : getStrippedSegments(segments);
@@ -95,9 +111,9 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Calculates the bounds of some live text that does not wrap onto new lines
 		/// </summary>
-		/// <param name="liveText">Text to calculate the bounds of</param>
+		/// <param name="lines">Lines of live text segments to calculate the bounds of</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateBounds (IEnumerable<ILiveTextSegment> liveText)
+		private static Vector2u calculateBounds (IEnumerable<IEnumerable<ILiveTextSegment>> lines)
 		{
 			throw new NotImplementedException();
 		}
@@ -105,10 +121,10 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Calculates the bounds of some text that has word wrapping applied to it
 		/// </summary>
-		/// <param name="liveText">Text to calculate the bounds of</param>
+		/// <param name="lines">Lines of live text segments to calculate the bounds of</param>
 		/// <param name="width">Target width to wrap lines by</param>
 		/// <returns>Width and height of the bounds</returns>
-		private static Vector2u calculateWrappedBounds (IEnumerable<ILiveTextSegment> liveText, int width)
+		private static Vector2u calculateWrappedBounds (IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
 		{
 			throw new NotImplementedException();
 		}
@@ -130,8 +146,8 @@ namespace Frost.Graphics.Text
 		/// Draws the text without applying any word wrapping to it
 		/// </summary>
 		/// <param name="target">Texture to draw the text onto</param>
-		/// <param name="liveText">Text to render</param>
-		private static void drawText (RenderTarget target, IEnumerable<ILiveTextSegment> liveText)
+		/// <param name="lines">Lines of live text segments to render</param>
+		private static void drawText (RenderTarget target, IEnumerable<IEnumerable<ILiveTextSegment>> lines)
 		{
 			throw new NotImplementedException();
 		}
@@ -140,9 +156,9 @@ namespace Frost.Graphics.Text
 		/// Draws the text and applies word wrapping to it
 		/// </summary>
 		/// <param name="target">Texture to draw the text onto</param>
-		/// <param name="liveText">Text to render</param>
+		/// <param name="lines">Lines of live text segments to render</param>
 		/// <param name="width">Target width to wrap lines by</param>
-		private static void drawWrappedText (RenderTarget target, IEnumerable<ILiveTextSegment> liveText, int width)
+		private static void drawWrappedText (RenderTarget target, IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
 		{
 			throw new NotImplementedException();
 		}
