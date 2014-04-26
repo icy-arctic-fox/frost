@@ -13,6 +13,11 @@ namespace Frost.Graphics.Text
 		string Text { get; }
 
 		/// <summary>
+		/// Appearance of the text
+		/// </summary>
+		TextAppearance Appearance { get; }
+
+		/// <summary>
 		/// Splits the segment into new segments on line breaks
 		/// </summary>
 		/// <returns>New segments</returns>
