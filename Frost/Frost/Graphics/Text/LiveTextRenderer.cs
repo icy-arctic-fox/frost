@@ -51,12 +51,9 @@ namespace Frost.Graphics.Text
 			var segments = new List<ILiveTextSegment>();
 			foreach(var segment in originalSegments)
 			{
-				var stringSegment = segment as LiveTextStringSegment;
-				if(stringSegment != null)
-				{// This is a segment that can have newlines
-					var text = SplitTextOnLinebreaks(stringSegment.Text);
-					segments.AddRange(text.Select(line => new LiveTextStringSegment(line, stringSegment.Appearance)));
-				}
+				var stringSegment = segment as ILiveTextStringSegment;
+				if(stringSegment != null) // This is a segment that can have newlines
+					segments.AddRange(stringSegment.SplitOnLineBreaks());
 				else // Segment that probably can't have newlines
 					segments.Add(segment);
 			}
@@ -70,19 +67,7 @@ namespace Frost.Graphics.Text
 		/// <returns>New collection of segments</returns>
 		private static IEnumerable<ILiveTextSegment> getStrippedSegments (IEnumerable<ILiveTextSegment> originalSegments)
 		{
-			var segments = new List<ILiveTextSegment>();
-			foreach(var segment in originalSegments)
-			{
-				var stringSegment = segment as LiveTextStringSegment;
-				if(stringSegment != null)
-				{// This is a segment that can have newlines
-					var text = stringSegment.Text.Replace('\r', ' ').Replace('\n', ' ');
-					segments.Add(new LiveTextStringSegment(text, stringSegment.Appearance));
-				}
-				else // Segment that probably can't have newlines
-					segments.Add(segment);
-			}
-			return segments;
+			return (from segment in originalSegments let stringSegment = segment as ILiveTextStringSegment select stringSegment != null ? stringSegment.StripLineBreaks() : segment);
 		}
 
 		/// <summary>
