@@ -50,7 +50,6 @@ namespace Frost.Graphics.Text
 		{
 			var lines   = new List<IEnumerable<ILiveTextSegment>>();
 			var curLine = new List<ILiveTextSegment>();
-			lines.Add(curLine);
 
 			foreach(var segment in originalSegments)
 			{
@@ -61,14 +60,16 @@ namespace Frost.Graphics.Text
 					foreach(var lineSegment in segments)
 					{// Add the first one to the current line and advance to the next line
 						curLine.Add(lineSegment);
-						curLine = new List<ILiveTextSegment>();
 						lines.Add(curLine);
+						curLine = new List<ILiveTextSegment>();
 					}
 				}
 				else // Segment that probably can't have newlines
 					curLine.Add(segment);
 			}
 
+			if(curLine.Count > 0)
+				lines.Add(curLine);
 			return lines;
 		}
 
