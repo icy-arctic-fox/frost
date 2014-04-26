@@ -115,7 +115,25 @@ namespace Frost.Graphics.Text
 		/// <returns>Width and height of the bounds</returns>
 		private static Vector2u calculateBounds (IEnumerable<IEnumerable<ILiveTextSegment>> lines)
 		{
-			throw new NotImplementedException();
+			float width = 0f, height = 0f;
+			foreach(var line in lines)
+			{// Iterate through each line
+				float lineWidth = 0f, lineHeight = 0f;
+				foreach(var segment in line)
+				{// Iterate through each segment on the line
+					var bounds = segment.CalculateSegmentBounds();
+					lineWidth += bounds.X; // Extend the line width
+					if(bounds.Y > lineHeight) // If the segment is taller than the current line height,
+						lineHeight = bounds.Y; // then extend the line height
+				}
+				height += lineHeight; // Extend the height of the bounds
+				if(lineWidth > width) // If the line is wider than the current bounds,
+					width = lineWidth; // then extend the width of the bounds
+			}
+
+			var finalWidth  = (uint)Math.Ceiling(width);
+			var finalHeight = (uint)Math.Ceiling(height);
+			return new Vector2u(finalWidth, finalHeight);
 		}
 
 		/// <summary>
