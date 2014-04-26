@@ -23,26 +23,6 @@ namespace Frost.Graphics.Text
 			get { return _text; }
 		}
 
-		/// <summary>
-		/// Splits the segment into new segments on line breaks
-		/// </summary>
-		/// <returns>New segments</returns>
-		public IEnumerable<ILiveTextStringSegment> SplitOnLineBreaks ()
-		{
-			var lines = _text.Split(new[] {"\n", "\r\n"}, StringSplitOptions.None);
-			return (from line in lines select new LiveTextStringSegment(line, _appearance));
-		}
-
-		/// <summary>
-		/// Removes newline characters from the segment's text
-		/// </summary>
-		/// <returns>New segment without newline characters</returns>
-		public ILiveTextStringSegment StripLineBreaks ()
-		{
-			var text = _text.Replace('\n', ' ').Replace('\r', ' ');
-			return new LiveTextStringSegment(text, _appearance);
-		}
-
 		private readonly TextAppearance _appearance;
 
 		/// <summary>
@@ -120,6 +100,26 @@ namespace Frost.Graphics.Text
 				_appearance.ApplyTo(t);
 				t.Draw(target, RenderStates.Default);
 			}
+		}
+
+		/// <summary>
+		/// Splits the segment into new segments on line breaks
+		/// </summary>
+		/// <returns>New segments</returns>
+		public IEnumerable<ILiveTextStringSegment> SplitOnLineBreaks ()
+		{
+			var lines = _text.Split(new[] { "\n", "\r\n" }, StringSplitOptions.None);
+			return (from line in lines select new LiveTextStringSegment(line, _appearance));
+		}
+
+		/// <summary>
+		/// Removes newline characters from the segment's text
+		/// </summary>
+		/// <returns>New segment without newline characters</returns>
+		public ILiveTextStringSegment StripLineBreaks ()
+		{
+			var text = _text.Replace('\n', ' ').Replace('\r', ' ');
+			return new LiveTextStringSegment(text, _appearance);
 		}
 	}
 }
