@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Frost.Utility;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -111,6 +112,10 @@ namespace Frost.Graphics.Text
 		/// <returns>Width (<see cref="Vector2f.X"/>) and height (<see cref="Vector2f.Y"/>) of the bounds needed</returns>
 		public Vector2f CalculateSegmentBounds ()
 		{
+			var lineCount  = _text.CountLines();
+			var lineHeight = _appearance.Font.UnderlyingFont.GetLineSpacing(_appearance.Size);
+			var textHeight = lineHeight * lineCount;
+
 			using(var t = new SFML.Graphics.Text())
 			{
 				t.DisplayedString = _text;
@@ -118,6 +123,8 @@ namespace Frost.Graphics.Text
 				var bounds = t.GetLocalBounds();
 				var width  = bounds.Width  + bounds.Left;
 				var height = bounds.Height + bounds.Top;
+				if(textHeight > height)
+					height = textHeight;
 				return new Vector2f(width, height);
 			}
 		}
