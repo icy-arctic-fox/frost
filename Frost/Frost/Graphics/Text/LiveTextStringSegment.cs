@@ -118,7 +118,7 @@ namespace Frost.Graphics.Text
 			{
 				t.DisplayedString = _text;
 				_appearance.ApplyTo(t);
-				t.Draw(null /* TODO */, RenderStates.Default);
+				t.Draw(target, RenderStates.Default);
 			}
 		}
 	}

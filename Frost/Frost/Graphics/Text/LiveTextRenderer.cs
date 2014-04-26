@@ -165,7 +165,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="lines">Lines of live text segments to render</param>
-		private static void drawText (RenderTarget target, IEnumerable<IEnumerable<ILiveTextSegment>> lines)
+		private static void drawText (RenderTexture target, IEnumerable<IEnumerable<ILiveTextSegment>> lines)
 		{
 			var y = 0f;
 			foreach(var line in lines)
@@ -175,7 +175,7 @@ namespace Frost.Graphics.Text
 				{// Iterate through each segment on the line
 					// Draw the segment
 					var position = new Vector2f(x, y);
-					segment.DrawSegment(null /* TODO */, position);
+					segment.DrawSegment(target, position);
 
 					// Calculate the bounds and advance the position
 					var bounds = segment.CalculateSegmentBounds();
@@ -191,7 +191,7 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to draw the text onto</param>
 		/// <param name="lines">Lines of live text segments to render</param>
 		/// <param name="width">Target width to wrap lines by</param>
-		private static void drawWrappedText (RenderTarget target, IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
+		private static void drawWrappedText (RenderTexture target, IEnumerable<IEnumerable<ILiveTextSegment>> lines, int width)
 		{
 			throw new NotImplementedException();
 		}
