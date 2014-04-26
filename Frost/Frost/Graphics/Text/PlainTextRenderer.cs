@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Frost.Utility;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -187,7 +188,7 @@ namespace Frost.Graphics.Text
 		private static WordWrap<WrappedWord> performWordWrap (string text, int width, SFML.Graphics.Text t)
 		{
 			// Split the text into words
-			var unbrokenLines = SplitTextOnLinebreaks(text);
+			var unbrokenLines = text.SplitTextOnLinebreaks();
 			var lines = unbrokenLines.Select(SplitTextIntoWords);
 
 			// Perform word wrapping

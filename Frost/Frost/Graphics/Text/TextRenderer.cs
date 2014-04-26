@@ -53,16 +53,6 @@ namespace Frost.Graphics.Text
 		#region Text operations
 
 		/// <summary>
-		/// Splits text on newlines
-		/// </summary>
-		/// <param name="text">Text string to split</param>
-		/// <returns>Array of lines of text</returns>
-		protected static IEnumerable<string> SplitTextOnLinebreaks (string text)
-		{
-			return text.Split(new[] {"\n", "\r\n"}, StringSplitOptions.None);
-		}
-
-		/// <summary>
 		/// Splits text apart into words.
 		/// The text is split where it changes from whitespace to non-whitespace.
 		/// This keeps whitespace at the end of the word to maintain spacing for non-wrapped portions of the text.

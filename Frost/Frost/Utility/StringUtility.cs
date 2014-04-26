@@ -48,5 +48,16 @@ namespace Frost.Utility
 
 			return lines;
 		}
+
+		/// <summary>
+		/// Splits text on newlines
+		/// </summary>
+		/// <param name="value">Text string to split</param>
+		/// <returns>Array of lines of text</returns>
+		/// <remarks>null will be returned if <paramref name="value"/> is null.</remarks>
+		public static string[] SplitTextOnLinebreaks (this string value)
+		{
+			return value == null ? null : value.Split(new[] { "\n", "\r\n" }, StringSplitOptions.None);
+		}
 	}
 }
