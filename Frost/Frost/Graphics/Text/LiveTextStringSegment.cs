@@ -96,7 +96,15 @@ namespace Frost.Graphics.Text
 		/// <returns>Width (<see cref="Vector2f.X"/>) and height (<see cref="Vector2f.Y"/>) of the bounds needed</returns>
 		public Vector2f CalculateSegmentBounds ()
 		{
-			throw new NotImplementedException();
+			using(var t = new SFML.Graphics.Text())
+			{
+				t.DisplayedString = _text;
+				_appearance.ApplyTo(t);
+				var bounds = t.GetLocalBounds();
+				var width  = bounds.Width  + bounds.Left;
+				var height = bounds.Height + bounds.Top;
+				return new Vector2f(width, height);
+			}
 		}
 
 		/// <summary>
@@ -106,7 +114,6 @@ namespace Frost.Graphics.Text
 		/// <param name="position">Position of the top-left corner of the segment</param>
 		public void DrawSegment (RenderTexture target, Vector2f position)
 		{
-			throw new NotImplementedException();
 		}
 	}
 }
