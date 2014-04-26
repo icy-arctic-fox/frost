@@ -67,7 +67,42 @@ namespace Frost.Graphics.Text
 		/// <see cref="ILiveTextSegment.IsSegmentBreakable"/> should be false in this instance.</exception>
 		public IEnumerable<ILiveTextSegment> BreakSegmentApart ()
 		{
-			throw new NotImplementedException();
+			var words = breakTextIntoWords(_text);
+			return words.Select(word => new LiveTextStringSegment(word, _appearance));
+		}
+
+		/// <summary>
+		/// Breaks text apart into words
+		/// </summary>
+		/// <param name="text">Text to break apart</param>
+		/// <returns>Collection of strings, each item is a word with trailing whitespace</returns>
+		private static IEnumerable<string> breakTextIntoWords (string text)
+		{
+			var words = new List<string>();
+
+			var whitespace = false;
+			var start = 0;
+			for(var i = 0; i < text.Length; ++i)
+			{// Iterate over each character
+				var c = text[i];
+				if(Char.IsWhiteSpace(c))
+					whitespace = true;
+
+				else if(whitespace)
+				{// Transition from whitespace to non-whitespace, break here
+					var word = text.Substring(start, i - start);
+					words.Add(word);
+
+					start = i;
+					whitespace = false;
+				}
+			}
+
+			// Add final word
+			var last = text.Substring(start);
+			words.Add(last);
+
+			return words;
 		}
 
 		/// <summary>
