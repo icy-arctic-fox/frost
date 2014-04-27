@@ -14,6 +14,14 @@ namespace Frost.Graphics.Text
 		private readonly TextAppearance _appearance;
 
 		/// <summary>
+		/// Default text appearance
+		/// </summary>
+		internal TextAppearance DefaultAppearance
+		{
+			get { return _appearance; }
+		}
+
+		/// <summary>
 		/// Creates a live text string from some existing text
 		/// </summary>
 		/// <param name="text">Text to create the live text string from</param>
