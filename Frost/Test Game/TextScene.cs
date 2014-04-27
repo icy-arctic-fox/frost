@@ -28,7 +28,7 @@ namespace Test_Game
 					renderer.MultiLine = true;
 					renderer.WordWrap  = true;
 					renderer.WrapWidth = 200;
-					renderer.Text = new LiveTextString("Hello!\nThis is a test of the text rendering system.", appearance);
+					renderer.Text = new LiveTextString("\\b{Hello!}\nThis is a \\i{test} of the text rendering system.", appearance);
 					_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
 				}
 			}
