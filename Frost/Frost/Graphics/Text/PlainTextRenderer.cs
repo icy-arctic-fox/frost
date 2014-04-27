@@ -79,7 +79,7 @@ namespace Frost.Graphics.Text
 		protected override Vector2u CalculateBounds ()
 		{
 			var text = getFixedText();
-			var appearance = Appearance.CloneTextAppearance();
+			var appearance = _appearance.CloneTextAppearance();
 			return WordWrap ? calculateWrappedBounds(text, WrapWidth, appearance) : calculateBounds(text, appearance);
 		}
 
@@ -138,9 +138,16 @@ namespace Frost.Graphics.Text
 		/// <param name="target">Texture to render to</param>
 		protected override void Draw (RenderTexture target)
 		{
+			// Get the text and appearance information
 			var text = getFixedText();
 			var appearance = Appearance.CloneTextAppearance();
 
+			// Clear the back color to a transparent font color.
+			// This fixes font smoothing issues blending to black.
+			var backColor = new Color(appearance.Color, 0);
+			target.Clear(backColor);
+
+			// Draw it
 			if(WordWrap)
 				drawWrappedText(target, text, WrapWidth, appearance);
 			else
