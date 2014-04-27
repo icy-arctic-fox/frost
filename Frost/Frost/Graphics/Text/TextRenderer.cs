@@ -50,45 +50,6 @@ namespace Frost.Graphics.Text
 			_appearance = appearance;
 		}
 
-		#region Text operations
-
-		/// <summary>
-		/// Splits text apart into words.
-		/// The text is split where it changes from whitespace to non-whitespace.
-		/// This keeps whitespace at the end of the word to maintain spacing for non-wrapped portions of the text.
-		/// </summary>
-		/// <param name="text">Text string to split</param>
-		/// <returns>Collection of words from the text</returns>
-		protected static IEnumerable<string> SplitTextIntoWords (string text)
-		{
-			var words = new List<string>();
-
-			var whitespace = false;
-			var start = 0;
-			for(var i = 0; i < text.Length; ++i)
-			{// Iterate over each character
-				var c = text[i];
-				if(Char.IsWhiteSpace(c))
-					whitespace = true;
-
-				else if(whitespace)
-				{// Transition from whitespace to non-whitespace, break here
-					var word = text.Substring(start, i - start);
-					words.Add(word);
-
-					start = i;
-					whitespace = false;
-				}
-			}
-
-			// Add final word
-			var last = text.Substring(start);
-			words.Add(last);
-
-			return words;
-		}
-		#endregion
-
 		#region Rendering
 
 		/// <summary>

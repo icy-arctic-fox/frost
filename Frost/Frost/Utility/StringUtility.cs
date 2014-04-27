@@ -59,7 +59,7 @@ namespace Frost.Utility
 
 			var start = 0;
 			var whitespace = true;
-			for(int i = 0, j = 0; i < value.Length; ++i)
+			for(int i = 0, j = 0; i < value.Length && j < count; ++i)
 			{
 				var c = value[i];
 				if(Char.IsWhiteSpace(c))
@@ -81,6 +81,52 @@ namespace Frost.Utility
 
 			if(!whitespace)
 			{// There's characters left at the end of the string
+				var word = value.Substring(start);
+				var j    = count - 1;
+				words[j] = word;
+			}
+
+			return words;
+		}
+
+		/// <summary>
+		/// Splits text apart into words.
+		/// The text is split where it changes from whitespace to non-whitespace.
+		/// This keeps whitespace at the end of the word.
+		/// </summary>
+		/// <param name="value">String to split</param>
+		/// <returns>Array of words</returns>
+		/// <remarks>null will be returned if <paramref name="value"/> is null.</remarks>
+		public static string[] SplitIntoWordsKeepWhitespace (this string value)
+		{
+			if(value == null)
+				return null;
+
+			var count = CountWords(value);
+			var words = new string[count];
+			if(value.Length > 0 && Char.IsWhiteSpace(value[0]))
+				++count; // value starts with whitespace, causing there to be an extra "word"
+
+			var start      = 0;
+			var whitespace = false;
+			for(int i = 0, j = 0; i < value.Length && j < count; ++i)
+			{// Iterate over each character
+				var c = value[i];
+				if(Char.IsWhiteSpace(c))
+					whitespace = true;
+
+				else if(whitespace)
+				{// Transition from whitespace to non-whitespace, break here
+					var word   = value.Substring(start, i - start);
+					words[j++] = word;
+
+					start      = i;
+					whitespace = false;
+				}
+			}
+
+			if(start > 0)
+			{// Add final word
 				var word = value.Substring(start);
 				var j    = count - 1;
 				words[j] = word;

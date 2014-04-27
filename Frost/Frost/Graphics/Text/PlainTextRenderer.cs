@@ -189,7 +189,7 @@ namespace Frost.Graphics.Text
 		{
 			// Split the text into words
 			var unbrokenLines = text.SplitOnLinebreaks();
-			var lines = unbrokenLines.Select(SplitTextIntoWords);
+			var lines = unbrokenLines.Select(StringUtility.SplitIntoWordsKeepWhitespace);
 
 			// Perform word wrapping
 			var wordWrap = new WordWrap<WrappedWord>(width);
