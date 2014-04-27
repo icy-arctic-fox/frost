@@ -79,7 +79,7 @@ namespace Frost.Graphics.Text
 		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
 		public static IEnumerable<ILiveTextSegment> Parse (string text, TextAppearance appearance = null)
 		{
-			var parser = new LiveTextParser(text, appearance);
+			var parser = new LiveTextParser(text, appearance ?? TextAppearance.GetDefaultAppearance());
 			return parser.Parse(appearanceTranslator, null /* TODO: Create segment translator */);
 		}
 
