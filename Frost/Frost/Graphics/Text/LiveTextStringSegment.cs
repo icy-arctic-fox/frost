@@ -73,24 +73,52 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
+		/// Retrieves the bounds that the text object calculates
+		/// </summary>
+		/// <param name="t">Preconfigured text object</param>
+		/// <param name="width">Computed width</param>
+		/// <param name="height">Computed height</param>
+		private void calculateTextBounds (SFML.Graphics.Text t, out float width, out float height)
+		{
+			var bounds = t.GetLocalBounds();
+			width  = bounds.Width + bounds.Left;
+			height = bounds.Height + bounds.Top;
+		}
+
+		/// <summary>
+		/// Calculates the fully needed width and height
+		/// </summary>
+		/// <param name="t">Preconfigured text object</param>
+		/// <param name="width">Computed width</param>
+		/// <param name="height">Computed height</param>
+		private void calculateFullBounds (SFML.Graphics.Text t, out float width, out float height)
+		{
+			float h;
+			calculateTextBounds(t, out width, out h);
+
+			// Calculate the line height
+			var lineCount  = _text.CountLines();
+			var lineHeight = _appearance.Font.UnderlyingFont.GetLineSpacing(_appearance.Size);
+			var textHeight = lineHeight * lineCount;
+
+			// Set the height to the larger of the two
+			height = Math.Max(h, textHeight);
+		}
+
+		/// <summary>
 		/// Calculates the needed size of the live text segment
 		/// </summary>
 		/// <returns>Width (<see cref="Vector2f.X"/>) and height (<see cref="Vector2f.Y"/>) of the bounds needed</returns>
 		public Vector2f CalculateSegmentBounds ()
 		{
-			var lineCount  = _text.CountLines();
-			var lineHeight = _appearance.Font.UnderlyingFont.GetLineSpacing(_appearance.Size);
-			var textHeight = lineHeight * lineCount;
-
 			using(var t = new SFML.Graphics.Text())
 			{
+				// Set up the text object
 				t.DisplayedString = _text;
 				_appearance.ApplyTo(t);
-				var bounds = t.GetLocalBounds();
-				var width  = bounds.Width  + bounds.Left;
-				var height = bounds.Height + bounds.Top;
-				if(textHeight > height)
-					height = textHeight;
+
+				float width, height;
+				calculateFullBounds(t, out width, out height);
 				return new Vector2f(width, height);
 			}
 		}
@@ -104,10 +132,21 @@ namespace Frost.Graphics.Text
 		{
 			using(var t = new SFML.Graphics.Text())
 			{
+				// Set up the text object
 				t.DisplayedString = _text;
 				_appearance.ApplyTo(t);
+
+				// Get the bounds (needed for the background/edge fix)
+				float width, height;
+				calculateFullBounds(t, out width, out height);
+
+				// TODO: Add background/edge fix (sharper text)
+
+				// Calculate the transform
 				var rs = RenderStates.Default;
 				rs.Transform.Translate(position);
+
+				// Draw the text
 				t.Draw(target, rs);
 			}
 		}
