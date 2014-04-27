@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Frost.Utility;
 using F = SFML.Graphics.Font;
 
@@ -10,6 +11,27 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public sealed class Font : IFullDisposable
 	{
+		private static readonly object _defaultLocker = new object();
+		private static Font _defaultFont;
+		private const string DefaultFontResourceName = "Resources/Sansation_Regular.ttf";
+
+		/// <summary>
+		/// Retrieves the default font that is embedded in Frost
+		/// </summary>
+		/// <returns>Default font information</returns>
+		public static Font GetDefaultFont ()
+		{
+			lock(_defaultLocker)
+			{
+				if(_defaultFont == null)
+				{// Default font hasn't be loaded yet
+					var fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(DefaultFontResourceName);
+					_defaultFont   = LoadFromStream(fontStream);
+				}
+				return _defaultFont;
+			}
+		}
+
 		private readonly F _font;
 
 		/// <summary>
