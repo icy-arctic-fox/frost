@@ -56,8 +56,12 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="path">Path to the font file</param>
 		/// <returns>A <see cref="Font"/> object</returns>
+		/// <exception cref="ArgumentNullException">The path to the file containing the font information can't be null.</exception>
 		public static Font LoadFromFile (string path)
 		{
+			if(path == null)
+				throw new ArgumentNullException("path");
+
 			var font = new SFML.Graphics.Font(path);
 			return new Font(font);
 		}
@@ -67,8 +71,12 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="s">Stream containing the font data</param>
 		/// <returns>A <see cref="Font"/> object</returns>
+		/// <exception cref="ArgumentNullException">The stream to read font data from can't be null.</exception>
 		public static Font LoadFromStream (Stream s)
 		{
+			if(s == null)
+				throw new ArgumentNullException("s");
+
 			var font = new SFML.Graphics.Font(s);
 			return new Font(font);
 		}
