@@ -18,13 +18,14 @@ namespace Frost.Utility
 		{
 			if(value == null)
 				return -1;
+			var trimmed = value.Trim();
 
 			var start = -1;
 			var words = 0;
 			var whitespace = false;
-			for(var i = 0; i < value.Length; ++i)
+			for(var i = 0; i < trimmed.Length; ++i)
 			{// Iterate over each character
-				var c = value[i];
+				var c = trimmed[i];
 				if(Char.IsWhiteSpace(c))
 					whitespace = true;
 
@@ -102,9 +103,9 @@ namespace Frost.Utility
 				return null;
 
 			var count = CountWords(value);
-			var words = new string[count];
 			if(value.Length > 0 && Char.IsWhiteSpace(value[0]))
 				++count; // value starts with whitespace, causing there to be an extra "word"
+			var words = new string[count];
 
 			var start      = 0;
 			var whitespace = false;
