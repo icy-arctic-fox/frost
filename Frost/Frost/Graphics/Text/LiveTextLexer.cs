@@ -168,8 +168,9 @@ namespace Frost.Graphics.Text
 							applyEscapeSequence();
 						else
 						{// This looks like a formatter
-							goBack();
-							return escapeState();
+							goBack(); // first char
+							goBack(); // initial \
+							break;
 						}
 					}
 				}
