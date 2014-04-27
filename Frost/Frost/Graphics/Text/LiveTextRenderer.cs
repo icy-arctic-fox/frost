@@ -21,22 +21,8 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Creates a new live text renderer
 		/// </summary>
-		/// <param name="appearance">Initial (default) visual appearance of the text</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		public LiveTextRenderer (TextAppearance appearance)
-			: base(appearance)
-		{
-			// ...
-		}
-
-		/// <summary>
-		/// Creates a new live text renderer
-		/// </summary>
 		/// <param name="text">Text to render</param>
-		/// <param name="appearance">Initial (default) visual appearance of the text</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		public LiveTextRenderer (LiveTextString text, TextAppearance appearance)
-			: base(appearance)
+		public LiveTextRenderer (LiveTextString text)
 		{
 			Text = text;
 		}

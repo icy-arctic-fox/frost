@@ -20,14 +20,12 @@ namespace Test_Game
 		/// </summary>
 		public TextScene ()
 		{
-			var font = Font.GetDefaultFont();
-			var appearance = new TextAppearance(font, 20);
-			using(var renderer = new LiveTextRenderer(appearance))
+			const string text = "\\b{Hello!}\nThis is a \\i{test} of the text rendering system.";
+			using(var renderer = new LiveTextRenderer(text))
 			{
 				renderer.MultiLine = true;
 				renderer.WordWrap  = true;
 				renderer.WrapWidth = 200;
-				renderer.Text = new LiveTextString("\\b{Hello!}\nThis is a \\i{test} of the text rendering system.", appearance);
 				_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
 			}
 		}

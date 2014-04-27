@@ -27,28 +27,6 @@ namespace Frost.Graphics.Text
 		/// It is possible to go over this length if the first word on a line has a pixel length greater than this value.</remarks>
 		public int WrapWidth { get; set; }
 
-		private readonly TextAppearance _appearance;
-
-		/// <summary>
-		/// Appearance of the rendered text
-		/// </summary>
-		public TextAppearance Appearance
-		{
-			get { return _appearance; }
-		}
-
-		/// <summary>
-		/// Creates a text renderer
-		/// </summary>
-		/// <param name="appearance">Visual appearance of the text</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		protected TextRenderer (TextAppearance appearance)
-		{
-			if(appearance == null)
-				throw new ArgumentNullException("appearance");
-			_appearance = appearance;
-		}
-
 		#region Rendering
 
 		/// <summary>
@@ -95,8 +73,9 @@ namespace Frost.Graphics.Text
 		{
 			// Clear the back color to a transparent font color.
 			// This fixes font smoothing issues blending to black.
-			var backColor = new Color(_appearance.Color, 0);
-			target.Clear(backColor);
+// TODO: Re-implement this fix now that _appearance is unavailable
+//			var backColor = new Color(_appearance.Color, 0);
+//			target.Clear(backColor);
 
 			// Draw and finalize the texture
 			Draw(target);

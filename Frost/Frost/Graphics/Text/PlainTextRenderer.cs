@@ -18,6 +18,16 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public string Text { get; set; }
 
+		private readonly TextAppearance _appearance;
+
+		/// <summary>
+		/// Appearance of the rendered text
+		/// </summary>
+		public TextAppearance Appearance
+		{
+			get { return _appearance; }
+		}
+
 		/// <summary>
 		/// Retrieves the text to render and corrects it based on rendering properties
 		/// </summary>
@@ -43,9 +53,11 @@ namespace Frost.Graphics.Text
 		/// <param name="appearance">Visual appearance of the text</param>
 		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
 		public PlainTextRenderer (TextAppearance appearance)
-			: base(appearance)
 		{
-			// ...
+			if(appearance == null)
+				throw new ArgumentNullException("appearance");
+
+			_appearance = appearance;
 		}
 
 		/// <summary>
@@ -55,7 +67,7 @@ namespace Frost.Graphics.Text
 		/// <param name="appearance">Visual appearance of the text</param>
 		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
 		public PlainTextRenderer (string text, TextAppearance appearance)
-			: base(appearance)
+			: this(appearance)
 		{
 			Text = text;
 		}
