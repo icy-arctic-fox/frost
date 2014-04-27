@@ -37,9 +37,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\json\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="sfmlnet-audio-2">
-      <HintPath>..\lib\sfml\32-bit\sfmlnet-audio-2.dll</HintPath>
-    </Reference>
     <Reference Include="sfmlnet-graphics-2">
       <HintPath>..\lib\sfml\32-bit\sfmlnet-graphics-2.dll</HintPath>
     </Reference>
@@ -49,11 +46,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Display\Window.cs" />
