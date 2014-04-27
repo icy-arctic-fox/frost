@@ -146,7 +146,7 @@ namespace Frost.Utility
 		{
 			if(value == null)
 				return -1;
-			if(value == String.Empty)
+			if(value.Length <= 0)
 				return 0;
 
 			var lines = 1;
