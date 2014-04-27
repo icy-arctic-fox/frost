@@ -82,6 +82,8 @@ namespace Frost.Graphics.Text
 
 			// Start of formatting token
 			var sb = new StringBuilder();
+			sb.Append(c);
+
 			while(!EndOfString)
 			{ // Continue until a { is found
 				c = getNextChar();
