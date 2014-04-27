@@ -102,7 +102,7 @@ namespace Frost.Utility
 			var words = new string[count];
 
 			var start      = 0;
-			var whitespace = false;
+			var whitespace = true;
 			for(int i = 0, j = 0; i < value.Length && j < count; ++i)
 			{// Iterate over each character
 				var c = value[i];
@@ -111,19 +111,21 @@ namespace Frost.Utility
 
 				else if(whitespace)
 				{// Transition from whitespace to non-whitespace, break here
-					var word   = value.Substring(start, i - start);
-					words[j++] = word;
-
-					start      = i;
+					if(i > 0)
+					{
+						var word   = value.Substring(start, i - start);
+						words[j++] = word;
+						start      = i;
+					}
 					whitespace = false;
 				}
 			}
 
-			if(start > 0)
+			if(count > 0)
 			{// Add final word
-				var word = value.Substring(start);
-				var j    = count - 1;
-				words[j] = word;
+				var word    = value.Substring(start);
+				var last    = count - 1;
+				words[last] = word;
 			}
 
 			return words;
