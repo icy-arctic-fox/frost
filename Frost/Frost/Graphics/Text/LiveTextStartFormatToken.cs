@@ -37,7 +37,7 @@ namespace Frost.Graphics.Text
 		public LiveTextStartFormatToken (string token, string formatName, string extra)
 			: base(token)
 		{
-			if(_formatName == null)
+			if(formatName == null)
 				throw new ArgumentNullException("formatName");
 
 			_formatName = formatName;
