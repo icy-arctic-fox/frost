@@ -51,13 +51,10 @@ namespace Frost.Graphics.Text
 		/// Creates a new plain text renderer
 		/// </summary>
 		/// <param name="appearance">Visual appearance of the text</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		public PlainTextRenderer (TextAppearance appearance)
+		/// <remarks>The default text appearance will be used if <paramref name="appearance"/> is null.</remarks>
+		public PlainTextRenderer (TextAppearance appearance = null)
 		{
-			if(appearance == null)
-				throw new ArgumentNullException("appearance");
-
-			_appearance = appearance;
+			_appearance = appearance ?? TextAppearance.GetDefaultAppearance();
 		}
 
 		/// <summary>
@@ -65,8 +62,8 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="text">Initial text</param>
 		/// <param name="appearance">Visual appearance of the text</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		public PlainTextRenderer (string text, TextAppearance appearance)
+		/// <remarks>The default text appearance will be used if <paramref name="appearance"/> is null.</remarks>
+		public PlainTextRenderer (string text, TextAppearance appearance = null)
 			: this(appearance)
 		{
 			Text = text;
