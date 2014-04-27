@@ -92,8 +92,14 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Disposes of the font and the resources it holds
 		/// </summary>
+		/// <exception cref="InvalidOperationException">The default fonts can't be disposed of manually.</exception>
+		/// <seealso cref="GetDefaultFont"/>
 		public void Dispose ()
 		{
+			lock(_defaultLocker)
+				if(ReferenceEquals(_defaultFont, this))
+					throw new InvalidOperationException("The default fonts can't be disposed of manually.");
+
 			dispose(true);
 			GC.SuppressFinalize(this);
 		}
