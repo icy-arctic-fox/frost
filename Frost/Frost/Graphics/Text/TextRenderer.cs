@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Frost.Utility;
 using SFML.Graphics;
 
