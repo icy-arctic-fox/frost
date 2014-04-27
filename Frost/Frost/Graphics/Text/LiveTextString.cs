@@ -32,13 +32,11 @@ namespace Frost.Graphics.Text
 		/// <param name="text">Text to create the live text string from</param>
 		/// <param name="appearance">Default appearance of the text</param>
 		/// <param name="formatted">True to interpret any formatting codes contained in <paramref name="text"/></param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.</remarks>
+		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
 		public LiveTextString (string text, TextAppearance appearance, bool formatted = true)
 		{
-			if(appearance == null)
-				throw new ArgumentNullException("appearance");
-
-			_appearance = appearance;
+			_appearance = appearance ?? TextAppearance.GetDefaultAppearance();
 			if(formatted)
 			{// Parse the string and store the segments
 				var segments = Parse(text, appearance);
@@ -53,13 +51,11 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="segments">Collection of segments</param>
 		/// <param name="appearance">Default appearance of the text</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
+		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.</remarks>
+		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
 		public LiveTextString (IEnumerable<ILiveTextSegment> segments, TextAppearance appearance)
 		{
-			if(appearance == null)
-				throw new ArgumentNullException("appearance");
-
-			_appearance = appearance;
+			_appearance = appearance ?? TextAppearance.GetDefaultAppearance();
 			if(segments != null)
 				foreach(var segment in segments)
 				{
@@ -92,12 +88,10 @@ namespace Frost.Graphics.Text
 		/// <param name="text">String to parse and extract segments from</param>
 		/// <param name="appearance">Default appearance of the text</param>
 		/// <returns>Collection of <see cref="ILiveTextSegment"/> extracted from <paramref name="text"/></returns>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		public static IEnumerable<ILiveTextSegment> Parse (string text, TextAppearance appearance)
+		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.</remarks>
+		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
+		public static IEnumerable<ILiveTextSegment> Parse (string text, TextAppearance appearance = null)
 		{
-			if(appearance == null)
-				throw new ArgumentNullException("appearance");
-
 			var parser = new LiveTextParser(text, appearance);
 			return parser.Parse(appearanceTranslator, null /* TODO: Create segment translator */);
 		}
