@@ -14,19 +14,6 @@ namespace Frost.Graphics.Text
 		private readonly TextAppearance _appearance;
 
 		/// <summary>
-		/// Creates an empty live text string
-		/// </summary>
-		/// <param name="appearance">Default appearance of the text</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="appearance"/> of the text can't be null.</exception>
-		public LiveTextString (TextAppearance appearance)
-		{
-			if(appearance == null)
-				throw new ArgumentNullException("appearance");
-
-			_appearance = appearance;
-		}
-
-		/// <summary>
 		/// Creates a live text string from some existing text
 		/// </summary>
 		/// <param name="text">Text to create the live text string from</param>
@@ -34,7 +21,7 @@ namespace Frost.Graphics.Text
 		/// <param name="formatted">True to interpret any formatting codes contained in <paramref name="text"/></param>
 		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.</remarks>
 		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
-		public LiveTextString (string text, TextAppearance appearance, bool formatted = true)
+		public LiveTextString (string text, TextAppearance appearance = null, bool formatted = true)
 		{
 			_appearance = appearance ?? TextAppearance.GetDefaultAppearance();
 			if(formatted)
@@ -179,8 +166,9 @@ namespace Frost.Graphics.Text
 		/// <returns>A live text string</returns>
 		public static implicit operator LiveTextString (string text)
 		{
-			var segments = Parse(text);
-			return new LiveTextString(segments);
+			var appearance = TextAppearance.GetDefaultAppearance();
+			var segments   = Parse(text, appearance);
+			return new LiveTextString(segments, appearance);
 		}
 		#endregion
 
