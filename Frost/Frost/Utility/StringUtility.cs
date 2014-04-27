@@ -9,9 +9,44 @@ namespace Frost.Utility
 	public static class StringUtility
 	{
 		/// <summary>
+		/// Counts the number of words in a string
+		/// </summary>
+		/// <param name="value">String to count words in</param>
+		/// <returns>Number of words in the string</returns>
+		/// <remarks>A word is considered to be some characters surrounded by whitespace (or the start/end of the string).
+		/// -1 will be returned if <paramref name="value"/> is null.</remarks>
+		public static int CountWords (this string value)
+		{
+			if(value == null)
+				return -1;
+
+			var start = -1;
+			var words = 0;
+			var whitespace = false;
+			for(var i = 0; i < value.Length; ++i)
+			{// Iterate over each character
+				var c = value[i];
+				if(Char.IsWhiteSpace(c))
+					whitespace = true;
+
+				else if(whitespace)
+				{// Transition from whitespace to non-whitespace, this is a word boundary
+					++words;
+					start = i;
+					whitespace = false;
+				}
+			}
+
+			if(start >= 0) // Add the last word, if there was one
+				++words;
+
+			return words;
+		}
+
+		/// <summary>
 		/// Counts the number of lines in a string
 		/// </summary>
-		/// <param name="value">String to count the lines in</param>
+		/// <param name="value">String to count lines in</param>
 		/// <returns>Number of lines in the string</returns>
 		/// <remarks>-1 is returned if <paramref name="value"/> is null.
 		/// 0 is returned if <paramref name="value"/> is an empty string.</remarks>
