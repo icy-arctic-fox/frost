@@ -11,6 +11,16 @@ namespace Frost.Graphics.Text
 		private static readonly Color DefaultColor = new Color(0, 0, 0);
 
 		/// <summary>
+		/// Constructs text appearance information using the default font and values
+		/// </summary>
+		/// <returns>Default text appearance</returns>
+		public static TextAppearance GetDefaultAppearance ()
+		{
+			var font = Font.GetDefaultFont();
+			return new TextAppearance(font);
+		}
+
+		/// <summary>
 		/// Height of each character in pixels
 		/// </summary>
 		public uint Size { get; set; }
