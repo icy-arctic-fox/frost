@@ -99,7 +99,30 @@ namespace Frost.Graphics.Text
 				throw new ArgumentNullException("appearance");
 
 			var parser = new LiveTextParser(text, appearance);
-			return parser.Parse(null /* TODO: Create appearance translator */, null /* TODO: Create segment translator */);
+			return parser.Parse(appearanceTranslator, null /* TODO: Create segment translator */);
+		}
+
+		private static TextAppearance appearanceTranslator (string type, string extra, TextAppearance before)
+		{
+			if(type == "b")
+			{
+				var after  = before.CloneTextAppearance();
+				after.Bold = true;
+				return after;
+			}
+			if(type == "i")
+			{
+				var after = before.CloneTextAppearance();
+				after.Italic = true;
+				return after;
+			}
+			if(type == "u")
+			{
+				var after = before.CloneTextAppearance();
+				after.Underlined = true;
+				return after;
+			}
+			return null;
 		}
 
 		#region Operators
