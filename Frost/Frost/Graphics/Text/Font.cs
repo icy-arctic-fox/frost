@@ -13,7 +13,7 @@ namespace Frost.Graphics.Text
 	{
 		private static readonly object _defaultLocker = new object();
 		private static Font _defaultFont;
-		private const string DefaultFontResourceName = "Resources/Sansation_Regular.ttf";
+		private const string DefaultFontResourceName = "Frost.Resources.Sansation_Regular.ttf";
 
 		/// <summary>
 		/// Retrieves the default font that is embedded in Frost
@@ -26,7 +26,9 @@ namespace Frost.Graphics.Text
 				if(_defaultFont == null)
 				{// Default font hasn't be loaded yet
 					var fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(DefaultFontResourceName);
-					_defaultFont   = LoadFromStream(fontStream);
+					if(fontStream == null)
+						throw new BadImageFormatException("Failed to load the embedded default font", DefaultFontResourceName);
+					_defaultFont = LoadFromStream(fontStream);
 				}
 				return _defaultFont;
 			}
