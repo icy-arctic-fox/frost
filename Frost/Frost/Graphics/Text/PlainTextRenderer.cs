@@ -188,7 +188,7 @@ namespace Frost.Graphics.Text
 		private static WordWrap<WrappedWord> performWordWrap (string text, int width, SFML.Graphics.Text t)
 		{
 			// Split the text into words
-			var unbrokenLines = text.SplitTextOnLinebreaks();
+			var unbrokenLines = text.SplitOnLinebreaks();
 			var lines = unbrokenLines.Select(SplitTextIntoWords);
 
 			// Perform word wrapping

@@ -49,7 +49,7 @@ namespace Frost.Utility
 		/// <param name="value">String to break apart</param>
 		/// <returns>Array of words</returns>
 		/// <remarks>null will be returned if <paramref name="value"/> is null.</remarks>
-		public static string[] SplitTextIntoWords (this string value)
+		public static string[] SplitIntoWords (this string value)
 		{
 			if(value == null)
 				return null;
@@ -136,7 +136,7 @@ namespace Frost.Utility
 		/// <param name="value">Text string to split</param>
 		/// <returns>Array of lines of text</returns>
 		/// <remarks>null will be returned if <paramref name="value"/> is null.</remarks>
-		public static string[] SplitTextOnLinebreaks (this string value)
+		public static string[] SplitOnLinebreaks (this string value)
 		{
 			return value == null ? null : value.Split(new[] { "\n", "\r\n" }, StringSplitOptions.None);
 		}
