@@ -56,12 +56,20 @@ namespace Frost.Graphics.Text
 				var stringSegment = segment as ILiveTextStringSegment;
 				if(stringSegment != null)
 				{// This is a segment that can have newlines
+					var count    = 1;
 					var segments = stringSegment.SplitOnLineBreaks();
 					foreach(var lineSegment in segments)
 					{// Add the first one to the current line and advance to the next line
-						curLine.Add(lineSegment);
-						lines.Add(curLine);
-						curLine = new List<ILiveTextSegment>();
+						var empty = lineSegment.Text.Length <= 0;
+						if(count > 1 || empty)
+						{// Advance to next line
+							lines.Add(curLine);
+							curLine = new List<ILiveTextSegment>();
+							if(!empty)
+								++count;
+						}
+						if(!empty)
+							curLine.Add(lineSegment);
 					}
 				}
 				else // Segment that probably can't have newlines
