@@ -37,7 +37,21 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public Color Color { get; set; }
 
-		// TODO: Bold, Underline, Italics flags
+		/// <summary>
+		/// Increase the weight of the font
+		/// </summary>
+		public bool Bold { get; set; }
+
+		/// <summary>
+		/// Apply a shearing effect to the font
+		/// </summary>
+		public bool Italic { get; set; }
+
+		/// <summary>
+		/// Place a line under the text
+		/// </summary>
+		public bool Underlined { get; set; }
+
 		// TODO: Outline Thickness, Outline Color
 		// TODO: Horizontal alignment
 
@@ -67,9 +81,12 @@ namespace Frost.Graphics.Text
 			if(copy == null)
 				throw new ArgumentNullException("copy");
 
-			_font = copy._font;
-			Size  = copy.Size;
-			Color = copy.Color;
+			_font      = copy._font;
+			Size       = copy.Size;
+			Color      = copy.Color;
+			Bold       = copy.Bold;
+			Italic     = copy.Italic;
+			Underlined = copy.Underlined;
 		}
 
 		/// <summary>
@@ -97,8 +114,16 @@ namespace Frost.Graphics.Text
 		internal void ApplyTo (SFML.Graphics.Text t)
 		{
 			t.CharacterSize = Size;
-			t.Font = _font.UnderlyingFont;
+			t.Font  = _font.UnderlyingFont;
 			t.Color = Color;
+
+			t.Style = SFML.Graphics.Text.Styles.Regular;
+			if(Bold)
+				t.Style |= SFML.Graphics.Text.Styles.Bold;
+			if(Italic)
+				t.Style |= SFML.Graphics.Text.Styles.Italic;
+			if(Underlined)
+				t.Style |= SFML.Graphics.Text.Styles.Underlined;
 		}
 	}
 }
