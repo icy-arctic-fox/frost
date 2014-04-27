@@ -16,8 +16,7 @@ namespace Frost
 	/// </summary>
 	public class GameRunner : IFullDisposable, IDebugOverlayLine
 	{
-		private const string DebugOverlayFontFile = "crystal.TTF";
-		private const uint DebugOverlayFontSize   = 12;
+		private const uint DebugOverlayFontSize = 12;
 
 		/// <summary>
 		/// Display that will be rendered upon
@@ -68,18 +67,10 @@ namespace Frost
 			if(display == null)
 				throw new ArgumentNullException("display");
 
-			// Try to load the debug overlay font
-			Graphics.Text.Font font;
-			try
-			{
-				font = Graphics.Text.Font.LoadFromFile(DebugOverlayFontFile);
-			}
-			catch(SFML.LoadingFailedException)
-			{// Font failed to load
-				// TODO: Report this failure
-				font = null;
-			}
+			// Load the debug overlay font
+			var font = Graphics.Text.Font.GetDebugFont(); // TODO: Catch exceptions
 
+			// Setup the display and scene manager
 			_display = display;
 			_scenes  = new Scene.Manager(initialScene, display);
 
