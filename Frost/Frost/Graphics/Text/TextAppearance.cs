@@ -7,7 +7,7 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class TextAppearance : ICloneable
 	{
-		private const uint DefaultSize = 10;
+		private const uint DefaultSize = 12;
 		private static readonly Color DefaultColor = new Color(0, 0, 0);
 
 		/// <summary>
