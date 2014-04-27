@@ -53,7 +53,7 @@ namespace Frost.Graphics.Text
 		/// <param name="appearance">Default appearance of the text</param>
 		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.</remarks>
 		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
-		public LiveTextString (IEnumerable<ILiveTextSegment> segments, TextAppearance appearance)
+		public LiveTextString (IEnumerable<ILiveTextSegment> segments, TextAppearance appearance = null)
 		{
 			_appearance = appearance ?? TextAppearance.GetDefaultAppearance();
 			if(segments != null)
@@ -170,6 +170,17 @@ namespace Frost.Graphics.Text
 			var liveText = new LiveTextString(text._segments, text._appearance);
 			liveText._segments.AddRange(other._segments);
 			return liveText;
+		}
+
+		/// <summary>
+		/// Parses and creates a live text string from text containing formatting codes
+		/// </summary>
+		/// <param name="text">Text to parse</param>
+		/// <returns>A live text string</returns>
+		public static implicit operator LiveTextString (string text)
+		{
+			var segments = Parse(text);
+			return new LiveTextString(segments);
 		}
 		#endregion
 
