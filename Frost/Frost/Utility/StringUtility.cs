@@ -18,27 +18,21 @@ namespace Frost.Utility
 		{
 			if(value == null)
 				return -1;
-			var trimmed = value.Trim();
 
-			var start = -1;
 			var words = 0;
-			var whitespace = false;
-			for(var i = 0; i < trimmed.Length; ++i)
+			var whitespace = true;
+			for(var i = 0; i < value.Length; ++i)
 			{// Iterate over each character
-				var c = trimmed[i];
+				var c = value[i];
 				if(Char.IsWhiteSpace(c))
 					whitespace = true;
 
 				else if(whitespace)
 				{// Transition from whitespace to non-whitespace, this is a word boundary
 					++words;
-					start = i;
 					whitespace = false;
 				}
 			}
-
-			if(start >= 0) // Add the last word, if there was one
-				++words;
 
 			return words;
 		}
