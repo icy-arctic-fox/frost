@@ -11,15 +11,18 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public sealed class Font : IFullDisposable
 	{
-		private static readonly object _defaultLocker = new object();
-		private static Font _defaultFont;
 		private const string DefaultFontResourceName = "Frost.Resources.Sansation_Regular.ttf";
+		private const string DebugFontResourceName   = "Frost.Resources.crystal.ttf";
+
+		private static readonly object _defaultLocker = new object();
+		private static Font _defaultFont, _debugFont;
 
 		/// <summary>
 		/// Retrieves the default font that is embedded in Frost
 		/// </summary>
 		/// <returns>Default font information</returns>
-		public static Font GetDefaultFont ()
+		/// <exception cref="BadImageFormatException">The font wasn't found embedded in the dll.</exception>
+		public static Font GetDefaultFont()
 		{
 			lock(_defaultLocker)
 			{
@@ -31,6 +34,27 @@ namespace Frost.Graphics.Text
 					_defaultFont = LoadFromStream(fontStream);
 				}
 				return _defaultFont;
+			}
+		}
+
+		/// <summary>
+		/// Retrieves the debug font that is embedded in Frost
+		/// </summary>
+		/// <returns>Debug font information</returns>
+		/// <remarks>The debug font is a bitmap-based.</remarks>
+		/// <exception cref="BadImageFormatException">The font wasn't found embedded in the dll.</exception>
+		public static Font GetDebugFont ()
+		{
+			lock(_defaultLocker)
+			{
+				if(_debugFont == null)
+				{// Debug font hasn't be loaded yet
+					var fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(DebugFontResourceName);
+					if(fontStream == null)
+						throw new BadImageFormatException("Failed to load the embedded debug font", DebugFontResourceName);
+					_debugFont = LoadFromStream(fontStream);
+				}
+				return _debugFont;
 			}
 		}
 
@@ -102,13 +126,13 @@ namespace Frost.Graphics.Text
 		/// <summary>
 		/// Disposes of the font and the resources it holds
 		/// </summary>
-		/// <exception cref="InvalidOperationException">The default fonts can't be disposed of manually.</exception>
+		/// <exception cref="InvalidOperationException">The embedded fonts can't be disposed of manually.</exception>
 		/// <seealso cref="GetDefaultFont"/>
 		public void Dispose ()
 		{
 			lock(_defaultLocker)
-				if(ReferenceEquals(_defaultFont, this))
-					throw new InvalidOperationException("The default fonts can't be disposed of manually.");
+				if(ReferenceEquals(this, _defaultFont) || ReferenceEquals(this, _debugFont))
+					throw new InvalidOperationException("The embedded fonts can't be disposed of manually.");
 
 			dispose(true);
 			GC.SuppressFinalize(this);
