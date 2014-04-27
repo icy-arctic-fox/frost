@@ -128,6 +128,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <exception cref="InvalidOperationException">The embedded fonts can't be disposed of manually.</exception>
 		/// <seealso cref="GetDefaultFont"/>
+		/// <seealso cref="GetDebugFont"/>
 		public void Dispose ()
 		{
 			lock(_defaultLocker)
