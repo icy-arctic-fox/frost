@@ -139,11 +139,6 @@ namespace Frost.Graphics.Text
 			var text = getFixedText();
 			var appearance = Appearance.CloneTextAppearance();
 
-			// Clear the back color to a transparent font color.
-			// This fixes font smoothing issues blending to black.
-			var backColor = new Color(appearance.Color, 0);
-			target.Clear(backColor);
-
 			// Draw it
 			if(WordWrap)
 				drawWrappedText(target, text, WrapWidth, appearance);
@@ -163,7 +158,9 @@ namespace Frost.Graphics.Text
 			{
 				t.DisplayedString = text;
 				appearance.ApplyTo(t);
-				target.Draw(t);
+				var rs = RenderStates.Default;
+				rs.BlendMode = BlendMode.None;
+				target.Draw(t, rs);
 			}
 		}
 
@@ -187,9 +184,10 @@ namespace Frost.Graphics.Text
 					foreach(var word in line)
 					{
 						t.DisplayedString = word.Value.WordString;
-						var states = RenderStates.Default;
-						states.Transform.Translate(word.Bounds.Left, word.Bounds.Top);
-						target.Draw(t, states);
+						var rs = RenderStates.Default;
+						rs.BlendMode = BlendMode.None;
+						rs.Transform.Translate(word.Bounds.Left, word.Bounds.Top);
+						target.Draw(t, rs);
 					}
 			}
 		}
