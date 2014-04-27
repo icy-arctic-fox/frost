@@ -44,6 +44,52 @@ namespace Frost.Utility
 		}
 
 		/// <summary>
+		/// Breaks a string apart by words
+		/// </summary>
+		/// <param name="value">String to break apart</param>
+		/// <returns>Array of words</returns>
+		/// <remarks>null will be returned if <paramref name="value"/> is null.</remarks>
+		public static string[] SplitTextIntoWords (this string value)
+		{
+			if(value == null)
+				return null;
+
+			var count = CountWords(value);
+			var words = new string[count];
+
+			var start = 0;
+			var whitespace = true;
+			for(int i = 0, j = 0; i < value.Length; ++i)
+			{
+				var c = value[i];
+				if(Char.IsWhiteSpace(c))
+				{
+					if(!whitespace)
+					{// Start of whitespace
+						var word   = value.Substring(start, i - start);
+						words[j++] = word;
+						whitespace = true;
+					}
+				}
+
+				else if(whitespace)
+				{ // Transition from whitespace to non-whitespace, this is the start of a word
+					start = i;
+					whitespace = false;
+				}
+			}
+
+			if(!whitespace)
+			{// There's characters left at the end of the string
+				var word = value.Substring(start);
+				var j    = count - 1;
+				words[j] = word;
+			}
+
+			return words;
+		}
+
+		/// <summary>
 		/// Counts the number of lines in a string
 		/// </summary>
 		/// <param name="value">String to count lines in</param>
