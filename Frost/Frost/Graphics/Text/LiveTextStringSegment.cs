@@ -140,10 +140,9 @@ namespace Frost.Graphics.Text
 				float width, height;
 				calculateFullBounds(t, out width, out height);
 
-				// TODO: Add background/edge fix (sharper text)
-
 				// Calculate the transform
 				var rs = RenderStates.Default;
+				rs.BlendMode = BlendMode.None;
 				rs.Transform.Translate(position);
 
 				// Draw the text
