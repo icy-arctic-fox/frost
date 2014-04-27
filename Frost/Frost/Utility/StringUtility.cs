@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Frost.Utility
 {
@@ -73,7 +72,7 @@ namespace Frost.Utility
 				}
 
 				else if(whitespace)
-				{ // Transition from whitespace to non-whitespace, this is the start of a word
+				{// Transition from whitespace to non-whitespace, this is the start of a word
 					start = i;
 					whitespace = false;
 				}
