@@ -38,8 +38,55 @@ namespace Frost.Graphics.Text
 		/// <seealso cref="GetDefaultRuleset"/>
 		public void ApplyDefaultRules ()
 		{
-			throw new NotImplementedException();
+			lock(_appearanceModifiers)
+			{
+				AddAppearanceModifierRule("b", applyBoldTextAppearance);
+				AddAppearanceModifierRule("i", applyItalicTextAppearance);
+				AddAppearanceModifierRule("u", applyUnderlinedTextAppearance);
+			}
 		}
+
+		#region Formatting rules
+
+		/// <summary>
+		/// Applies bold text appearance
+		/// </summary>
+		/// <param name="before">Appearance of the text before being modified</param>
+		/// <param name="extra">Additional information for formatting (unused)</param>
+		/// <returns>Appearance of the text after being modified</returns>
+		private static TextAppearance applyBoldTextAppearance (TextAppearance before, string extra)
+		{
+			var after = before.CloneTextAppearance();
+			after.Bold = true;
+			return after;
+		}
+
+		/// <summary>
+		/// Applies italic text appearance
+		/// </summary>
+		/// <param name="before">Appearance of the text before being modified</param>
+		/// <param name="extra">Additional information for formatting (unused)</param>
+		/// <returns>Appearance of the text after being modified</returns>
+		private static TextAppearance applyItalicTextAppearance (TextAppearance before, string extra)
+		{
+			var after = before.CloneTextAppearance();
+			after.Italic = true;
+			return after;
+		}
+
+		/// <summary>
+		/// Applies underlined text appearance
+		/// </summary>
+		/// <param name="before">Appearance of the text before being modified</param>
+		/// <param name="extra">Additional information for formatting (unused)</param>
+		/// <returns>Appearance of the text after being modified</returns>
+		private static TextAppearance applyUnderlinedTextAppearance (TextAppearance before, string extra)
+		{
+			var after = before.CloneTextAppearance();
+			after.Underlined = true;
+			return after;
+		}
+		#endregion
 		#endregion
 
 		#region Appearance modifiers
