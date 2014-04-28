@@ -20,8 +20,10 @@ namespace Test_Game
 		/// </summary>
 		public TextScene ()
 		{
-			const string text = "\\b{Hello!}\nThis is a \\i{test} of the text rendering system.";
-			using(var renderer = new LiveTextRenderer(text))
+			const string text = "\\b{Hello!}\nThis is a \\i{test} of the \\u{text rendering system.}";
+			var appearance    = new TextAppearance(Font.GetDefaultFont(), 20);
+			var liveText      = new LiveTextString(text, appearance);
+			using(var renderer = new LiveTextRenderer(liveText))
 			{
 				renderer.MultiLine = true;
 				renderer.WordWrap  = true;
