@@ -26,15 +26,18 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="text">Text to create the live text string from</param>
 		/// <param name="appearance">Default appearance of the text</param>
+		/// <param name="ruleset">Rules used to translate formatting codes</param>
 		/// <param name="formatted">True to interpret any formatting codes contained in <paramref name="text"/></param>
-		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.</remarks>
+		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.
+		/// If <paramref name="ruleset"/> is null, then the default formatting ruleset will be used.</remarks>
 		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
-		public LiveTextString (string text, TextAppearance appearance = null, bool formatted = true)
+		/// <seealso cref="LiveTextFormattingRuleset.GetDefaultRuleset"/>
+		public LiveTextString (string text, TextAppearance appearance = null, LiveTextFormattingRuleset ruleset = null, bool formatted = true)
 		{
 			_appearance = appearance ?? TextAppearance.GetDefaultAppearance();
 			if(formatted)
 			{// Parse the string and store the segments
-				var segments = Parse(text, appearance);
+				var segments = Parse(text, appearance, ruleset);
 				_segments.AddRange(segments);
 			}
 			else if(!String.IsNullOrEmpty(text)) // No formatting and not blank
@@ -82,36 +85,18 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="text">String to parse and extract segments from</param>
 		/// <param name="appearance">Default appearance of the text</param>
+		/// <param name="ruleset">Rules used to translate formatting codes</param>
 		/// <returns>Collection of <see cref="ILiveTextSegment"/> extracted from <paramref name="text"/></returns>
-		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.</remarks>
+		/// <remarks>If <paramref name="appearance"/> is null, then the default text appearance will be used.
+		/// If <paramref name="ruleset"/> is null, then the default formatting ruleset will be used.</remarks>
 		/// <seealso cref="TextAppearance.GetDefaultAppearance"/>
-		public static IEnumerable<ILiveTextSegment> Parse (string text, TextAppearance appearance = null)
+		/// <seealso cref="LiveTextFormattingRuleset.GetDefaultRuleset"/>
+		public static IEnumerable<ILiveTextSegment> Parse (string text, TextAppearance appearance = null, LiveTextFormattingRuleset ruleset = null)
 		{
 			var parser = new LiveTextParser(text, appearance ?? TextAppearance.GetDefaultAppearance());
-			return parser.Parse(appearanceTranslator, null /* TODO: Create segment translator */);
-		}
-
-		private static TextAppearance appearanceTranslator (string type, string extra, TextAppearance before)
-		{
-			if(type == "b")
-			{
-				var after  = before.CloneTextAppearance();
-				after.Bold = true;
-				return after;
-			}
-			if(type == "i")
-			{
-				var after = before.CloneTextAppearance();
-				after.Italic = true;
-				return after;
-			}
-			if(type == "u")
-			{
-				var after = before.CloneTextAppearance();
-				after.Underlined = true;
-				return after;
-			}
-			return null;
+			if(ruleset == null) // Use the default ruleset
+				ruleset = LiveTextFormattingRuleset.GetDefaultRuleset();
+			return parser.Parse(ruleset.TranslateFormattingCode, ruleset.TranslateSegmentCode);
 		}
 
 		#region Operators
