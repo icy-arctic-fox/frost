@@ -77,6 +77,7 @@
     <Compile Include="Graphics\Text\ILiveTextStringSegment.cs" />
     <Compile Include="Graphics\Text\ITextSize.cs" />
     <Compile Include="Graphics\Text\LiveTextEndFormatToken.cs" />
+    <Compile Include="Graphics\Text\LiveTextFormattingRuleset.cs" />
     <Compile Include="Graphics\Text\LiveTextLexer.cs" />
     <Compile Include="Graphics\Text\LiveTextParser.cs" />
     <Compile Include="Graphics\Text\LiveTextSegmentToken.cs" />
