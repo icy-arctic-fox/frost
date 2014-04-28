@@ -7,6 +7,7 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class LiveTextFormattingRuleset
 	{
+		#region Default ruleset
 		private static readonly object _defaultLocker = new object();
 		private static LiveTextFormattingRuleset _defaultRuleset;
 
@@ -38,6 +39,7 @@ namespace Frost.Graphics.Text
 		{
 			throw new NotImplementedException();
 		}
+		#endregion
 
 		/// <summary>
 		/// Applies changes to text appearance given formatting code information

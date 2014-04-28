@@ -7,6 +7,7 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class TextAppearance : ICloneable
 	{
+		#region Default appearance
 		private const uint DefaultSize = 12;
 		private static readonly Color DefaultColor = new Color(0, 0, 0);
 
@@ -19,6 +20,7 @@ namespace Frost.Graphics.Text
 			var font = Font.GetDefaultFont();
 			return new TextAppearance(font);
 		}
+		#endregion
 
 		/// <summary>
 		/// Height of each character in pixels

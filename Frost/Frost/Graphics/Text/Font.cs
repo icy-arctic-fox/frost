@@ -11,6 +11,7 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public sealed class Font : IFullDisposable
 	{
+		#region Default font
 		private const string DefaultFontResourceName = "Frost.Resources.Sansation_Regular.ttf";
 		private const string DebugFontResourceName   = "Frost.Resources.crystal.ttf";
 
@@ -57,6 +58,7 @@ namespace Frost.Graphics.Text
 				return _debugFont;
 			}
 		}
+		#endregion
 
 		private readonly F _font;
 
