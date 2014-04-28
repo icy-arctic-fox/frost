@@ -64,7 +64,14 @@ namespace Frost.Graphics.Text
 		/// <exception cref="ArgumentNullException">The <paramref name="formatName"/> and <paramref name="modifier"/> can't be null.</exception>
 		public void AddAppearanceModifierRule (string formatName, TextAppearanceModifier modifier)
 		{
-			throw new NotImplementedException();
+			if(formatName == null)
+				throw new ArgumentNullException("formatName");
+			if(modifier == null)
+				throw new ArgumentNullException("modifier");
+
+			var key = formatName.ToLowerInvariant();
+			lock(_appearanceModifiers)
+				_appearanceModifiers[key] = modifier;
 		}
 
 		/// <summary>
