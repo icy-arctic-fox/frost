@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Frost.Graphics.Text
 {
@@ -45,6 +47,7 @@ namespace Frost.Graphics.Text
 				AddAppearanceModifierRule("u", applyUnderlinedTextAppearance);
 				AddAppearanceModifierRule("+", applyIncreaseSizeTextAppearance);
 				AddAppearanceModifierRule("-", applyDecreaseSizeTextAppearance);
+				AddAppearanceModifierRule("c", applyColorTextAppearance);
 			}
 		}
 
@@ -121,6 +124,61 @@ namespace Frost.Graphics.Text
 				amount = TextSizeChangeAmount;
 			after.Size -= amount;
 			return after;
+		}
+
+		/// <summary>
+		/// Applies a color change to the text appearance
+		/// </summary>
+		/// <param name="before">Appearance of the text before being modified</param>
+		/// <param name="extra">Color information (hex, triplet of color channels, or color name)</param>
+		/// <returns>Appearance of the text after being modified</returns>
+		private static TextAppearance applyColorTextAppearance (TextAppearance before, string extra)
+		{
+			var after = before.CloneTextAppearance();
+			after.Color = parseColorString(extra);
+			return after;
+		}
+
+		private static readonly Regex TripletRegex = new Regex(@"\(?(\d+)(,|\s+|,\s+)(\d+)(,|\s+|,\s+)(\d+)((,|\s+|,\s+)(\d+))?\)?",
+																RegexOptions.Compiled);
+
+		private static Color parseColorString (string value)
+		{
+			if(value != null)
+			{
+				// Try matching something like:
+				// (255, 255, 255)
+				var match = TripletRegex.Match(value);
+				if(match.Success)
+				{
+					var redString   = match.Groups[1].Value;
+					var greenString = match.Groups[3].Value;
+					var blueString  = match.Groups[5].Value;
+					var alphaString = match.Groups[8].Value;
+					byte red, green, blue, alpha;
+					if(!Byte.TryParse(redString, out red))
+						red = Byte.MaxValue;
+					if(!Byte.TryParse(greenString, out green))
+						green = Byte.MaxValue;
+					if(!Byte.TryParse(blueString, out blue))
+						blue = Byte.MaxValue;
+					if(!Byte.TryParse(alphaString, out alpha))
+						alpha = Byte.MaxValue;
+					return new Color(red, green, blue, alpha);
+				}
+
+				// Try matching something like:
+				// 0xff00ff
+				int hexValue;
+				var hexString = value.StartsWith("0x") ? value.Substring(2) : value;
+				if(Int32.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out hexValue))
+					return new Color(hexValue);
+
+				// Last resort is a color name
+				return new Color(value);
+			}
+
+			return new Color(0x000000); // Black by default
 		}
 		#endregion
 		#endregion
