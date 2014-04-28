@@ -43,6 +43,8 @@ namespace Frost.Graphics.Text
 				AddAppearanceModifierRule("b", applyBoldTextAppearance);
 				AddAppearanceModifierRule("i", applyItalicTextAppearance);
 				AddAppearanceModifierRule("u", applyUnderlinedTextAppearance);
+				AddAppearanceModifierRule("+", applyIncreaseSizeTextAppearance);
+				AddAppearanceModifierRule("-", applyDecreaseSizeTextAppearance);
 			}
 		}
 
@@ -84,6 +86,40 @@ namespace Frost.Graphics.Text
 		{
 			var after = before.CloneTextAppearance();
 			after.Underlined = true;
+			return after;
+		}
+
+		private const int TextSizeChangeAmount = 2;
+
+		/// <summary>
+		/// Applies size increase to the text appearance
+		/// </summary>
+		/// <param name="before">Appearance of the text before being modified</param>
+		/// <param name="extra">Amount to increase the size by</param>
+		/// <returns>Appearance of the text after being modified</returns>
+		private static TextAppearance applyIncreaseSizeTextAppearance (TextAppearance before, string extra)
+		{
+			var after = before.CloneTextAppearance();
+			uint amount;
+			if(!UInt32.TryParse(extra, out amount))
+				amount = TextSizeChangeAmount;
+			after.Size += amount;
+			return after;
+		}
+
+		/// <summary>
+		/// Applies size decrease to the text appearance
+		/// </summary>
+		/// <param name="before">Appearance of the text before being modified</param>
+		/// <param name="extra">Amount to decrease the size by</param>
+		/// <returns>Appearance of the text after being modified</returns>
+		private static TextAppearance applyDecreaseSizeTextAppearance (TextAppearance before, string extra)
+		{
+			var after = before.CloneTextAppearance();
+			uint amount;
+			if(!UInt32.TryParse(extra, out amount))
+				amount = TextSizeChangeAmount;
+			after.Size -= amount;
 			return after;
 		}
 		#endregion
