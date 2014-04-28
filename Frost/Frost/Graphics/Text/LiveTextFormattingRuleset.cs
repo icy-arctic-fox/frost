@@ -45,8 +45,9 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <param name="name">Name of the formatter</param>
 		/// <param name="info">Additional information</param>
+		/// <param name="appearance">Current text appearance</param>
 		/// <returns>Newly created segment</returns>
-		internal ILiveTextSegment TranslateSegmentCode (string name, string info)
+		internal ILiveTextSegment TranslateSegmentCode (string name, string info, TextAppearance appearance)
 		{
 			throw new NotImplementedException();
 		}
