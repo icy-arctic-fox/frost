@@ -113,7 +113,14 @@ namespace Frost.Graphics.Text
 		/// <exception cref="ArgumentNullException">The <paramref name="formatName"/> and <paramref name="translator"/> can't be null.</exception>
 		public void AddSegmentCodeRule (string formatName, SegmentCodeTranslator translator)
 		{
-			throw new NotImplementedException();
+			if(formatName == null)
+				throw new ArgumentNullException("formatName");
+			if(translator == null)
+				throw new ArgumentNullException("translator");
+
+			var key = formatName.ToLowerInvariant();
+			lock(_segmentTranslators)
+				_segmentTranslators[key] = translator;
 		}
 
 		/// <summary>
