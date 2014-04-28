@@ -81,11 +81,20 @@ namespace Frost.Graphics.Text
 		/// <param name="segment">Segment to append to the text block</param>
 		public void Append (T segment)
 		{
-			int width, height;
-			segment.GetTrimmedSize(out width, out height);
+			// Use the trimmed size for determining whether an overflow needs to occur
+			int trimmedWidth, trimmedHeight;
+			segment.GetTrimmedSize(out trimmedWidth, out trimmedHeight);
 
-			if(_curWidth > 0 && _curWidth + width > _targetWidth)
-				NextLine(); // Move to the next line, out of space on the current one
+			// But use the real size when positioning the segment
+			int width, height;
+			segment.GetSize(out width, out height);
+
+			if(_curWidth > 0 && _curWidth + trimmedWidth > _targetWidth)
+			{// Move to the next line, out of space on the current one
+				NextLine();
+				_curHeight      = height;
+				_bounds.Height += height;
+			}
 
 			else
 			{// Stay on the same line, there's enough space for the word
@@ -107,9 +116,6 @@ namespace Frost.Graphics.Text
 					}
 				}
 			}
-
-			// Update width and height to include trailing whitespace
-			segment.GetSize(out width, out height);
 
 			// Calculate the position of the word
 			var x = _curWidth;
