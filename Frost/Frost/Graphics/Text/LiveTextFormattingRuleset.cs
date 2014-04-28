@@ -7,6 +7,9 @@ namespace Frost.Graphics.Text
 	/// </summary>
 	public class LiveTextFormattingRuleset
 	{
+		private static readonly object _defaultLocker = new object();
+		private static LiveTextFormattingRuleset _defaultRuleset;
+
 		/// <summary>
 		/// Retrieves the default live text formatting ruleset
 		/// </summary>
@@ -15,7 +18,15 @@ namespace Frost.Graphics.Text
 		/// <seealso cref="ApplyDefaultRules"/>
 		public static LiveTextFormattingRuleset GetDefaultRuleset ()
 		{
-			throw new NotImplementedException();
+			lock(_defaultLocker)
+			{
+				if(_defaultRuleset == null)
+				{// Default ruleset doesn't exist, create it
+					_defaultRuleset = new LiveTextFormattingRuleset();
+					_defaultRuleset.ApplyDefaultRules();
+				}
+				return _defaultRuleset;
+			}
 		}
 
 		/// <summary>
