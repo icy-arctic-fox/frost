@@ -118,7 +118,12 @@ namespace Frost.Graphics.Text
 		/// <returns>Newly created segment</returns>
 		internal ILiveTextSegment TranslateSegmentCode (string name, string info, TextAppearance appearance)
 		{
-			throw new NotImplementedException();
+			var key = name.ToLowerInvariant();
+			SegmentCodeTranslator translator;
+			lock(_segmentTranslators)
+				if(!_segmentTranslators.TryGetValue(key, out translator))
+					return null;
+			return translator(appearance, info);
 		}
 		#endregion
 	}
