@@ -76,7 +76,12 @@ namespace Frost.Graphics.Text
 		/// <returns>Appearance of the text after the change</returns>
 		internal TextAppearance TranslateFormattingCode (string formatName, string extra, TextAppearance before)
 		{
-			throw new NotImplementedException();
+			var key = formatName.ToLowerInvariant();
+			TextAppearanceModifier modifier;
+			lock(_appearanceModifiers)
+				if(!_appearanceModifiers.TryGetValue(key, out modifier))
+					return null;
+			return modifier(before, extra);
 		}
 		#endregion
 
