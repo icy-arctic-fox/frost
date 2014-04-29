@@ -51,15 +51,6 @@
     <Compile Include="Display\Window.cs" />
     <Compile Include="Display\IDisplay.cs" />
     <Compile Include="Display\WindowClosingEventArgs.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\EntityComponentMap.cs" />
-    <Compile Include="Entities\EntityComponentState.cs" />
-    <Compile Include="Entities\Entity.Manager.cs" />
-    <Compile Include="Entities\EntityComponent.cs" />
-    <Compile Include="Entities\Graphics2DEntityProcessor.cs" />
-    <Compile Include="Entities\IEntityRenderer.cs" />
-    <Compile Include="Entities\Position2DEntityComponent.cs" />
-    <Compile Include="Entities\TexturedEntityComponent.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameConfiguration.cs" />
     <Compile Include="GameRunner.cs" />
@@ -163,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\crystal.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

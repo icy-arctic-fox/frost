@@ -1,5 +1,4 @@
 ﻿using Frost.Display;
-using Frost.Entities;
 using Frost.Graphics;
 
 namespace Frost.Logic
@@ -19,16 +18,6 @@ namespace Frost.Logic
 		/// </summary>
 		/// <remarks>This property is used instead of reflection because it is be faster.</remarks>
 		public abstract string Name { get; }
-
-		private readonly Entity.Manager _entityManager = new Entity.Manager();
-
-		/// <summary>
-		/// Provides access to the entities in the scene
-		/// </summary>
-		public Entity.Manager Entities
-		{
-			get { return _entityManager; }
-		}
 
 		/// <summary>
 		/// Updates the state of the scene by a single step

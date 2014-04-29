@@ -50,8 +50,7 @@ namespace Frost.UI
 			var curScene  = scenes.CurrentScene;
 			var sceneName = curScene.Name;
 			var manager   = scenes.StateManager;
-			var entities  = curScene.Entities;
-			return String.Format("Scene: {0} - {1} {2}", sceneName, manager, entities);
+			return String.Format("Scene: {0} - {1}", sceneName, manager);
 		}
 	}
 }
