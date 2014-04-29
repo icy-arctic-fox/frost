@@ -10,6 +10,8 @@ namespace Frost.Entities
 	/// </summary>
 	public class EntityManager
 	{
+		#region Registration
+
 		private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
 
 		/// <summary>
@@ -31,6 +33,11 @@ namespace Frost.Entities
 		{
 			throw new NotImplementedException();
 		}
+		#endregion
+
+		#region Components
+
+		private readonly List<object> _componentMaps = new List<object>();
 
 		/// <summary>
 		/// Retrieves a collection of entities that have a component
@@ -41,5 +48,16 @@ namespace Frost.Entities
 		{
 			throw new NotImplementedException();
 		}
+
+		/// <summary>
+		/// Retrieves an object that will be able to pull a component from the entities tracked by the manager
+		/// </summary>
+		/// <typeparam name="T">Type of entity components to map</typeparam>
+		/// <returns>A mapping object</returns>
+		public EntityComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 	}
 }
