@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Frost.Entities
 	/// <summary>
 	/// Manages a collection of entities and their components
 	/// </summary>
-	public class EntityManager
+	public class EntityManager : IEnumerable<Entity>
 	{
 		#region Registration
 
@@ -59,5 +60,36 @@ namespace Frost.Entities
 			throw new NotImplementedException();
 		}
 		#endregion
+
+		/// <summary>
+		/// Number of registered entities
+		/// </summary>
+		public int Count
+		{
+			get
+			{
+				lock(_registeredEntities)
+					return _registeredEntities.Count;
+			}
+		}
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the entities
+		/// </summary>
+		/// <returns>An enumerator that can be used to iterate through the registered entities</returns>
+		public IEnumerator<Entity> GetEnumerator ()
+		{
+			lock(_registeredEntities)
+				return _registeredEntities.Values.GetEnumerator();
+		}
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the entities
+		/// </summary>
+		/// <returns>An enumerator object that can be used to iterate through the registered entities</returns>
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return GetEnumerator();
+		}
 	}
 }
