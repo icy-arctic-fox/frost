@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Frost.Logic
+namespace Frost
 {
 	/// <summary>
 	/// Tracks the states to be updated and rendered

@@ -88,8 +88,8 @@
     <Compile Include="ResourceLoader.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Logic\Scene.cs" />
-    <Compile Include="Logic\Scene.Manager.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="Scene.Manager.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\InputModule.cs" />
     <Compile Include="Modules\Input\BasicController.cs" />
@@ -111,9 +111,9 @@
     <Compile Include="Graphics\IRenderable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Logic\IStepable.cs" />
-    <Compile Include="Logic\StateManager.cs" />
-    <Compile Include="Logic\StateSet.cs" />
+    <Compile Include="IStepable.cs" />
+    <Compile Include="StateManager.cs" />
+    <Compile Include="StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Text\Font.cs" />
     <Compile Include="UI\MemoryDebugOverlayLine.cs" />

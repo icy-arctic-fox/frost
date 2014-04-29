@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using Frost.Display;
-using Frost.Logic;
 using Frost.Modules;
 using Frost.UI;
 using Frost.Utility;

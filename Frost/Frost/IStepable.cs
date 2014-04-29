@@ -1,4 +1,4 @@
-﻿namespace Frost.Logic
+﻿namespace Frost
 {
 	/// <summary>
 	/// An object that can update the state of a component step by step

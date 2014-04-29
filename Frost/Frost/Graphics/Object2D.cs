@@ -1,5 +1,4 @@
 ﻿using Frost.Display;
-using Frost.Logic;
 using SFML.Graphics;
 
 namespace Frost.Graphics

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Frost.Display;
 using Frost.Graphics;
 
-namespace Frost.Logic
+namespace Frost
 {
 	public abstract partial class Scene
 	{

@@ -1,8 +1,8 @@
 ﻿using System;
+using Frost;
 using Frost.Display;
 using Frost.Graphics;
 using Frost.Graphics.Text;
-using Frost.Logic;
 
 namespace Test_Game
 {

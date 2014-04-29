@@ -1,7 +1,7 @@
 ﻿using Frost.Display;
 using Frost.Graphics;
 
-namespace Frost.Logic
+namespace Frost
 {
 	/// <summary>
 	/// Logically separate section of the game
