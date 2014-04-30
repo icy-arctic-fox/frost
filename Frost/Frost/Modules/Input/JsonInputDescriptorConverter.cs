@@ -16,11 +16,7 @@ namespace Frost.Modules.Input
 		/// <returns>True if <paramref name="objectType"/> is the type <see cref="InputDescriptor"/></returns>
 		public override bool CanConvert (Type objectType)
 		{
-#if MONO
-			return objectType.GUID == typeof(InputDescriptor).GUID;
-#else
-			return objectType == typeof(InputDescriptor);
-#endif
+			return Utility.Portability.CompareTypes(objectType, typeof(InputDescriptor));
 		}
 
 		private const string KeyboardType = "Keyboard";
