@@ -119,6 +119,7 @@
     <Compile Include="StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphics\Text\Font.cs" />
+    <Compile Include="Subsystems\ISubsystem.cs" />
     <Compile Include="UI\MemoryDebugOverlayLine.cs" />
     <Compile Include="UI\DebugOverlay.cs" />
     <Compile Include="UI\SceneDebugOverlayLine.cs" />
