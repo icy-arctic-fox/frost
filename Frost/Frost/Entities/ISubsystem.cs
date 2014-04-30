@@ -1,6 +1,4 @@
-﻿using Frost.Entities;
-
-namespace Frost.Subsystems
+﻿namespace Frost.Entities
 {
 	/// <summary>
 	/// Processes multiple entities by using their components
