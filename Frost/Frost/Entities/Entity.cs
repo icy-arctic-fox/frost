@@ -66,6 +66,16 @@ namespace Frost.Entities
 		{
 			throw new NotImplementedException();
 		}
+
+		/// <summary>
+		/// Checks if the entity has a component
+		/// </summary>
+		/// <param name="componentType">Type of component to look for</param>
+		/// <returns>True if the entity has the component or false if it doesn't</returns>
+		internal bool HasComponent (Type componentType)
+		{
+			throw new NotImplementedException();
+		}
 		#endregion
 
 		#region Disposable
