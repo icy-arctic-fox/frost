@@ -8,19 +8,19 @@ namespace Frost.UI
 	/// </summary>
 	public class SceneDebugOverlayLine : IDebugOverlayLine
 	{
-		private readonly Scene.Manager _scenes;
+		private readonly SceneManager _manager;
 
 		/// <summary>
 		/// Creates a new scene debug overlay line
 		/// </summary>
-		/// <param name="runner">Game runner to get the <see cref="Scene.Manager"/> from</param>
+		/// <param name="runner">Game runner to get the <see cref="SceneManager"/> from</param>
 		/// <exception cref="ArgumentNullException">The game <paramref name="runner"/> can't be null.</exception>
 		public SceneDebugOverlayLine (GameRunner runner)
 		{
 			if(runner == null)
 				throw new ArgumentNullException("runner");
 
-			_scenes = runner.Scenes;
+			_manager = runner.Scenes;
 			runner.Disposing += _runner_Disposing;
 		}
 
@@ -45,7 +45,7 @@ namespace Frost.UI
 		/// <returns>Scene information</returns>
 		public override string ToString ()
 		{
-			var scenes    = _scenes;
+			var scenes    = _manager;
 			var curScene  = scenes.CurrentScene;
 			var sceneName = curScene.Name;
 			var manager   = scenes.StateManager;

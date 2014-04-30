@@ -6,12 +6,26 @@ namespace Frost
 	/// <summary>
 	/// Logically separate section of the game
 	/// </summary>
-	public abstract partial class Scene : IStepable, IRenderable
+	public abstract class Scene : IStepable, IRenderable
 	{
+		private SceneManager _manager;
+
 		/// <summary>
 		/// Manager that owns the scene
 		/// </summary>
-		protected Manager ParentManager { get; private set; }
+		protected SceneManager ParentManager
+		{
+			get { return _manager; }
+		}
+
+		/// <summary>
+		/// Sets the scene manager that is the scene's parent
+		/// </summary>
+		/// <param name="manager">Parent scene manager</param>
+		internal void SetParentManager (SceneManager manager)
+		{
+			_manager = manager;
+		}
 
 		/// <summary>
 		/// Visible name of the scene

@@ -25,12 +25,12 @@ namespace Frost
 		/// <summary>
 		/// Tracks the active scene
 		/// </summary>
-		private readonly Scene.Manager _scenes;
+		private readonly SceneManager _scenes;
 
 		/// <summary>
 		/// Game scenes being ran
 		/// </summary>
-		public Scene.Manager Scenes
+		public SceneManager Scenes
 		{
 			get { return _scenes; }
 		}
@@ -71,7 +71,7 @@ namespace Frost
 
 			// Setup the display and scene manager
 			_display = display;
-			_scenes  = new Scene.Manager(initialScene, display);
+			_scenes  = new SceneManager(initialScene, display);
 
 			if(font != null)
 			{// Set up the debug overlay
