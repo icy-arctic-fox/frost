@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Frost.Utility;
 
 namespace Frost.Entities
 {
 	/// <summary>
 	/// Base game object that consists of a unique ID and component information
 	/// </summary>
-	public class Entity
+	public class Entity : IFullDisposable
 	{
 		#region ID
 
@@ -65,6 +66,53 @@ namespace Frost.Entities
 		{
 			throw new NotImplementedException();
 		}
+		#endregion
+
+		#region Disposable
+
+		private volatile bool _disposed;
+
+		/// <summary>
+		/// Indicates whether the entity has been disposed
+		/// </summary>
+		public bool Disposed
+		{
+			get { return _disposed; }
+		}
+
+		/// <summary>
+		/// Releases resources held by the entity
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Deconstructs the entity
+		/// </summary>
+		~Entity ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Releases resources held by the entity
+		/// </summary>
+		/// <param name="disposing">Indicates whether inner-resources should be freed</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(_disposed)
+				return; // Already disposed
+
+			Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+			_disposed = true;
+		}
+
+		/// <summary>
+		/// Triggered just before the entity is disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
 		#endregion
 	}
 }
