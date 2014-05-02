@@ -93,6 +93,7 @@
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="SceneEventArgs.cs" />
     <Compile Include="SceneManager.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\InputModule.cs" />
