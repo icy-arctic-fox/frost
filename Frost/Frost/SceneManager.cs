@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Frost.Display;
 using Frost.Graphics;
+using Frost.Utility;
 
 namespace Frost
 {
@@ -88,6 +89,21 @@ namespace Frost
 		#region Scene management
 
 		/// <summary>
+		/// Triggered when a new scene is entered
+		/// </summary>
+		public event EventHandler<SceneEventArgs> SceneEntered;
+
+		/// <summary>
+		/// Called when a scene has been added to the stack
+		/// </summary>
+		/// <param name="args">Scene arguments</param>
+		/// <remarks>This method triggers the <see cref="SceneEntered"/> event.</remarks>
+		protected virtual void OnEnterScene (SceneEventArgs args)
+		{
+			SceneEntered.NotifyThreadedSubscribers(this, args);
+		}
+
+		/// <summary>
 		/// Enters a new scene
 		/// </summary>
 		/// <param name="scene">Scene to enter</param>
@@ -109,6 +125,23 @@ namespace Frost
 				_sceneStack.Push(entry);
 				_curScene = entry;
 			}
+
+			OnEnterScene(new SceneEventArgs(scene));
+		}
+
+		/// <summary>
+		/// Triggered when a scene is left
+		/// </summary>
+		public event EventHandler<SceneEventArgs> SceneExited;
+
+		/// <summary>
+		/// Called when a scene has been removed from the stack
+		/// </summary>
+		/// <param name="args">Scene arguments</param>
+		/// <remarks>This method triggers the <see cref="SceneExited"/> event.</remarks>
+		protected virtual void OnExitScene (SceneEventArgs args)
+		{
+			SceneExited.NotifyThreadedSubscribers(this, args);
 		}
 
 		/// <summary>
@@ -118,15 +151,19 @@ namespace Frost
 		/// <remarks>The current executing scene will finish its <see cref="Update"/> or <see cref="Render"/>.</remarks>
 		public void ExitScene ()
 		{
+			Scene prevScene;
 			lock(_locker)
 			{
 				if(_sceneStack.Count <= 0)
 					throw new InvalidOperationException("There are no more scenes left to exit from.");
 
-				var prevScene = _sceneStack.Pop();
-				prevScene.Scene.SetParentManager(null);
+				var prevEntry = _sceneStack.Pop();
+				prevScene = prevEntry.Scene;
+				prevScene.SetParentManager(null);
 				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Peek() : default(SceneStackEntry);
 			}
+
+			OnExitScene(new SceneEventArgs(prevScene));
 		}
 		#endregion
 
