@@ -44,8 +44,12 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="componentType">Type of <see cref="IEntityComponent"/> to look for</param>
 		/// <returns>Collection of entities</returns>
+		/// <exception cref="ArgumentNullException">The type of component to look for can't be null.</exception>
 		public IEnumerable<Entity> GetEntitiesWith (Type componentType)
 		{
+			if(componentType == null)
+				throw new ArgumentNullException("componentType");
+
 			var entities = new List<Entity>();
 			lock(_registeredEntities)
 				entities.AddRange(_registeredEntities.Values.Where(entity => entity.HasComponent(componentType)));

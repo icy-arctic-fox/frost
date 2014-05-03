@@ -72,8 +72,12 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="componentType">Type of component to look for</param>
 		/// <returns>True if the entity has the component or false if it doesn't</returns>
+		/// <exception cref="ArgumentNullException">The type of component to look for can't be null.</exception>
 		internal bool HasComponent (Type componentType)
 		{
+			if(componentType == null)
+				throw new ArgumentNullException("componentType");
+
 			throw new NotImplementedException();
 		}
 		#endregion
