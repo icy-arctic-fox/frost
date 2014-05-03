@@ -44,7 +44,7 @@ namespace Frost
 #if DEBUG
 			= true // Enable debug overlay by default with debug builds
 #endif
-			;
+							;
 
 		/// <summary>
 		/// Indicates whether the debug overlay is displayed
@@ -157,7 +157,7 @@ namespace Frost
 		/// Tracks the average time interval taken
 		/// </summary>
 		private readonly SampleCounter _updateCounter = new SampleCounter(MeasurementCount),
-			_renderCounter = new SampleCounter(MeasurementCount);
+										_renderCounter = new SampleCounter(MeasurementCount);
 
 		/// <summary>
 		/// Starts the game runner.
@@ -179,7 +179,8 @@ namespace Frost
 		/// <param name="multiThreaded">Indicates whether frame processing should be multi-threaded</param>
 		/// <exception cref="InvalidOperationException">Thrown if the game is already running</exception>
 		/// <exception cref="ObjectDisposedException">Thrown if the game has already been disposed</exception>
-		public void Run (double updateRate = DefaultTargetUpdateRate, double renderRate = DefaultTargetRenderRate, bool multiThreaded = true)
+		public void Run (double updateRate = DefaultTargetUpdateRate, double renderRate = DefaultTargetRenderRate,
+						bool multiThreaded = true)
 		{
 			if(Disposed)
 				throw new ObjectDisposedException(GetType().FullName);
@@ -361,7 +362,7 @@ namespace Frost
 			var nextUpdateTime = 0d;
 			stopwatch.Start();
 
-			_scenes.Update(); // Generate the first frame to start the process
+			performUpdate(); // Generate the first frame to start the process
 			while(_running)
 			{
 				if(!ThreadSynchronization || _scenes.StateManager.WaitForRender(timeout))
@@ -398,15 +399,15 @@ namespace Frost
 					nextUpdateTime = -MaxUpdateInterval; // ... but don't schedule it too soon to prevent overload
 				IsRunningSlow = (nextUpdateTime <= 0d && !UnboundedUpdateRate);
 
-				// Perform the update
-				update();
+				// Actually do the update logic
+				performUpdate();
 
 				// Calculate how long the update took
 				var elapsed = stopwatch.Elapsed.TotalSeconds;
 				_updateCounter.AddMeasurement(elapsed);
 				LastUpdateInterval = time = elapsed - time;
-				nextUpdateTime  -= time;
-				totalUpdateTime += time;
+				nextUpdateTime    -= time;
+				totalUpdateTime   += time;
 				if(nextUpdateTime > MaxUpdateInterval)
 					nextUpdateTime = MaxUpdateInterval; // Don't schedule too far in advance or the game will hang
 
@@ -431,16 +432,91 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Reused event arguments that contains information pertaining to the current update
+		/// </summary>
+		private readonly FrameStepEventArgs _stepArgs = new FrameStepEventArgs();
+
+		/// <summary>
 		/// Performs the logic update for all modules and scenes
 		/// </summary>
-		private void update ()
+		private void performUpdate ()
 		{
+			var stepArgs = _stepArgs; // Copy to stack
+			OnPreUpdate(stepArgs);
+
+			updateModules(stepArgs);
+			updateScenes(stepArgs);
+
+			OnPostUpdate(stepArgs);
+		}
+
+		/// <summary>
+		/// Updates step information with the information available in this instance
+		/// </summary>
+		/// <param name="stepArgs">Step information to update</param>
+		private void updateStepInfo (FrameStepEventArgs stepArgs)
+		{
+			stepArgs.FrameNumber   = _scenes.StateManager.FrameNumber;
+			stepArgs.GameTime      = GameTime;
+			stepArgs.IsRunningSlow = IsRunningSlow;
+		}
+
+		/// <summary>
+		/// Updates all game modules and the debug overlay
+		/// </summary>
+		/// <param name="stepArgs">Step information</param>
+		private void updateModules (FrameStepEventArgs stepArgs)
+		{
+			// Update all modules
 			for(var i = 0; i < _moduleUpdates.Count; ++i)
 				_moduleUpdates[i]();
+
+			// Update the contents of the debug overlay
 			if(_debug && _debugOverlay != null)
 				_debugOverlay.Update();
-			if(!_scenes.Update())
+		}
+
+		/// <summary>
+		/// Updates the state of each scene
+		/// </summary>
+		/// <param name="stepArgs">Step information</param>
+		private void updateScenes (FrameStepEventArgs stepArgs)
+		{
+			if(!_scenes.Update(stepArgs))
 				_running = false; // All scenes exited
+		}
+
+		/// <summary>
+		/// Triggered just before a game (logic) update occurs
+		/// </summary>
+		public event EventHandler<FrameStepEventArgs> PreUpdate;
+
+		/// <summary>
+		/// Called just before any logic updates occur
+		/// </summary>
+		/// <param name="args">Step information</param>
+		/// <remarks>This method triggers the <see cref="PreUpdate"/> event.</remarks>
+		protected virtual void OnPreUpdate (FrameStepEventArgs args)
+		{
+			updateStepInfo(args);
+			_scenes.PreUpdate(args); // State indices are set by the scene manager
+			PreUpdate.NotifySubscribers(this, args);
+		}
+
+		/// <summary>
+		/// Triggered just after a game (logic) update occurs
+		/// </summary>
+		public event EventHandler<FrameStepEventArgs> PostUpdate;
+
+		/// <summary>
+		/// Called just after any logic updates occur
+		/// </summary>
+		/// <param name="args">Step information</param>
+		/// <remarks>This method triggers the <see cref="PostUpdate"/> event.</remarks>
+		protected virtual void OnPostUpdate (FrameStepEventArgs args)
+		{
+			PostUpdate.NotifySubscribers(this, args);
+			_scenes.PostUpdate(args);
 		}
 		#endregion
 

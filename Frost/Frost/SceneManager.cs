@@ -187,24 +187,40 @@ namespace Frost
 #endif
 
 		/// <summary>
-		/// Updates the active scene
+		/// Prepares for an update
 		/// </summary>
-		/// <returns>True if there is still a scene to process</returns>
-		/// <remarks>A return value of false indicates that the last scene has exited and the game should terminate.</remarks>
-		public bool Update ()
+		/// <param name="stepArgs">Step information</param>
+		/// <remarks><paramref name="stepArgs"/> is populated with state index information.</remarks>
+		internal void PreUpdate (FrameStepEventArgs stepArgs)
 		{
 			// Get the previous state and next state to update
 			int prevStateIndex;
 			var nextStateIndex = StateManager.AcquireNextUpdateState(out prevStateIndex);
 
-			// Perform the update
-			_display.Update();
-			CurrentScene.Step(prevStateIndex, nextStateIndex);
+			stepArgs.PreviousStateIndex = prevStateIndex;
+			stepArgs.NextStateIndex     = nextStateIndex;
+		}
 
+		/// <summary>
+		/// Updates the active scene
+		/// </summary>
+		/// <returns>True if there is still a scene to process</returns>
+		/// <remarks>A return value of false indicates that the last scene has exited and the game should terminate.</remarks>
+		internal bool Update (FrameStepEventArgs stepArgs)
+		{
+			_display.Update();
+			CurrentScene.Step(stepArgs.PreviousStateIndex, stepArgs.NextStateIndex); // TODO: Pass stepArgs
+			return ScenesRemaining;
+		}
+
+		/// <summary>
+		/// Cleans up after an update
+		/// </summary>
+		/// <param name="stepArgs">Step information</param>
+		internal void PostUpdate (FrameStepEventArgs stepArgs)
+		{
 			// Release the state
 			StateManager.ReleaseUpdateState();
-
-			return ScenesRemaining;
 		}
 
 #if DEBUG
