@@ -56,6 +56,7 @@
     <Compile Include="Entities\EntityGroup.cs" />
     <Compile Include="Entities\EntityManager.cs" />
     <Compile Include="Entities\IEntityComponent.cs" />
+    <Compile Include="FrameStepEventArgs.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameConfiguration.cs" />
     <Compile Include="GameRunner.cs" />
