@@ -712,7 +712,7 @@ namespace Frost
 			get { return _debug && _debugOverlay != null; }
 			set
 			{
-				if(value && !_debug)
+				if(value && !_debug && _debugOverlay != null)
 					enableDebugOverlay();
 				else if(!value && _debug)
 					disableDebugOverlay();
