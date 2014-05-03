@@ -17,8 +17,6 @@ namespace Frost.UI
 	/// </summary>
 	public class DebugOverlay : IRenderable, IFullDisposable
 	{
-		private const uint GraphWidth      = 350;
-		private const uint GraphHeight     = 30;
 		private const int TextColor        = 0xffffff;
 		private const int BackgroundColor  = 0x404040;
 		private const byte BackgroundAlpha = 0x80;
@@ -27,7 +25,6 @@ namespace Frost.UI
 		private static readonly Color _textColor = new Color(TextColor);
 
 		private readonly SFML.Graphics.Sprite _background;
-		private readonly PixelGraph _graph;
 		private readonly Font _font;
 		private readonly uint _fontSize;
 		private readonly object _locker = new object();
@@ -53,7 +50,6 @@ namespace Frost.UI
 			_font       = font;
 			_fontSize   = fontSize;
 			_background = new SFML.Graphics.Sprite();
-			_graph      = new PixelGraph(GraphWidth, 3 * (uint)font.UnderlyingFont.GetLineSpacing(fontSize) + GraphHeight, 0d, 2d);
 		}
 
 		/// <summary>
@@ -120,18 +116,6 @@ namespace Frost.UI
 		public void Update ()
 		{
 			updateText();
-/*			
-			_timeText.Text   = String.Format("Update: {0:0.00} ms Render: {1:0.00} ms", _runner.UpdateInterval * 1000d, _runner.RenderInterval * 1000d);
- */
-
-			// Update the graph
-/*			var measurement = _runner.LastUpdateInterval + _runner.LastRenderInterval;
-			var divisor = _runner.TargetUpdateRate + _runner.TargetRenderRate;
-			if(divisor > 0d)
-				measurement /= 1d / divisor;
-			_graph.AddMeasurement(measurement);
- */
-			_graph.AddMeasurement(0.5d);
 			
 			// Calculate the bounds
 			var point = calculateBounds(); // Point at the bottom-right corner
