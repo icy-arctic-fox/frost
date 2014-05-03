@@ -2,6 +2,7 @@
 using Frost.Display;
 using Frost.Geometry;
 using Frost.Graphics;
+using Frost.Utility;
 using SFML.Graphics;
 
 namespace Frost.UI
@@ -10,7 +11,7 @@ namespace Frost.UI
 	/// A horizontal graph with each bar 1 pixel in size.
 	/// This graph is useful for diagnostics.
 	/// </summary>
-	public class PixelGraph : IRenderable // TODO: Make disposable
+	public class PixelGraph : IRenderable, IFullDisposable
 	{
 		private const int DefaultColor = 0x2eb82e;
 
@@ -104,5 +105,53 @@ namespace Frost.UI
 			rs.Transform.Translate(Position.X, Position.Y);
 			display.Draw(_sprite, rs);
 		}
+
+		#region Disposable
+
+		/// <summary>
+		/// Flag that indicates whether the graph has been disposed
+		/// </summary>
+		public bool Disposed { get; private set; }
+
+		/// <summary>
+		/// Triggered when the graph is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Frees the resources held by the graph
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Tears down the pixel graph
+		/// </summary>
+		~PixelGraph ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Underlying method that releases the resources held by the graph
+		/// </summary>
+		/// <param name="disposing">True if <see cref="Dispose"/> was called and inner resources should be disposed as well</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(!Disposed)
+			{// Don't do anything if the graph is already disposed
+				Disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+				if(disposing)
+				{// Dispose of the resources this object holds
+					_sprite.Dispose();
+					_texture.Dispose();
+				}
+			}
+		}
+		#endregion
 	}
 }
