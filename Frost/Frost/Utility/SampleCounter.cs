@@ -6,6 +6,7 @@
 	/// </summary>
 	public class SampleCounter
 	{
+		private readonly object _locker = new object();
 		private readonly double[] _measurements;
 		private int _pos;
 
@@ -31,7 +32,7 @@
 			get
 			{
 				var avg = 0d;
-				lock(_measurements)
+				lock(_locker)
 					for(var i = 0; i < Count; ++i)
 						avg += _measurements[i] / Count;
 				return avg;
@@ -46,7 +47,7 @@
 			get
 			{
 				var max = _measurements[0];
-				lock(_measurements)
+				lock(_locker)
 					for(var i = 1; i < Count; ++i)
 						if(_measurements[i] > max)
 							max = _measurements[i];
@@ -62,7 +63,7 @@
 			get
 			{
 				var min = _measurements[0];
-				lock(_measurements)
+				lock(_locker)
 					for(var i = 1; i < Count; ++i)
 						if(_measurements[i] < min)
 							min = _measurements[i];
@@ -76,7 +77,7 @@
 		/// <param name="measurement">Measurement value</param>
 		public void AddMeasurement (double measurement)
 		{
-			lock(_measurements)
+			lock(_locker)
 			{
 				_measurements[_pos++] = measurement;
 				if(_pos >= _measurements.Length)
