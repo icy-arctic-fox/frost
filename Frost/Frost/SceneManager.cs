@@ -153,11 +153,11 @@ namespace Frost
 		/// <summary>
 		/// Sets the ID of the thread that is allowed to update
 		/// </summary>
-		/// <param name="id">ID of the update thread</param>
-		internal void SetUpdateThreadId (int id)
+		/// <param name="tid">ID of the update thread</param>
+		internal void SetUpdateThreadId (int tid)
 		{
-			_updateThreadId = id;
-			_stateManager.UpdateThreadId = id;
+			_updateThreadId = tid;
+			_stateManager.UpdateThreadId = tid;
 		}
 #endif
 
@@ -204,11 +204,11 @@ namespace Frost
 		/// <summary>
 		/// Sets the ID of the thread that is allowed to render
 		/// </summary>
-		/// <param name="id">Id of the render thread</param>
-		internal void SetRenderThreadId (int id)
+		/// <param name="tid">Id of the render thread</param>
+		internal void SetRenderThreadId (int tid)
 		{
-			_renderThreadId = id;
-			_stateManager.RenderThreadId = id;
+			_renderThreadId = tid;
+			_stateManager.RenderThreadId = tid;
 		}
 #endif
 
