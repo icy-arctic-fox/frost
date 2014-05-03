@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Frost.Entities
 {
@@ -45,7 +46,10 @@ namespace Frost.Entities
 		/// <returns>Collection of entities</returns>
 		public IEnumerable<Entity> GetEntitiesWith (Type componentType)
 		{
-			throw new NotImplementedException();
+			var entities = new List<Entity>();
+			lock(_registeredEntities)
+				entities.AddRange(_registeredEntities.Values.Where(entity => entity.HasComponent(componentType)));
+			return entities.AsReadOnly();
 		}
 
 		/// <summary>
