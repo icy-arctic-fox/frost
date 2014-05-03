@@ -6,7 +6,7 @@ namespace Frost
 	/// <summary>
 	/// Tracks the states to be updated and rendered
 	/// </summary>
-	public class StateManager
+	public class StateManager : IDisposable
 	{
 		// TODO: Add ability to save older states for roll-back
 
@@ -15,14 +15,6 @@ namespace Frost
 		/// Each component that can be modified during runtime needs to have this many states.
 		/// </summary>
 		public const int StateCount = 3;
-
-		/// <summary>
-		/// Creates a new state manager
-		/// </summary>
-		public StateManager ()
-		{
-			// TODO: Add "backlog" state count argument (for roll-back)
-		}
 
 		/// <summary>
 		/// Frame number that each of the states are on
@@ -301,5 +293,41 @@ namespace Frost
 			}
 			return sb.ToString();
 		}
+
+		#region Disposable
+
+		/// <summary>
+		/// Disposes of the state manager by releasing resources it holds
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Destructor - disposes of the state manager
+		/// </summary>
+		~StateManager ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the state manager
+		/// </summary>
+		/// <param name="disposing">True if inner-resources should be disposed of (<see cref="Dispose"/> was called)</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(disposing)
+			{
+				lock(_stateFrameNumbers)
+				{
+					_renderSignal.Dispose();
+					_updateSignal.Dispose();
+				}
+			}
+		}
+		#endregion
 	}
 }
