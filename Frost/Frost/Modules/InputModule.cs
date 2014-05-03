@@ -223,7 +223,7 @@ namespace Frost.Modules
 				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 				if(disposing)
 				{
-					// ...
+					_capturing.Dispose();
 				}
 			}
 		}
