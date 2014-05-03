@@ -148,15 +148,12 @@ namespace Frost
 		#region Update and render
 
 #if DEBUG
-		private volatile int _updateThreadId;
-
 		/// <summary>
 		/// Sets the ID of the thread that is allowed to update
 		/// </summary>
 		/// <param name="tid">ID of the update thread</param>
 		internal void SetUpdateThreadId (int tid)
 		{
-			_updateThreadId = tid;
 			_stateManager.UpdateThreadId = tid;
 		}
 #endif
@@ -199,15 +196,12 @@ namespace Frost
 		}
 
 #if DEBUG
-		private volatile int _renderThreadId;
-
 		/// <summary>
 		/// Sets the ID of the thread that is allowed to render
 		/// </summary>
 		/// <param name="tid">Id of the render thread</param>
 		internal void SetRenderThreadId (int tid)
 		{
-			_renderThreadId = tid;
 			_stateManager.RenderThreadId = tid;
 		}
 #endif
