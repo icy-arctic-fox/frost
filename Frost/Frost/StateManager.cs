@@ -16,6 +16,8 @@ namespace Frost
 		/// </summary>
 		public const int StateCount = 3;
 
+		private readonly object _locker = new object();
+
 		/// <summary>
 		/// Frame number that each of the states are on
 		/// </summary>
@@ -67,7 +69,7 @@ namespace Frost
 			if(Thread.CurrentThread.ManagedThreadId != UpdateThreadId)
 				throw new AccessViolationException("Only the update thread may acquire an update state.");
 #endif
-			lock(_stateFrameNumbers)
+			lock(_locker)
 			{
 #if DEBUG
 				if(_curUpdateStateIndex != -1)
@@ -106,7 +108,7 @@ namespace Frost
 			if(Thread.CurrentThread.ManagedThreadId != UpdateThreadId)
 				throw new AccessViolationException("Only the update thread may release an update state.");
 #endif
-			lock(_stateFrameNumbers)
+			lock(_locker)
 			{
 #if DEBUG
 				if(_curUpdateStateIndex == -1)
@@ -126,7 +128,7 @@ namespace Frost
 		/// <returns>True if the render thread finished before the timeout elapsed or false if it didn't</returns>
 		internal bool WaitForRender (TimeSpan timeout)
 		{
-			lock(_stateFrameNumbers)
+			lock(_locker)
 			{
 				if((_curRenderStateIndex == -1 && _prevRenderStateIndex == _prevUpdateStateIndex) || // Render thread just finished it
 					_curRenderStateIndex == _prevUpdateStateIndex) // Render thread just started it
@@ -188,7 +190,7 @@ namespace Frost
 			if(Thread.CurrentThread.ManagedThreadId != RenderThreadId)
 				throw new AccessViolationException("Only the render thread may acquire a render state.");
 #endif
-			lock(_stateFrameNumbers)
+			lock(_locker)
 			{
 #if DEBUG
 				if(_curRenderStateIndex != -1)
@@ -220,7 +222,7 @@ namespace Frost
 			if(Thread.CurrentThread.ManagedThreadId != RenderThreadId)
 				throw new AccessViolationException("Only the render thread may release a render state.");
 #endif
-			lock(_stateFrameNumbers)
+			lock(_locker)
 			{
 #if DEBUG
 				if(_curRenderStateIndex == -1)
@@ -239,7 +241,7 @@ namespace Frost
 		/// <returns>True if a frame was updated before the timeout elapsed</returns>
 		internal bool WaitForUpdate (TimeSpan timeout)
 		{
-			lock(_stateFrameNumbers)
+			lock(_locker)
 			{
 				if(_prevRenderFrameNumber < _prevUpdateFrameNumber)
 					return true; // There's already a frame waiting
@@ -259,7 +261,7 @@ namespace Frost
 		{
 			var frames = new long[3];
 			int updateIndex, renderIndex;
-			lock(_stateFrameNumbers)
+			lock(_locker)
 			{// Grab the values
 				for(var i = 0; i < 3; ++i)
 					frames[i] = _stateFrameNumbers[i];
@@ -321,7 +323,7 @@ namespace Frost
 		{
 			if(disposing)
 			{
-				lock(_stateFrameNumbers)
+				lock(_locker)
 				{
 					_renderSignal.Dispose();
 					_updateSignal.Dispose();
