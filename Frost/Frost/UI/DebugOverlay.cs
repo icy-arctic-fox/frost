@@ -4,6 +4,7 @@ using Frost.Display;
 using Frost.Geometry;
 using Frost.Graphics;
 using Frost.Graphics.Text;
+using Frost.Utility;
 using SFML.Graphics;
 using Color = Frost.Graphics.Color;
 using Font = Frost.Graphics.Text.Font;
@@ -14,7 +15,7 @@ namespace Frost.UI
 	/// Informational overlay that displays useful debugging information.
 	/// Lines can be added dynamically to the overlay while the game is running.
 	/// </summary>
-	public class DebugOverlay : IRenderable // TODO: Make disposable
+	public class DebugOverlay : IRenderable, IFullDisposable
 	{
 		private const uint GraphWidth      = 350;
 		private const uint GraphHeight     = 30;
@@ -211,5 +212,54 @@ namespace Frost.UI
 					yPos += line.Bounds.Height;
 				}
 		}
+
+		#region Disposable
+
+		/// <summary>
+		/// Flag that indicates whether the overlay has been disposed
+		/// </summary>
+		public bool Disposed { get; private set; }
+
+		/// <summary>
+		/// Triggered when the overlay is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
+
+		/// <summary>
+		/// Frees the resources held by the overlay
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Tears down the debug overlay
+		/// </summary>
+		~DebugOverlay ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Underlying method that releases the resources held by the overlay
+		/// </summary>
+		/// <param name="disposing">True if <see cref="Dispose"/> was called and inner resources should be disposed as well</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(!Disposed)
+			{// Don't do anything if the runner is already disposed
+				Disposed = true;
+				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+				if(disposing)
+				{// Dispose of the resources this object holds
+					_content.Clear();
+					_textLines.Clear();
+					_background.Dispose();
+				}
+			}
+		}
+		#endregion
 	}
 }
