@@ -399,12 +399,7 @@ namespace Frost
 				IsRunningSlow = (nextUpdateTime <= 0d && !UnboundedUpdateRate);
 
 				// Perform the update
-				for(var i = 0; i < _moduleUpdates.Count; ++i)
-					_moduleUpdates[i]();
-				if(_debug && _debugOverlay != null)
-					_debugOverlay.Update();
-				if(!_scenes.Update())
-					_running = false; // All scenes exited
+				update();
 
 				// Calculate how long the update took
 				var elapsed = stopwatch.Elapsed.TotalSeconds;
@@ -433,6 +428,19 @@ namespace Frost
 				var avgTime = totalUpdateTime / updatesProcessed;
 				LastUpdateInterval = avgTime;
 			}
+		}
+
+		/// <summary>
+		/// Performs the logic update for all modules and scenes
+		/// </summary>
+		private void update ()
+		{
+			for(var i = 0; i < _moduleUpdates.Count; ++i)
+				_moduleUpdates[i]();
+			if(_debug && _debugOverlay != null)
+				_debugOverlay.Update();
+			if(!_scenes.Update())
+				_running = false; // All scenes exited
 		}
 		#endregion
 
