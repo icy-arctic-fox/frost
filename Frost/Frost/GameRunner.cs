@@ -731,7 +731,7 @@ namespace Frost
 				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 				if(disposing)
 				{// Dispose of the resources this object holds
-					// TODO
+					_scenes.Dispose();
 				}
 			}
 		}
