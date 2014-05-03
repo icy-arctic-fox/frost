@@ -253,9 +253,9 @@ namespace Frost
 		private double _targetUpdateInterval = DefaultTargetUpdateInterval;
 
 		/// <summary>
-		/// Time when the last update was performed
+		/// Ticks that have elapsed (since the runner started) when the last update occurred
 		/// </summary>
-		private DateTime _lastUpdateTime;
+		private long _lastUpdateTime;
 
 		/// <summary>
 		/// Number of frames updated per second
@@ -376,7 +376,7 @@ namespace Frost
 				stopwatch.Start();
 
 				// Store the time when this update occurred so that the renderer can interpolate
-				_lastUpdateTime = DateTime.Now; // TODO: Use stopwatch, this allocates memory
+				_lastUpdateTime = _gameWatch.ElapsedTicks;
 
 				// Allow consecutive updates to occur, but not too many.
 				// This allows the hardware to catch up.
@@ -427,7 +427,6 @@ namespace Frost
 		/// <param name="stepArgs">Step information</param>
 		private void updateModules (FrameStepEventArgs stepArgs)
 		{
-			// Update all modules
 			for(var i = 0; i < _moduleUpdates.Count; ++i)
 				_moduleUpdates[i]();
 		}
@@ -639,7 +638,9 @@ namespace Frost
 		private void updateRenderInfo (FrameDrawEventArgs drawArgs)
 		{
 			// Calculate the amount of interpolation
-			var t = (DateTime.Now - _lastUpdateTime).TotalSeconds / _targetUpdateInterval;
+			var intervalInTicks = _targetUpdateInterval * TimeSpan.TicksPerSecond;
+			var elapsedTicks    = _gameWatch.ElapsedTicks - _lastUpdateTime;
+			var t = elapsedTicks / intervalInTicks;
 
 			drawArgs.IsRunningSlow = IsRunningSlow;
 			drawArgs.Interpolation = t;
