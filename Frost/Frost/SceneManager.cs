@@ -11,7 +11,7 @@ namespace Frost
 	/// <remarks>The scene manager operates using a stack.
 	/// The scene on top of the stack is executed every frame.
 	/// When it is finished, the top scene is popped off the stack.</remarks>
-	public class SceneManager
+	public class SceneManager : IDisposable
 	{
 		private readonly object _locker = new object();
 		private Scene _curScene;
@@ -261,6 +261,37 @@ namespace Frost
 
 			// Release the state
 			_stateManager.ReleaseRenderState();
+		}
+		#endregion
+
+		#region Disposable
+
+		/// <summary>
+		/// Disposes of the scene manager by releasing resources it holds
+		/// </summary>
+		public void Dispose ()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Destructor - disposes of the scene manager
+		/// </summary>
+		~SceneManager ()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// Disposes of the scene manager
+		/// </summary>
+		/// <param name="disposing">True if inner-resources should be disposed of (<see cref="Dispose"/> was called)</param>
+		protected virtual void Dispose (bool disposing)
+		{
+			if(disposing)
+				lock(_locker)
+					_stateManager.Dispose();
 		}
 		#endregion
 	}
