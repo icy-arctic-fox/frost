@@ -4,7 +4,7 @@ using Frost.Utility;
 namespace Frost.UI
 {
 	/// <summary>
-	/// Debug overlay line that displays scene information from a <see cref="Scene.Manager"/>
+	/// Debug overlay line that displays scene information from a <see cref="SceneManager"/>
 	/// </summary>
 	public class SceneDebugOverlayLine : IDebugOverlayLine
 	{
@@ -48,8 +48,7 @@ namespace Frost.UI
 			var scenes    = _manager;
 			var curScene  = scenes.CurrentScene;
 			var sceneName = curScene.Name;
-			var manager   = scenes.StateManager;
-			return String.Format("Scene: {0} - {1}", sceneName, manager);
+			return String.Format("Scene: {0}", sceneName);
 		}
 	}
 }

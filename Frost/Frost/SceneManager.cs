@@ -11,12 +11,11 @@ namespace Frost
 	/// <remarks>The scene manager operates using a stack.
 	/// The scene on top of the stack is executed every frame.
 	/// When it is finished, the top scene is popped off the stack.</remarks>
-	public class SceneManager : IDisposable
+	public class SceneManager
 	{
 		private readonly object _locker = new object();
 		private Scene _curScene;
 		private readonly Stack<Scene> _sceneStack = new Stack<Scene>();
-		private readonly StateManager _stateManager = new StateManager();
 		private readonly IDisplay _display;
 
 		/// <summary>
@@ -42,15 +41,6 @@ namespace Frost
 				lock(_locker)
 					return _curScene;
 			}
-		}
-
-		/// <summary>
-		/// State manager for the current scene.
-		/// If there isn't a scene, then null is returned.
-		/// </summary>
-		internal StateManager StateManager
-		{
-			get { return _stateManager; }
 		}
 
 		/// <summary>
@@ -147,17 +137,6 @@ namespace Frost
 
 		#region Update and render
 
-#if DEBUG
-		/// <summary>
-		/// Sets the ID of the thread that is allowed to update
-		/// </summary>
-		/// <param name="tid">ID of the update thread</param>
-		internal void SetUpdateThreadId (int tid)
-		{
-			_stateManager.UpdateThreadId = tid;
-		}
-#endif
-
 		/// <summary>
 		/// Prepares for an update
 		/// </summary>
@@ -165,12 +144,7 @@ namespace Frost
 		/// <remarks><paramref name="stepArgs"/> is populated with state index information.</remarks>
 		internal void PreUpdate (FrameStepEventArgs stepArgs)
 		{
-			// Get the previous state and next state to update
-			int prevStateIndex;
-			var nextStateIndex = _stateManager.AcquireNextUpdateState(out prevStateIndex);
-
-			stepArgs.PreviousStateIndex = prevStateIndex;
-			stepArgs.NextStateIndex     = nextStateIndex;
+			// ...
 		}
 
 		/// <summary>
@@ -191,20 +165,8 @@ namespace Frost
 		/// <param name="stepArgs">Step information</param>
 		internal void PostUpdate (FrameStepEventArgs stepArgs)
 		{
-			// Release the state
-			_stateManager.ReleaseUpdateState();
+			// ...
 		}
-
-#if DEBUG
-		/// <summary>
-		/// Sets the ID of the thread that is allowed to render
-		/// </summary>
-		/// <param name="tid">Id of the render thread</param>
-		internal void SetRenderThreadId (int tid)
-		{
-			_stateManager.RenderThreadId = tid;
-		}
-#endif
 
 		/// <summary>
 		/// Total number of frames that were drawn multiple times.
@@ -224,13 +186,6 @@ namespace Frost
 		/// <remarks><paramref name="drawArgs"/> is populated with state index information.</remarks>
 		internal void PreRender (FrameDrawEventArgs drawArgs)
 		{
-			// Retrieve the next state to render
-			int prevStateIndex;
-			var nextStateIndex = _stateManager.AcquireNextRenderState(out prevStateIndex);
-
-			drawArgs.PreviousStateIndex = prevStateIndex;
-			drawArgs.StateIndex         = nextStateIndex;
-
 			_display.EnterFrame();
 		}
 
@@ -258,40 +213,6 @@ namespace Frost
 		internal void PostRender (FrameDrawEventArgs drawArgs)
 		{
 			_display.ExitFrame();
-
-			// Release the state
-			_stateManager.ReleaseRenderState();
-		}
-		#endregion
-
-		#region Disposable
-
-		/// <summary>
-		/// Disposes of the scene manager by releasing resources it holds
-		/// </summary>
-		public void Dispose ()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// Destructor - disposes of the scene manager
-		/// </summary>
-		~SceneManager ()
-		{
-			Dispose(false);
-		}
-
-		/// <summary>
-		/// Disposes of the scene manager
-		/// </summary>
-		/// <param name="disposing">True if inner-resources should be disposed of (<see cref="Dispose"/> was called)</param>
-		protected virtual void Dispose (bool disposing)
-		{
-			if(disposing)
-				lock(_locker)
-					_stateManager.Dispose();
 		}
 		#endregion
 	}

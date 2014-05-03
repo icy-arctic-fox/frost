@@ -19,19 +19,17 @@ namespace Frost
 		/// Display that will be rendered upon
 		/// </summary>
 		private readonly IDisplay _display;
-
-		/// <summary>
-		/// Tracks the active scene
-		/// </summary>
 		private readonly SceneManager _scenes;
 
 		/// <summary>
-		/// Game scenes being ran
+		/// Tracks active game scenes
 		/// </summary>
 		public SceneManager Scenes
 		{
 			get { return _scenes; }
 		}
+
+		private readonly StateManager _stateManager = new StateManager();
 
 		/// <summary>
 		/// Creates a new game runner
@@ -175,8 +173,8 @@ namespace Frost
 #if DEBUG
 			// Set allowed update and render threads
 			var tid = Thread.CurrentThread.ManagedThreadId;
-			_scenes.SetUpdateThreadId(tid);
-			_scenes.SetRenderThreadId(tid);
+			_stateManager.UpdateThreadId = tid;
+			_stateManager.RenderThreadId = tid;
 #endif
 
 			// Allocate these on the stack for faster access
@@ -313,7 +311,7 @@ namespace Frost
 		private void doUpdateLoop ()
 		{
 #if DEBUG
-			_scenes.SetUpdateThreadId(Thread.CurrentThread.ManagedThreadId);
+			_stateManager.UpdateThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 			var timeout = TimeSpan.FromSeconds(MaxUpdateInterval);
 
@@ -325,7 +323,7 @@ namespace Frost
 			performUpdate(); // Generate the first frame to start the process
 			while(_running)
 			{
-				if(!ThreadSynchronization || _scenes.StateManager.WaitForRender(timeout))
+				if(!ThreadSynchronization || _stateManager.WaitForRender(timeout))
 					updateTiming(ref stopwatch, ref nextUpdateTime);
 
 				// TODO: Do something to reduce high CPU utilization
@@ -416,7 +414,7 @@ namespace Frost
 		/// <param name="stepArgs">Step information to update</param>
 		private void updateStepInfo (FrameStepEventArgs stepArgs)
 		{
-			stepArgs.FrameNumber   = _scenes.StateManager.FrameNumber;
+			stepArgs.FrameNumber   = _stateManager.FrameNumber;
 			stepArgs.GameTime      = GameTime;
 			stepArgs.IsRunningSlow = IsRunningSlow;
 		}
@@ -453,8 +451,16 @@ namespace Frost
 		/// <remarks>This method triggers the <see cref="PreUpdate"/> event.</remarks>
 		protected virtual void OnPreUpdate (FrameStepEventArgs args)
 		{
+			// Get the previous state and next state to update
+			int prevStateIndex;
+			var nextStateIndex = _stateManager.AcquireNextUpdateState(out prevStateIndex);
+
+			// Update step information
 			updateStepInfo(args);
-			_scenes.PreUpdate(args); // State indices are set by the scene manager
+			args.PreviousStateIndex = prevStateIndex;
+			args.NextStateIndex     = nextStateIndex;
+
+			_scenes.PreUpdate(args);
 			PreUpdate.NotifySubscribers(this, args);
 		}
 
@@ -472,6 +478,9 @@ namespace Frost
 		{
 			PostUpdate.NotifySubscribers(this, args);
 			_scenes.PostUpdate(args);
+
+			// Release the state
+			_stateManager.ReleaseUpdateState();
 		}
 		#endregion
 
@@ -551,7 +560,7 @@ namespace Frost
 		private void doRenderLoop ()
 		{
 #if DEBUG
-			_scenes.SetRenderThreadId(Thread.CurrentThread.ManagedThreadId);
+			_stateManager.RenderThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the render thread. It may be active on another thread.");
@@ -564,7 +573,7 @@ namespace Frost
 
 			while(_running)
 			{
-				if(!ThreadSynchronization || _scenes.StateManager.WaitForUpdate(timeout))
+				if(!ThreadSynchronization || _stateManager.WaitForUpdate(timeout))
 					renderTiming(ref stopwatch, ref nextRenderTime);
 
 				// TODO: Do something to reduce high CPU utilization
@@ -667,8 +676,16 @@ namespace Frost
 		/// <remarks>This method triggers the <see cref="PreRender"/> event.</remarks>
 		protected virtual void OnPreRender (FrameDrawEventArgs args)
 		{
+			// Retrieve the next state to render
+			int prevStateIndex;
+			var nextStateIndex = _stateManager.AcquireNextRenderState(out prevStateIndex);
+
+			// Update the render information
+			args.PreviousStateIndex = prevStateIndex;
+			args.StateIndex = nextStateIndex;
 			updateRenderInfo(args);
-			_scenes.PreRender(args); // State index is set by the scene manager
+
+			_scenes.PreRender(args);
 			PreRender.NotifySubscribers(this, args);
 		}
 
@@ -686,6 +703,9 @@ namespace Frost
 		{
 			PostRender.NotifySubscribers(this, args);
 			_scenes.PostRender(args);
+
+			// Release the state
+			_stateManager.ReleaseRenderState();
 		}
 		#endregion
 
@@ -731,7 +751,7 @@ namespace Frost
 				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 				if(disposing)
 				{// Dispose of the resources this object holds
-					_scenes.Dispose();
+					_stateManager.Dispose();
 				}
 			}
 		}
@@ -744,7 +764,7 @@ namespace Frost
 		/// Frame: # - # u/s - # f/s (#/# dups, # skips)</returns>
 		public override string ToString ()
 		{
-			var sm = _scenes.StateManager;
+			var sm = _stateManager;
 			var sb = new StringBuilder();
 			sb.Append("Frame: ");
 			sb.Append(sm.FrameNumber);

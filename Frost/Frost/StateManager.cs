@@ -6,7 +6,7 @@ namespace Frost
 	/// <summary>
 	/// Tracks the states to be updated and rendered
 	/// </summary>
-	public class StateManager : IDisposable
+	internal class StateManager : IDisposable
 	{
 		// TODO: Add ability to save older states for roll-back
 
