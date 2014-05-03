@@ -233,7 +233,7 @@ namespace Frost.UI
 		protected virtual void Dispose (bool disposing)
 		{
 			if(!Disposed)
-			{// Don't do anything if the runner is already disposed
+			{// Don't do anything if the overlay is already disposed
 				Disposed = true;
 				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 				if(disposing)
