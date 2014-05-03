@@ -646,15 +646,89 @@ namespace Frost
 				{
 					// TODO: Implement adaptive VSync
 
-					// Calculate the amount of interpolation
-					var t = (DateTime.Now - _lastUpdateTime).TotalSeconds / _targetUpdateInterval;
-
-					// Record intervals and draw the frame
+					// Record interval
 					_renderCounter.AddMeasurement(time);
-					_scenes.Render(t);
+
+					// Actually perform the rendering
+					performRender();
+
+					// Store how long it took
 					LastRenderInterval = stopwatch.Elapsed.TotalSeconds;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Reused event arguments that contains information pertaining to the current render
+		/// </summary>
+		private readonly FrameDrawEventArgs _drawArgs = new FrameDrawEventArgs();
+
+		/// <summary>
+		/// Performs the drawing operations for all scenes
+		/// </summary>
+		private void performRender ()
+		{
+			var drawArgs = _drawArgs; // Copy to stack
+			OnPreRender(drawArgs);
+
+			renderScenes(drawArgs);
+
+			OnPostRender(drawArgs);
+		}
+
+		/// <summary>
+		/// Updates render information with the information available in this instance
+		/// </summary>
+		/// <param name="drawArgs">Render information to update</param>
+		private void updateRenderInfo (FrameDrawEventArgs drawArgs)
+		{
+			// Calculate the amount of interpolation
+			var t = (DateTime.Now - _lastUpdateTime).TotalSeconds / _targetUpdateInterval;
+
+			drawArgs.IsRunningSlow = IsRunningSlow;
+			drawArgs.Interpolation = t;
+		}
+
+		/// <summary>
+		/// Draws all of the scenes
+		/// </summary>
+		/// <param name="drawArgs">Render information</param>
+		private void renderScenes (FrameDrawEventArgs drawArgs)
+		{
+			_scenes.Render(drawArgs);
+		}
+
+		/// <summary>
+		/// Triggered just before a frame is rendered
+		/// </summary>
+		public event EventHandler<FrameDrawEventArgs> PreRender;
+
+		/// <summary>
+		/// Called just before any rendering occurs
+		/// </summary>
+		/// <param name="args">Render information</param>
+		/// <remarks>This method triggers the <see cref="PreRender"/> event.</remarks>
+		protected virtual void OnPreRender (FrameDrawEventArgs args)
+		{
+			updateRenderInfo(args);
+			_scenes.PreRender(args); // State index is set by the scene manager
+			PreRender.NotifySubscribers(this, args);
+		}
+
+		/// <summary>
+		/// Triggered just after a frame is rendered
+		/// </summary>
+		public event EventHandler<FrameDrawEventArgs> PostRender;
+
+		/// <summary>
+		/// Called just after any frame is rendered
+		/// </summary>
+		/// <param name="args">Render information</param>
+		/// <remarks>This method triggers the <see cref="PostRender"/> event.</remarks>
+		protected virtual void OnPostRender (FrameDrawEventArgs args)
+		{
+			PostRender.NotifySubscribers(this, args);
+			_scenes.PostRender(args);
 		}
 		#endregion
 

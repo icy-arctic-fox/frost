@@ -252,32 +252,52 @@ namespace Frost
 		public bool RenderDuplicateFrames { get; set; }
 
 		/// <summary>
+		/// Prepares for rendering
+		/// </summary>
+		/// <param name="drawArgs">Render information</param>
+		/// <remarks><paramref name="drawArgs"/> is populated with state index information.</remarks>
+		internal void PreRender (FrameDrawEventArgs drawArgs)
+		{
+			// Retrieve the next state to render
+			int prevStateIndex;
+			var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
+
+			drawArgs.PreviousStateIndex = prevStateIndex;
+			drawArgs.StateIndex         = nextStateIndex;
+
+			_display.EnterFrame();
+		}
+
+		/// <summary>
 		/// Renders the active scene
 		/// </summary>
-		/// <param name="t">Interpolation between frame updates</param>
-		public void Render (double t)
+		/// <param name="drawArgs">Render information</param>
+		public void Render (FrameDrawEventArgs drawArgs)
 		{
 			if(ScenesRemaining)
 			{// Only render if there's a scene
-				// Retrieve the next state to render
-				int prevStateIndex;
-				var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
-
-				if(RenderDuplicateFrames || prevStateIndex != nextStateIndex)
+				if(RenderDuplicateFrames || !drawArgs.Duplicate)
 				{// Render the frame
-					_display.EnterFrame();
-					CurrentScene.Draw(_display, nextStateIndex, t);
+					CurrentScene.Draw(_display, drawArgs.StateIndex, drawArgs.Interpolation); // TODO: Pass drawArgs
 					for(var i = 0; i < _overlays.Count; ++i)
-						_overlays[i].Draw(_display, nextStateIndex, t);
-					_display.ExitFrame();
+						_overlays[i].Draw(_display, drawArgs.StateIndex, drawArgs.Interpolation); // TODO: Pass drawArgs
 
-					if(prevStateIndex == nextStateIndex)
+					if(drawArgs.Duplicate)
 						++RenderedDuplicateFrames;
 				}
-
-				// Release the state
-				StateManager.ReleaseRenderState();
 			}
+		}
+
+		/// <summary>
+		/// Cleans up after rendering
+		/// </summary>
+		/// <param name="drawArgs">Render information</param>
+		internal void PostRender (FrameDrawEventArgs drawArgs)
+		{
+			_display.ExitFrame();
+
+			// Release the state
+			StateManager.ReleaseRenderState();
 		}
 		#endregion
 
