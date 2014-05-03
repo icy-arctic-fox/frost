@@ -404,7 +404,7 @@ namespace Frost
 		/// Underlying method that releases the resources held by the game
 		/// </summary>
 		/// <param name="disposing">True if <see cref="Dispose"/> was called and inner resources should be disposed as well</param>
-		protected void Dispose (bool disposing)
+		protected virtual void Dispose (bool disposing)
 		{
 			if(!Disposed)
 			{// Don't do anything if the game is already disposed
