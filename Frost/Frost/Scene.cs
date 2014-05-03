@@ -47,12 +47,11 @@ namespace Frost
 		/// <summary>
 		/// Updates the state of the scene by a single step
 		/// </summary>
-		/// <param name="prev">Index of the previous state that was updated</param>
-		/// <param name="next">Index of the next state that should be updated</param>
-		/// <remarks>The only game state that should be modified during this process is the state indicated by <paramref name="next"/>.
-		/// The state indicated by <paramref name="prev"/> can be used for reference (if needed), but should not be modified.
-		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
-		public virtual void Step (int prev, int next)
+		/// <param name="args">Update information</param>
+		/// <remarks>The only game state that should be modified during this process is the state indicated by <see cref="FrameStepEventArgs.NextStateIndex"/>.
+		/// The state indicated by <see cref="FrameStepEventArgs.PreviousStateIndex"/> can be used for reference (if needed), but should not be modified.
+		/// Modifying any other game state info during this process could corrupt the game state.</remarks>
+		public virtual void Step (FrameStepEventArgs args)
 		{
 			// TODO: Update all updatable entities
 		}
@@ -60,12 +59,11 @@ namespace Frost
 		/// <summary>
 		/// Draws the state of the scene
 		/// </summary>
-		/// <param name="display">Display to draw the scene onto</param>
-		/// <param name="state">Index of the state to draw</param>
-		/// <param name="t">Interpolation value</param>
-		/// <remarks>None of the game states should be modified by this process - including the state indicated by <paramref name="state"/>.
+		/// <param name="display">Display to draw the object's state onto</param>
+		/// <param name="args">Render information</param>
+		/// <remarks>None of the game states should be modified by this process - including the state indicated by <see cref="FrameDrawEventArgs.StateIndex"/>.
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
-		public virtual void Draw (IDisplay display, int state, double t)
+		public virtual void Draw (IDisplay display, FrameDrawEventArgs args)
 		{
 			// TODO: Render all drawable entities
 		}

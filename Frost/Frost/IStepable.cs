@@ -8,11 +8,10 @@
 		/// <summary>
 		/// Updates the state of the component by a single step
 		/// </summary>
-		/// <param name="prev">Index of the previous state that was updated</param>
-		/// <param name="next">Index of the next state that should be updated</param>
-		/// <remarks>The only game state that should be modified during this process is the state indicated by <paramref name="next"/>.
-		/// The state indicated by <paramref name="prev"/> can be used for reference (if needed), but should not be modified.
-		/// Modifying any other game state info during this process would corrupt the game state.</remarks>
-		void Step (int prev, int next);
+		/// <param name="args">Update information</param>
+		/// <remarks>The only game state that should be modified during this process is the state indicated by <see cref="FrameStepEventArgs.NextStateIndex"/>.
+		/// The state indicated by <see cref="FrameStepEventArgs.PreviousStateIndex"/> can be used for reference (if needed), but should not be modified.
+		/// Modifying any other game state info during this process could corrupt the game state.</remarks>
+		void Step (FrameStepEventArgs args);
 	}
 }

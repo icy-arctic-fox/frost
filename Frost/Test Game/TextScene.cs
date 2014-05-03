@@ -1,5 +1,4 @@
-﻿using System;
-using Frost;
+﻿using Frost;
 using Frost.Display;
 using Frost.Graphics;
 using Frost.Graphics.Text;
@@ -32,16 +31,16 @@ namespace Test_Game
 			}
 		}
 
-		public override void Step (int prev, int next)
+		public override void Step (FrameStepEventArgs args)
 		{
-			base.Step(prev, next);
-			_sprite.Step(prev, next);
+			base.Step(args);
+			_sprite.Step(args);
 		}
 
-		public override void Draw (IDisplay display, int state, double t)
+		public override void Draw (IDisplay display, FrameDrawEventArgs args)
 		{
-			base.Draw(display, state, t);
-			_sprite.Draw(display, state, t);
+			base.Draw(display, args);
+			_sprite.Draw(display, args);
 		}
 	}
 }

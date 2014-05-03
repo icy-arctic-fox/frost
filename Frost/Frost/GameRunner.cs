@@ -782,7 +782,7 @@ namespace Frost
 		/// <param name="e">Render information</param>
 		private void renderDebugOverlay (object sender, FrameDrawEventArgs e)
 		{
-			_debugOverlay.Draw(_display, e.StateIndex, e.Interpolation); // TODO: Pass e
+			_debugOverlay.Draw(_display, e);
 		}
 		#endregion
 

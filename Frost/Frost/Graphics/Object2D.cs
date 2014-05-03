@@ -145,10 +145,15 @@ namespace Frost.Graphics
 		/// <summary>
 		/// Updates the state of the object
 		/// </summary>
-		/// <param name="prev">Index of the previous state</param>
-		/// <param name="next">Index of the state to update</param>
-		public void Step (int prev, int next)
+		/// <param name="args">Update information</param>
+		/// <remarks>The only game state that should be modified during this process is the state indicated by <see cref="FrameStepEventArgs.NextStateIndex"/>.
+		/// The state indicated by <see cref="FrameStepEventArgs.PreviousStateIndex"/> can be used for reference (if needed), but should not be modified.
+		/// Modifying any other game state info during this process could corrupt the game state.</remarks>
+		public void Step (FrameStepEventArgs args)
 		{
+			var prev = args.PreviousStateIndex;
+			var next = args.NextStateIndex;
+
 			if(_dirty)
 			{// Apply transformations to the next state
 				var state = InitialState;
@@ -175,11 +180,12 @@ namespace Frost.Graphics
 		/// Draws a object's state to a display
 		/// </summary>
 		/// <param name="display">Display to draw to</param>
-		/// <param name="state">Index of the state to draw</param>
-		/// <param name="t">Interpolation value</param>
-		public void Draw (IDisplay display, int state, double t)
+		/// <param name="args">Render information</param>
+		/// <remarks>None of the game states should be modified by this process - including the state indicated by <see cref="FrameDrawEventArgs.StateIndex"/>.
+		/// Modifying the game state info during this process would corrupt the game state.</remarks>
+		public void Draw (IDisplay display, FrameDrawEventArgs args)
 		{
-			DrawObject(display, _states[state], t);
+			DrawObject(display, _states[args.StateIndex], args.Interpolation);
 		}
 		#endregion
 	}

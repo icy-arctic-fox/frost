@@ -197,7 +197,7 @@ namespace Frost
 		internal bool Update (FrameStepEventArgs stepArgs)
 		{
 			_display.Update();
-			CurrentScene.Step(stepArgs.PreviousStateIndex, stepArgs.NextStateIndex); // TODO: Pass stepArgs
+			CurrentScene.Step(stepArgs);
 			return ScenesRemaining;
 		}
 
@@ -266,7 +266,7 @@ namespace Frost
 			{// Only render if there's a scene
 				if(RenderDuplicateFrames || !drawArgs.Duplicate)
 				{// Render the frame
-					CurrentScene.Draw(_display, drawArgs.StateIndex, drawArgs.Interpolation); // TODO: Pass drawArgs
+					CurrentScene.Draw(_display, drawArgs);
 					if(drawArgs.Duplicate)
 						++RenderedDuplicateFrames;
 				}

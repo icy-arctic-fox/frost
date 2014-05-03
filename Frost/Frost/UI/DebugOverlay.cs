@@ -179,9 +179,8 @@ namespace Frost.UI
 		/// Draws the debug overlay onto the display
 		/// </summary>
 		/// <param name="display">Display to draw on</param>
-		/// <param name="state">State index (ignored)</param>
-		/// <param name="t">Interpolation value (ignored)</param>
-		public void Draw (IDisplay display, int state, double t)
+		/// <param name="args">Render information</param>
+		public void Draw (IDisplay display, FrameDrawEventArgs args)
 		{
 			var bounds = Bounds;
 			if(_background.Texture == null || _resize)
