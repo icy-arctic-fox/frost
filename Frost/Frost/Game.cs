@@ -85,6 +85,7 @@ namespace Frost
 		/// <returns>A scene</returns>
 		protected abstract Scene CreateInitialScene ();
 
+		#region Modules
 		private readonly List<IModule> _modules = new List<IModule>();
 
 		/// <summary>
@@ -98,6 +99,15 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Shuts down and disposes of game modules
+		/// </summary>
+		protected virtual void ShutdownModules ()
+		{
+			foreach(var module in _modules)
+				module.Dispose();
+		}
+
+		/// <summary>
 		/// Adds a module to the game which is processed each logic update
 		/// </summary>
 		/// <param name="module">Module to add</param>
@@ -106,6 +116,7 @@ namespace Frost
 			Runner.AddModule(module);
 			_modules.Add(module);
 		}
+		#endregion
 
 		/// <summary>
 		/// Initializes the core game components
@@ -176,15 +187,6 @@ namespace Frost
 				Resources.Dispose();
 				ShutdownModules();
 			}
-		}
-
-		/// <summary>
-		/// Shuts down and disposes of game modules
-		/// </summary>
-		protected virtual void ShutdownModules ()
-		{
-			foreach(var module in _modules)
-				module.Dispose();
 		}
 
 		#region Debug overlay
