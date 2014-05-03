@@ -47,11 +47,6 @@ namespace Frost
 			// Setup the display and scene manager
 			_display = display;
 			_scenes  = new SceneManager(initialScene, display);
-
-			_debugOverlay = setupDebugOverlay();
-#if DEBUG
-			enableDebugOverlay();
-#endif
 		}
 
 		#region Modules
@@ -690,99 +685,6 @@ namespace Frost
 		{
 			PostRender.NotifySubscribers(this, args);
 			_scenes.PostRender(args);
-		}
-		#endregion
-
-		#region Debug overlay
-
-		private const uint DebugOverlayFontSize = 12;
-
-		/// <summary>
-		/// Debug overlay component
-		/// </summary>
-		private readonly DebugOverlay _debugOverlay;
-
-		private volatile bool _debug;
-
-		/// <summary>
-		/// Indicates whether the debug overlay is displayed
-		/// </summary>
-		public bool Debug
-		{
-			get { return _debug && _debugOverlay != null; }
-			set
-			{
-				if(value && !_debug && _debugOverlay != null)
-					enableDebugOverlay();
-				else if(!value && _debug)
-					disableDebugOverlay();
-			}
-		}
-
-		/// <summary>
-		/// Enables the debug overlay and starts updating and displaying it
-		/// </summary>
-		private void enableDebugOverlay ()
-		{
-			PreUpdate  += updateDebugOverlay;
-			PostRender += renderDebugOverlay;
-			_debug = true;
-		}
-
-		/// <summary>
-		/// Disables the debug overlay and stops it from being updated and displayed
-		/// </summary>
-		private void disableDebugOverlay ()
-		{
-			PreUpdate  -= updateDebugOverlay;
-			PostRender -= renderDebugOverlay;
-			_debug = false;
-		}
-
-		/// <summary>
-		/// Attempts to create the debug overlay
-		/// </summary>
-		/// <returns>Constructed debug overlay or null if something went wrong</returns>
-		private DebugOverlay setupDebugOverlay ()
-		{
-			// Load the debug overlay font
-			var font = Graphics.Text.Font.GetDebugFont(); // TODO: Catch exceptions
-
-			if(font != null)
-			{// Set up the debug overlay
-				var debugOverlay = new DebugOverlay(this, font, DebugOverlayFontSize);
-
-				// Default overlay lines
-				debugOverlay.AddLine(this); // Frame information
-				debugOverlay.AddLine(new SceneDebugOverlayLine(this)); // Scene information
-				debugOverlay.AddLine(new MemoryDebugOverlayLine()); // Memory usage information
-
-				return debugOverlay;
-			}
-
-			return null; // Font failed to load, can't use the overlay
-		}
-
-		/// <summary>
-		/// Updates the contents of the debug overlay.
-		/// This should be called before an update occurs.
-		/// </summary>
-		/// <param name="sender">Game runner (this instance)</param>
-		/// <param name="e">Update information</param>
-		private void updateDebugOverlay (object sender, FrameStepEventArgs e)
-		{
-			_debugOverlay.Update(); // TODO: Pass e
-		}
-
-		/// <summary>
-		/// Draws the debug overlay.
-		/// This should be called after everything else has been rendered.
-		/// </summary>
-		/// <param name="sender">Game runner (this instance)</param>
-		/// <param name="e">Render information</param>
-		private void renderDebugOverlay (object sender, FrameDrawEventArgs e)
-		{
-			_debugOverlay.Draw(_display, e);
 		}
 		#endregion
 

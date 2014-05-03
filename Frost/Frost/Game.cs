@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Frost.Display;
 using Frost.Modules;
+using Frost.UI;
 using Frost.Utility;
 
 namespace Frost
@@ -133,6 +134,12 @@ namespace Frost
 			var initialScene = CreateInitialScene();
 			Runner = new GameRunner(Window, initialScene) {ThreadSynchronization = Configuration.SyncRenderThread};
 
+			// Set up the debug overlay
+			DebugOverlay = setupDebugOverlay();
+#if DEBUG
+			enableDebugOverlay(); // Enable debug overlay by default for debug builds
+#endif
+
 			InitializeModules();
 			Initialized = true;
 		}
@@ -179,6 +186,99 @@ namespace Frost
 			foreach(var module in _modules)
 				module.Dispose();
 		}
+
+		#region Debug overlay
+
+		private const uint DebugOverlayFontSize = 12;
+
+		/// <summary>
+		/// Overlay that appears on top of everything that displays internal information
+		/// </summary>
+		protected DebugOverlay DebugOverlay { get; private set; }
+
+		private volatile bool _debug;
+
+		/// <summary>
+		/// Indicates whether the debug overlay is displayed
+		/// </summary>
+		public bool Debug
+		{
+			get { return _debug && DebugOverlay != null; }
+			set
+			{
+				if(value && !_debug && DebugOverlay != null)
+					enableDebugOverlay();
+				else if(!value && _debug)
+					disableDebugOverlay();
+			}
+		}
+
+		/// <summary>
+		/// Enables the debug overlay and starts updating and displaying it
+		/// </summary>
+		private void enableDebugOverlay ()
+		{
+			Runner.PreUpdate  += updateDebugOverlay;
+			Runner.PostRender += renderDebugOverlay;
+			_debug = true;
+		}
+
+		/// <summary>
+		/// Disables the debug overlay and stops it from being updated and displayed
+		/// </summary>
+		private void disableDebugOverlay ()
+		{
+			Runner.PreUpdate  -= updateDebugOverlay;
+			Runner.PostRender -= renderDebugOverlay;
+			_debug = false;
+		}
+
+		/// <summary>
+		/// Attempts to create the debug overlay
+		/// </summary>
+		/// <returns>Constructed debug overlay or null if something went wrong</returns>
+		private DebugOverlay setupDebugOverlay ()
+		{
+			// Load the debug overlay font
+			var font = Graphics.Text.Font.GetDebugFont(); // TODO: Catch exceptions
+
+			if(font != null)
+			{// Set up the debug overlay
+				var debugOverlay = new DebugOverlay(Runner, font, DebugOverlayFontSize);
+
+				// Default overlay lines
+				debugOverlay.AddLine(Runner); // Frame information
+				debugOverlay.AddLine(new SceneDebugOverlayLine(Runner)); // Scene information
+				debugOverlay.AddLine(new MemoryDebugOverlayLine()); // Memory usage information
+
+				return debugOverlay;
+			}
+
+			return null; // Font failed to load, can't use the overlay
+		}
+
+		/// <summary>
+		/// Updates the contents of the debug overlay.
+		/// This should be called before an update occurs.
+		/// </summary>
+		/// <param name="sender">Game runner (this instance)</param>
+		/// <param name="e">Update information</param>
+		private void updateDebugOverlay (object sender, FrameStepEventArgs e)
+		{
+			DebugOverlay.Update(); // TODO: Pass e
+		}
+
+		/// <summary>
+		/// Draws the debug overlay.
+		/// This should be called after everything else has been rendered.
+		/// </summary>
+		/// <param name="sender">Game runner (this instance)</param>
+		/// <param name="e">Render information</param>
+		private void renderDebugOverlay (object sender, FrameDrawEventArgs e)
+		{
+			DebugOverlay.Draw(Window, e);
+		}
+		#endregion
 
 		#region Subscribers
 
