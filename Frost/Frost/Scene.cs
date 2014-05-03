@@ -1,4 +1,5 @@
 ﻿using Frost.Display;
+using Frost.Entities;
 using Frost.Graphics;
 
 namespace Frost
@@ -8,14 +9,14 @@ namespace Frost
 	/// </summary>
 	public abstract class Scene : IStepable, IRenderable
 	{
-		private SceneManager _manager;
+		private SceneManager _sceneManager;
 
 		/// <summary>
 		/// Manager that owns the scene
 		/// </summary>
-		protected SceneManager ParentManager
+		protected SceneManager ParentSceneManager
 		{
-			get { return _manager; }
+			get { return _sceneManager; }
 		}
 
 		/// <summary>
@@ -24,13 +25,23 @@ namespace Frost
 		/// <param name="manager">Parent scene manager</param>
 		internal void SetParentManager (SceneManager manager)
 		{
-			_manager = manager;
+			_sceneManager = manager;
+		}
+
+		private readonly EntityManager _entityManager = new EntityManager();
+
+		/// <summary>
+		/// Tracks entities used in the current scene
+		/// </summary>
+		protected EntityManager Entities
+		{
+			get { return _entityManager; }
 		}
 
 		/// <summary>
 		/// Visible name of the scene
 		/// </summary>
-		/// <remarks>This property is used instead of reflection because it is be faster.</remarks>
+		/// <remarks>This property is used instead of reflection (<see cref="System.Type.FullName"/>) because it's faster.</remarks>
 		public abstract string Name { get; }
 
 		/// <summary>
