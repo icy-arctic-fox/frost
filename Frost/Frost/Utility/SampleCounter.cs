@@ -8,6 +8,7 @@
 	{
 		private readonly object _locker = new object();
 		private readonly double[] _measurements;
+		private double _min, _max;
 		private int _pos;
 
 		/// <summary>
@@ -46,12 +47,8 @@
 		{
 			get
 			{
-				var max = _measurements[0];
 				lock(_locker)
-					for(var i = 1; i < Count; ++i)
-						if(_measurements[i] > max)
-							max = _measurements[i];
-				return max;
+					return _max;
 			}
 		}
 
@@ -62,28 +59,30 @@
 		{
 			get
 			{
-				var min = _measurements[0];
 				lock(_locker)
-					for(var i = 1; i < Count; ++i)
-						if(_measurements[i] < min)
-							min = _measurements[i];
-				return min;
+					return _min;
 			}
 		}
 
 		/// <summary>
 		/// Adds a measurement to the counter
 		/// </summary>
-		/// <param name="measurement">Measurement value</param>
-		public void AddMeasurement (double measurement)
+		/// <param name="value">Measurement value</param>
+		public void AddMeasurement (double value)
 		{
 			lock(_locker)
 			{
-				_measurements[_pos++] = measurement;
+				_measurements[_pos++] = value;
 				if(_pos >= _measurements.Length)
 					_pos = 0; // Wrap around
 				else if(Count < _measurements.Length)
 					++Count; // Increment number of measurements
+
+				// Update min/max
+				if(value > _max)
+					_max = value;
+				else if(value < _min)
+					_min = value;
 			}
 		}
 	}
