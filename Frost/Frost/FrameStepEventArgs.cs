@@ -21,7 +21,7 @@ namespace Frost
 		/// <summary>
 		/// Current frame number
 		/// </summary>
-		public ulong Frame { get; internal set; }
+		public long FrameNumber { get; internal set; }
 
 		/// <summary>
 		/// Length of time that the game has been running for
