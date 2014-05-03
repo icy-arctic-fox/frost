@@ -14,8 +14,9 @@ namespace Frost
 	public class SceneManager
 	{
 		private readonly object _locker = new object();
-		private SceneStackEntry _curScene;
-		private readonly Stack<SceneStackEntry> _sceneStack = new Stack<SceneStackEntry>();
+		private Scene _curScene;
+		private readonly Stack<Scene> _sceneStack = new Stack<Scene>();
+		private readonly StateManager _stateManager = new StateManager();
 		private readonly IDisplay _display;
 
 		/// <summary>
@@ -26,7 +27,7 @@ namespace Frost
 			get
 			{
 				lock(_locker)
-					return _sceneStack.Count > 0;
+					return _curScene != null;
 			}
 		}
 
@@ -39,7 +40,7 @@ namespace Frost
 			get
 			{
 				lock(_locker)
-					return (_sceneStack.Count <= 0) ? null : _curScene.Scene;
+					return _curScene;
 			}
 		}
 
@@ -49,11 +50,7 @@ namespace Frost
 		/// </summary>
 		internal StateManager StateManager
 		{
-			get
-			{
-				lock(_locker)
-					return (_sceneStack.Count <= 0) ? null : _curScene.StateManager;
-			}
+			get { return _stateManager; }
 		}
 
 		/// <summary>
@@ -102,16 +99,10 @@ namespace Frost
 				throw new ArgumentNullException("scene");
 
 			scene.SetParentManager(this);
-			var entry = new SceneStackEntry(scene);
-#if DEBUG
-			entry.StateManager.UpdateThreadId = _updateThreadId;
-			entry.StateManager.RenderThreadId = _renderThreadId;
-#endif
-
 			lock(_locker)
 			{
-				_sceneStack.Push(entry);
-				_curScene = entry;
+				_sceneStack.Push(scene);
+				_curScene = scene;
 			}
 
 			OnEnterScene(new SceneEventArgs(scene));
@@ -145,10 +136,9 @@ namespace Frost
 				if(_sceneStack.Count <= 0)
 					throw new InvalidOperationException("There are no more scenes left to exit from.");
 
-				var prevEntry = _sceneStack.Pop();
-				prevScene = prevEntry.Scene;
+				prevScene = _sceneStack.Pop();
 				prevScene.SetParentManager(null);
-				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Peek() : default(SceneStackEntry);
+				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Peek() : null;
 			}
 
 			OnExitScene(new SceneEventArgs(prevScene));
@@ -161,16 +151,13 @@ namespace Frost
 		private volatile int _updateThreadId;
 
 		/// <summary>
-		/// ID of the thread that is allowed to update
+		/// Sets the ID of the thread that is allowed to update
 		/// </summary>
-		internal int UpdateThreadId
+		/// <param name="id">ID of the update thread</param>
+		internal void SetUpdateThreadId (int id)
 		{
-			set
-			{
-				foreach(var entry in _sceneStack)
-					entry.StateManager.UpdateThreadId = value;
-				_updateThreadId = value;
-			}
+			_updateThreadId = id;
+			_stateManager.UpdateThreadId = id;
 		}
 #endif
 
@@ -183,7 +170,7 @@ namespace Frost
 		{
 			// Get the previous state and next state to update
 			int prevStateIndex;
-			var nextStateIndex = StateManager.AcquireNextUpdateState(out prevStateIndex);
+			var nextStateIndex = _stateManager.AcquireNextUpdateState(out prevStateIndex);
 
 			stepArgs.PreviousStateIndex = prevStateIndex;
 			stepArgs.NextStateIndex     = nextStateIndex;
@@ -208,23 +195,20 @@ namespace Frost
 		internal void PostUpdate (FrameStepEventArgs stepArgs)
 		{
 			// Release the state
-			StateManager.ReleaseUpdateState();
+			_stateManager.ReleaseUpdateState();
 		}
 
 #if DEBUG
 		private volatile int _renderThreadId;
 
 		/// <summary>
-		/// ID of the thread that is allowed to render
+		/// Sets the ID of the thread that is allowed to render
 		/// </summary>
-		internal int RenderThreadId
+		/// <param name="id">Id of the render thread</param>
+		internal void SetRenderThreadId (int id)
 		{
-			set
-			{
-				foreach(var entry in _sceneStack)
-					entry.StateManager.RenderThreadId = value;
-				_renderThreadId = value;
-			}
+			_renderThreadId = id;
+			_stateManager.RenderThreadId = id;
 		}
 #endif
 
@@ -248,7 +232,7 @@ namespace Frost
 		{
 			// Retrieve the next state to render
 			int prevStateIndex;
-			var nextStateIndex = StateManager.AcquireNextRenderState(out prevStateIndex);
+			var nextStateIndex = _stateManager.AcquireNextRenderState(out prevStateIndex);
 
 			drawArgs.PreviousStateIndex = prevStateIndex;
 			drawArgs.StateIndex         = nextStateIndex;
@@ -282,38 +266,8 @@ namespace Frost
 			_display.ExitFrame();
 
 			// Release the state
-			StateManager.ReleaseRenderState();
+			_stateManager.ReleaseRenderState();
 		}
 		#endregion
-
-		/// <summary>
-		/// An entry in the stack
-		/// </summary>
-		private struct SceneStackEntry
-		{
-			/// <summary>
-			/// Scene to update and render
-			/// </summary>
-			public readonly Scene Scene;
-
-			/// <summary>
-			/// Manager that tracks the state to update and render
-			/// </summary>
-			public readonly StateManager StateManager;
-
-			/// <summary>
-			/// Creates a new stack entry
-			/// </summary>
-			/// <param name="scene">Scene to update and render</param>
-			/// <exception cref="ArgumentNullException">The stored scene can't be null.</exception>
-			public SceneStackEntry (Scene scene)
-			{
-				if(scene == null)
-					throw new ArgumentNullException("scene");
-
-				Scene        = scene;
-				StateManager = new StateManager();
-			}
-		}
 	}
 }

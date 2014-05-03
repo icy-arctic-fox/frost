@@ -180,8 +180,8 @@ namespace Frost
 #if DEBUG
 			// Set allowed update and render threads
 			var tid = Thread.CurrentThread.ManagedThreadId;
-			_scenes.UpdateThreadId = tid;
-			_scenes.RenderThreadId = tid;
+			_scenes.SetUpdateThreadId(tid);
+			_scenes.SetRenderThreadId(tid);
 #endif
 
 			// Allocate these on the stack for faster access
@@ -318,7 +318,7 @@ namespace Frost
 		private void doUpdateLoop ()
 		{
 #if DEBUG
-			_scenes.UpdateThreadId = Thread.CurrentThread.ManagedThreadId;
+			_scenes.SetUpdateThreadId(Thread.CurrentThread.ManagedThreadId);
 #endif
 			var timeout = TimeSpan.FromSeconds(MaxUpdateInterval);
 
@@ -557,7 +557,7 @@ namespace Frost
 		private void doRenderLoop ()
 		{
 #if DEBUG
-			_scenes.RenderThreadId = Thread.CurrentThread.ManagedThreadId;
+			_scenes.SetRenderThreadId(Thread.CurrentThread.ManagedThreadId);
 #endif
 			if(!_display.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the render thread. It may be active on another thread.");
