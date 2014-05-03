@@ -191,7 +191,7 @@ namespace Frost
 			_targetRenderInterval = (renderRate <= 0d) ? 0d : 1d / renderRate;
 
 			if(_debug)
-				_scenes.AddOverlay(_debugOverlay);
+				PostRender += renderDebugOverlay;
 
 			_running = true;
 			_gameWatch.Start();
@@ -729,6 +729,17 @@ namespace Frost
 		{
 			PostRender.NotifySubscribers(this, args);
 			_scenes.PostRender(args);
+		}
+
+		/// <summary>
+		/// Draws the debug overlay.
+		/// This should be called after everything else has been rendered.
+		/// </summary>
+		/// <param name="sender">Game runner</param>
+		/// <param name="e">Render information</param>
+		private void renderDebugOverlay (object sender, FrameDrawEventArgs e)
+		{
+			_debugOverlay.Draw(_display, e.StateIndex, e.Interpolation); // TODO: Pass e
 		}
 		#endregion
 
