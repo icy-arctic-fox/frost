@@ -85,12 +85,44 @@ namespace Frost.Entities
 		}
 
 		/// <summary>
+		/// Removes an entity from being processed by each update and rendering
+		/// </summary>
+		/// <param name="entity">Entity to remove</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="entity"/> to remove can't be null.</exception>
+		public void RemoveEntity (Entity entity)
+		{
+			if(entity == null)
+				throw new ArgumentNullException("entity");
+
+			bool found;
+			lock(_allEntities)
+				found = _allEntities.Remove(entity);
+
+			if(!found)
+				return;  // Entity isn't tracked, don't waste time processing
+
+			lock(_updateSystems)
+				for(var i = 0; i < _updateSystems.Count; ++i)
+				{
+					var set = _updateSystems[i];
+					set.Entities.Remove(entity);
+				}
+
+			lock(_renderSystems)
+				for(var i = 0; i < _renderSystems.Count; ++i)
+				{
+					var set = _renderSystems[i];
+					set.Entities.Remove(entity);
+				}
+		}
+
+		/// <summary>
 		/// Adds an entity to a subsystem set if the subsystem can process it
 		/// </summary>
 		/// <param name="subsystem">Subsystem to check</param>
 		/// <param name="entity">Entity to add</param>
 		/// <param name="entityList">List of existing entities</param>
-		private static void addToSubsystem (ISubsystem subsystem, Entity entity, List<Entity> entityList)
+		private static void addToSubsystem(ISubsystem subsystem, Entity entity, List<Entity> entityList)
 		{
 			if(subsystem.CanProcess(entity))
 				lock(entityList)
