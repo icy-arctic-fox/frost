@@ -38,7 +38,7 @@ namespace Frost.Entities
 		/// <param name="id">Entity ID number</param>
 		internal void SetId (ulong id)
 		{
-			throw new NotImplementedException();
+			_id = id;
 		}
 		#endregion
 
@@ -54,7 +54,13 @@ namespace Frost.Entities
 		/// <exception cref="InvalidOperationException">Components can't be added to the entity after it has been registered.</exception>
 		internal void AddComponent (int index, IEntityComponent component)
 		{
-			throw new NotImplementedException();
+			if(Registered)
+				throw new InvalidOperationException("Components can't be added to the entity after it has been registered.");
+
+			// Pad with null components until the index is reached
+			while(_components.Count < index + 1)
+				_components.Add(null);
+			_components[index] = component;
 		}
 
 		/// <summary>
@@ -64,7 +70,7 @@ namespace Frost.Entities
 		/// <returns>Component information</returns>
 		internal IEntityComponent GetComponent (int index)
 		{
-			throw new NotImplementedException();
+			return _components[index];
 		}
 
 		/// <summary>
@@ -78,7 +84,10 @@ namespace Frost.Entities
 			if(componentType == null)
 				throw new ArgumentNullException("componentType");
 
-			throw new NotImplementedException();
+			for(var i = 0; i < _components.Count; ++i)
+				if(Portability.CompareTypes(componentType, _components[i].GetType()))
+					return true;
+			return false;
 		}
 		#endregion
 
