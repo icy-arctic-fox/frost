@@ -25,14 +25,18 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="entities">Initial entities</param>
 		/// <exception cref="ArgumentNullException">The collection of <paramref name="entities"/> can't be null.</exception>
+		/// <exception cref="ArgumentException">An entity in <paramref name="entities"/> is null or previously disposed.</exception>
 		public EntityGroup (IEnumerable<Entity> entities)
 		{
 			if(entities == null)
 				throw new ArgumentNullException("entities");
 
 			foreach(var entity in entities)
-				if(entity != null)
-					_entities.Add(entity);
+			{
+				if(entity == null || entity.Disposed)
+					throw new ArgumentException();
+				addEntity(entity);
+			}
 		}
 
 		/// <summary>
@@ -68,9 +72,38 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="item">The entity to add to the group</param>
 		/// <exception cref="NotSupportedException">The collection is read-only.</exception>
+		/// <exception cref="ArgumentNullException">The <paramref name="item"/> to add can't be null.</exception>
+		/// <exception cref="ArgumentException">The <paramref name="item"/> to add can't be disposed.</exception>
 		public void Add (Entity item)
 		{
-			throw new NotImplementedException();
+			if(item == null)
+				throw new ArgumentNullException("item");
+			if(item.Disposed)
+				throw new ArgumentException("item");
+
+			lock(_entities)
+				addEntity(item);
+		}
+
+		/// <summary>
+		/// Actually adds an entity to the list (sans the locking)
+		/// </summary>
+		/// <param name="entity">Entity to add</param>
+		private void addEntity (Entity entity)
+		{
+			_entities.Add(entity);
+			entity.Disposing += entityDisposing;
+		}
+
+		/// <summary>
+		/// Called when an entity is being disposed.
+		/// Removes the disposing entity from the group.
+		/// </summary>
+		/// <param name="sender">Entity being disposed</param>
+		/// <param name="e">Event arguments (unused)</param>
+		private void entityDisposing (object sender, EventArgs e)
+		{
+			Remove((Entity)sender);
 		}
 
 		/// <summary>
