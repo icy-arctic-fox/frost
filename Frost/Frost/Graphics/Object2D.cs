@@ -179,13 +179,12 @@ namespace Frost.Graphics
 		/// <summary>
 		/// Draws a object's state to a display
 		/// </summary>
-		/// <param name="display">Display to draw to</param>
 		/// <param name="args">Render information</param>
 		/// <remarks>None of the game states should be modified by this process - including the state indicated by <see cref="FrameDrawEventArgs.StateIndex"/>.
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
-		public void Draw (IDisplay display, FrameDrawEventArgs args)
+		public void Draw (FrameDrawEventArgs args)
 		{
-			DrawObject(display, _states[args.StateIndex], args.Interpolation);
+			DrawObject(args.Display, _states[args.StateIndex], args.Interpolation);
 		}
 		#endregion
 	}

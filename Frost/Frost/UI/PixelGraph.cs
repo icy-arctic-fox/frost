@@ -1,5 +1,4 @@
 ﻿using System;
-using Frost.Display;
 using Frost.Geometry;
 using Frost.Graphics;
 using Frost.Utility;
@@ -96,14 +95,13 @@ namespace Frost.UI
 		/// <summary>
 		/// Draws the graph
 		/// </summary>
-		/// <param name="display">Display to draw the graph onto</param>
 		/// <param name="args">Render information</param>
-		public void Draw (IDisplay display, FrameDrawEventArgs args)
+		public void Draw (FrameDrawEventArgs args)
 		{
 			_texture.Display();
 			var rs = RenderStates.Default;
 			rs.Transform.Translate(Position.X, Position.Y);
-			display.Draw(_sprite, rs);
+			args.Display.Draw(_sprite, rs);
 		}
 
 		#region Disposable

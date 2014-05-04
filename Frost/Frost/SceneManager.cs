@@ -256,7 +256,7 @@ namespace Frost
 			while(curNode != null)
 			{
 				var scene = curNode.Value;
-				scene.Draw(_display, args);
+				scene.Draw(args);
 				curNode = curNode.Next;
 			}
 		}

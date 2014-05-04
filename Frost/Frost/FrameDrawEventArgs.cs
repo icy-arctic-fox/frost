@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Display;
 
 namespace Frost
 {
@@ -38,5 +39,10 @@ namespace Frost
 		/// Indicates whether game updates are falling behind of the target update rate
 		/// </summary>
 		public bool IsRunningSlow { get; internal set; }
+
+		/// <summary>
+		/// Destination display to draw to
+		/// </summary>
+		public IDisplay Display { get; internal set; }
 	}
 }

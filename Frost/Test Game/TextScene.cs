@@ -1,5 +1,4 @@
 ﻿using Frost;
-using Frost.Display;
 using Frost.Graphics;
 using Frost.Graphics.Text;
 
@@ -42,10 +41,10 @@ namespace Test_Game
 			_sprite.Step(args);
 		}
 
-		public override void Draw (IDisplay display, FrameDrawEventArgs args)
+		public override void Draw (FrameDrawEventArgs args)
 		{
-			base.Draw(display, args);
-			_sprite.Draw(display, args);
+			base.Draw(args);
+			_sprite.Draw(args);
 		}
 	}
 }

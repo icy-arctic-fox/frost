@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Frost.Display;
 using Frost.Geometry;
 using Frost.Graphics;
 using Frost.Graphics.Text;
@@ -163,9 +162,8 @@ namespace Frost.UI
 		/// <summary>
 		/// Draws the debug overlay onto the display
 		/// </summary>
-		/// <param name="display">Display to draw on</param>
 		/// <param name="args">Render information</param>
-		public void Draw (IDisplay display, FrameDrawEventArgs args)
+		public void Draw ( FrameDrawEventArgs args)
 		{
 			var bounds = Bounds;
 			if(_background.Texture == null || _resize)
@@ -184,7 +182,7 @@ namespace Frost.UI
 			// Draw the background
 			var rs = RenderStates.Default;
 			rs.Transform.Translate(bounds.Left, bounds.Top);
-			display.Draw(_background, rs);
+			args.Display.Draw(_background, rs);
 
 			// Draw each line
 			var yPos = bounds.Top;
@@ -192,7 +190,7 @@ namespace Frost.UI
 				for(var i = 0; i < _textLines.Count; ++i)
 				{
 					var line = _textLines[i];
-					line.Draw(display, bounds.Left, yPos);
+					line.Draw(args.Display, bounds.Left, yPos);
 					yPos += line.Bounds.Height;
 				}
 		}

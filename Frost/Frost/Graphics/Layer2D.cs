@@ -17,14 +17,13 @@ namespace Frost.Graphics
 		/// <summary>
 		/// Draws the state of a layer and all contained objects
 		/// </summary>
-		/// <param name="display">Display to draw the state onto</param>
 		/// <param name="args">Render information</param>
 		/// <remarks>None of the game states should be modified by this process - including the state indicated by <see cref="FrameDrawEventArgs.StateIndex"/>.
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
-		public void Draw (IDisplay display, FrameDrawEventArgs args)
+		public void Draw (FrameDrawEventArgs args)
 		{
 			foreach(var obj in _objects)
-				obj.Draw(display, args);
+				obj.Draw(args);
 		}
 
 		/// <summary>

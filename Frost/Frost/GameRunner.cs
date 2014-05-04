@@ -45,6 +45,7 @@ namespace Frost
 			// Setup the display and scene manager
 			_display = display;
 			_scenes  = new SceneManager(initialScene, display);
+			_drawArgs.Display = display;
 		}
 
 		#region Modules

@@ -1,5 +1,4 @@
-﻿using Frost.Display;
-using Frost.Entities;
+﻿using Frost.Entities;
 using Frost.Graphics;
 
 namespace Frost
@@ -82,11 +81,10 @@ namespace Frost
 		/// <summary>
 		/// Draws the state of the scene
 		/// </summary>
-		/// <param name="display">Display to draw the object's state onto</param>
 		/// <param name="args">Render information</param>
 		/// <remarks>None of the game states should be modified by this process - including the state indicated by <see cref="FrameDrawEventArgs.StateIndex"/>.
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
-		public virtual void Draw (IDisplay display, FrameDrawEventArgs args)
+		public virtual void Draw (FrameDrawEventArgs args)
 		{
 			_subsystemManager.Render(args);
 		}
