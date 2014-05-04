@@ -8,7 +8,7 @@ namespace Frost.UI
 	/// </summary>
 	public class SceneDebugOverlayLine : IDebugOverlayLine
 	{
-		private readonly SceneManager _manager;
+		private readonly GameRunner _runner;
 
 		/// <summary>
 		/// Creates a new scene debug overlay line
@@ -20,7 +20,7 @@ namespace Frost.UI
 			if(runner == null)
 				throw new ArgumentNullException("runner");
 
-			_manager = runner.Scenes;
+			_runner = runner;
 			runner.Disposing += _runner_Disposing;
 		}
 
@@ -45,10 +45,12 @@ namespace Frost.UI
 		/// <returns>Scene information</returns>
 		public override string ToString ()
 		{
-			var scenes    = _manager;
+			var scenes    = _runner.Scenes;
 			var curScene  = scenes.CurrentScene;
 			var sceneName = curScene.Name;
-			return String.Format("Scene: {0}", sceneName);
+			var entities  = curScene.EntityManager.Count;
+			var states    = _runner.StateManager;
+			return String.Format("Scene: {0} {1} - {2} entities", sceneName, states, entities);
 		}
 	}
 }
