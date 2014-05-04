@@ -107,7 +107,7 @@ namespace Frost.Entities
 			}
 
 			if(found)
-				OnRegister(new EntityEventArgs(entity));
+				OnDeregister(new EntityEventArgs(entity));
 			return found;
 		}
 
