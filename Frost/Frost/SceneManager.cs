@@ -14,9 +14,10 @@ namespace Frost
 	public class SceneManager
 	{
 		private readonly object _locker = new object();
+		private readonly IDisplay _display;
+
 		private Scene _curScene;
 		private readonly Stack<Scene> _sceneStack = new Stack<Scene>();
-		private readonly IDisplay _display;
 
 		/// <summary>
 		/// Checks if there are any scenes being processed
@@ -150,13 +151,24 @@ namespace Frost
 		/// <summary>
 		/// Updates the active scene
 		/// </summary>
+		/// <param name="stepArgs">Update information</param>
 		/// <returns>True if there is still a scene to process</returns>
 		/// <remarks>A return value of false indicates that the last scene has exited and the game should terminate.</remarks>
 		internal bool Update (FrameStepEventArgs stepArgs)
 		{
 			_display.Update();
-			_curScene.Step(stepArgs);
+			updateSceneStack(stepArgs);
 			return ScenesRemaining;
+		}
+
+		/// <summary>
+		/// Processes all scenes in the stack from top to bottom until <see cref="Scene.AllowFallthrough"/> is false or the bottom of the stack is reached.
+		/// The stack is processed top-down so that higher scenes can intercept events before lower scenes.
+		/// </summary>
+		/// <param name="args">Update information</param>
+		private void updateSceneStack (FrameStepEventArgs args)
+		{
+			_curScene.Step(args);
 		}
 
 		/// <summary>
@@ -199,11 +211,21 @@ namespace Frost
 			{// Only render if there's a scene
 				if(RenderDuplicateFrames || !drawArgs.Duplicate)
 				{// Render the frame
-					_curScene.Draw(_display, drawArgs);
+					renderSceneStack(drawArgs);
 					if(drawArgs.Duplicate)
 						++RenderedDuplicateFrames;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Processes all scenes in the stack from top to bottom until <see cref="Scene.AllowFallthrough"/> is false or the bottom of the stack is reached.
+		/// The stack is processed bottom-up so that higher scenes are overlaid on top of lower scenes.
+		/// </summary>
+		/// <param name="args">Render information</param>
+		private void renderSceneStack (FrameDrawEventArgs args)
+		{
+			_curScene.Draw(_display, args);
 		}
 
 		/// <summary>
