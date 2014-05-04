@@ -19,7 +19,7 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="subsystem">Subsystem to add</param>
 		/// <exception cref="ArgumentNullException">The <paramref name="subsystem"/> to add can't be null.</exception>
-		public void AddUpdateSubsystem (ISubsystem subsystem)
+		public void AddUpdateSubsystem (IUpdateSubsystem subsystem)
 		{
 			if(subsystem == null)
 				throw new ArgumentNullException("subsystem");
@@ -41,7 +41,7 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="subsystem">Subsystem to add</param>
 		/// <exception cref="ArgumentNullException">The <paramref name="subsystem"/> to add can't be null.</exception>
-		public void AddRenderSubsystem (ISubsystem subsystem)
+		public void AddRenderSubsystem (IRenderSubsystem subsystem)
 		{
 			if(subsystem == null)
 				throw new ArgumentNullException("subsystem");
@@ -143,7 +143,7 @@ namespace Frost.Entities
 					var set = _updateSystems[i];
 					var subsystem = set.Subsystem;
 					var entities  = set.Entities;
-					runUpdateSubsystem(subsystem, entities, stepArgs);
+					runUpdateSubsystem((IUpdateSubsystem)subsystem, entities, stepArgs); // TODO: Remove cast
 				}
 		}
 
@@ -153,10 +153,10 @@ namespace Frost.Entities
 		/// <param name="subsystem">Subsystem to execute</param>
 		/// <param name="entities">Entities to run through the subsystem</param>
 		/// <param name="args">Update information</param>
-		private static void runUpdateSubsystem (ISubsystem subsystem, EntityGroup entities, FrameStepEventArgs args)
+		private static void runUpdateSubsystem (IUpdateSubsystem subsystem, EntityGroup entities, FrameStepEventArgs args)
 		{
 			lock(entities)
-				entities.Iterate(subsystem.Process);
+				entities.Iterate(subsystem.Process, args);
 		}
 
 		/// <summary>
@@ -171,7 +171,7 @@ namespace Frost.Entities
 					var set = _renderSystems[i];
 					var subsystem = set.Subsystem;
 					var entities  = set.Entities;
-					runRenderSubsystem(subsystem, entities, drawArgs);
+					runRenderSubsystem((IRenderSubsystem)subsystem, entities, drawArgs); // TODO: Remove cast
 				}
 		}
 
@@ -181,10 +181,10 @@ namespace Frost.Entities
 		/// <param name="subsystem">Subsystem to execute</param>
 		/// <param name="entities">Entities to run through the subsystem</param>
 		/// <param name="args">Render information</param>
-		private static void runRenderSubsystem (ISubsystem subsystem, EntityGroup entities, FrameDrawEventArgs args)
+		private static void runRenderSubsystem (IRenderSubsystem subsystem, EntityGroup entities, FrameDrawEventArgs args)
 		{
 			lock(entities)
-				entities.Iterate(subsystem.Process);
+				entities.Iterate(subsystem.Process, args);
 		}
 
 		/// <summary>
