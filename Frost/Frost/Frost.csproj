@@ -48,6 +48,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\SubsystemManager.cs" />
     <Compile Include="FrameDrawEventArgs.cs" />
     <Compile Include="Display\Window.cs" />
     <Compile Include="Display\IDisplay.cs" />
