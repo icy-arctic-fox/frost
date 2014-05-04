@@ -32,6 +32,14 @@ namespace Frost
 		private readonly StateManager _stateManager = new StateManager();
 
 		/// <summary>
+		/// Tracks the states currently being updated and rendered
+		/// </summary>
+		internal StateManager StateManager
+		{
+			get { return _stateManager; }
+		}
+
+		/// <summary>
 		/// Creates a new game runner
 		/// </summary>
 		/// <param name="display">Display to render to</param>
