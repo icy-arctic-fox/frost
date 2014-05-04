@@ -74,10 +74,19 @@ namespace Frost.Entities
 		/// Iterates over all of the entities and calls a method for each one
 		/// </summary>
 		/// <param name="method">Method to call for each entity</param>
+		/// <param name="arg">Additional argument to pass to the method</param>
 		/// <exception cref="ArgumentNullException">The <paramref name="method"/> to call for each entity can't be null.</exception>
-		public void Iterate<T> (Action<Entity, T> method)
+		public void Iterate<T> (Action<Entity, T> method, T arg)
 		{
-			throw new NotImplementedException();
+			if(method == null)
+				throw new ArgumentNullException("method");
+
+			lock(_entities)
+				for(var i = 0; i < _entities.Count; ++i)
+				{
+					var entity = _entities[i];
+					method(entity, arg);
+				}
 		}
 
 		/// <summary>
