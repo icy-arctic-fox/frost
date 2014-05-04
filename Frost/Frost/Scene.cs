@@ -39,10 +39,23 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Tracks entities used in the current scene
+		/// </summary>
+		internal EntityManager EntityManager
+		{
+			get { return _entityManager; }
+		}
+
+		/// <summary>
 		/// Visible name of the scene
 		/// </summary>
 		/// <remarks>This property is used instead of reflection (<see cref="System.Type.FullName"/>) because it's faster.</remarks>
 		public abstract string Name { get; }
+
+		/// <summary>
+		/// Indicates whether scenes below this one can be processed during the same frame
+		/// </summary>
+		public abstract bool AllowFallthrough { get; }
 
 		/// <summary>
 		/// Updates the state of the scene by a single step
