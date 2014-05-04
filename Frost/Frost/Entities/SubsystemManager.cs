@@ -60,9 +60,41 @@ namespace Frost.Entities
 		/// Adds an entity to be processed by each update and rendering
 		/// </summary>
 		/// <param name="entity">Entity to add</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="entity"/> to add can't be null.</exception>
 		public void AddEntity (Entity entity)
 		{
-			throw new NotImplementedException();
+			if(entity == null)
+				throw new ArgumentNullException("entity");
+
+			lock(_allEntities)
+				_allEntities.Add(entity);
+
+			lock(_updateSystems)
+				for(var i = 0; i < _updateSystems.Count; ++i)
+				{
+					var set = _updateSystems[i];
+					addToSubsystem(set.Subsystem, entity, set.Entities);
+				}
+
+			lock(_renderSystems)
+				for(var i = 0; i < _renderSystems.Count; ++i)
+				{
+					var set = _renderSystems[i];
+					addToSubsystem(set.Subsystem, entity, set.Entities);
+				}
+		}
+
+		/// <summary>
+		/// Adds an entity to a subsystem set if the subsystem can process it
+		/// </summary>
+		/// <param name="subsystem">Subsystem to check</param>
+		/// <param name="entity">Entity to add</param>
+		/// <param name="entityList">List of existing entities</param>
+		private static void addToSubsystem (ISubsystem subsystem, Entity entity, List<Entity> entityList)
+		{
+			if(subsystem.CanProcess(entity))
+				lock(entityList)
+					entityList.Add(entity);
 		}
 
 		/// <summary>
