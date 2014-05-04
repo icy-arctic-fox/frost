@@ -14,6 +14,24 @@ namespace Frost.Entities
 		#region Registration
 
 		private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
+		private ulong _nextId;
+
+		/// <summary>
+		/// Gets the next usable entity ID
+		/// </summary>
+		/// <returns>Next available entity ID</returns>
+		private ulong getNextAvailableId ()
+		{
+			ulong id;
+			lock(_registeredEntities)
+			{
+				do
+				{
+					id = unchecked(_nextId++);
+				} while(_registeredEntities.ContainsKey(id));
+			}
+			return id;
+		}
 
 		/// <summary>
 		/// Adds an entity to be tracked by the manager
@@ -21,12 +39,30 @@ namespace Frost.Entities
 		/// <param name="entity">Entity to register</param>
 		/// <returns>True if the entity was registered or false if it has been previously registered with this manager</returns>
 		/// <exception cref="ArgumentNullException">The <paramref name="entity"/> to register can't be null.</exception>
+		/// <exception cref="ArgumentException">The <paramref name="entity"/> can't be already registered to another manager.</exception>
 		public bool Register (Entity entity)
 		{
 			if(entity == null)
 				throw new ArgumentNullException("entity");
 
-			throw new NotImplementedException();
+			lock(_registeredEntities)
+			{
+				if(entity.Registered)
+				{
+					Entity prevEntity;
+					if(_registeredEntities.TryGetValue(entity.Id, out prevEntity) && ReferenceEquals(prevEntity, entity))
+						return false; // Already registered to this manager
+					throw new ArgumentException("entity"); // Registered to another manager
+				}
+
+				// Not registered at all, register to this manager
+				var id = getNextAvailableId();
+				_registeredEntities.Add(id, entity);
+				entity.SetId(id);
+			}
+
+			OnRegister(new EntityEventArgs(entity));
+			return true;
 		}
 
 		/// <summary>
@@ -54,8 +90,25 @@ namespace Frost.Entities
 		{
 			if(entity == null)
 				throw new ArgumentNullException("entity");
+			if(!entity.Registered)
+				return false;
 
-			throw new NotImplementedException();
+			var found = false;
+			var id = entity.Id;
+			lock(_registeredEntities)
+			{
+				Entity prevEntity;
+				if(_registeredEntities.TryGetValue(id, out prevEntity))
+					if(ReferenceEquals(prevEntity, entity))
+					{// Entity is registered to this manager, remove it
+						_registeredEntities.Remove(id);
+						found = true;
+					}
+			}
+
+			if(found)
+				OnRegister(new EntityEventArgs(entity));
+			return found;
 		}
 
 		/// <summary>
