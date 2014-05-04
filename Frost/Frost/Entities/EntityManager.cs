@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Frost.Utility;
 
 namespace Frost.Entities
 {
@@ -19,9 +20,28 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="entity">Entity to register</param>
 		/// <returns>True if the entity was registered or false if it has been previously registered with this manager</returns>
+		/// <exception cref="ArgumentNullException">The <paramref name="entity"/> to register can't be null.</exception>
 		public bool Register (Entity entity)
 		{
+			if(entity == null)
+				throw new ArgumentNullException("entity");
+
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Triggered when an entity is registered
+		/// </summary>
+		public event EventHandler<EntityEventArgs> EntityRegistered;
+
+		/// <summary>
+		/// Called when an entity is registered
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		/// <remarks>This method triggers the <see cref="EntityRegistered"/> event.</remarks>
+		protected virtual void OnRegister (EntityEventArgs args)
+		{
+			EntityRegistered.NotifyThreadedSubscribers(this, args);
 		}
 
 		/// <summary>
@@ -29,9 +49,28 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="entity">Entity to deregister</param>
 		/// <returns>True if the entity was deregistered or false if it wasn't registered previously in this manager</returns>
+		/// <exception cref="ArgumentNullException">The <paramref name="entity"/> to deregister can't be null.</exception>
 		public bool Deregister (Entity entity)
 		{
+			if(entity == null)
+				throw new ArgumentNullException("entity");
+
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Triggered when an entity is registered
+		/// </summary>
+		public event EventHandler<EntityEventArgs> EntityDeregistered;
+
+		/// <summary>
+		/// Called when an entity is deregistered
+		/// </summary>
+		/// <param name="args">Event arguments</param>
+		/// <remarks>This method triggers the <see cref="EntityDeregistered"/> event.</remarks>
+		protected virtual void OnDeregister (EntityEventArgs args)
+		{
+			EntityDeregistered.NotifyThreadedSubscribers(this, args);
 		}
 		#endregion
 
