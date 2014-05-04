@@ -29,6 +29,16 @@ namespace Frost.Entities
 		}
 
 		/// <summary>
+		/// Iterates over all of the entities and calls a method for each one
+		/// </summary>
+		/// <param name="method">Method to call for each entity</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="method"/> to call for each entity can't be null.</exception>
+		public void Iterate<T> (Action<Entity, T> method)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Adds an entity to the group
 		/// </summary>
 		/// <param name="item">The entity to add to the group</param>
