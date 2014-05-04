@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Frost.Entities
 {
@@ -11,22 +12,48 @@ namespace Frost.Entities
 		private readonly List<SubsystemSet> _updateSystems = new List<SubsystemSet>(),
 											_renderSystems = new List<SubsystemSet>();
 
+		private readonly List<Entity> _allEntities = new List<Entity>();
+
 		/// <summary>
 		/// Adds a subsystem that will process entities during logic updates
 		/// </summary>
 		/// <param name="subsystem">Subsystem to add</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="subsystem"/> to add can't be null.</exception>
 		public void AddUpdateSubsystem (ISubsystem subsystem)
 		{
-			throw new NotImplementedException();
+			if(subsystem == null)
+				throw new ArgumentNullException("subsystem");
+
+			// Get the entities that the subsystem can process
+			List<Entity> entities;
+			lock(_allEntities)
+				entities = _allEntities.Where(subsystem.CanProcess).ToList();
+
+			// Add the subsystem to the collection
+			var set = new SubsystemSet(subsystem, entities);
+			lock(_updateSystems)
+				_updateSystems.Add(set);
 		}
 
 		/// <summary>
 		/// Adds a subsystem that will process entities during frame renders
 		/// </summary>
 		/// <param name="subsystem">Subsystem to add</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="subsystem"/> to add can't be null.</exception>
 		public void AddRenderSubsystem (ISubsystem subsystem)
 		{
-			throw new NotImplementedException();
+			if(subsystem == null)
+				throw new ArgumentNullException("subsystem");
+
+			// Get the entities that the subsystem can process
+			List<Entity> entities;
+			lock(_allEntities)
+				entities = _allEntities.Where(subsystem.CanProcess).ToList();
+
+			// Add the subsystem to the collection
+			var set = new SubsystemSet(subsystem, entities);
+			lock(_renderSystems)
+				_renderSystems.Add(set);
 		}
 
 		/// <summary>
@@ -121,10 +148,11 @@ namespace Frost.Entities
 			/// Creates a subsystem set
 			/// </summary>
 			/// <param name="subsystem">Subsystem that will process the entities</param>
-			public SubsystemSet (ISubsystem subsystem)
+			/// <param name="entities">Entities that the subsystem can process</param>
+			public SubsystemSet (ISubsystem subsystem, List<Entity> entities)
 			{
 				Subsystem = subsystem;
-				Entities  = new List<Entity>();
+				Entities  = entities;
 			}
 		}
 	}
