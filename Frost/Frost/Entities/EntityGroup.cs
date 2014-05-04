@@ -142,7 +142,17 @@ namespace Frost.Entities
 		/// <exception cref="ArgumentException">The number of elements in the source group is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.</exception>
 		public void CopyTo (Entity[] array, int arrayIndex)
 		{
-			throw new NotImplementedException();
+			if(array == null)
+				throw new ArgumentNullException("array");
+			if(arrayIndex < 0)
+				throw new ArgumentOutOfRangeException("arrayIndex");
+
+			lock(_entities)
+			{
+				if(_entities.Count > array.Length - arrayIndex)
+					throw new ArgumentException();
+				_entities.CopyTo(array, arrayIndex);
+			}
 		}
 
 		/// <summary>
