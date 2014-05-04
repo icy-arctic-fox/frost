@@ -58,6 +58,16 @@ namespace Frost
 		public abstract bool AllowFallthrough { get; }
 
 		/// <summary>
+		/// Creates the base of the scene
+		/// </summary>
+		protected Scene ()
+		{
+			// Listen for entities being added and removed
+			_entityManager.EntityRegistered   += entityRegistered;
+			_entityManager.EntityDeregistered += entityDeregistered;
+		}
+
+		/// <summary>
 		/// Updates the state of the scene by a single step
 		/// </summary>
 		/// <param name="args">Update information</param>
@@ -66,7 +76,7 @@ namespace Frost
 		/// Modifying any other game state info during this process could corrupt the game state.</remarks>
 		public virtual void Step (FrameStepEventArgs args)
 		{
-			// TODO: Update all updatable entities
+			_subsystemManager.Update(args);
 		}
 
 		/// <summary>
@@ -78,7 +88,40 @@ namespace Frost
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
 		public virtual void Draw (IDisplay display, FrameDrawEventArgs args)
 		{
-			// TODO: Render all drawable entities
+			_subsystemManager.Render(args);
 		}
+
+		#region Subsystems and entities
+
+		private readonly SubsystemManager _subsystemManager = new SubsystemManager();
+
+		/// <summary>
+		/// Subsystems that process entities in the scene
+		/// </summary>
+		protected SubsystemManager Subsystems
+		{
+			get { return _subsystemManager; }
+		}
+
+		/// <summary>
+		/// Called when an entity is registered in a scene
+		/// </summary>
+		/// <param name="sender">Entity manager</param>
+		/// <param name="e">Event arguments</param>
+		private void entityRegistered (object sender, EntityEventArgs e)
+		{
+			_subsystemManager.AddEntity(e.Entity);
+		}
+
+		/// <summary>
+		/// Called when an entity is deregistered in a scene
+		/// </summary>
+		/// <param name="sender">Entity manager</param>
+		/// <param name="e">Event arguments</param>
+		private void entityDeregistered (object sender, EntityEventArgs e)
+		{
+			_subsystemManager.RemoveEntity(e.Entity);
+		}
+		#endregion
 	}
 }

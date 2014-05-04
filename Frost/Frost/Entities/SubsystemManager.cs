@@ -7,7 +7,7 @@ namespace Frost.Entities
 	/// <summary>
 	/// Processes all entities through subsystems
 	/// </summary>
-	class SubsystemManager
+	public class SubsystemManager
 	{
 		private readonly List<SubsystemSet> _updateSystems = new List<SubsystemSet>(),
 											_renderSystems = new List<SubsystemSet>();

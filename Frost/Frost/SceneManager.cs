@@ -100,8 +100,6 @@ namespace Frost
 				_curScene = scene;
 			}
 
-			scene.EntityManager.EntityRegistered   += entityRegistered;
-			scene.EntityManager.EntityDeregistered += entityDeregistered;
 			OnEnterScene(new SceneEventArgs(scene));
 		}
 
@@ -139,9 +137,6 @@ namespace Frost
 				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Last.Value : null;
 			}
 
-			
-			prevScene.EntityManager.EntityRegistered   -= entityRegistered;
-			prevScene.EntityManager.EntityDeregistered -= entityDeregistered;
 			OnExitScene(new SceneEventArgs(prevScene));
 		}
 		#endregion
@@ -273,29 +268,6 @@ namespace Frost
 		internal void PostRender (FrameDrawEventArgs drawArgs)
 		{
 			_display.ExitFrame();
-		}
-		#endregion
-
-		#region Subsystems and entities
-
-		/// <summary>
-		/// Called when an entity is registered in a scene
-		/// </summary>
-		/// <param name="sender">Entity manager</param>
-		/// <param name="e">Event arguments</param>
-		private void entityRegistered (object sender, Entities.EntityEventArgs e)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Called when an entity is deregistered in a scene
-		/// </summary>
-		/// <param name="sender">Entity manager</param>
-		/// <param name="e">Event arguments</param>
-		private void entityDeregistered (object sender, Entities.EntityEventArgs e)
-		{
-			throw new NotImplementedException();
 		}
 		#endregion
 	}
