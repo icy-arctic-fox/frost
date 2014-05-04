@@ -17,7 +17,11 @@ namespace Frost
 		private readonly IDisplay _display;
 
 		private Scene _curScene;
-		private readonly Stack<Scene> _sceneStack = new Stack<Scene>();
+
+		/// <summary>
+		/// Scene stack arranged as new scenes at the end of the list
+		/// </summary>
+		private readonly LinkedList<Scene> _sceneStack = new LinkedList<Scene>();
 
 		/// <summary>
 		/// Checks if there are any scenes being processed
@@ -92,7 +96,7 @@ namespace Frost
 			scene.SetParentManager(this);
 			lock(_locker)
 			{
-				_sceneStack.Push(scene);
+				_sceneStack.AddLast(scene);
 				_curScene = scene;
 			}
 
@@ -127,9 +131,10 @@ namespace Frost
 				if(_sceneStack.Count <= 0)
 					throw new InvalidOperationException("There are no more scenes left to exit from.");
 
-				prevScene = _sceneStack.Pop();
+				prevScene = _sceneStack.Last.Value;
+				_sceneStack.RemoveLast();
 				prevScene.SetParentManager(null);
-				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Peek() : null;
+				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Last.Value : null;
 			}
 
 			OnExitScene(new SceneEventArgs(prevScene));
@@ -168,7 +173,17 @@ namespace Frost
 		/// <param name="args">Update information</param>
 		private void updateSceneStack (FrameStepEventArgs args)
 		{
-			_curScene.Step(args);
+			var curNode = _sceneStack.Last;
+			while(curNode != null)
+			{
+				var scene = curNode.Value;
+				scene.Step(args);
+
+				if(scene.AllowFallthrough) // Fall through to the next scene
+					curNode = curNode.Previous;
+				else // Don't fall through, stop processing scenes
+					break;
+			}
 		}
 
 		/// <summary>
@@ -225,7 +240,25 @@ namespace Frost
 		/// <param name="args">Render information</param>
 		private void renderSceneStack (FrameDrawEventArgs args)
 		{
-			_curScene.Draw(_display, args);
+			// Find the bottom node first
+			var bottomNode = _sceneStack.Last;
+			while(bottomNode != null)
+			{
+				var scene = bottomNode.Value;
+				if(scene.AllowFallthrough) // Scenes below this can be rendered
+					bottomNode = bottomNode.Previous;
+				else // Can't render anything below this
+					break;
+			}
+
+			// Render each scene from bottom to top
+			var curNode = bottomNode;
+			while(curNode != null)
+			{
+				var scene = curNode.Value;
+				scene.Draw(_display, args);
+				curNode = curNode.Next;
+			}
 		}
 
 		/// <summary>
