@@ -10,6 +10,31 @@ namespace Frost.Entities
 	/// </summary>
 	public class EntityGroup : ICollection<Entity>
 	{
+		private readonly List<Entity> _entities = new List<Entity>();
+
+		/// <summary>
+		/// Creates an empty group of entities
+		/// </summary>
+		public EntityGroup ()
+		{
+			// ...
+		}
+
+		/// <summary>
+		/// Creates a pre-populated group of entities
+		/// </summary>
+		/// <param name="entities">Initial entities</param>
+		/// <exception cref="ArgumentNullException">The collection of <paramref name="entities"/> can't be null.</exception>
+		public EntityGroup (IEnumerable<Entity> entities)
+		{
+			if(entities == null)
+				throw new ArgumentNullException("entities");
+
+			foreach(var entity in entities)
+				if(entity != null)
+					_entities.Add(entity);
+		}
+
 		/// <summary>
 		/// Returns an enumerator that iterates through the group
 		/// </summary>
