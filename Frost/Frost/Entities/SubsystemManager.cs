@@ -9,9 +9,8 @@ namespace Frost.Entities
 	/// </summary>
 	public class SubsystemManager
 	{
-		private readonly List<SubsystemSet> _updateSystems = new List<SubsystemSet>(),
-											_renderSystems = new List<SubsystemSet>();
-
+		private readonly List<SubsystemSet<IUpdateSubsystem>> _updateSystems = new List<SubsystemSet<IUpdateSubsystem>>();
+		private readonly List<SubsystemSet<IRenderSubsystem>> _renderSystems = new List<SubsystemSet<IRenderSubsystem>>();
 		private readonly EntityGroup _allEntities = new EntityGroup();
 
 		/// <summary>
@@ -30,7 +29,7 @@ namespace Frost.Entities
 				var entities = _allEntities.Where(subsystem.CanProcess);
 
 				// Add the subsystem to the collection
-				var set = new SubsystemSet(subsystem, entities);
+				var set = new SubsystemSet<IUpdateSubsystem>(subsystem, entities);
 				lock(_updateSystems)
 					_updateSystems.Add(set);
 			}
@@ -52,7 +51,7 @@ namespace Frost.Entities
 				var entities = _allEntities.Where(subsystem.CanProcess);
 
 				// Add the subsystem to the collection
-				var set = new SubsystemSet(subsystem, entities);
+				var set = new SubsystemSet<IRenderSubsystem>(subsystem, entities);
 				lock(_renderSystems)
 					_renderSystems.Add(set);
 			}
@@ -143,7 +142,7 @@ namespace Frost.Entities
 					var set = _updateSystems[i];
 					var subsystem = set.Subsystem;
 					var entities  = set.Entities;
-					runUpdateSubsystem((IUpdateSubsystem)subsystem, entities, stepArgs); // TODO: Remove cast
+					runUpdateSubsystem(subsystem, entities, stepArgs);
 				}
 		}
 
@@ -171,7 +170,7 @@ namespace Frost.Entities
 					var set = _renderSystems[i];
 					var subsystem = set.Subsystem;
 					var entities  = set.Entities;
-					runRenderSubsystem((IRenderSubsystem)subsystem, entities, drawArgs); // TODO: Remove cast
+					runRenderSubsystem(subsystem, entities, drawArgs);
 				}
 		}
 
@@ -190,12 +189,12 @@ namespace Frost.Entities
 		/// <summary>
 		/// Associates a collection of entities with a subsystem that can process them
 		/// </summary>
-		private struct SubsystemSet
+		private struct SubsystemSet<T> where T : ISubsystem
 		{
 			/// <summary>
 			/// Subsystem that will process the entities
 			/// </summary>
-			public readonly ISubsystem Subsystem;
+			public readonly T Subsystem;
 
 			/// <summary>
 			/// Entities that the subsystem can process
@@ -207,7 +206,7 @@ namespace Frost.Entities
 			/// </summary>
 			/// <param name="subsystem">Subsystem that will process the entities</param>
 			/// <param name="entities">Entities that the subsystem can process</param>
-			public SubsystemSet (ISubsystem subsystem, IEnumerable<Entity> entities)
+			public SubsystemSet (T subsystem, IEnumerable<Entity> entities)
 			{
 				Subsystem = subsystem;
 				Entities  = new EntityGroup(entities);
