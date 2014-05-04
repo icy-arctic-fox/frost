@@ -45,7 +45,7 @@ namespace Frost.Entities
 		/// <returns>An enumerator that can be used to iterate through the group of entities</returns>
 		public IEnumerator<Entity> GetEnumerator ()
 		{
-			throw new NotImplementedException();
+			return _entities.GetEnumerator();
 		}
 
 		/// <summary>
@@ -112,7 +112,8 @@ namespace Frost.Entities
 		/// <exception cref="NotSupportedException">The collection is read-only.</exception>
 		public void Clear ()
 		{
-			throw new NotImplementedException();
+			lock(_entities)
+				_entities.Clear();
 		}
 
 		/// <summary>
@@ -120,9 +121,14 @@ namespace Frost.Entities
 		/// </summary>
 		/// <returns>True if <paramref name="item"/> is found in the group; otherwise, false</returns>
 		/// <param name="item">The entity to locate in the group</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="item"/> to look for can't be null.</exception>
 		public bool Contains (Entity item)
 		{
-			throw new NotImplementedException();
+			if(item == null)
+				throw new ArgumentNullException("item");
+
+			lock(_entities)
+				return _entities.Contains(item);
 		}
 
 		/// <summary>
@@ -145,10 +151,15 @@ namespace Frost.Entities
 		/// <returns>True if <paramref name="item"/> was successfully removed from the group; otherwise, false.
 		/// This method also returns false if <paramref name="item"/> is not found in the original group.</returns>
 		/// <param name="item">The entity to remove from the group</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="item"/> to remove can't be null.</exception>
 		/// <exception cref="NotSupportedException">The collection is read-only.</exception>
 		public bool Remove (Entity item)
 		{
-			throw new NotImplementedException();
+			if(item == null)
+				throw new ArgumentNullException("item");
+
+			lock(_entities)
+				return _entities.Remove(item);
 		}
 
 		/// <summary>
@@ -156,7 +167,11 @@ namespace Frost.Entities
 		/// </summary>
 		public int Count
 		{
-			get { throw new NotImplementedException(); }
+			get
+			{
+				lock(_entities)
+					return _entities.Count;
+			}
 		}
 
 		/// <summary>
