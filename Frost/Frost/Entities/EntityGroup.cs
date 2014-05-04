@@ -10,14 +10,15 @@ namespace Frost.Entities
 	/// </summary>
 	public class EntityGroup : ICollection<Entity>
 	{
-		private readonly List<Entity> _entities = new List<Entity>();
+		private readonly List<Entity> _entities;
+		private readonly bool _ro;
 
 		/// <summary>
 		/// Creates an empty group of entities
 		/// </summary>
 		public EntityGroup ()
 		{
-			// ...
+			_entities = new List<Entity>();
 		}
 
 		/// <summary>
@@ -31,12 +32,24 @@ namespace Frost.Entities
 			if(entities == null)
 				throw new ArgumentNullException("entities");
 
+			_entities = new List<Entity>();
 			foreach(var entity in entities)
 			{
 				if(entity == null || entity.Disposed)
 					throw new ArgumentException();
 				addEntity(entity);
 			}
+		}
+
+		/// <summary>
+		/// Private constructor for creating a read-only entity group
+		/// </summary>
+		/// <param name="entities">Original list of entities</param>
+		/// <param name="ro">Flag indicating whether the group is read-only</param>
+		private EntityGroup (List<Entity> entities, bool ro)
+		{
+			_entities = entities;
+			_ro       = ro;
 		}
 
 		/// <summary>
@@ -76,6 +89,8 @@ namespace Frost.Entities
 		/// <exception cref="ArgumentException">The <paramref name="item"/> to add can't be disposed.</exception>
 		public void Add (Entity item)
 		{
+			if(_ro)
+				throw new NotSupportedException("The collection is read-only.");
 			if(item == null)
 				throw new ArgumentNullException("item");
 			if(item.Disposed)
@@ -112,6 +127,9 @@ namespace Frost.Entities
 		/// <exception cref="NotSupportedException">The collection is read-only.</exception>
 		public void Clear ()
 		{
+			if(_ro)
+				throw new NotSupportedException("The collection is read-only.");
+
 			lock(_entities)
 				_entities.Clear();
 		}
@@ -165,6 +183,8 @@ namespace Frost.Entities
 		/// <exception cref="NotSupportedException">The collection is read-only.</exception>
 		public bool Remove (Entity item)
 		{
+			if(_ro)
+				throw new NotSupportedException("The collection is read-only.");
 			if(item == null)
 				throw new ArgumentNullException("item");
 
@@ -189,7 +209,17 @@ namespace Frost.Entities
 		/// </summary>
 		public bool IsReadOnly
 		{
-			get { throw new NotImplementedException(); }
+			get { return _ro; }
+		}
+
+		/// <summary>
+		/// Creates another entity group that will maintain the same collection of entities,
+		/// but will not allow modifications to the collection
+		/// </summary>
+		/// <returns>A read-only entity group</returns>
+		public EntityGroup AsReadOnly ()
+		{
+			return new EntityGroup(_entities, true);
 		}
 	}
 }
