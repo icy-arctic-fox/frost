@@ -122,7 +122,7 @@ namespace Frost.Entities
 		/// <param name="subsystem">Subsystem to check</param>
 		/// <param name="entity">Entity to add</param>
 		/// <param name="entityList">List of existing entities</param>
-		private static void addToSubsystem(ISubsystem subsystem, Entity entity, List<Entity> entityList)
+		private static void addToSubsystem (ISubsystem subsystem, Entity entity, List<Entity> entityList)
 		{
 			if(subsystem.CanProcess(entity))
 				lock(entityList)
@@ -133,7 +133,7 @@ namespace Frost.Entities
 		/// Updates all entities by having the subsystems process them
 		/// </summary>
 		/// <param name="stepArgs">Update information</param>
-		public void Update (FrameStepEventArgs stepArgs)
+		public void Step (FrameStepEventArgs stepArgs)
 		{
 			lock(_updateSystems)
 				for(var i = 0; i < _updateSystems.Count; ++i)
@@ -165,7 +165,7 @@ namespace Frost.Entities
 		/// Renders all entities by having the subsystems process them
 		/// </summary>
 		/// <param name="drawArgs">Render information</param>
-		public void Render (FrameDrawEventArgs drawArgs)
+		public void Draw (FrameDrawEventArgs drawArgs)
 		{
 			lock(_renderSystems)
 				for(var i = 0; i < _renderSystems.Count; ++i)

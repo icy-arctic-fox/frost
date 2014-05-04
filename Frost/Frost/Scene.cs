@@ -75,7 +75,7 @@ namespace Frost
 		/// Modifying any other game state info during this process could corrupt the game state.</remarks>
 		public virtual void Step (FrameStepEventArgs args)
 		{
-			_subsystemManager.Update(args);
+			_subsystemManager.Step(args);
 		}
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace Frost
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
 		public virtual void Draw (FrameDrawEventArgs args)
 		{
-			_subsystemManager.Render(args);
+			_subsystemManager.Draw(args);
 		}
 
 		#region Subsystems and entities
