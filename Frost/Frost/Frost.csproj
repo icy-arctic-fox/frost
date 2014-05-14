@@ -51,6 +51,7 @@
     <Compile Include="Entities\IRenderSubsystem.cs" />
     <Compile Include="Entities\EntityEventArgs.cs" />
     <Compile Include="Entities\IUpdateSubsystem.cs" />
+    <Compile Include="Entities\Positional2DComponent.cs" />
     <Compile Include="Entities\SubsystemManager.cs" />
     <Compile Include="FrameDrawEventArgs.cs" />
     <Compile Include="Display\Window.cs" />
