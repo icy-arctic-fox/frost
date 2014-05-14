@@ -132,6 +132,16 @@ namespace Frost.Entities
 		private readonly List<object> _componentMaps = new List<object>();
 
 		/// <summary>
+		/// Retrieves the index to be used for a component
+		/// </summary>
+		/// <param name="componentType">Type of <see cref="IEntityComponent"/> to get the index of</param>
+		/// <returns>Index corresponding to where the component is stored</returns>
+		internal int GetComponentIndex (Type componentType)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Retrieves a collection of entities that have a component
 		/// </summary>
 		/// <param name="componentType">Type of <see cref="IEntityComponent"/> to look for</param>
