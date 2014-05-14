@@ -1,4 +1,6 @@
-﻿namespace Frost.Entities
+﻿using System;
+
+namespace Frost.Entities
 {
 	/// <summary>
 	/// Information about an entity's location in 2D space
@@ -48,6 +50,16 @@
 		public override int GetHashCode ()
 		{
 			return unchecked((X.GetHashCode() * 397) ^ Y.GetHashCode());
+		}
+
+		/// <summary>
+		/// Creates the string representation of the the component
+		/// </summary>
+		/// <returns>A string in the form:
+		/// (Position2D X: ###, Y: ###)</returns>
+		public override string ToString ()
+		{
+			return String.Format("(Position2D X: {0:R}, Y: {1:R})", X, Y);
 		}
 	}
 }
