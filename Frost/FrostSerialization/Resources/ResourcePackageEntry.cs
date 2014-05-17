@@ -114,7 +114,7 @@ namespace Frost.Resources
 
 		/// <summary>
 		/// Creates information about a resource package entry by extracting it from a node.
-		/// The node passed as <paramref name="node"/> should be the same format as a node returned by <see cref="ToNode"/>.
+		/// The node passed as <paramref name="node"/> should be the same format as a node returned by <see cref="ToTntNode"/>.
 		/// </summary>
 		/// <param name="node">Node that contains information about the resource package entry</param>
 		public ResourcePackageEntry (Node node)
@@ -132,7 +132,7 @@ namespace Frost.Resources
 		/// Packs information about the resource into a node
 		/// </summary>
 		/// <returns>A node containing information about the resource</returns>
-		public Node ToNode ()
+		public Node ToTntNode ()
 		{
 			var root = new ComplexNode {
 				{IdNodeName,     new GuidNode(_id)},

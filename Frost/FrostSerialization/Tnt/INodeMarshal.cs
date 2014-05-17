@@ -10,6 +10,6 @@
 		/// Creates a node from the contents of the object
 		/// </summary>
 		/// <returns>A node</returns>
-		Node ToNode ();
+		Node ToTntNode ();
 	}
 }

@@ -236,7 +236,7 @@ namespace Frost.Resources
 
 			var list = new ListNode(NodeType.Complex);
 			foreach(var entry in entries)
-				list.Add(entry.ToNode());
+				list.Add(entry.ToTntNode());
 			root.Add("entries", list);
 
 			return new NodeContainer(root);
