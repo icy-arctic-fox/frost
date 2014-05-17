@@ -1,5 +1,5 @@
 ﻿using System;
-using Frost.IO.Tnt;
+using Frost.Tnt;
 
 namespace Frost.Resources
 {

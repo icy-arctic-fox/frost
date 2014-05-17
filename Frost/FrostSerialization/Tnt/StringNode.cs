@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
-	/// X and Y node.
-	/// Contains X and Y integer values for sizes or locations.
+	/// String of text node
 	/// </summary>
-	public class Point2iNode : Node
+	public class StringNode : Node
 	{
 		#region Node properties
 
@@ -14,49 +13,50 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Point2i"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.String"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Point2i; }
+			get { return NodeType.String; }
 		}
 
-		/// <summary>
-		/// X position
-		/// </summary>
-		public int X { get; set; }
+		private string _value;
 
 		/// <summary>
-		/// Y position
+		/// Value stored in the node
 		/// </summary>
-		public int Y { get; set; }
+		/// <remarks>Null strings are automatically converted to empty strings.</remarks>
+		public string Value
+		{
+			get { return _value; }
+			set { _value = value ?? String.Empty; }
+		}
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return String.Format("({0}, {1})", X, Y); }
+			get { return String.Format("\"{0}\"", _value); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new 2D point node
+		/// Creates a new string node
 		/// </summary>
-		/// <param name="x">X position</param>
-		/// <param name="y">Y position</param>
-		public Point2iNode (int x, int y)
+		/// <param name="value">Value to store in the node</param>
+		/// <remarks>A null string for <paramref name="value"/> will be converted to an empty string.</remarks>
+		public StringNode (string value)
 		{
-			X = x;
-			Y = y;
+			Value = value;
 		}
 
 		/// <summary>
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public Point2iNode CloneNode ()
+		public StringNode CloneNode ()
 		{
-			return new Point2iNode(X, Y);
+			return new StringNode(Value);
 		}
 
 		/// <summary>
@@ -71,15 +71,14 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a 2D point node by reading its payload from a stream
+		/// Constructs a string node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed 2D point node</returns>
-		internal static Point2iNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed string node</returns>
+		internal static StringNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var x = br.ReadInt32();
-			var y = br.ReadInt32();
-			return new Point2iNode(x, y);
+			var value = br.ReadString();
+			return new StringNode(value);
 		}
 
 		/// <summary>
@@ -88,8 +87,7 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(X);
-			bw.Write(Y);
+			bw.Write(Value);
 		}
 		#endregion
 	}

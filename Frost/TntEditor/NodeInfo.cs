@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using Frost.IO.Tnt;
+using Frost.Tnt;
 
 namespace Frost.TntEditor
 {

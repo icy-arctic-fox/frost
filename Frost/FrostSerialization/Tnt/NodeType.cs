@@ -1,4 +1,4 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
 	/// Values for the different types of nodes that exist

@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// Date and time node
+	/// 16-bit unsigned integer node
 	/// </summary>
-	public class DateTimeNode : Node
+	public class UShortNode : Node
 	{
 		#region Node properties
 
@@ -13,16 +11,16 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.DateTime"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.UShort"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.DateTime; }
+			get { return NodeType.UShort; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public DateTime Value { get; set; }
+		public ushort Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
@@ -34,10 +32,10 @@ namespace Frost.IO.Tnt
 		#endregion
 
 		/// <summary>
-		/// Creates a new date and time node
+		/// Creates a new unsigned short node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public DateTimeNode (DateTime value)
+		public UShortNode (ushort value)
 		{
 			Value = value;
 		}
@@ -46,9 +44,9 @@ namespace Frost.IO.Tnt
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public DateTimeNode CloneNode ()
+		public UShortNode CloneNode ()
 		{
-			return new DateTimeNode(Value);
+			return new UShortNode(Value);
 		}
 
 		/// <summary>
@@ -63,15 +61,14 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a date and time node by reading its payload from a stream
+		/// Constructs an unsigned short node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed date and time node</returns>
-		internal static DateTimeNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed unsigned short node</returns>
+		internal static UShortNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var data = br.ReadInt64();
-			var dt   = DateTime.FromBinary(data);
-			return new DateTimeNode(dt);
+			var value = br.ReadUInt16();
+			return new UShortNode(value);
 		}
 
 		/// <summary>
@@ -80,7 +77,7 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(Value.ToBinary());
+			bw.Write(Value);
 		}
 		#endregion
 	}

@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// String of text node
+	/// True or false value node
 	/// </summary>
-	public class StringNode : Node
+	public class BooleanNode : Node
 	{
 		#region Node properties
 
@@ -13,39 +11,31 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.String"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Boolean"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.String; }
+			get { return NodeType.Boolean; }
 		}
-
-		private string _value;
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		/// <remarks>Null strings are automatically converted to empty strings.</remarks>
-		public string Value
-		{
-			get { return _value; }
-			set { _value = value ?? String.Empty; }
-		}
+		public bool Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return String.Format("\"{0}\"", _value); }
+			get { return Value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new string node
+		/// Creates a new boolean node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		/// <remarks>A null string for <paramref name="value"/> will be converted to an empty string.</remarks>
-		public StringNode (string value)
+		public BooleanNode(bool value)
 		{
 			Value = value;
 		}
@@ -54,9 +44,9 @@ namespace Frost.IO.Tnt
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public StringNode CloneNode ()
+		public BooleanNode CloneNode ()
 		{
-			return new StringNode(Value);
+			return new BooleanNode(Value);
 		}
 
 		/// <summary>
@@ -71,14 +61,14 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a string node by reading its payload from a stream
+		/// Constructs a boolean node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed string node</returns>
-		internal static StringNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed boolean node</returns>
+		internal static BooleanNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadString();
-			return new StringNode(value);
+			var value = br.ReadBoolean();
+			return new BooleanNode(value);
 		}
 
 		/// <summary>

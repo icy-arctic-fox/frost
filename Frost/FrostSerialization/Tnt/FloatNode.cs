@@ -1,9 +1,9 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// 8-bit unsigned integer node
+	/// 32-bit single-precision floating-point node
 	/// </summary>
-	public class ByteNode : Node
+	public class FloatNode : Node
 	{
 		#region Node properties
 
@@ -11,16 +11,16 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Byte"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Float"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Byte; }
+			get { return NodeType.Float; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public byte Value { get; set; }
+		public float Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
@@ -32,10 +32,10 @@
 		#endregion
 
 		/// <summary>
-		/// Creates a new byte node
+		/// Creates a new single-precision floating-point node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public ByteNode (byte value)
+		public FloatNode (float value)
 		{
 			Value = value;
 		}
@@ -44,9 +44,9 @@
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public ByteNode CloneNode ()
+		public FloatNode CloneNode ()
 		{
-			return new ByteNode(Value);
+			return new FloatNode(Value);
 		}
 
 		/// <summary>
@@ -61,14 +61,14 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a byte node by reading its payload from a stream
+		/// Constructs a single-precision floating-point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed byte node</returns>
-		internal static ByteNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed single-precision floating-point node</returns>
+		internal static FloatNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadByte();
-			return new ByteNode(value);
+			var value = br.ReadSingle();
+			return new FloatNode(value);
 		}
 
 		/// <summary>

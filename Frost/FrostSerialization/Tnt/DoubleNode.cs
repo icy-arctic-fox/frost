@@ -1,9 +1,9 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// True or false value node
+	/// 64-bit double-precision floating-point node
 	/// </summary>
-	public class BooleanNode : Node
+	public class DoubleNode : Node
 	{
 		#region Node properties
 
@@ -11,16 +11,16 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Boolean"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Double"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Boolean; }
+			get { return NodeType.Double; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public bool Value { get; set; }
+		public double Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
@@ -32,10 +32,10 @@
 		#endregion
 
 		/// <summary>
-		/// Creates a new boolean node
+		/// Creates a new double-precision floating-point node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public BooleanNode(bool value)
+		public DoubleNode (double value)
 		{
 			Value = value;
 		}
@@ -44,9 +44,9 @@
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public BooleanNode CloneNode ()
+		public DoubleNode CloneNode ()
 		{
-			return new BooleanNode(Value);
+			return new DoubleNode(Value);
 		}
 
 		/// <summary>
@@ -61,14 +61,14 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a boolean node by reading its payload from a stream
+		/// Constructs a double-precision floating-point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed boolean node</returns>
-		internal static BooleanNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed double-precision floating-point node</returns>
+		internal static DoubleNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadBoolean();
-			return new BooleanNode(value);
+			var value = br.ReadDouble();
+			return new DoubleNode(value);
 		}
 
 		/// <summary>

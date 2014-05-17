@@ -1,4 +1,4 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
 	/// 64-bit unsigned integer node

@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
-	/// 2D point node with floating-point values
+	/// Date and time node
 	/// </summary>
-	public class Point2fNode : Node
+	public class DateTimeNode : Node
 	{
 		#region Node properties
 
@@ -13,49 +13,42 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Point2f"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.DateTime"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Point2f; }
+			get { return NodeType.DateTime; }
 		}
 
 		/// <summary>
-		/// X-coordinate
+		/// Value stored in the node
 		/// </summary>
-		public float X { get; set; }
-
-		/// <summary>
-		/// Y-coordinate
-		/// </summary>
-		public float Y { get; set; }
+		public DateTime Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return String.Format("({0}, {1})", X, Y); }
+			get { return Value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new 2D point node
+		/// Creates a new date and time node
 		/// </summary>
-		/// <param name="x">X-coordinate</param>
-		/// <param name="y">Y-coordinate</param>
-		public Point2fNode (float x, float y)
+		/// <param name="value">Value to store in the node</param>
+		public DateTimeNode (DateTime value)
 		{
-			X = x;
-			Y = y;
+			Value = value;
 		}
 
 		/// <summary>
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public Point2fNode CloneNode ()
+		public DateTimeNode CloneNode ()
 		{
-			return new Point2fNode(X, Y);
+			return new DateTimeNode(Value);
 		}
 
 		/// <summary>
@@ -70,15 +63,15 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a 2D point node by reading its payload from a stream
+		/// Constructs a date and time node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed 2D point node</returns>
-		internal static Point2fNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed date and time node</returns>
+		internal static DateTimeNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var x = br.ReadSingle();
-			var y = br.ReadSingle();
-			return new Point2fNode(x, y);
+			var data = br.ReadInt64();
+			var dt   = DateTime.FromBinary(data);
+			return new DateTimeNode(dt);
 		}
 
 		/// <summary>
@@ -87,8 +80,7 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(X);
-			bw.Write(Y);
+			bw.Write(Value.ToBinary());
 		}
 		#endregion
 	}

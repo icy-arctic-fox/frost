@@ -1,7 +1,7 @@
 ﻿using System;
 using Frost.Utility;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
 	/// Raw binary data node

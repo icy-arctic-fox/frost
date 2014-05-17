@@ -1,9 +1,9 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// 8-bit signed integer node
+	/// 64-bit signed integer node
 	/// </summary>
-	public class SByteNode : Node
+	public class LongNode : Node
 	{
 		#region Node properties
 
@@ -11,16 +11,16 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.SByte"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Long"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.SByte; }
+			get { return NodeType.Long; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public sbyte Value { get; set; }
+		public long Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
@@ -32,10 +32,10 @@
 		#endregion
 
 		/// <summary>
-		/// Creates a new signed byte node
+		/// Creates a new long node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public SByteNode (sbyte value)
+		public LongNode (long value)
 		{
 			Value = value;
 		}
@@ -44,9 +44,9 @@
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public SByteNode CloneNode ()
+		public LongNode CloneNode ()
 		{
-			return new SByteNode(Value);
+			return new LongNode(Value);
 		}
 
 		/// <summary>
@@ -61,14 +61,14 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a signed byte node by reading its payload from a stream
+		/// Constructs a long node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed signed byte node</returns>
-		internal static SByteNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed long integer node</returns>
+		internal static LongNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadSByte();
-			return new SByteNode(value);
+			var value = br.ReadInt64();
+			return new LongNode(value);
 		}
 
 		/// <summary>

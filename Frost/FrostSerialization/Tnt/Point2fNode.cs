@@ -1,9 +1,11 @@
-﻿namespace Frost.IO.Tnt
+﻿using System;
+
+namespace Frost.Tnt
 {
 	/// <summary>
-	/// 64-bit signed integer node
+	/// 2D point node with floating-point values
 	/// </summary>
-	public class LongNode : Node
+	public class Point2fNode : Node
 	{
 		#region Node properties
 
@@ -11,42 +13,49 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Long"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Point2f"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Long; }
+			get { return NodeType.Point2f; }
 		}
 
 		/// <summary>
-		/// Value stored in the node
+		/// X-coordinate
 		/// </summary>
-		public long Value { get; set; }
+		public float X { get; set; }
+
+		/// <summary>
+		/// Y-coordinate
+		/// </summary>
+		public float Y { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return Value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
+			get { return String.Format("({0}, {1})", X, Y); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new long node
+		/// Creates a new 2D point node
 		/// </summary>
-		/// <param name="value">Value to store in the node</param>
-		public LongNode (long value)
+		/// <param name="x">X-coordinate</param>
+		/// <param name="y">Y-coordinate</param>
+		public Point2fNode (float x, float y)
 		{
-			Value = value;
+			X = x;
+			Y = y;
 		}
 
 		/// <summary>
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public LongNode CloneNode ()
+		public Point2fNode CloneNode ()
 		{
-			return new LongNode(Value);
+			return new Point2fNode(X, Y);
 		}
 
 		/// <summary>
@@ -61,14 +70,15 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a long node by reading its payload from a stream
+		/// Constructs a 2D point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed long integer node</returns>
-		internal static LongNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed 2D point node</returns>
+		internal static Point2fNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadInt64();
-			return new LongNode(value);
+			var x = br.ReadSingle();
+			var y = br.ReadSingle();
+			return new Point2fNode(x, y);
 		}
 
 		/// <summary>
@@ -77,7 +87,8 @@
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(Value);
+			bw.Write(X);
+			bw.Write(Y);
 		}
 		#endregion
 	}

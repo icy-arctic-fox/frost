@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using Frost.IO;
-using Frost.IO.Tnt;
+using Frost.Tnt;
 using Ionic.Zlib;
 
 namespace Frost.Resources

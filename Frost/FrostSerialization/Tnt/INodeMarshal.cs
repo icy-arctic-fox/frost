@@ -1,4 +1,4 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
 	/// An object that can marshal itself into a <see cref="Node"/> and extract itself from one as well.

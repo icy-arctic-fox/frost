@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
 	/// Contains extension methods for checking node types

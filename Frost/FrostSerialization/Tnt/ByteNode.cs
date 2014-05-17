@@ -1,9 +1,9 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// 32-bit unsigned integer node
+	/// 8-bit unsigned integer node
 	/// </summary>
-	public class UIntNode : Node
+	public class ByteNode : Node
 	{
 		#region Node properties
 
@@ -11,16 +11,16 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.UInt"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Byte"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.UInt; }
+			get { return NodeType.Byte; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public uint Value { get; set; }
+		public byte Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
@@ -32,10 +32,10 @@
 		#endregion
 
 		/// <summary>
-		/// Creates a new unsigned integer node
+		/// Creates a new byte node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public UIntNode (uint value)
+		public ByteNode (byte value)
 		{
 			Value = value;
 		}
@@ -44,9 +44,9 @@
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public UIntNode CloneNode ()
+		public ByteNode CloneNode ()
 		{
-			return new UIntNode(Value);
+			return new ByteNode(Value);
 		}
 
 		/// <summary>
@@ -61,14 +61,14 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs an unsigned integer node by reading its payload from a stream
+		/// Constructs a byte node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed unsigned integer node</returns>
-		internal static UIntNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed byte node</returns>
+		internal static ByteNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadUInt32();
-			return new UIntNode(value);
+			var value = br.ReadByte();
+			return new ByteNode(value);
 		}
 
 		/// <summary>

@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// Globally unique identifier node
+	/// 8-bit signed integer node
 	/// </summary>
-	public class GuidNode : Node
+	public class SByteNode : Node
 	{
 		#region Node properties
 
@@ -13,31 +11,31 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Guid"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.SByte"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Guid; }
+			get { return NodeType.SByte; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public Guid Value { get; set; }
+		public sbyte Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return Value.ToString(); }
+			get { return Value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new Guid node
+		/// Creates a new signed byte node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public GuidNode (Guid value)
+		public SByteNode (sbyte value)
 		{
 			Value = value;
 		}
@@ -46,9 +44,9 @@ namespace Frost.IO.Tnt
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public GuidNode CloneNode ()
+		public SByteNode CloneNode ()
 		{
-			return new GuidNode(Value);
+			return new SByteNode(Value);
 		}
 
 		/// <summary>
@@ -63,20 +61,14 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Number of bytes that make up a Guid
-		/// </summary>
-		private const int GuidSize = 16;
-
-		/// <summary>
-		/// Constructs a Guid node by reading its payload from a stream
+		/// Constructs a signed byte node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed Guid node</returns>
-		internal static GuidNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed signed byte node</returns>
+		internal static SByteNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var bytes = br.ReadBytes(GuidSize);
-			var guid  = new Guid(bytes);
-			return new GuidNode(guid);
+			var value = br.ReadSByte();
+			return new SByteNode(value);
 		}
 
 		/// <summary>
@@ -85,8 +77,7 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			var bytes = Value.ToByteArray();
-			bw.Write(bytes);
+			bw.Write(Value);
 		}
 		#endregion
 	}

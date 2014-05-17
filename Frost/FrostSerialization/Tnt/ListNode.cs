@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
 	/// Node that contains multiple nodes of the same type

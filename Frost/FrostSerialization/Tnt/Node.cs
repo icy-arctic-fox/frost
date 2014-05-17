@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
 	/// Base class for all node types

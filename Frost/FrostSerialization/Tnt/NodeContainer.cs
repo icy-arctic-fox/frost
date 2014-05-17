@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using Frost.IO;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
 	/// Wraps a typed-node structure.

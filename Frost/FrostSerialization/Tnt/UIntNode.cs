@@ -1,9 +1,9 @@
-﻿namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// 32-bit single-precision floating-point node
+	/// 32-bit unsigned integer node
 	/// </summary>
-	public class FloatNode : Node
+	public class UIntNode : Node
 	{
 		#region Node properties
 
@@ -11,16 +11,16 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Float"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.UInt"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Float; }
+			get { return NodeType.UInt; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public float Value { get; set; }
+		public uint Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
@@ -32,10 +32,10 @@
 		#endregion
 
 		/// <summary>
-		/// Creates a new single-precision floating-point node
+		/// Creates a new unsigned integer node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public FloatNode (float value)
+		public UIntNode (uint value)
 		{
 			Value = value;
 		}
@@ -44,9 +44,9 @@
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public FloatNode CloneNode ()
+		public UIntNode CloneNode ()
 		{
-			return new FloatNode(Value);
+			return new UIntNode(Value);
 		}
 
 		/// <summary>
@@ -61,14 +61,14 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a single-precision floating-point node by reading its payload from a stream
+		/// Constructs an unsigned integer node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed single-precision floating-point node</returns>
-		internal static FloatNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed unsigned integer node</returns>
+		internal static UIntNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadSingle();
-			return new FloatNode(value);
+			var value = br.ReadUInt32();
+			return new UIntNode(value);
 		}
 
 		/// <summary>

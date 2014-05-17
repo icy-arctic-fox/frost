@@ -1,9 +1,12 @@
-﻿namespace Frost.IO.Tnt
+﻿using System;
+
+namespace Frost.Tnt
 {
 	/// <summary>
-	/// 32-bit signed integer node
+	/// X and Y node.
+	/// Contains X and Y integer values for sizes or locations.
 	/// </summary>
-	public class IntNode : Node
+	public class Point2iNode : Node
 	{
 		#region Node properties
 
@@ -11,42 +14,49 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Int"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Point2i"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Int; }
+			get { return NodeType.Point2i; }
 		}
 
 		/// <summary>
-		/// Value stored in the node
+		/// X position
 		/// </summary>
-		public int Value { get; set; }
+		public int X { get; set; }
+
+		/// <summary>
+		/// Y position
+		/// </summary>
+		public int Y { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return Value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
+			get { return String.Format("({0}, {1})", X, Y); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new integer node
+		/// Creates a new 2D point node
 		/// </summary>
-		/// <param name="value">Value to store in the node</param>
-		public IntNode (int value)
+		/// <param name="x">X position</param>
+		/// <param name="y">Y position</param>
+		public Point2iNode (int x, int y)
 		{
-			Value = value;
+			X = x;
+			Y = y;
 		}
 
 		/// <summary>
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public IntNode CloneNode ()
+		public Point2iNode CloneNode ()
 		{
-			return new IntNode(Value);
+			return new Point2iNode(X, Y);
 		}
 
 		/// <summary>
@@ -61,14 +71,15 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs an integer node by reading its payload from a stream
+		/// Constructs a 2D point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed integer node</returns>
-		internal static IntNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed 2D point node</returns>
+		internal static Point2iNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadInt32();
-			return new IntNode(value);
+			var x = br.ReadInt32();
+			var y = br.ReadInt32();
+			return new Point2iNode(x, y);
 		}
 
 		/// <summary>
@@ -77,7 +88,8 @@
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(Value);
+			bw.Write(X);
+			bw.Write(Y);
 		}
 		#endregion
 	}

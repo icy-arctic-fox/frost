@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
 	/// X, Y, and Z node.

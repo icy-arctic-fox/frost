@@ -1,9 +1,11 @@
-﻿namespace Frost.IO.Tnt
+﻿using System;
+
+namespace Frost.Tnt
 {
 	/// <summary>
-	/// 16-bit unsigned integer node
+	/// Length of time node
 	/// </summary>
-	public class UShortNode : Node
+	public class TimeSpanNode : Node
 	{
 		#region Node properties
 
@@ -11,31 +13,31 @@
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.UShort"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.TimeSpan"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.UShort; }
+			get { return NodeType.TimeSpan; }
 		}
 
 		/// <summary>
 		/// Value stored in the node
 		/// </summary>
-		public ushort Value { get; set; }
+		public TimeSpan Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return Value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
+			get { return Value.ToString(); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new unsigned short node
+		/// Creates a new time span node
 		/// </summary>
 		/// <param name="value">Value to store in the node</param>
-		public UShortNode (ushort value)
+		public TimeSpanNode (TimeSpan value)
 		{
 			Value = value;
 		}
@@ -44,9 +46,9 @@
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public UShortNode CloneNode ()
+		public TimeSpanNode CloneNode ()
 		{
-			return new UShortNode(Value);
+			return new TimeSpanNode(Value);
 		}
 
 		/// <summary>
@@ -61,14 +63,15 @@
 		#region Serialization
 
 		/// <summary>
-		/// Constructs an unsigned short node by reading its payload from a stream
+		/// Constructs a time span node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed unsigned short node</returns>
-		internal static UShortNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed time span node</returns>
+		internal static TimeSpanNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var value = br.ReadUInt16();
-			return new UShortNode(value);
+			var ticks = br.ReadInt64();
+			var span  = new TimeSpan(ticks);
+			return new TimeSpanNode(span);
 		}
 
 		/// <summary>
@@ -77,7 +80,7 @@
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(Value);
+			bw.Write(Value.Ticks);
 		}
 		#endregion
 	}

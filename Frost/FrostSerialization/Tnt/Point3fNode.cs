@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Frost.IO.Tnt
+namespace Frost.Tnt
 {
 	/// <summary>
-	/// Length of time node
+	/// 3D point node with floating-point values
 	/// </summary>
-	public class TimeSpanNode : Node
+	public class Point3fNode : Node
 	{
 		#region Node properties
 
@@ -13,42 +13,56 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.TimeSpan"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Point3f"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.TimeSpan; }
+			get { return NodeType.Point3f; }
 		}
 
 		/// <summary>
-		/// Value stored in the node
+		/// X-coordinate
 		/// </summary>
-		public TimeSpan Value { get; set; }
+		public float X { get; set; }
+
+		/// <summary>
+		/// Y-coordinate
+		/// </summary>
+		public float Y { get; set; }
+
+		/// <summary>
+		/// Z-coordinate
+		/// </summary>
+		public float Z { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return Value.ToString(); }
+			get { return String.Format("({0}, {1}, {2})", X, Y, Z); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new time span node
+		/// Creates a new 3D point node
 		/// </summary>
-		/// <param name="value">Value to store in the node</param>
-		public TimeSpanNode (TimeSpan value)
+		/// <param name="x">X-coordinate</param>
+		/// <param name="y">Y-coordinate</param>
+		/// <param name="z">Z-coordinate</param>
+		public Point3fNode (float x, float y, float z)
 		{
-			Value = value;
+			X = x;
+			Y = y;
+			Z = z;
 		}
 
 		/// <summary>
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public TimeSpanNode CloneNode ()
+		public Point3fNode CloneNode ()
 		{
-			return new TimeSpanNode(Value);
+			return new Point3fNode(X, Y, Z);
 		}
 
 		/// <summary>
@@ -63,15 +77,16 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a time span node by reading its payload from a stream
+		/// Constructs a 3D point node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed time span node</returns>
-		internal static TimeSpanNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed 3D point node</returns>
+		internal static Point3fNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var ticks = br.ReadInt64();
-			var span  = new TimeSpan(ticks);
-			return new TimeSpanNode(span);
+			var x = br.ReadSingle();
+			var y = br.ReadSingle();
+			var z = br.ReadSingle();
+			return new Point3fNode(x, y, z);
 		}
 
 		/// <summary>
@@ -80,7 +95,9 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(Value.Ticks);
+			bw.Write(X);
+			bw.Write(Y);
+			bw.Write(Z);
 		}
 		#endregion
 	}

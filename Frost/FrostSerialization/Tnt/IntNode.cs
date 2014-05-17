@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Frost.IO.Tnt
+﻿namespace Frost.Tnt
 {
 	/// <summary>
-	/// 3D point node with floating-point values
+	/// 32-bit signed integer node
 	/// </summary>
-	public class Point3fNode : Node
+	public class IntNode : Node
 	{
 		#region Node properties
 
@@ -13,56 +11,42 @@ namespace Frost.IO.Tnt
 		/// Indicates the type of node.
 		/// This can be used to safely cast nodes.
 		/// </summary>
-		/// <remarks>The type for this node is always <see cref="NodeType.Point3f"/>.</remarks>
+		/// <remarks>The type for this node is always <see cref="NodeType.Int"/>.</remarks>
 		public override NodeType Type
 		{
-			get { return NodeType.Point3f; }
+			get { return NodeType.Int; }
 		}
 
 		/// <summary>
-		/// X-coordinate
+		/// Value stored in the node
 		/// </summary>
-		public float X { get; set; }
-
-		/// <summary>
-		/// Y-coordinate
-		/// </summary>
-		public float Y { get; set; }
-
-		/// <summary>
-		/// Z-coordinate
-		/// </summary>
-		public float Z { get; set; }
+		public int Value { get; set; }
 
 		/// <summary>
 		/// Value of the node as a string
 		/// </summary>
 		public override string StringValue
 		{
-			get { return String.Format("({0}, {1}, {2})", X, Y, Z); }
+			get { return Value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 		#endregion
 
 		/// <summary>
-		/// Creates a new 3D point node
+		/// Creates a new integer node
 		/// </summary>
-		/// <param name="x">X-coordinate</param>
-		/// <param name="y">Y-coordinate</param>
-		/// <param name="z">Z-coordinate</param>
-		public Point3fNode (float x, float y, float z)
+		/// <param name="value">Value to store in the node</param>
+		public IntNode (int value)
 		{
-			X = x;
-			Y = y;
-			Z = z;
+			Value = value;
 		}
 
 		/// <summary>
 		/// Creates a new node that is a copy of the current instance
 		/// </summary>
 		/// <returns>A new node that is a copy of this instance</returns>
-		public Point3fNode CloneNode ()
+		public IntNode CloneNode ()
 		{
-			return new Point3fNode(X, Y, Z);
+			return new IntNode(Value);
 		}
 
 		/// <summary>
@@ -77,16 +61,14 @@ namespace Frost.IO.Tnt
 		#region Serialization
 
 		/// <summary>
-		/// Constructs a 3D point node by reading its payload from a stream
+		/// Constructs an integer node by reading its payload from a stream
 		/// </summary>
 		/// <param name="br">Reader to use to pull data from the stream</param>
-		/// <returns>A constructed 3D point node</returns>
-		internal static Point3fNode ReadPayload (System.IO.BinaryReader br)
+		/// <returns>A constructed integer node</returns>
+		internal static IntNode ReadPayload (System.IO.BinaryReader br)
 		{
-			var x = br.ReadSingle();
-			var y = br.ReadSingle();
-			var z = br.ReadSingle();
-			return new Point3fNode(x, y, z);
+			var value = br.ReadInt32();
+			return new IntNode(value);
 		}
 
 		/// <summary>
@@ -95,9 +77,7 @@ namespace Frost.IO.Tnt
 		/// <param name="bw">Writer to use to put data on the stream</param>
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
-			bw.Write(X);
-			bw.Write(Y);
-			bw.Write(Z);
+			bw.Write(Value);
 		}
 		#endregion
 	}

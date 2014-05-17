@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Frost.IO.Tnt;
+using Frost.Tnt;
 
 namespace Frost.TntEditor
 {
