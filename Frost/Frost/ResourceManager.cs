@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Frost.IO.Resources;
+using Frost.Resources;
 using Frost.Utility;
 
 namespace Frost

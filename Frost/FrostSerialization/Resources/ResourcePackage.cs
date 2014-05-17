@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Frost.Utility;
 
-namespace Frost.IO.Resources
+namespace Frost.Resources
 {
 	/// <summary>
 	/// Basic functionality for processing resource packages.

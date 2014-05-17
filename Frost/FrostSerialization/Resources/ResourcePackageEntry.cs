@@ -1,7 +1,7 @@
 ﻿using System;
 using Frost.IO.Tnt;
 
-namespace Frost.IO.Resources
+namespace Frost.Resources
 {
 	/// <summary>
 	/// Information about an entry in a resource package.

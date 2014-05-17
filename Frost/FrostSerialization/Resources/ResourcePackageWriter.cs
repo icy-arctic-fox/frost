@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using Frost.IO;
 using Frost.IO.Tnt;
 using Frost.Utility;
 using Ionic.Zlib;
 
-namespace Frost.IO.Resources
+namespace Frost.Resources
 {
 	/// <summary>
 	/// Creates resource package files

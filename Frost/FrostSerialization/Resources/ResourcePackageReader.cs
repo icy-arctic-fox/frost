@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using Frost.IO;
 using Frost.IO.Tnt;
 using Ionic.Zlib;
 
-namespace Frost.IO.Resources
+namespace Frost.Resources
 {
 	/// <summary>
 	/// Provides access to existing resource package files

@@ -8,7 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Frost.IO.Resources;
+using Frost.Resources;
 using Frost.Utility;
 
 namespace Frost.ResourcePackagerGui

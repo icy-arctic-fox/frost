@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Frost.IO.Resources
+namespace Frost.Resources
 {
 	/// <summary>
 	/// Flags that indicate options for a resource package file

@@ -1,4 +1,4 @@
-﻿namespace Frost.IO.Resources
+﻿namespace Frost.Resources
 {
 	/// <summary>
 	/// Information about a package

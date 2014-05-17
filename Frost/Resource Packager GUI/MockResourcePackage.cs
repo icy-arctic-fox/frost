@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Frost.IO.Resources;
+using Frost.Resources;
 
 namespace Frost.ResourcePackagerGui
 {

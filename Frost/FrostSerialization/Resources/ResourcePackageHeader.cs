@@ -1,4 +1,4 @@
-﻿namespace Frost.IO.Resources
+﻿namespace Frost.Resources
 {
 	/// <summary>
 	/// Raw information about the structure of the file from the resource package file's header
