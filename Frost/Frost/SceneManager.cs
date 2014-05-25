@@ -13,7 +13,6 @@ namespace Frost
 	/// When it is finished, the top scene is popped off the stack.</remarks>
 	public class SceneManager
 	{
-		private readonly object _locker = new object();
 		private readonly IDisplay _display;
 
 		private Scene _curScene;
@@ -21,8 +20,17 @@ namespace Frost
 		/// <summary>
 		/// Scene stack arranged with new scenes at the end of the list
 		/// </summary>
-		/// <remarks>A linked list is used so that the entire stack can be traversed quickly.</remarks>
+		/// <remarks>A linked list is used here because the stack needs to be traversed.</remarks>
 		private readonly LinkedList<Scene> _sceneStack = new LinkedList<Scene>();
+
+		/// <summary>
+		/// Collection of scenes that are updated and rendered each frame.
+		/// This is a subset of the full scene stack.
+		/// The scenes are ordered as bottom (<see cref="LinkedList{T}.First"/>) to top (<see cref="LinkedList{T}.Last"/>).
+		/// </summary>
+		private readonly LinkedList<Scene> _scenesToProcess = new LinkedList<Scene>();
+
+		private readonly object _updateLocker = new object(), _renderLocker = new object();
 
 		/// <summary>
 		/// Checks if there are any scenes being processed
@@ -31,7 +39,7 @@ namespace Frost
 		{
 			get
 			{
-				lock(_locker)
+				lock(_sceneStack)
 					return _curScene != null;
 			}
 		}
@@ -44,7 +52,7 @@ namespace Frost
 		{
 			get
 			{
-				lock(_locker)
+				lock(_sceneStack)
 					return _curScene;
 			}
 		}
@@ -95,14 +103,33 @@ namespace Frost
 			if(scene == null)
 				throw new ArgumentNullException("scene");
 
-			scene.SetParentManager(this);
-			lock(_locker)
-			{
-				_sceneStack.AddLast(scene);
-				_curScene = scene;
-			}
+			lock(_sceneStack)
+				pushScene(scene);
 
 			OnEnterScene(new SceneEventArgs(scene));
+		}
+
+		/// <summary>
+		/// Pushes a scene onto the stack
+		/// </summary>
+		/// <param name="scene">Scene to push onto the top of the stack</param>
+		private void pushScene (Scene scene)
+		{
+			// Assign the scene's manager
+			scene.SetParentManager(this);
+
+			// Add the scene to the stack
+			_sceneStack.AddLast(scene);
+			_curScene = scene;
+
+			// Update the list of scenes to process
+			lock(_updateLocker)
+				lock(_renderLocker)
+				{
+					if(!scene.AllowFallthrough) // Don't allow any other scenes to be processed
+						_scenesToProcess.Clear();
+					_scenesToProcess.AddLast(scene);
+				}
 		}
 		#endregion
 
@@ -131,18 +158,55 @@ namespace Frost
 		public void ExitScene ()
 		{
 			Scene prevScene;
-			lock(_locker)
+			lock(_sceneStack)
 			{
 				if(_sceneStack.Count <= 0)
 					throw new InvalidOperationException("There are no more scenes left to exit from.");
-
-				prevScene = _sceneStack.Last.Value;
-				_sceneStack.RemoveLast();
-				prevScene.SetParentManager(null);
-				_curScene = (_sceneStack.Count > 0) ? _sceneStack.Last.Value : null;
+				prevScene = popScene();
 			}
 
 			OnExitScene(new SceneEventArgs(prevScene));
+		}
+
+		/// <summary>
+		/// Pops the top-most scene off from the stack
+		/// </summary>
+		/// <returns>Top-most scene that was just popped off</returns>
+		private Scene popScene ()
+		{
+			// Remove the scene
+			var popped = _sceneStack.Last.Value;
+			_sceneStack.RemoveLast();
+
+			// Remove the scene from being processed
+			lock(_updateLocker)
+				lock(_renderLocker)
+				{
+					_scenesToProcess.RemoveLast();
+
+					if(_scenesToProcess.Count <= 0)
+					{// All scenes to process removed, get the next group of scenes to process (if any)
+						var curNode = _sceneStack.Last;
+						while(curNode != null)
+						{// Continue adding to the process list in reverse order until fall-through isn't allowed
+							var scene = curNode.Value;
+							_scenesToProcess.AddFirst(scene);
+
+							if(!scene.AllowFallthrough)
+								break;
+							
+							curNode = curNode.Previous;
+						}
+					}
+				}
+
+			// Tell the scene it has no manager anymore
+			popped.SetParentManager(null);
+
+			// Update the current scene
+			_curScene = (_sceneStack.Count > 0) ? _sceneStack.Last.Value : null;
+
+			return popped;
 		}
 		#endregion
 		#endregion
@@ -173,22 +237,21 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Processes all scenes in the stack from top to bottom until <see cref="Scene.AllowFallthrough"/> is false or the bottom of the stack is reached.
+		/// Steps through all reachable scenes.
 		/// The stack is processed top-down so that higher scenes can intercept events before lower scenes.
 		/// </summary>
 		/// <param name="args">Update information</param>
 		private void updateSceneStack (FrameStepEventArgs args)
 		{
-			var curNode = _sceneStack.Last;
-			while(curNode != null)
+			lock(_updateLocker)
 			{
-				var scene = curNode.Value;
-				scene.Step(args);
-
-				if(scene.AllowFallthrough) // Fall through to the next scene
-					curNode = curNode.Previous;
-				else // Don't fall through, stop processing scenes
-					break;
+				var curNode = _scenesToProcess.Last; // Start at the top scene
+				while(curNode != null)
+				{// Step through each scene that is part of the render
+					var scene = curNode.Value;
+					scene.Step(args);
+					curNode = curNode.Previous; // Advance from top to bottom of the stack
+				}
 			}
 		}
 
@@ -243,30 +306,21 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Processes all scenes in the stack from top to bottom until <see cref="Scene.AllowFallthrough"/> is false or the bottom of the stack is reached.
+		/// Draws all reachable scenes.
 		/// The stack is processed bottom-up so that higher scenes are overlaid on top of lower scenes.
 		/// </summary>
 		/// <param name="args">Render information</param>
 		private void renderSceneStack (FrameDrawEventArgs args)
 		{
-			// Find the bottom node first
-			var bottomNode = _sceneStack.Last;
-			while(bottomNode != null)
+			lock(_renderLocker)
 			{
-				var scene = bottomNode.Value;
-				if(scene.AllowFallthrough) // Scenes below this can be rendered
-					bottomNode = bottomNode.Previous;
-				else // Can't render anything below this
-					break;
-			}
-
-			// Render each scene from bottom to top
-			var curNode = bottomNode;
-			while(curNode != null)
-			{
-				var scene = curNode.Value;
-				scene.Draw(args);
-				curNode = curNode.Next;
+				var curNode = _scenesToProcess.First; // Start at the bottom scene
+				while(curNode != null)
+				{// Step through each scene that is part of the render
+					var scene = curNode.Value;
+					scene.Draw(args);
+					curNode = curNode.Next; // Advance from bottom to top of the stack
+				}
 			}
 		}
 
