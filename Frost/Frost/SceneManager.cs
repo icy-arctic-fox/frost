@@ -19,8 +19,9 @@ namespace Frost
 		private Scene _curScene;
 
 		/// <summary>
-		/// Scene stack arranged as new scenes at the end of the list
+		/// Scene stack arranged with new scenes at the end of the list
 		/// </summary>
+		/// <remarks>A linked list is used so that the entire stack can be traversed quickly.</remarks>
 		private readonly LinkedList<Scene> _sceneStack = new LinkedList<Scene>();
 
 		/// <summary>
@@ -53,7 +54,7 @@ namespace Frost
 		/// </summary>
 		/// <param name="initialScene">Initial scene</param>
 		/// <param name="display">Display to render scenes to</param>
-		/// <exception cref="ArgumentNullException">The initial scene (<paramref name="initialScene"/>) and <paramref name="display"/> display to render can't be null.</exception>
+		/// <exception cref="ArgumentNullException">The initial scene (<paramref name="initialScene"/>) and <paramref name="display"/> to render on can't be null.</exception>
 		public SceneManager (Scene initialScene, IDisplay display)
 		{
 			if(initialScene == null)
@@ -67,6 +68,7 @@ namespace Frost
 		}
 
 		#region Scene management
+		#region EnterScene
 
 		/// <summary>
 		/// Triggered when a new scene is entered
@@ -102,6 +104,9 @@ namespace Frost
 
 			OnEnterScene(new SceneEventArgs(scene));
 		}
+		#endregion
+
+		#region ExitScene
 
 		/// <summary>
 		/// Triggered when a scene is left
@@ -140,8 +145,9 @@ namespace Frost
 			OnExitScene(new SceneEventArgs(prevScene));
 		}
 		#endregion
+		#endregion
 
-		#region Update and render
+		#region Update
 
 		/// <summary>
 		/// Prepares for an update
@@ -194,6 +200,9 @@ namespace Frost
 		{
 			// ...
 		}
+		#endregion
+
+		#region Render
 
 		/// <summary>
 		/// Total number of frames that were drawn multiple times.
