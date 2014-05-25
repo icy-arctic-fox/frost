@@ -35,15 +35,15 @@ namespace Test_Game
 			get { return false; }
 		}
 
-		public override void Step (FrameStepEventArgs args)
+		protected override void OnStep (FrameStepEventArgs args)
 		{
-			base.Step(args);
+			base.OnStep(args);
 			_sprite.Step(args);
 		}
 
-		public override void Draw (FrameDrawEventArgs args)
+		protected override void OnDraw (FrameDrawEventArgs args)
 		{
-			base.Draw(args);
+			base.OnDraw(args);
 			_sprite.Draw(args);
 		}
 	}

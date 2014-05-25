@@ -67,26 +67,44 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Updates the state of the scene by a single step
+		/// Called when the state of the scene should be updated by a single step
 		/// </summary>
 		/// <param name="args">Update information</param>
 		/// <remarks>The only game state that should be modified during this process is the state indicated by <see cref="FrameStepEventArgs.NextStateIndex"/>.
 		/// The state indicated by <see cref="FrameStepEventArgs.PreviousStateIndex"/> can be used for reference (if needed), but should not be modified.
 		/// Modifying any other game state info during this process could corrupt the game state.</remarks>
-		public virtual void Step (FrameStepEventArgs args)
+		protected virtual void OnStep (FrameStepEventArgs args)
 		{
 			_subsystemManager.Step(args);
+		}
+
+		/// <summary>
+		/// Updates the state of the scene by a single step
+		/// </summary>
+		/// <param name="args">Update information</param>
+		public void Step (FrameStepEventArgs args)
+		{
+			OnStep(args);
+		}
+
+		/// <summary>
+		/// Called when the scene should be drawn to the display
+		/// </summary>
+		/// <param name="args">Render information</param>
+		/// <remarks>None of the game states should be modified by this process - including the state indicated by <see cref="FrameDrawEventArgs.StateIndex"/>.
+		/// Modifying the game state info during this process would corrupt the game state.</remarks>
+		protected virtual void OnDraw (FrameDrawEventArgs args)
+		{
+			_subsystemManager.Draw(args);
 		}
 
 		/// <summary>
 		/// Draws the state of the scene
 		/// </summary>
 		/// <param name="args">Render information</param>
-		/// <remarks>None of the game states should be modified by this process - including the state indicated by <see cref="FrameDrawEventArgs.StateIndex"/>.
-		/// Modifying the game state info during this process would corrupt the game state.</remarks>
-		public virtual void Draw (FrameDrawEventArgs args)
+		public void Draw (FrameDrawEventArgs args)
 		{
-			_subsystemManager.Draw(args);
+			OnDraw(args);
 		}
 
 		#region Subsystems and entities
