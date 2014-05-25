@@ -85,8 +85,11 @@ namespace Frost.Entities
 				throw new ArgumentNullException("componentType");
 
 			for(var i = 0; i < _components.Count; ++i)
-				if(Portability.CompareTypes(componentType, _components[i].GetType()))
+			{
+				var component = _components[i];
+				if(component != null && Portability.CompareTypes(componentType, component.GetType()))
 					return true;
+			}
 			return false;
 		}
 		#endregion
