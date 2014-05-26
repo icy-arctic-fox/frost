@@ -16,7 +16,7 @@ namespace Frost.Entities
 		/// <param name="index">Index of the component in the entity's component array</param>
 		internal EntityComponentMap (int index)
 		{
-			throw new NotImplementedException();
+			_index = index;
 		}
 
 		/// <summary>
@@ -24,9 +24,13 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="entity">Entity to retrieve component from</param>
 		/// <returns>Component information</returns>
+		/// <exception cref="ArgumentNullException">The <paramref name="entity"/> to get the component from can't be null.</exception>
 		public T GetComponentFromEntity (Entity entity)
 		{
-			throw new NotImplementedException();
+			if(entity == null)
+				throw new ArgumentNullException("entity");
+
+			return (T)entity.GetComponent(_index);
 		}
 	}
 }
