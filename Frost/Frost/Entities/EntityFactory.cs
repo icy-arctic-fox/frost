@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Frost.Entities
 {
@@ -9,6 +10,7 @@ namespace Frost.Entities
 	public class EntityFactory
 	{
 		private readonly EntityManager _manager;
+		private readonly List<IEntityComponent> _components = new List<IEntityComponent>();
 
 		/// <summary>
 		/// Creates a factory to construct entities
@@ -30,7 +32,10 @@ namespace Frost.Entities
 		/// <exception cref="ArgumentNullException">The <paramref name="component"/> to add can't be null.</exception>
 		public void AddComponent (IEntityComponent component)
 		{
-			throw new NotImplementedException();
+			if(component == null)
+				throw new ArgumentNullException("component");
+			
+			_components.Add(component);
 		}
 
 		/// <summary>
