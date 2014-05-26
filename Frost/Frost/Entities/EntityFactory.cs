@@ -8,13 +8,19 @@ namespace Frost.Entities
 	/// </summary>
 	public class EntityFactory
 	{
+		private readonly EntityManager _manager;
+
 		/// <summary>
 		/// Creates a factory to construct entities
 		/// </summary>
 		/// <param name="manager">Manager to construct and register the entities for</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="manager"/> to construct entities for can't be null.</exception>
 		public EntityFactory (EntityManager manager)
 		{
-			throw new NotImplementedException();
+			if(manager == null)
+				throw new ArgumentNullException("manager");
+
+			_manager = manager;
 		}
 
 		/// <summary>
