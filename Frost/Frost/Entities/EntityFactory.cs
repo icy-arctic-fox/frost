@@ -44,7 +44,19 @@ namespace Frost.Entities
 		/// <returns>Newly constructed entity</returns>
 		public Entity Construct ()
 		{
-			throw new NotImplementedException();
+			var entity = new Entity();
+
+			// Add each component
+			for(var i = 0; i < _components.Count; ++i)
+			{
+				var component = _components[i].CloneComponent();
+				var index     = _manager.GetComponentIndex(component.GetType());
+				entity.AddComponent(index, component);
+			}
+
+			// Register and return the entity
+			_manager.Register(entity);
+			return entity;
 		}
 	}
 }
