@@ -129,16 +129,42 @@ namespace Frost.Entities
 
 		#region Components
 
-		private readonly List<object> _componentMaps = new List<object>();
+		/// <summary>
+		/// Collection of tuples containing (1) the type of component map and (2) a <see cref="EntityComponentMap{T}"/>
+		/// </summary>
+		private readonly List<Tuple<Type, object>> _componentMaps = new List<Tuple<Type, object>>();
 
 		/// <summary>
 		/// Retrieves the index to be used for a component
 		/// </summary>
 		/// <param name="componentType">Type of <see cref="IEntityComponent"/> to get the index of</param>
 		/// <returns>Index corresponding to where the component is stored</returns>
+		/// <exception cref="ArgumentNullException">The type of entity component (<paramref name="componentType"/>) to get the index of can't be null.</exception>
 		internal int GetComponentIndex (Type componentType)
 		{
-			throw new NotImplementedException();
+			if(ReferenceEquals(componentType, null))
+				throw new ArgumentNullException("componentType");
+
+			lock(_componentMaps)
+			{
+				var index = 0;
+				Tuple<Type, object> tuple;
+
+				for(; index < _componentMaps.Count; ++index)
+				{
+					tuple    = _componentMaps[index];
+					var type = tuple.Item1;
+					if(Portability.CompareTypes(componentType, type))
+						return index; // Found the component type
+				}
+
+				// Didn't find the component type, create it
+				var map = createComponentMap(componentType);
+				tuple   = new Tuple<Type, object>(componentType, map);
+				_componentMaps.Add(tuple);
+
+				return index; // index will be at the position of the newly added tuple
+			}
 		}
 
 		/// <summary>
@@ -164,6 +190,11 @@ namespace Frost.Entities
 		/// <typeparam name="T">Type of entity components to map</typeparam>
 		/// <returns>A mapping object</returns>
 		public EntityComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
+		{
+			throw new NotImplementedException();
+		}
+
+		private object createComponentMap (Type componentType)
 		{
 			throw new NotImplementedException();
 		}
