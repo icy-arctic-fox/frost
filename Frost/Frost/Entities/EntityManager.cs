@@ -185,7 +185,20 @@ namespace Frost.Entities
 		/// <returns>A mapping object</returns>
 		public EntityComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
 		{
-			throw new NotImplementedException();
+			lock(_componentMaps)
+			{
+				var index = findComponentType(typeof(T));
+
+				if(index >= 0)
+				{// Found it
+					var tuple = _componentMaps[index];
+					var map   = tuple.Item2;
+					return (EntityComponentMap<T>)map;
+				}
+
+				// Not found, create it
+				return createComponentMap<T>();
+			}
 		}
 
 		/// <summary>
@@ -207,9 +220,44 @@ namespace Frost.Entities
 			return -1; // Not found
 		}
 
+		/// <summary>
+		/// Creates an entity component map using the next index from <see cref="_componentMaps"/>
+		/// </summary>
+		/// <typeparam name="T">An <see cref="IEntityComponent"/> to map to</typeparam>
+		/// <returns>A <see cref="EntityComponentMap{T}"/> of the corresponding type</returns>
+		private EntityComponentMap<T> createComponentMap<T> () where T : IEntityComponent
+		{
+			// Create the map
+			var index = _componentMaps.Count;
+			var map   = new EntityComponentMap<T>(index);
+
+			// Add the map to the collection
+			var tuple = new Tuple<Type, object>(typeof(T), map);
+			_componentMaps.Add(tuple);
+
+			return map;
+		}
+
+		/// <summary>
+		/// Creates an entity component map using the next index from <see cref="_componentMaps"/>
+		/// </summary>
+		/// <param name="componentType">Type of component to map for</param>
+		/// <returns>A <see cref="EntityComponentMap{T}"/> of the corresponding type</returns>
 		private object createComponentMap (Type componentType)
 		{
-			throw new NotImplementedException();
+			// Get type information
+			var baseType    = typeof(EntityComponentMap<>);
+			var genericType = baseType.MakeGenericType(componentType);
+
+			// Create the map
+			var index = _componentMaps.Count;
+			var map   = Activator.CreateInstance(genericType, index);
+
+			// Add the map to the collection
+			var tuple = new Tuple<Type, object>(componentType, map);
+			_componentMaps.Add(tuple);
+
+			return map;
 		}
 		#endregion
 
