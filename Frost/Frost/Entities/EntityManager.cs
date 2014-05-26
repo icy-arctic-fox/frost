@@ -147,23 +147,17 @@ namespace Frost.Entities
 
 			lock(_componentMaps)
 			{
-				var index = 0;
-				Tuple<Type, object> tuple;
+				var index = findComponentType(componentType);
 
-				for(; index < _componentMaps.Count; ++index)
-				{
-					tuple    = _componentMaps[index];
-					var type = tuple.Item1;
-					if(Portability.CompareTypes(componentType, type))
-						return index; // Found the component type
-				}
+				if(index >= 0) // Found it
+					return index;
 
 				// Didn't find the component type, create it
-				var map = createComponentMap(componentType);
-				tuple   = new Tuple<Type, object>(componentType, map);
+				var map   = createComponentMap(componentType);
+				var tuple = new Tuple<Type, object>(componentType, map);
 				_componentMaps.Add(tuple);
 
-				return index; // index will be at the position of the newly added tuple
+				return _componentMaps.Count - 1;
 			}
 		}
 
@@ -192,6 +186,25 @@ namespace Frost.Entities
 		public EntityComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
 		{
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Attempts to find an existing component type in <see cref="_componentMaps"/>
+		/// </summary>
+		/// <param name="componentType">Type of component to look for</param>
+		/// <returns>Index of the found item in <see cref="_componentMaps"/>,
+		/// or -1 if the component wasn't found</returns>
+		private int findComponentType (Type componentType)
+		{
+			for(var i = 0; i < _componentMaps.Count; ++i)
+			{
+				var tuple = _componentMaps[i];
+				var type  = tuple.Item1;
+				if(Portability.CompareTypes(componentType, type))
+					return i; // Found the component type
+			}
+
+			return -1; // Not found
 		}
 
 		private object createComponentMap (Type componentType)
