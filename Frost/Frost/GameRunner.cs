@@ -30,6 +30,7 @@ namespace Frost
 		}
 
 		private readonly StateManager _stateManager = new StateManager();
+		private readonly StateSet<Queue<Action>> _preUpdateActions;
 
 		/// <summary>
 		/// Tracks the states currently being updated and rendered
@@ -54,6 +55,14 @@ namespace Frost
 			_display = display;
 			_scenes  = new SceneManager(initialScene, display);
 			_drawArgs.Display = display;
+
+			// Setup the pre-update action queues
+			var initialActionQueues = new List<Queue<Action>>(StateManager.StateCount) {
+				new Queue<Action>(),
+				new Queue<Action>(),
+				new Queue<Action>()
+			};
+			_preUpdateActions = new StateSet<Queue<Action>>(initialActionQueues);
 		}
 
 		#region Modules
@@ -471,6 +480,11 @@ namespace Frost
 
 			_scenes.PreUpdate(args);
 			PreUpdate.NotifySubscribers(this, args);
+
+			// Perform pre-update actions
+			var actions = _preUpdateActions[nextStateIndex];
+			while(actions.Count > 0)
+				actions.Dequeue()();
 		}
 
 		/// <summary>
@@ -487,6 +501,27 @@ namespace Frost
 		{
 			PostUpdate.NotifySubscribers(this, args);
 			_scenes.PostUpdate(args);
+
+			// Queue any pre-update actions
+			Queue<Action> stateQueue1, stateQueue2;
+			switch(args.NextStateIndex)
+			{
+			case 0: // Append to states 1 and 2
+				stateQueue1 = _preUpdateActions[1];
+				stateQueue2 = _preUpdateActions[2];
+				break;
+			case 1: // Append to states 0 and 2
+				stateQueue1 = _preUpdateActions[0];
+				stateQueue2 = _preUpdateActions[2];
+				break;
+			case 2: // Append to states 0 and 1
+				stateQueue1 = _preUpdateActions[0];
+				stateQueue2 = _preUpdateActions[1];
+				break;
+			default:
+				throw new ApplicationException("The state index should be 0, 1, or 2.");
+			}
+			args.AppendAndClearPreUpdateActions(stateQueue1, stateQueue2);
 
 			// Release the state
 			_stateManager.ReleaseUpdateState();
