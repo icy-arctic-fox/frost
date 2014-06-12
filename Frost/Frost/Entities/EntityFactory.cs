@@ -10,7 +10,7 @@ namespace Frost.Entities
 	public class EntityFactory
 	{
 		private readonly EntityManager _manager;
-		private readonly List<IEntityComponent> _components = new List<IEntityComponent>();
+		private readonly List<IEntityComponent> _prototypes = new List<IEntityComponent>();
 
 		/// <summary>
 		/// Creates a factory to construct entities
@@ -26,16 +26,16 @@ namespace Frost.Entities
 		}
 
 		/// <summary>
-		/// Adds a component that will be a part of the constructed entity
+		/// Adds a prototype of a component that will be a part of the constructed entity
 		/// </summary>
-		/// <param name="component">Component to add to the entity</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="component"/> to add can't be null.</exception>
-		public void AddComponent (IEntityComponent component)
+		/// <param name="prototype">Prototype of the component</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="prototype"/> can't be null.</exception>
+		public void AddComponent (IEntityComponent prototype)
 		{
-			if(component == null)
-				throw new ArgumentNullException("component");
-			
-			_components.Add(component);
+			if(prototype == null)
+				throw new ArgumentNullException("prototype");
+
+			_prototypes.Add(prototype);
 		}
 
 		/// <summary>
@@ -47,9 +47,9 @@ namespace Frost.Entities
 			var entity = new Entity();
 
 			// Add each component
-			for(var i = 0; i < _components.Count; ++i)
+			for(var i = 0; i < _prototypes.Count; ++i)
 			{
-				var component = _components[i].CloneComponent();
+				var component = _prototypes[i].CloneComponent();
 				var index     = _manager.GetComponentIndex(component.GetType());
 				entity.AddComponent(index, component);
 			}
