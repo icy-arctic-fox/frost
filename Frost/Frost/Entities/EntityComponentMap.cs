@@ -30,7 +30,7 @@ namespace Frost.Entities
 			if(entity == null)
 				throw new ArgumentNullException("entity");
 
-			return (T)entity.GetComponent(_index);
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -174,7 +174,7 @@ namespace Frost.Entities
 
 			var entities = new List<Entity>();
 			lock(_registeredEntities)
-				entities.AddRange(_registeredEntities.Values.Where(entity => entity.HasComponent(componentType)));
+				throw new NotImplementedException(); // entities.AddRange(_registeredEntities.Values.Where(entity => entity.HasComponent(componentType))));
 			return entities.AsReadOnly();
 		}
 

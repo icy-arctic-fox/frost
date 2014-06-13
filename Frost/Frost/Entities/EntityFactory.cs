@@ -51,7 +51,7 @@ namespace Frost.Entities
 			{
 				var component = _prototypes[i].CloneComponent();
 				var index     = _manager.GetComponentIndex(component.GetType());
-				entity.AddComponent(index, component);
+				throw new NotImplementedException(); // entity.AddComponent(index, component));
 			}
 
 			// Register and return the entity
