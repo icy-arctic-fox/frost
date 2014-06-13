@@ -132,10 +132,7 @@ namespace Frost.Entities
 
 		#region Components
 
-		/// <summary>
-		/// Collection of tuples containing (1) the type of component map and (2) a <see cref="EntityComponentMap{T}"/>
-		/// </summary>
-		private readonly List<Tuple<Type, object>> _componentMaps = new List<Tuple<Type, object>>();
+		private readonly EntityComponentManager _componentManager = new EntityComponentManager();
 
 		/// <summary>
 		/// Retrieves an object that will be able to pull a component from the entities tracked by the manager
@@ -144,60 +141,11 @@ namespace Frost.Entities
 		/// <returns>A mapping object</returns>
 		public EntityComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
 		{
-			lock(_componentMaps)
-			{
-				var index = 0; // TODO: findComponentType(typeof(T));
-
-				if(index >= 0)
-				{// Found it
-					var tuple = _componentMaps[index];
-					var map   = tuple.Item2;
-					return (EntityComponentMap<T>)map;
-				}
-
-				// Not found, create it
-				return createComponentMap<T>();
-			}
-		}
-
-		/// <summary>
-		/// Creates an entity component map using the next index from <see cref="_componentMaps"/>
-		/// </summary>
-		/// <typeparam name="T">An <see cref="IEntityComponent"/> to map to</typeparam>
-		/// <returns>A <see cref="EntityComponentMap{T}"/> of the corresponding type</returns>
-		private EntityComponentMap<T> createComponentMap<T> () where T : IEntityComponent
-		{
-			// Create the map
-			var index = _componentMaps.Count;
-			var map   = new EntityComponentMap<T>(index);
-
-			// Add the map to the collection
-			var tuple = new Tuple<Type, object>(typeof(T), map);
-			_componentMaps.Add(tuple);
-
-			return map;
-		}
-
-		/// <summary>
-		/// Creates an entity component map using the next index from <see cref="_componentMaps"/>
-		/// </summary>
-		/// <param name="componentType">Type of component to map for</param>
-		/// <returns>A <see cref="EntityComponentMap{T}"/> of the corresponding type</returns>
-		private object createComponentMap (Type componentType)
-		{
-			// Get type information
-			var baseType    = typeof(EntityComponentMap<>);
-			var genericType = baseType.MakeGenericType(componentType);
-
-			// Create the map
-			var index = _componentMaps.Count;
-			var map   = Activator.CreateInstance(genericType, index);
-
-			// Add the map to the collection
-			var tuple = new Tuple<Type, object>(componentType, map);
-			_componentMaps.Add(tuple);
-
-			return map;
+			var componentType = typeof(T);
+			var componentList = _componentManager.GetEntityComponentList(componentType);
+			var mapList       = (IList<T>)componentList; // TODO: Will this cast work?
+			return new EntityComponentMap<T>(mapList);
+			// TODO: Reuse maps by saving them in a dictionary?
 		}
 		#endregion
 

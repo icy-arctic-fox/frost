@@ -185,6 +185,16 @@ namespace Frost.Entities
 		}
 
 		/// <summary>
+		/// Gets a list that will be updated with entity components
+		/// </summary>
+		/// <param name="componentType">Type of component</param>
+		/// <returns>List of entity components</returns>
+		internal IList<IEntityComponent> GetEntityComponentList (Type componentType)
+		{
+			return getComponentList(componentType, true).AsReadOnly();
+		}
+
+		/// <summary>
 		/// Gets the index for a component type
 		/// </summary>
 		/// <param name="componentType">Type of component</param>
