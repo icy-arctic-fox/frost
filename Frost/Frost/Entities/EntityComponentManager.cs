@@ -229,6 +229,7 @@ namespace Frost.Entities
 
 				// Add it to the mapping
 				typeIndex = _componentsByType.Count;
+				_componentsByType.Add(componentList);
 				_componentTypeMap.Add(componentType.FullName, typeIndex);
 
 				return componentList;
