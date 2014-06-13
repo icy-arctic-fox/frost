@@ -38,23 +38,22 @@ namespace Frost.Entities
 		/// <param name="entity">Entity to register</param>
 		/// <returns>True if the entity was registered or false if it has been previously registered with this manager</returns>
 		/// <exception cref="ArgumentNullException">The <paramref name="entity"/> to register can't be null.</exception>
-		/// <exception cref="ArgumentException">The <paramref name="entity"/> can't be already registered to another manager.</exception>
+		/// <exception cref="InvalidOperationException">The <paramref name="entity"/> is already registered to another manager.</exception>
 		public bool Register (Entity entity)
 		{
 			if(entity == null)
 				throw new ArgumentNullException("entity");
 
+			if(entity.Registered)
+			{// Entity is already registered to a manager
+				if(entity.Owner == this)
+					return false; // Already registered to this manager
+				throw new InvalidOperationException("The entity is already registered to another manager."); // Registered to another manager
+			}
+
+			// Not registered at all, register to this manager
 			lock(_registeredEntities)
 			{
-				if(entity.Registered)
-				{
-					Entity prevEntity;
-					if(_registeredEntities.TryGetValue(entity.Id, out prevEntity) && ReferenceEquals(prevEntity, entity))
-						return false; // Already registered to this manager
-					throw new ArgumentException("entity"); // Registered to another manager
-				}
-
-				// Not registered at all, register to this manager
 				Guid id;
 				int index;
 				getNextAvailable(out id, out index);
@@ -93,25 +92,20 @@ namespace Frost.Entities
 				throw new ArgumentNullException("entity");
 			if(!entity.Registered)
 				return false;
+			if(entity.Owner != this)
+				return false; // Entity isn't registered to this manager
 
-			var found = false;
+			// The entity is registered to this manager
 			var id = entity.Id;
 			lock(_registeredEntities)
 			{
-				Entity prevEntity;
-				if(_registeredEntities.TryGetValue(id, out prevEntity))
-					if(ReferenceEquals(prevEntity, entity))
-					{// Entity is registered to this manager, remove it
-						_registeredEntities.Remove(id);
-						_freeIndices.Release(entity.Index);
-						entity.ClearRegistrationInfo();
-						found = true;
-					}
+				_registeredEntities.Remove(id);
+				_freeIndices.Release(entity.Index);
+				entity.ClearRegistrationInfo();
 			}
 
-			if(found)
-				OnDeregister(new EntityEventArgs(entity));
-			return found;
+			OnDeregister(new EntityEventArgs(entity));
+			return true;
 		}
 
 		/// <summary>
