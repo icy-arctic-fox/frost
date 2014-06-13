@@ -149,9 +149,10 @@ namespace Frost.Entities
 		/// <typeparam name="T">Type of component</typeparam>
 		/// <param name="e">Entity to check</param>
 		/// <returns>True if the entity has the component, false otherwise</returns>
+		/// <exception cref="ArgumentNullException">The entity can't be null.</exception>
 		public bool HasComponent<T> (Entity e) where T : IEntityComponent
 		{
-			throw new NotImplementedException();
+			return HasComponent(e, typeof(T));
 		}
 
 		/// <summary>
@@ -160,9 +161,26 @@ namespace Frost.Entities
 		/// <param name="e">Entity to check</param>
 		/// <param name="componentType">Type of component</param>
 		/// <returns>True if the entity has the component, false otherwise</returns>
+		/// <exception cref="ArgumentNullException">The entity and component type can't be null.</exception>
 		public bool HasComponent (Entity e, Type componentType)
 		{
-			throw new NotImplementedException();
+			if(e == null)
+				throw new ArgumentNullException("e");
+			if(componentType == null)
+				throw new ArgumentNullException("componentType");
+
+			var entityIndex = e.Index;
+			var typeName    = componentType.FullName;
+			int typeIndex;
+
+			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			{// Component is known about
+				var componentList = _componentsByType[typeIndex];
+				return componentList[entityIndex] != null; // Will be null if the entity doesn't have the component
+				// TODO: Use bit flag arrays to track which components an entity has
+			}
+
+			return false; // Component doesn't exist for any entity
 		}
 	}
 }
