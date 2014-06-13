@@ -116,7 +116,7 @@ namespace Frost
 		private void pushScene (Scene scene)
 		{
 			// Assign the scene's manager
-			scene.SetParentManager(this);
+			scene.SetOwner(this);
 
 			// Add the scene to the stack
 			_sceneStack.AddLast(scene);
@@ -201,7 +201,7 @@ namespace Frost
 				}
 
 			// Tell the scene it has no manager anymore
-			popped.SetParentManager(null);
+			popped.SetOwner(null);
 
 			// Update the current scene
 			_curScene = (_sceneStack.Count > 0) ? _sceneStack.Last.Value : null;

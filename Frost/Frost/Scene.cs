@@ -13,36 +13,18 @@ namespace Frost
 		/// <summary>
 		/// Manager that owns the scene
 		/// </summary>
-		protected SceneManager ParentSceneManager
+		protected SceneManager Owner
 		{
 			get { return _sceneManager; }
 		}
 
 		/// <summary>
-		/// Sets the scene manager that is the scene's parent
+		/// Sets the scene manager that is the scene's owner
 		/// </summary>
 		/// <param name="manager">Parent scene manager</param>
-		internal void SetParentManager (SceneManager manager)
+		internal void SetOwner (SceneManager manager)
 		{
 			_sceneManager = manager;
-		}
-
-		private readonly EntityManager _entityManager = new EntityManager();
-
-		/// <summary>
-		/// Tracks entities used in the current scene
-		/// </summary>
-		protected EntityManager Entities
-		{
-			get { return _entityManager; }
-		}
-
-		/// <summary>
-		/// Tracks entities used in the current scene
-		/// </summary>
-		internal EntityManager EntityManager
-		{
-			get { return _entityManager; }
 		}
 
 		/// <summary>
@@ -110,6 +92,7 @@ namespace Frost
 		#region Subsystems and entities
 
 		private readonly SubsystemManager _subsystemManager = new SubsystemManager();
+		private readonly EntityManager _entityManager = new EntityManager();
 
 		/// <summary>
 		/// Subsystems that process entities in the scene
@@ -137,6 +120,22 @@ namespace Frost
 		private void entityDeregistered (object sender, EntityEventArgs e)
 		{
 			_subsystemManager.RemoveEntity(e.Entity);
+		}
+
+		/// <summary>
+		/// Tracks entities used in the current scene
+		/// </summary>
+		protected EntityManager Entities
+		{
+			get { return _entityManager; }
+		}
+
+		/// <summary>
+		/// Tracks entities used in the current scene
+		/// </summary>
+		internal EntityManager EntityManager
+		{
+			get { return _entityManager; }
 		}
 		#endregion
 	}
