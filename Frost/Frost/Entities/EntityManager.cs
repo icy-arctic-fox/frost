@@ -13,21 +13,20 @@ namespace Frost.Entities
 	{
 		#region Registration
 
-		private readonly Dictionary<ulong, Entity> _registeredEntities = new Dictionary<ulong, Entity>();
-		private ulong _nextId;
+		private readonly Dictionary<Guid, Entity> _registeredEntities = new Dictionary<Guid, Entity>();
 
 		/// <summary>
 		/// Gets the next usable entity ID
 		/// </summary>
 		/// <returns>Next available entity ID</returns>
-		private ulong getNextAvailableId ()
+		private Guid getNextAvailableId ()
 		{
-			ulong id;
+			Guid id;
 			lock(_registeredEntities)
 			{
 				do
 				{
-					id = unchecked(_nextId++);
+					id = Guid.NewGuid();
 				} while(_registeredEntities.ContainsKey(id));
 			}
 			return id;
@@ -58,7 +57,7 @@ namespace Frost.Entities
 				// Not registered at all, register to this manager
 				var id = getNextAvailableId();
 				_registeredEntities.Add(id, entity);
-				entity.SetId(id);
+				// TODO: entity.SetId(id);
 			}
 
 			OnRegister(new EntityEventArgs(entity));

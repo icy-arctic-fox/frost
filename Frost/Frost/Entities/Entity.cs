@@ -8,36 +8,61 @@ namespace Frost.Entities
 	/// </summary>
 	public class Entity : IFullDisposable
 	{
-		#region ID
+		#region Registration
 
-		private ulong _id;
+		private Guid _id;
 
 		/// <summary>
 		/// Unique identification number of the entity.
 		/// This value can be used to reference an entity from anywhere.
-		/// An entity that has an ID of 0 has not been registered and should not be openly used.
+		/// An entity that has an empty ID (<see cref="Guid.Empty"/>) has not been registered and should not be openly used.
 		/// </summary>
-		public ulong Id
+		public Guid Id
 		{
 			get { return _id; }
 		}
 
+		private int _index;
+
+		/// <summary>
+		/// Internal entity index
+		/// </summary>
+		internal int Index
+		{
+			get { return _index; }
+		}
+
+		private EntityManager _owner;
+
+		/// <summary>
+		/// Manager that owns and controls the entity
+		/// </summary>
+		/// <remarks>This property's value will be null if the entity isn't registered.</remarks>
+		public EntityManager Owner
+		{
+			get { return _owner; }
+		}
+
 		/// <summary>
 		/// Indicates whether the entity has been registered.
-		/// An unregistered entity will have an <see cref="Id"/> of 0.
+		/// An unregistered entity will have an empty <see cref="Id"/> and a null <see cref="Owner"/>.
 		/// </summary>
 		public bool Registered
 		{
-			get { return _id != 0L; }
+			get { return _owner != null; }
 		}
 
 		/// <summary>
 		/// Sets the unique identification number of the entity
 		/// </summary>
-		/// <param name="id">Entity ID number</param>
-		internal void SetId (ulong id)
+		internal void SetRegistrationInfo (EntityManager owner, Guid id, int index)
 		{
-			_id = id;
+			throw new NotImplementedException();
+		}
+
+		internal void ClearRegistrationInfo ()
+		{
+			throw new NotImplementedException();
 		}
 		#endregion
 
