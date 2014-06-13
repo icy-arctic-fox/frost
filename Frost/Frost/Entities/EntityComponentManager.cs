@@ -55,7 +55,7 @@ namespace Frost.Entities
 		/// <typeparam name="T">Type of component</typeparam>
 		/// <param name="e">Entity to retrieve the component of</param>
 		/// <returns>Corresponding component for the entity</returns>
-		public T GetComponent<T> (Entity e)
+		public T GetComponent<T> (Entity e) where T : IEntityComponent
 		{
 			throw new NotImplementedException();
 		}
@@ -78,6 +78,28 @@ namespace Frost.Entities
 		/// <param name="componentType">Type of component to remove from the entity</param>
 		/// <returns>True if the component was removed or false if the entity is untracked or the entity doesn't have the component</returns>
 		public bool RemoveComponent (Entity e, Type componentType)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Checks whether an entity has a component
+		/// </summary>
+		/// <typeparam name="T">Type of component</typeparam>
+		/// <param name="e">Entity to check</param>
+		/// <returns>True if the entity has the component, false otherwise</returns>
+		public bool HasComponent<T> (Entity e) where T : IEntityComponent
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Checks whether an entity has a component
+		/// </summary>
+		/// <param name="e">Entity to check</param>
+		/// <param name="componentType">Type of component</param>
+		/// <returns>True if the entity has the component, false otherwise</returns>
+		public bool HasComponent (Entity e, Type componentType)
 		{
 			throw new NotImplementedException();
 		}
