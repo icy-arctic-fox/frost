@@ -30,15 +30,15 @@ namespace Frost.Utility
 		/// </summary>
 		public int Acquired
 		{
-			get { throw new NotImplementedException(); }
+			get { return _top - _released.Count; }
 		}
 
 		/// <summary>
 		/// Total number of integers available
 		/// </summary>
-		public int Available
+		public int Total
 		{
-			get { throw new NotImplementedException(); }
+			get { return _max; }
 		}
 
 		/// <summary>
@@ -46,7 +46,7 @@ namespace Frost.Utility
 		/// </summary>
 		public int Remaining
 		{
-			get { throw new NotImplementedException(); }
+			get { return _max - _top + _released.Count; }
 		}
 
 		/// <summary>
@@ -61,8 +61,12 @@ namespace Frost.Utility
 		/// Creates a free list with a maximum upper bound
 		/// </summary>
 		/// <param name="max">Maximum number of integers allowed</param>
+		/// <exception cref="ArgumentOutOfRangeException">The maximum number of integers must be zero or more.</exception>
 		public FreeList (int max)
 		{
+			if(max < 0)
+				throw new ArgumentOutOfRangeException("max");
+
 			_max = max;
 		}
 
