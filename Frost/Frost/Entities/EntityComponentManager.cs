@@ -11,6 +11,12 @@ namespace Frost.Entities
 	internal class EntityComponentManager
 	{
 		/// <summary>
+		/// Maximum entity index.
+		/// Length minus 1 of the sub-lists in <see cref="_componentsByType"/>.
+		/// </summary>
+		private int _maxEntityIndex = -1;
+
+		/// <summary>
 		/// Collection of components organized by type and then by entity index
 		/// </summary>
 		private readonly List<List<IEntityComponent>> _componentsByType = new List<List<IEntityComponent>>();
@@ -24,19 +30,63 @@ namespace Frost.Entities
 		/// Adds an empty entity (an entity with no components)
 		/// </summary>
 		/// <param name="e">Entity to add</param>
+		/// <exception cref="ArgumentNullException">The entity to add can't be null.</exception>
 		public void AddEntity (Entity e)
 		{
-			throw new NotImplementedException();
+			if(e == null)
+				throw new ArgumentNullException("e");
+
+			extendComponentLists(e.Index);
+		}
+
+		/// <summary>
+		/// Extends the component lists to accommodate slots for entity components
+		/// </summary>
+		/// <param name="index">Index to ensure is available in the lists</param>
+		private void extendComponentLists (int index)
+		{
+			if(index <= _maxEntityIndex)
+				return; // Don't need to extend
+
+			// Extend each component list
+			for(var i = 0; i < _componentsByType.Count; ++i)
+			{
+				var componentList = _componentsByType[i];
+				for(var j = _maxEntityIndex; j < index; ++j)
+					componentList.Add(null);
+			}
+
+			_maxEntityIndex = index;
 		}
 
 		/// <summary>
 		/// Removes an entity and all of its components
 		/// </summary>
 		/// <param name="e">Entity to remove</param>
-		/// <returns>True if the entity was removed or false if the entity is untracked</returns>
-		public bool RemoveEntity (Entity e)
+		/// <exception cref="ArgumentNullException">The entity to remove can't be null.</exception>
+		public void RemoveEntity (Entity e)
 		{
-			throw new NotImplementedException();
+			if(e == null)
+				throw new ArgumentNullException("e");
+
+			removeComponentsAt(e.Index);
+		}
+
+		/// <summary>
+		/// Removes all components at a specified entity index
+		/// </summary>
+		/// <param name="index">Index of the entity to remove components for</param>
+		private void removeComponentsAt (int index)
+		{
+			if(index > _maxEntityIndex)
+				return; // Don't need to remove anything, entity isn't in lists
+
+			// Entity has its components stored in the lists
+			for(var i = 0; i < _componentsByType.Count; ++i)
+			{
+				var componentList    = _componentsByType[i];
+				componentList[index] = null;
+			}
 		}
 
 		/// <summary>
