@@ -135,33 +135,6 @@ namespace Frost.Entities
 		private readonly List<Tuple<Type, object>> _componentMaps = new List<Tuple<Type, object>>();
 
 		/// <summary>
-		/// Retrieves the index to be used for a component
-		/// </summary>
-		/// <param name="componentType">Type of <see cref="IEntityComponent"/> to get the index of</param>
-		/// <returns>Index corresponding to where the component is stored</returns>
-		/// <exception cref="ArgumentNullException">The type of entity component (<paramref name="componentType"/>) to get the index of can't be null.</exception>
-		internal int GetComponentIndex (Type componentType)
-		{
-			if(ReferenceEquals(componentType, null))
-				throw new ArgumentNullException("componentType");
-
-			lock(_componentMaps)
-			{
-				var index = findComponentType(componentType);
-
-				if(index >= 0) // Found it
-					return index;
-
-				// Didn't find the component type, create it
-				var map   = createComponentMap(componentType);
-				var tuple = new Tuple<Type, object>(componentType, map);
-				_componentMaps.Add(tuple);
-
-				return _componentMaps.Count - 1;
-			}
-		}
-
-		/// <summary>
 		/// Retrieves a collection of entities that have a component
 		/// </summary>
 		/// <param name="componentType">Type of <see cref="IEntityComponent"/> to look for</param>
@@ -187,7 +160,7 @@ namespace Frost.Entities
 		{
 			lock(_componentMaps)
 			{
-				var index = findComponentType(typeof(T));
+				var index = 0; // TODO: findComponentType(typeof(T));
 
 				if(index >= 0)
 				{// Found it
@@ -199,25 +172,6 @@ namespace Frost.Entities
 				// Not found, create it
 				return createComponentMap<T>();
 			}
-		}
-
-		/// <summary>
-		/// Attempts to find an existing component type in <see cref="_componentMaps"/>
-		/// </summary>
-		/// <param name="componentType">Type of component to look for</param>
-		/// <returns>Index of the found item in <see cref="_componentMaps"/>,
-		/// or -1 if the component wasn't found</returns>
-		private int findComponentType (Type componentType)
-		{
-			for(var i = 0; i < _componentMaps.Count; ++i)
-			{
-				var tuple = _componentMaps[i];
-				var type  = tuple.Item1;
-				if(Portability.CompareTypes(componentType, type))
-					return i; // Found the component type
-			}
-
-			return -1; // Not found
 		}
 
 		/// <summary>

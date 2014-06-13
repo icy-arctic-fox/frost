@@ -50,7 +50,7 @@ namespace Frost.Entities
 			for(var i = 0; i < _prototypes.Count; ++i)
 			{
 				var component = _prototypes[i].CloneComponent();
-				var index     = _manager.GetComponentIndex(component.GetType());
+				var index     = 0; // TOD: _manager.GetComponentIndex(component.GetType());
 				throw new NotImplementedException(); // entity.AddComponent(index, component));
 			}
 
