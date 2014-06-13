@@ -154,8 +154,9 @@ namespace Frost.Entities
 		/// <param name="args">Update information</param>
 		private static void runUpdateSubsystem (IUpdateSubsystem subsystem, EntityGroup entities, FrameStepEventArgs args)
 		{
-			lock(entities)
-				entities.Iterate(subsystem.Process, args);
+			lock(entities) // TODO: Use read-write lock
+				for(var i = 0; i < entities.Count; ++i)
+					subsystem.Process(entities[i], args);
 		}
 
 		/// <summary>
@@ -183,7 +184,8 @@ namespace Frost.Entities
 		private static void runRenderSubsystem (IRenderSubsystem subsystem, EntityGroup entities, FrameDrawEventArgs args)
 		{
 			lock(entities)
-				entities.Iterate(subsystem.Process, args);
+				for(var i = 0; i < entities.Count; ++i)
+					subsystem.Process(entities[i], args);
 		}
 
 		/// <summary>
