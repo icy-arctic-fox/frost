@@ -83,8 +83,12 @@ namespace Frost.Entities
 		/// </summary>
 		/// <typeparam name="T">Type of component</typeparam>
 		/// <returns>True if the entity has the component, false otherwise</returns>
+		/// <exception cref="InvalidOperationException">The entity must be registered before accessing entity components.</exception>
 		public bool HasComponent<T> () where T : IEntityComponent
 		{
+			if(_owner == null)
+				throw new InvalidOperationException("The entity must be registered before accessing entity components.");
+
 			return _owner.HasComponent<T>(this);
 		}
 
@@ -92,9 +96,13 @@ namespace Frost.Entities
 		/// Adds a component to the entity
 		/// </summary>
 		/// <param name="component">Component to add to the entity</param>
+		/// <exception cref="InvalidOperationException">The entity must be registered before accessing entity components.</exception>
 		/// <exception cref="ArgumentNullException">The <paramref name="component"/> can't be null.</exception>
 		public void AddComponent (IEntityComponent component)
 		{
+			if(_owner == null)
+				throw new InvalidOperationException("The entity must be registered before accessing entity components.");
+
 			_owner.AddComponent(this, component);
 		}
 		#endregion
