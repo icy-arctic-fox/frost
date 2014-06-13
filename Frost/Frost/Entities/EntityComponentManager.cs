@@ -124,6 +124,17 @@ namespace Frost.Entities
 		/// <summary>
 		/// Removes a component from an existing entity
 		/// </summary>
+		/// <typeparam name="T">Type of component to remove from the entity</typeparam>
+		/// <param name="e">Entity to detach the component from</param>
+		/// <returns>True if the component was removed or false if the entity is untracked or the entity doesn't have the component</returns>
+		public bool RemoveComponent<T> (Entity e)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes a component from an existing entity
+		/// </summary>
 		/// <param name="e">Entity to detach the component from</param>
 		/// <param name="componentType">Type of component to remove from the entity</param>
 		/// <returns>True if the component was removed or false if the entity is untracked or the entity doesn't have the component</returns>
