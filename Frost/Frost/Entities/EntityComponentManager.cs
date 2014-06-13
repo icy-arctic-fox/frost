@@ -94,9 +94,36 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="e">Entity to attach the component to</param>
 		/// <param name="component">Component to add to the entity</param>
+		/// <exception cref="ArgumentNullException">The entity and component can't be null.</exception>
 		public void AddComponent (Entity e, IEntityComponent component)
 		{
-			throw new NotImplementedException();
+			if(e == null)
+				throw new ArgumentNullException("e");
+			if(component == null)
+				throw new ArgumentNullException("component");
+
+			var entityIndex   = e.Index;
+			var componentType = component.GetType();
+			var typeName      = componentType.FullName;
+			int typeIndex;
+			List<IEntityComponent> componentList;
+
+			extendComponentLists(entityIndex);
+
+			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			{// Component is known about
+				componentList = _componentsByType[typeIndex];
+			}
+			else
+			{// New type of component
+				componentList = new List<IEntityComponent>(_maxEntityIndex);
+				for(var i = 0; i < _maxEntityIndex; ++i)
+					componentList.Add(null);
+				_componentTypeMap[typeName] = _componentsByType.Count;
+				_componentsByType.Add(componentList);
+			}
+
+			componentList[entityIndex] = component;
 		}
 
 		/// <summary>
