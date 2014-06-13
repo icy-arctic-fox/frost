@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Frost.Utility;
 
 namespace Frost.Entities
@@ -137,23 +136,6 @@ namespace Frost.Entities
 		/// Collection of tuples containing (1) the type of component map and (2) a <see cref="EntityComponentMap{T}"/>
 		/// </summary>
 		private readonly List<Tuple<Type, object>> _componentMaps = new List<Tuple<Type, object>>();
-
-		/// <summary>
-		/// Retrieves a collection of entities that have a component
-		/// </summary>
-		/// <param name="componentType">Type of <see cref="IEntityComponent"/> to look for</param>
-		/// <returns>Collection of entities</returns>
-		/// <exception cref="ArgumentNullException">The type of component to look for can't be null.</exception>
-		public IEnumerable<Entity> GetEntitiesWith (Type componentType)
-		{
-			if(componentType == null)
-				throw new ArgumentNullException("componentType");
-
-			var entities = new List<Entity>();
-			lock(_registeredEntities)
-				throw new NotImplementedException(); // entities.AddRange(_registeredEntities.Values.Where(entity => entity.HasComponent(componentType))));
-			return entities.AsReadOnly();
-		}
 
 		/// <summary>
 		/// Retrieves an object that will be able to pull a component from the entities tracked by the manager
