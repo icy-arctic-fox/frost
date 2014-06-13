@@ -104,6 +104,8 @@ namespace Frost.Entities
 					if(ReferenceEquals(prevEntity, entity))
 					{// Entity is registered to this manager, remove it
 						_registeredEntities.Remove(id);
+						_freeIndices.Release(entity.Index);
+						entity.ClearRegistrationInfo();
 						found = true;
 					}
 			}
