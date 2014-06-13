@@ -45,6 +45,7 @@ namespace Frost.Entities
 		public Entity Construct ()
 		{
 			var entity = new Entity();
+			_manager.Register(entity);
 
 			// Add each component
 			for(var i = 0; i < _prototypes.Count; ++i)
@@ -53,8 +54,6 @@ namespace Frost.Entities
 				entity.AddComponent(component);
 			}
 
-			// Register and return the entity
-			_manager.Register(entity);
 			return entity;
 		}
 	}
