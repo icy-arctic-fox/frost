@@ -8,15 +8,10 @@ namespace Frost
 	/// </summary>
 	public abstract class Scene : IStepable, IRenderable
 	{
-		private SceneManager _sceneManager;
-
 		/// <summary>
 		/// Manager that owns the scene
 		/// </summary>
-		protected SceneManager Owner
-		{
-			get { return _sceneManager; }
-		}
+		protected SceneManager Owner { get; private set; }
 
 		/// <summary>
 		/// Sets the scene manager that is the scene's owner
@@ -24,7 +19,7 @@ namespace Frost
 		/// <param name="manager">Parent scene manager</param>
 		internal void SetOwner (SceneManager manager)
 		{
-			_sceneManager = manager;
+			Owner = manager;
 		}
 
 		/// <summary>
