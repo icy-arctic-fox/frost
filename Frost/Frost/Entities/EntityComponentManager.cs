@@ -127,9 +127,10 @@ namespace Frost.Entities
 		/// <typeparam name="T">Type of component to remove from the entity</typeparam>
 		/// <param name="e">Entity to detach the component from</param>
 		/// <returns>True if the component was removed or false if the entity is untracked or the entity doesn't have the component</returns>
+		/// <exception cref="ArgumentNullException">The entity can't be null.</exception>
 		public bool RemoveComponent<T> (Entity e)
 		{
-			throw new NotImplementedException();
+			return RemoveComponent(e, typeof(T));
 		}
 
 		/// <summary>
@@ -138,9 +139,29 @@ namespace Frost.Entities
 		/// <param name="e">Entity to detach the component from</param>
 		/// <param name="componentType">Type of component to remove from the entity</param>
 		/// <returns>True if the component was removed or false if the entity is untracked or the entity doesn't have the component</returns>
+		/// <exception cref="ArgumentNullException">The entity and component type can't be null.</exception>
 		public bool RemoveComponent (Entity e, Type componentType)
 		{
-			throw new NotImplementedException();
+			if(e == null)
+				throw new ArgumentNullException("e");
+			if(componentType == null)
+				throw new ArgumentNullException("componentType");
+
+			var entityIndex = e.Index;
+			var typeName    = componentType.FullName;
+			int typeIndex;
+
+			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			{// Component is known about
+				var componentList = _componentsByType[typeIndex];
+				if(componentList[entityIndex] != null)
+				{// Entity has the component
+					componentList[entityIndex] = null;
+					return true;
+				}
+			}
+
+			return false; // Component doesn't exist for any entity
 		}
 
 		/// <summary>
