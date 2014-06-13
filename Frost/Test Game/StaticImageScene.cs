@@ -1,5 +1,6 @@
 ﻿using Frost;
 using Frost.Entities;
+using Frost.Graphics;
 
 namespace Test_Game
 {
@@ -12,10 +13,14 @@ namespace Test_Game
 
 		public StaticImageScene ()
 		{
+			var texture = new Texture("cat.jpg");
+
 			var factory = new EntityFactory(Entities);
 			factory.AddComponent(new Positional2DComponent());
-//			factory.AddComponent(new StaticImageComponent());
+			factory.AddComponent(new StaticImageComponent(texture));
 			factory.Construct();
+
+			Subsystems.AddRenderSubsystem(new StaticImageSubsystem(Entities));
 		}
 
 		public override bool AllowFallthrough
