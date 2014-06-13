@@ -104,13 +104,12 @@ namespace Frost.Entities
 
 			var entityIndex   = e.Index;
 			var componentType = component.GetType();
-			var typeName      = componentType.FullName;
-			int typeIndex;
+			var typeIndex     = getComponentTypeIndex(componentType);
 			List<IEntityComponent> componentList;
 
 			extendComponentLists(entityIndex);
 
-			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			if(typeIndex >= 0)
 			{// Component is known about
 				componentList = _componentsByType[typeIndex];
 			}
@@ -119,7 +118,7 @@ namespace Frost.Entities
 				componentList = new List<IEntityComponent>(_maxEntityIndex);
 				for(var i = 0; i < _maxEntityIndex; ++i)
 					componentList.Add(null);
-				_componentTypeMap[typeName] = _componentsByType.Count;
+				_componentTypeMap[componentType.FullName] = _componentsByType.Count;
 				_componentsByType.Add(componentList);
 			}
 
@@ -153,10 +152,9 @@ namespace Frost.Entities
 				throw new ArgumentNullException("componentType");
 
 			var entityIndex = e.Index;
-			var typeName    = componentType.FullName;
-			int typeIndex;
+			var typeIndex   = getComponentTypeIndex(componentType);
 
-			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			if(typeIndex >= 0)
 			{// Component is known about
 				var componentList = _componentsByType[typeIndex];
 				return componentList[entityIndex];
@@ -192,10 +190,9 @@ namespace Frost.Entities
 				throw new ArgumentNullException("componentType");
 
 			var entityIndex = e.Index;
-			var typeName    = componentType.FullName;
-			int typeIndex;
+			var typeIndex   = getComponentTypeIndex(componentType);
 
-			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			if(typeIndex >= 0)
 			{// Component is known about
 				var componentList = _componentsByType[typeIndex];
 				if(componentList[entityIndex] != null)
@@ -235,10 +232,9 @@ namespace Frost.Entities
 				throw new ArgumentNullException("componentType");
 
 			var entityIndex = e.Index;
-			var typeName    = componentType.FullName;
-			int typeIndex;
+			var typeIndex   = getComponentTypeIndex(componentType);
 
-			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			if(typeIndex >= 0)
 			{// Component is known about
 				var componentList = _componentsByType[typeIndex];
 				return componentList[entityIndex] != null; // Will be null if the entity doesn't have the component
@@ -246,6 +242,20 @@ namespace Frost.Entities
 			}
 
 			return false; // Component doesn't exist for any entity
+		}
+
+		/// <summary>
+		/// Gets the index for a component type
+		/// </summary>
+		/// <param name="componentType">Type of component</param>
+		/// <returns>Index of the component type or -1 if the type is unknown at this point</returns>
+		private int getComponentTypeIndex (Type componentType)
+		{
+			var typeName = componentType.FullName;
+			int index;
+			if(_componentTypeMap.TryGetValue(typeName, out index))
+				return index;
+			return -1;
 		}
 	}
 }
