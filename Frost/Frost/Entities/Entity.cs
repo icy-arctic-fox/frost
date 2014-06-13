@@ -87,6 +87,16 @@ namespace Frost.Entities
 		{
 			return _owner.HasComponent<T>(this);
 		}
+
+		/// <summary>
+		/// Adds a component to the entity
+		/// </summary>
+		/// <param name="component">Component to add to the entity</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="component"/> can't be null.</exception>
+		public void AddComponent (IEntityComponent component)
+		{
+			_owner.AddComponent(this, component);
+		}
 		#endregion
 
 		#region Disposable

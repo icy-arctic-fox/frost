@@ -155,6 +155,22 @@ namespace Frost.Entities
 		{
 			return _componentManager.HasComponent<T>(entity);
 		}
+
+		/// <summary>
+		/// Adds a component to an existing entity
+		/// </summary>
+		/// <param name="entity">Entity to attach the component to</param>
+		/// <param name="component">Component to add to the entity</param>
+		/// <exception cref="ArgumentNullException">The entity and component can't be null.</exception>
+		public void AddComponent (Entity entity, IEntityComponent component)
+		{
+			if(entity == null)
+				throw new ArgumentNullException("entity");
+			if(component == null)
+				throw new ArgumentNullException("component");
+
+			_componentManager.AddComponent(entity, component);
+		}
 		#endregion
 
 		/// <summary>
