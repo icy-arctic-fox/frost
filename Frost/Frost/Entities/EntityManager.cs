@@ -14,22 +14,23 @@ namespace Frost.Entities
 		#region Registration
 
 		private readonly Dictionary<Guid, Entity> _registeredEntities = new Dictionary<Guid, Entity>();
+		private readonly FreeList _freeIndices = new FreeList();
 
 		/// <summary>
-		/// Gets the next usable entity ID
+		/// Gets a new entity ID and next usable entity index
 		/// </summary>
-		/// <returns>Next available entity ID</returns>
-		private Guid getNextAvailableId ()
+		/// <param name="id">Unique entity ID</param>
+		/// <param name="index">Next usable entity index</param>
+		private void getNextAvailable (out Guid id, out int index)
 		{
-			Guid id;
 			lock(_registeredEntities)
 			{
 				do
 				{
 					id = Guid.NewGuid();
 				} while(_registeredEntities.ContainsKey(id));
+				index = _freeIndices.GetNext();
 			}
-			return id;
 		}
 
 		/// <summary>
@@ -55,9 +56,11 @@ namespace Frost.Entities
 				}
 
 				// Not registered at all, register to this manager
-				var id = getNextAvailableId();
+				Guid id;
+				int index;
+				getNextAvailable(out id, out index);
 				_registeredEntities.Add(id, entity);
-				// TODO: entity.SetId(id);
+				entity.SetRegistrationInfo(this, id, index);
 			}
 
 			OnRegister(new EntityEventArgs(entity));
