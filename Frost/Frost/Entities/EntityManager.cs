@@ -141,6 +141,18 @@ namespace Frost.Entities
 			return new EntityComponentMap<T>(mapList);
 			// TODO: Reuse maps by saving them in a dictionary?
 		}
+
+		/// <summary>
+		/// Checks whether an entity has a component
+		/// </summary>
+		/// <typeparam name="T">Type of component</typeparam>
+		/// <param name="entity">Entity to check</param>
+		/// <returns>True if the entity has the component, false otherwise</returns>
+		/// <exception cref="ArgumentNullException">The entity can't be null.</exception>
+		internal bool HasComponent<T> (Entity entity) where T : IEntityComponent
+		{
+			return _componentManager.HasComponent<T>(entity);
+		}
 		#endregion
 
 		/// <summary>

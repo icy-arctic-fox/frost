@@ -77,6 +77,16 @@ namespace Frost.Entities
 		#endregion
 
 		#region Components
+
+		/// <summary>
+		/// Checks whether the entity has a component
+		/// </summary>
+		/// <typeparam name="T">Type of component</typeparam>
+		/// <returns>True if the entity has the component, false otherwise</returns>
+		public bool HasComponent<T> () where T : IEntityComponent
+		{
+			return _owner.HasComponent<T>(this);
+		}
 		#endregion
 
 		#region Disposable
