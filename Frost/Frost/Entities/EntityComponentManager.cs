@@ -224,7 +224,7 @@ namespace Frost.Entities
 			{// Type is new and a list should be created for it
 				// Create the list
 				var componentList = new List<IEntityComponent>(_maxEntityIndex);
-				for(var i = 0; i < _maxEntityIndex; ++i)
+				for(var i = 0; i <= _maxEntityIndex; ++i)
 					componentList.Add(null);
 
 				// Add it to the mapping
