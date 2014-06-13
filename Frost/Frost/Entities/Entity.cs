@@ -55,14 +55,24 @@ namespace Frost.Entities
 		/// <summary>
 		/// Sets the unique identification number of the entity
 		/// </summary>
+		/// <param name="owner">Manager that owns and controls the entity</param>
+		/// <param name="id">Unique ID of the entity</param>
+		/// <param name="index">Internal entity index</param>
 		internal void SetRegistrationInfo (EntityManager owner, Guid id, int index)
 		{
-			throw new NotImplementedException();
+			_owner = owner;
+			_id    = id;
+			_index = index;
 		}
 
+		/// <summary>
+		/// Clears all registration information - effectively marks the entity as unregistered
+		/// </summary>
 		internal void ClearRegistrationInfo ()
 		{
-			throw new NotImplementedException();
+			_owner = null;
+			_id    = Guid.Empty;
+			_index = -1;
 		}
 		#endregion
 
