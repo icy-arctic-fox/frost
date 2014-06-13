@@ -139,8 +139,7 @@ namespace Frost.Entities
 		{
 			var componentType = typeof(T);
 			var componentList = _componentManager.GetEntityComponentList(componentType);
-			var mapList       = (IList<T>)componentList; // TODO: Will this cast work?
-			return new EntityComponentMap<T>(mapList);
+			return new EntityComponentMap<T>(componentList);
 			// TODO: Reuse maps by saving them in a dictionary?
 		}
 

@@ -9,14 +9,14 @@ namespace Frost.Entities
 	/// <typeparam name="T">Type of component information that the instance will retrieve</typeparam>
 	public class EntityComponentMap<T> where T : IEntityComponent
 	{
-		private readonly IList<T> _componentList;
+		private readonly IList<IEntityComponent> _componentList;
 
 		/// <summary>
 		/// Creates a component mapping
 		/// </summary>
 		/// <param name="componentList">Dynamic list of components, each index referencing a different entity</param>
 		/// <exception cref="ArgumentNullException">The component list can't be null.</exception>
-		internal EntityComponentMap (IList<T> componentList)
+		internal EntityComponentMap (IList<IEntityComponent> componentList)
 		{
 			if(componentList == null)
 				throw new ArgumentNullException("componentList");
@@ -36,7 +36,7 @@ namespace Frost.Entities
 				throw new ArgumentNullException("entity");
 
 			var entityIndex = entity.Index;
-			return _componentList[entityIndex];
+			return (T)_componentList[entityIndex];
 			// TODO: Safe access
 		}
 	}
