@@ -59,6 +59,7 @@ namespace Frost.Entities
 				getNextAvailable(out id, out index);
 				_registeredEntities.Add(id, entity);
 				entity.SetRegistrationInfo(this, id, index);
+				_componentManager.AddEntity(entity);
 			}
 
 			OnRegister(new EntityEventArgs(entity));
@@ -102,6 +103,7 @@ namespace Frost.Entities
 				_registeredEntities.Remove(id);
 				_freeIndices.Release(entity.Index);
 				entity.ClearRegistrationInfo();
+				_componentManager.RemoveEntity(entity);
 			}
 
 			OnDeregister(new EntityEventArgs(entity));
