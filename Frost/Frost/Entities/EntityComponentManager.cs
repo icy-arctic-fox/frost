@@ -105,9 +105,10 @@ namespace Frost.Entities
 		/// <typeparam name="T">Type of component</typeparam>
 		/// <param name="e">Entity to retrieve the component of</param>
 		/// <returns>Corresponding component for the entity</returns>
+		/// <exception cref="ArgumentNullException">The entity can't be null.</exception>
 		public T GetComponent<T> (Entity e) where T : IEntityComponent
 		{
-			throw new NotImplementedException();
+			return (T)GetComponent(e, typeof(T));
 		}
 
 		/// <summary>
@@ -116,9 +117,25 @@ namespace Frost.Entities
 		/// <param name="e">Entity to retrieve the component of</param>
 		/// <param name="componentType">Type of component to retrieve</param>
 		/// <returns>Corresponding component for the entity</returns>
+		/// <exception cref="ArgumentNullException">The entity and component type can't be null.</exception>
 		public IEntityComponent GetComponent (Entity e, Type componentType)
 		{
-			throw new NotImplementedException();
+			if(e == null)
+				throw new ArgumentNullException("e");
+			if(componentType == null)
+				throw new ArgumentNullException("componentType");
+
+			var entityIndex = e.Index;
+			var typeName    = componentType.FullName;
+			int typeIndex;
+
+			if(_componentTypeMap.TryGetValue(typeName, out typeIndex))
+			{// Component is known about
+				var componentList = _componentsByType[typeIndex];
+				return componentList[entityIndex];
+			}
+
+			return null; // Component doesn't exist for any entity
 		}
 
 		/// <summary>
