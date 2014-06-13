@@ -76,7 +76,13 @@ namespace Frost.Utility
 		/// <returns>Next available integer or -1 if no integers are available</returns>
 		public int GetNext ()
 		{
-			throw new NotImplementedException();
+			if(_released.Count > 0)
+				return _released.Dequeue(); // Reuse a released value
+
+			if(_top >= _max)
+				return -1; // No values remaining
+
+			return _top++;
 		}
 
 		/// <summary>
@@ -85,7 +91,10 @@ namespace Frost.Utility
 		/// <param name="value">Integer value to release</param>
 		public void Release (int value)
 		{
-			throw new NotImplementedException();
+			if(value > _top || _released.Contains(value))
+				return; // Invalid value to be released
+
+			_released.Enqueue(value);
 		}
 	}
 }
