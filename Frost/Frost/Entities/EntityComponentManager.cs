@@ -104,24 +104,9 @@ namespace Frost.Entities
 
 			var entityIndex   = e.Index;
 			var componentType = component.GetType();
-			var typeIndex     = getComponentTypeIndex(componentType);
-			List<IEntityComponent> componentList;
+			var componentList = getComponentList(componentType, true);
 
-			extendComponentLists(entityIndex);
-
-			if(typeIndex >= 0)
-			{// Component is known about
-				componentList = _componentsByType[typeIndex];
-			}
-			else
-			{// New type of component
-				componentList = new List<IEntityComponent>(_maxEntityIndex);
-				for(var i = 0; i < _maxEntityIndex; ++i)
-					componentList.Add(null);
-				_componentTypeMap[componentType.FullName] = _componentsByType.Count;
-				_componentsByType.Add(componentList);
-			}
-
+			extendComponentLists(entityIndex); // Just in case the entity is new too
 			componentList[entityIndex] = component;
 		}
 
@@ -151,16 +136,10 @@ namespace Frost.Entities
 			if(componentType == null)
 				throw new ArgumentNullException("componentType");
 
-			var entityIndex = e.Index;
-			var typeIndex   = getComponentTypeIndex(componentType);
+			var entityIndex   = e.Index;
+			var componentList = getComponentList(componentType);
 
-			if(typeIndex >= 0)
-			{// Component is known about
-				var componentList = _componentsByType[typeIndex];
-				return componentList[entityIndex];
-			}
-
-			return null; // Component doesn't exist for any entity
+			return (componentList != null) ? componentList[entityIndex] : null;
 		}
 
 		/// <summary>
@@ -189,17 +168,18 @@ namespace Frost.Entities
 			if(componentType == null)
 				throw new ArgumentNullException("componentType");
 
-			var entityIndex = e.Index;
-			var typeIndex   = getComponentTypeIndex(componentType);
+			var entityIndex   = e.Index;
+			var componentList = getComponentList(componentType);
 
-			if(typeIndex >= 0)
+			if(componentList != null)
 			{// Component is known about
-				var componentList = _componentsByType[typeIndex];
 				if(componentList[entityIndex] != null)
 				{// Entity has the component
 					componentList[entityIndex] = null;
 					return true;
 				}
+
+				// else - component doesn't exist for the entity (fall through)
 			}
 
 			return false; // Component doesn't exist for any entity
@@ -231,15 +211,12 @@ namespace Frost.Entities
 			if(componentType == null)
 				throw new ArgumentNullException("componentType");
 
-			var entityIndex = e.Index;
-			var typeIndex   = getComponentTypeIndex(componentType);
+			var entityIndex   = e.Index;
+			var componentList = getComponentList(componentType);
 
-			if(typeIndex >= 0)
-			{// Component is known about
-				var componentList = _componentsByType[typeIndex];
+			if(componentList != null) // Component is known about
 				return componentList[entityIndex] != null; // Will be null if the entity doesn't have the component
-				// TODO: Use bit flag arrays to track which components an entity has
-			}
+			// TODO: Use bit flag arrays to track which components an entity has
 
 			return false; // Component doesn't exist for any entity
 		}
@@ -256,6 +233,35 @@ namespace Frost.Entities
 			if(_componentTypeMap.TryGetValue(typeName, out index))
 				return index;
 			return -1;
+		}
+
+		/// <summary>
+		/// Gets the component list for a component type
+		/// </summary>
+		/// <param name="componentType">Type of component</param>
+		/// <param name="create">Flag indicating whether the list should be created if it doesn't exist</param>
+		/// <returns>The component list or null if it doesn't exist (and <paramref name="create"/> was false)</returns>
+		private List<IEntityComponent> getComponentList (Type componentType, bool create = false)
+		{
+			var typeIndex = getComponentTypeIndex(componentType);
+			if(typeIndex >= 0) // Type is known, list exists
+				return _componentsByType[typeIndex];
+
+			if(create)
+			{// Type is new and a list should be created for it
+				// Create the list
+				var componentList = new List<IEntityComponent>(_maxEntityIndex);
+				for(var i = 0; i < _maxEntityIndex; ++i)
+					componentList.Add(null);
+
+				// Add it to the mapping
+				typeIndex = _componentsByType.Count;
+				_componentTypeMap.Add(componentType.FullName, typeIndex);
+
+				return componentList;
+			}
+
+			return null; // Type unknown and don't create it
 		}
 	}
 }
