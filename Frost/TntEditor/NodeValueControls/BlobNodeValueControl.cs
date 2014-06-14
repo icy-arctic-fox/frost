@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using Frost.IO.Tnt;
+using Frost.Utility;
 
 namespace Frost.TntEditor.NodeValueControls
 {
@@ -38,15 +39,8 @@ namespace Frost.TntEditor.NodeValueControls
 
 		private void updateSizeLabel ()
 		{
-			var bytes = (double)_data.LongLength;
-			var units = 0;
-			while(bytes > 1000d)
-			{
-				bytes /= 1024d;
-				++units;
-			}
-			var unitLabel   = _unitLabels[units];
-			var text        = String.Format(units > 0 ? "{0:F} {1}" : "{0} {1}", bytes, unitLabel);
+			var bytes = _data.LongLength;
+			var text  = StringUtility.ToByteString(bytes);
 			bytesLabel.Text = text;
 		}
 

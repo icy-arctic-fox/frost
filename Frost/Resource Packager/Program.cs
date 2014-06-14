@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Frost.IO.Resources;
+using Frost.Utility;
 
 namespace Frost.ResourcePackager
 {
@@ -317,28 +318,8 @@ namespace Frost.ResourcePackager
 		{
 			using(var reader = new ResourcePackageReader(filepath, _password))
 				foreach(var resource in reader.Resources)
-					Console.WriteLine("{0} {1,9} {2}", resource.Id, formatSize(resource.Size), resource.Name);
+					Console.WriteLine("{0} {1,9} {2}", resource.Id, StringUtility.ToByteString(resource.Size), resource.Name);
 			return ReturnCode.Ok;
-		}
-
-		private static readonly string[] _units = new[] {"b ", "KB", "MB", "GB"};
-
-		/// <summary>
-		/// Formats a number of bytes as a human readable string
-		/// </summary>
-		/// <param name="bytes">Size in bytes</param>
-		/// <returns>Formatted size as a string</returns>
-		private static string formatSize (long bytes)
-		{
-			var index = 0;
-			var size  = (double)bytes;
-			while(size > 1000d)
-			{
-				size /= 1024d;
-				++index;
-			}
-			var unit = _units[index];
-			return String.Format("{0:F} {1}", size, unit);
 		}
 
 		/// <summary>
