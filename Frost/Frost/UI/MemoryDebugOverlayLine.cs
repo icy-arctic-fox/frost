@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Frost.Utility;
 
 namespace Frost.UI
 {
@@ -33,31 +34,11 @@ namespace Frost.UI
 			var allocated = _process.PrivateMemorySize64;
 			var working   = _process.WorkingSet64;
 
-			var managedString   = toByteString(managed);
-			var allocatedString = toByteString(allocated);
-			var workingString   = toByteString(working);
+			var managedString   = StringUtility.ToByteString(managed);
+			var allocatedString = StringUtility.ToByteString(allocated);
+			var workingString   = StringUtility.ToByteString(working);
 
 			return String.Format("{0} managed {1} allocated {2} working", managedString, allocatedString, workingString);
-		}
-
-		private static readonly string[] _units = new[] { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
-
-		/// <summary>
-		/// Creates a friendly string from a number of bytes
-		/// </summary>
-		/// <param name="bytes">Number of bytes</param>
-		/// <returns>Reduced bytes with units</returns>
-		private static string toByteString(long bytes)
-		{
-			var unitIndex = 0;
-			var b = (double)bytes;
-			while (b > 1000d)
-			{
-				b /= 1024d;
-				++unitIndex;
-			}
-			var unit = _units[unitIndex];
-			return String.Format("{0:0.00} {1}", b, unit);
 		}
 	}
 }

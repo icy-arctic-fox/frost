@@ -7,6 +7,8 @@ namespace Frost.Utility
 	/// </summary>
 	public static class StringUtility
 	{
+		#region Words and lines
+
 		/// <summary>
 		/// Counts the number of words in a string
 		/// </summary>
@@ -181,6 +183,27 @@ namespace Frost.Utility
 		public static string[] SplitOnLinebreaks (this string value)
 		{
 			return value == null ? null : value.Split(new[] { "\n", "\r\n" }, StringSplitOptions.None);
+		}
+		#endregion
+
+		private static readonly string[] _units = new[] { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
+
+		/// <summary>
+		/// Creates a friendly string from a number of bytes
+		/// </summary>
+		/// <param name="bytes">Number of bytes</param>
+		/// <returns>Reduced bytes with units</returns>
+		public static string ToByteString (long bytes)
+		{
+			var unitIndex = 0;
+			var b = (double)bytes;
+			while(b > 1000d)
+			{
+				b /= 1024d;
+				++unitIndex;
+			}
+			var unit = _units[unitIndex];
+			return String.Format("{0:0.00} {1}", b, unit);
 		}
 	}
 }
