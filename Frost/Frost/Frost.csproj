@@ -144,7 +144,6 @@
     <Compile Include="Utility\Portability.cs" />
     <Compile Include="Utility\SampleCounter.cs" />
     <Compile Include="Utility\Cache.cs" />
-    <Compile Include="Utility\StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="csfml-audio-2.dll">

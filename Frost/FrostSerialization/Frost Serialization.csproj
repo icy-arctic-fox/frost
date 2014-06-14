@@ -88,6 +88,7 @@
     <Compile Include="Utility\ByteUtility.cs" />
     <Compile Include="Utility\DelegateUtility.cs" />
     <Compile Include="Utility\EndianUtility.cs" />
+    <Compile Include="Utility\StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.json.txt">
