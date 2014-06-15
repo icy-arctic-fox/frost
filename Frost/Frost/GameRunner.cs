@@ -726,7 +726,7 @@ namespace Frost
 
 			// Update the render information
 			args.PreviousStateIndex = prevStateIndex;
-			args.StateIndex = nextStateIndex;
+			args.StateIndex         = nextStateIndex;
 			updateRenderInfo(args);
 
 			_scenes.PreRender(args);
