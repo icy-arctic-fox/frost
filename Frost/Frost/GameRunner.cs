@@ -696,7 +696,7 @@ namespace Frost
 			var t = elapsedTicks / intervalInTicks;
 
 			drawArgs.IsRunningSlow = IsRunningSlow;
-			drawArgs.Interpolation = t;
+			drawArgs.Extrapolation = t;
 		}
 
 		/// <summary>
