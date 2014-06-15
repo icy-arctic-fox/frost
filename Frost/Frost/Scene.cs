@@ -31,7 +31,10 @@ namespace Frost
 		/// <summary>
 		/// Indicates whether scenes below this one can be processed during the same frame
 		/// </summary>
-		public abstract bool AllowFallthrough { get; }
+		public virtual bool AllowFallthrough
+		{
+			get { return false; }
+		}
 
 		/// <summary>
 		/// Creates the base of the scene

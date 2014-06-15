@@ -22,10 +22,5 @@ namespace Test_Game
 
 			Subsystems.AddRenderSubsystem(new StaticImageSubsystem(Entities));
 		}
-
-		public override bool AllowFallthrough
-		{
-			get { return false; }
-		}
 	}
 }

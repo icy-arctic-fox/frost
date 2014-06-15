@@ -30,11 +30,6 @@ namespace Test_Game
 			}
 		}
 
-		public override bool AllowFallthrough
-		{
-			get { return false; }
-		}
-
 		protected override void OnStep (FrameStepEventArgs args)
 		{
 			base.OnStep(args);
