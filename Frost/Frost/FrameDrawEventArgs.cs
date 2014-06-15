@@ -30,10 +30,10 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Fraction of time that has passed since the last frame update and the next one.
+		/// Fraction of time that has passed since the last frame update and the upcoming one.
 		/// This is a number from 0 to 1, but can be greater than 1 if the renderer is ahead of game updates.
 		/// </summary>
-		public double Interpolation { get; internal set; }
+		public double Extrapolation { get; internal set; }
 
 		/// <summary>
 		/// Indicates whether game updates are falling behind of the target update rate
