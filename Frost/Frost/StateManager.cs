@@ -182,9 +182,9 @@ namespace Frost
 		/// <summary>
 		/// Marks the next state as being rendered and retrieves the index
 		/// </summary>
-		/// <param name="nextstateIndex">Index of the previous state that was rendered (used to detect duplicates)</param>
+		/// <param name="prevStateIndex">Index of the previous state that was rendered (used to detect duplicates)</param>
 		/// <returns>A state index</returns>
-		internal int AcquireNextRenderState (out int nextstateIndex)
+		internal int AcquireNextRenderState (out int prevStateIndex)
 		{
 #if DEBUG
 			if(Thread.CurrentThread.ManagedThreadId != RenderThreadId)
@@ -208,7 +208,7 @@ namespace Frost
 				else // First frame being drawn
 					SkippedFrames += frameNumber;
 				_renderSignal.Set();
-				nextstateIndex = _prevRenderStateIndex;
+				prevStateIndex = _prevRenderStateIndex;
 				return _curRenderStateIndex;
 			}
 		}
