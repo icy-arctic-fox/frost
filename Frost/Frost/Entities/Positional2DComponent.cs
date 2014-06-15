@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Frost.Geometry;
 
 namespace Frost.Entities
 {
@@ -53,33 +54,51 @@ namespace Frost.Entities
 		public class State
 		{
 			/// <summary>
-			/// Offset of the entity from the origin along the x-axis
+			/// Location of the entity in 2D space
 			/// </summary>
-			public float X { get; set; }
+			public Point2f Position { get; set; }
 
 			/// <summary>
-			/// Offset of the entity from the origin along the y-axis
+			/// Position of the entity along the x-axis
 			/// </summary>
-			public float Y { get; set; }
+			public float X
+			{
+				get { return Position.X; }
+			}
+
+			/// <summary>
+			/// Position of the entity along the y-axis
+			/// </summary>
+			public float Y
+			{
+				get { return Position.Y; }
+			}
 
 			/// <summary>
 			/// Creates a new state with a location at the origin
 			/// </summary>
 			public State ()
 			{
-				X = 0f;
-				Y = 0f;
+				Position = Point2f.Origin;
 			}
 
 			/// <summary>
-			/// Creates a new state with the provided location
+			/// Creates a new state with the provided position
 			/// </summary>
-			/// <param name="x">Offset of the entity from the origin along the x-axis</param>
-			/// <param name="y">Offset of the entity from the origin along the y-axis</param>
+			/// <param name="x">Position of the entity along the x-axis</param>
+			/// <param name="y">Position of the entity along the y-axis</param>
 			public State (float x, float y)
 			{
-				X = x;
-				Y = y;
+				Position = new Point2f(x, y);
+			}
+
+			/// <summary>
+			/// Creates a new state with the provided position
+			/// </summary>
+			/// <param name="position"></param>
+			public State (Point2f position)
+			{
+				Position = position;
 			}
 
 			/// <summary>
@@ -88,7 +107,7 @@ namespace Frost.Entities
 			/// <returns>Copy of the state</returns>
 			public State CloneState ()
 			{
-				return new State(X, Y);
+				return new State(Position);
 			}
 		}
 	}
