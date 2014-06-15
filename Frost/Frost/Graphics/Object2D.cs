@@ -184,7 +184,7 @@ namespace Frost.Graphics
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
 		public void Draw (FrameDrawEventArgs args)
 		{
-			DrawObject(args.Display, _states[args.StateIndex], args.Interpolation);
+			DrawObject(args.Display, _states[args.StateIndex], args.Extrapolation);
 		}
 		#endregion
 	}
