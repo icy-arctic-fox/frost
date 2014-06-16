@@ -20,7 +20,7 @@ namespace Test_Game
 			factory.AddComponent(new StaticImageComponent(texture));
 			factory.Construct();
 
-			Subsystems.AddRenderSubsystem(new StaticImageSubsystem(Entities));
+			Processors.AddRenderProcessor(new StaticImageProcessor(Entities));
 		}
 	}
 }

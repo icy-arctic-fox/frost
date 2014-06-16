@@ -1,23 +1,23 @@
 ﻿namespace Frost.Entities
 {
-	public class StaticImageSubsystem : IRenderSubsystem
+	public class StaticImageProcessor : IRenderProcessor
 	{
 		private readonly SFML.Graphics.Sprite _sprite = new SFML.Graphics.Sprite();
 
 		private readonly ComponentMap<Positional2DComponent> _pos2DMap;
 		private readonly ComponentMap<StaticImageComponent> _imgMap;
 
-		public StaticImageSubsystem (EntityManager manager)
+		public StaticImageProcessor (EntityManager manager)
 		{
 			_pos2DMap = manager.GetComponentMap<Positional2DComponent>();
 			_imgMap   = manager.GetComponentMap<StaticImageComponent>();
 		}
 
 		/// <summary>
-		/// Determines whether the subsystem can process the entity
+		/// Determines whether the processor can handle the entity
 		/// </summary>
 		/// <param name="entity">Entity to check</param>
-		/// <returns>True if the entity can be processed by the subsystem</returns>
+		/// <returns>True if the entity can be processed by the processor</returns>
 		public bool CanProcess (Entity entity)
 		{
 			return entity.HasComponent<Positional2DComponent>() && entity.HasComponent<StaticImageComponent>();

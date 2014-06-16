@@ -55,7 +55,7 @@ namespace Frost
 		/// Modifying any other game state info during this process could corrupt the game state.</remarks>
 		protected virtual void OnStep (FrameStepEventArgs args)
 		{
-			_subsystemManager.Step(args);
+			_processorManager.Step(args);
 		}
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace Frost
 		/// Modifying the game state info during this process would corrupt the game state.</remarks>
 		protected virtual void OnDraw (FrameDrawEventArgs args)
 		{
-			_subsystemManager.Draw(args);
+			_processorManager.Draw(args);
 		}
 
 		/// <summary>
@@ -87,17 +87,17 @@ namespace Frost
 			OnDraw(args);
 		}
 
-		#region Subsystems and entities
+		#region Processors and entities
 
-		private readonly SubsystemManager _subsystemManager = new SubsystemManager();
+		private readonly ProcessorManager _processorManager = new ProcessorManager();
 		private readonly EntityManager _entityManager = new EntityManager();
 
 		/// <summary>
-		/// Subsystems that process entities in the scene
+		/// Processors that handle entities in the scene
 		/// </summary>
-		protected SubsystemManager Subsystems
+		protected ProcessorManager Processors
 		{
-			get { return _subsystemManager; }
+			get { return _processorManager; }
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace Frost
 		/// <param name="e">Event arguments</param>
 		private void entityRegistered (object sender, EntityEventArgs e)
 		{
-			_subsystemManager.AddEntity(e.Entity);
+			_processorManager.AddEntity(e.Entity);
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace Frost
 		/// <param name="e">Event arguments</param>
 		private void entityDeregistered (object sender, EntityEventArgs e)
 		{
-			_subsystemManager.RemoveEntity(e.Entity);
+			_processorManager.RemoveEntity(e.Entity);
 		}
 
 		/// <summary>

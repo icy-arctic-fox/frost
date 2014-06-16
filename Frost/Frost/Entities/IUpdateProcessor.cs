@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Processes multiple entities during a logic update by using their components
 	/// </summary>
-	public interface IUpdateSubsystem : ISubsystem
+	public interface IUpdateProcessor : IProcessor
 	{
 		/// <summary>
 		/// Processes a single entity
