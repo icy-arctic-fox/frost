@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Frost.Geometry;
+using Frost.Utility;
 
 namespace Frost.Entities
 {
@@ -74,12 +75,25 @@ namespace Frost.Entities
 				get { return Position.Y; }
 			}
 
+			private float _rot;
+
+			/// <summary>
+			/// Clockwise rotation of the entity in degrees
+			/// </summary>
+			/// <remarks>Values outside the range of 0 to 360 will adjusted.</remarks>
+			public float Rotation
+			{
+				get { return _rot; }
+				set { _rot = MathHelper.CorrectAngle(value); }
+			}
+
 			/// <summary>
 			/// Creates a new state with a location at the origin
 			/// </summary>
 			public State ()
 			{
 				Position = Point2f.Origin;
+				_rot     = 0f;
 			}
 
 			/// <summary>
@@ -87,18 +101,22 @@ namespace Frost.Entities
 			/// </summary>
 			/// <param name="x">Position of the entity along the x-axis</param>
 			/// <param name="y">Position of the entity along the y-axis</param>
-			public State (float x, float y)
+			/// <param name="rot">Clockwise rotation of the entity in degrees</param>
+			public State (float x, float y, float rot)
 			{
 				Position = new Point2f(x, y);
+				Rotation = rot;
 			}
 
 			/// <summary>
 			/// Creates a new state with the provided position
 			/// </summary>
-			/// <param name="position"></param>
-			public State (Point2f position)
+			/// <param name="position">Location of the entity in 2D space</param>
+			/// <param name="rot">Clockwise rotation of the entity in degrees</param>
+			public State (Point2f position, float rot)
 			{
 				Position = position;
+				Rotation = rot;
 			}
 
 			/// <summary>
@@ -107,7 +125,7 @@ namespace Frost.Entities
 			/// <returns>Copy of the state</returns>
 			public State CloneState ()
 			{
-				return new State(Position);
+				return new State(Position, _rot);
 			}
 		}
 	}
