@@ -128,7 +128,7 @@ namespace Frost.Entities
 
 		#region Components
 
-		private readonly EntityComponentManager _componentManager = new EntityComponentManager();
+		private readonly ComponentManager _componentManager = new ComponentManager();
 
 		/// <summary>
 		/// Retrieves an object that will be able to pull a component from the entities tracked by the manager

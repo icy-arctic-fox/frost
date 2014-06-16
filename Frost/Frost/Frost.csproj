@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\StaticImageComponent.cs" />
-    <Compile Include="Entities\EntityComponentManager.cs" />
+    <Compile Include="Entities\ComponentManager.cs" />
     <Compile Include="Entities\EntityFactory.cs" />
     <Compile Include="Entities\IRenderSubsystem.cs" />
     <Compile Include="Entities\EntityEventArgs.cs" />

@@ -8,7 +8,7 @@ namespace Frost.Entities
 	/// Component data is not stored in the <see cref="Entity"/> class.
 	/// Instead, it is held here, in a format more efficient for bulk processing.
 	/// </summary>
-	internal class EntityComponentManager
+	internal class ComponentManager
 	{
 		/// <summary>
 		/// Maximum entity index.
