@@ -29,17 +29,5 @@ namespace Test_Game
 				_sprite = new Sprite(renderer.GetTexture()) {X = 50, Y = 200};
 			}
 		}
-
-		protected override void OnStep (FrameStepEventArgs args)
-		{
-			base.OnStep(args);
-			_sprite.Step(args);
-		}
-
-		protected override void OnDraw (FrameDrawEventArgs args)
-		{
-			base.OnDraw(args);
-			_sprite.Draw(args);
-		}
 	}
 }
