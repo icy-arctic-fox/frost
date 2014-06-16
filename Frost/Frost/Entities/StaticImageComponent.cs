@@ -5,7 +5,7 @@ namespace Frost.Entities
 	/// <summary>
 	/// Displays a static 2D image
 	/// </summary>
-	public class StaticImageComponent : IEntityComponent
+	public class StaticImageComponent : IComponent
 	{
 		private readonly Texture _texture;
 
@@ -29,7 +29,7 @@ namespace Frost.Entities
 		/// Creates a copy of the information in the component
 		/// </summary>
 		/// <returns>Copy of the component</returns>
-		public IEntityComponent CloneComponent ()
+		public IComponent CloneComponent ()
 		{
 			return new StaticImageComponent(_texture);
 		}

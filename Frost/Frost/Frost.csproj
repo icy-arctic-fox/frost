@@ -65,7 +65,7 @@
     <Compile Include="Entities\ComponentMap.cs" />
     <Compile Include="Entities\EntityGroup.cs" />
     <Compile Include="Entities\EntityManager.cs" />
-    <Compile Include="Entities\IEntityComponent.cs" />
+    <Compile Include="Entities\IComponent.cs" />
     <Compile Include="FrameStepEventArgs.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameConfiguration.cs" />

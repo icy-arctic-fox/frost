@@ -7,7 +7,7 @@ namespace Frost.Entities
 	/// <summary>
 	/// Information about an entity's location in 2D space
 	/// </summary>
-	public class Positional2DComponent : IEntityComponent
+	public class Positional2DComponent : IComponent
 	{
 		private readonly StateSet<State> _states;
 
@@ -41,7 +41,7 @@ namespace Frost.Entities
 		/// Creates a copy of the information in the component
 		/// </summary>
 		/// <returns>Copy of the component</returns>
-		public IEntityComponent CloneComponent ()
+		public IComponent CloneComponent ()
 		{
 			var clonedStates = new List<State>(StateManager.StateCount);
 			for(var i = 0; i < StateManager.StateCount; ++i)

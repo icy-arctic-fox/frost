@@ -19,7 +19,7 @@ namespace Frost.Entities
 		/// <summary>
 		/// Collection of components organized by type and then by entity index
 		/// </summary>
-		private readonly List<List<IEntityComponent>> _componentsByType = new List<List<IEntityComponent>>();
+		private readonly List<List<IComponent>> _componentsByType = new List<List<IComponent>>();
 
 		/// <summary>
 		/// Maps component type names to their index in <see cref="_componentsByType"/>
@@ -58,7 +58,7 @@ namespace Frost.Entities
 		/// <param name="entity">Entity to attach the component to</param>
 		/// <param name="component">Component to add to the entity</param>
 		/// <exception cref="ArgumentNullException">The entity and component can't be null.</exception>
-		public void AddComponent (Entity entity, IEntityComponent component)
+		public void AddComponent (Entity entity, IComponent component)
 		{
 			if(entity == null)
 				throw new ArgumentNullException("entity");
@@ -80,7 +80,7 @@ namespace Frost.Entities
 		/// <param name="entity">Entity to retrieve the component of</param>
 		/// <returns>Corresponding component for the entity</returns>
 		/// <exception cref="ArgumentNullException">The entity can't be null.</exception>
-		public T GetComponent<T> (Entity entity) where T : IEntityComponent
+		public T GetComponent<T> (Entity entity) where T : IComponent
 		{
 			return (T)GetComponent(entity, typeof(T));
 		}
@@ -92,7 +92,7 @@ namespace Frost.Entities
 		/// <param name="componentType">Type of component to retrieve</param>
 		/// <returns>Corresponding component for the entity</returns>
 		/// <exception cref="ArgumentNullException">The entity and component type can't be null.</exception>
-		public IEntityComponent GetComponent (Entity entity, Type componentType)
+		public IComponent GetComponent (Entity entity, Type componentType)
 		{
 			if(entity == null)
 				throw new ArgumentNullException("entity");
@@ -155,7 +155,7 @@ namespace Frost.Entities
 		/// <param name="entity">Entity to check</param>
 		/// <returns>True if the entity has the component, false otherwise</returns>
 		/// <exception cref="ArgumentNullException">The entity can't be null.</exception>
-		public bool HasComponent<T> (Entity entity) where T : IEntityComponent
+		public bool HasComponent<T> (Entity entity) where T : IComponent
 		{
 			return HasComponent(entity, typeof(T));
 		}
@@ -189,7 +189,7 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="componentType">Type of component</param>
 		/// <returns>List of entity components</returns>
-		internal IList<IEntityComponent> GetEntityComponentList (Type componentType)
+		internal IList<IComponent> GetEntityComponentList (Type componentType)
 		{
 			return getComponentList(componentType, true).AsReadOnly();
 		}
@@ -214,7 +214,7 @@ namespace Frost.Entities
 		/// <param name="componentType">Type of component</param>
 		/// <param name="create">Flag indicating whether the list should be created if it doesn't exist</param>
 		/// <returns>The component list or null if it doesn't exist (and <paramref name="create"/> was false)</returns>
-		private List<IEntityComponent> getComponentList (Type componentType, bool create = false)
+		private List<IComponent> getComponentList (Type componentType, bool create = false)
 		{
 			var typeIndex = getComponentTypeIndex(componentType);
 			if(typeIndex >= 0) // Type is known, list exists
@@ -223,7 +223,7 @@ namespace Frost.Entities
 			if(create)
 			{// Type is new and a list should be created for it
 				// Create the list
-				var componentList = new List<IEntityComponent>(_maxEntityIndex);
+				var componentList = new List<IComponent>(_maxEntityIndex);
 				for(var i = 0; i <= _maxEntityIndex; ++i)
 					componentList.Add(null);
 

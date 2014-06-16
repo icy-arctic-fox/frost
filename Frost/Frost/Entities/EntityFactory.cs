@@ -10,7 +10,7 @@ namespace Frost.Entities
 	public class EntityFactory
 	{
 		private readonly EntityManager _manager;
-		private readonly List<IEntityComponent> _prototypes = new List<IEntityComponent>();
+		private readonly List<IComponent> _prototypes = new List<IComponent>();
 
 		/// <summary>
 		/// Creates a factory to construct entities
@@ -30,7 +30,7 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="prototype">Prototype of the component</param>
 		/// <exception cref="ArgumentNullException">The <paramref name="prototype"/> can't be null.</exception>
-		public void AddComponent (IEntityComponent prototype)
+		public void AddComponent (IComponent prototype)
 		{
 			if(prototype == null)
 				throw new ArgumentNullException("prototype");

@@ -135,7 +135,7 @@ namespace Frost.Entities
 		/// </summary>
 		/// <typeparam name="T">Type of entity components to map</typeparam>
 		/// <returns>A mapping object</returns>
-		public ComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
+		public ComponentMap<T> GetComponentMap<T> () where T : IComponent
 		{
 			var componentType = typeof(T);
 			var componentList = _componentManager.GetEntityComponentList(componentType);
@@ -150,7 +150,7 @@ namespace Frost.Entities
 		/// <param name="entity">Entity to check</param>
 		/// <returns>True if the entity has the component, false otherwise</returns>
 		/// <exception cref="ArgumentNullException">The entity can't be null.</exception>
-		internal bool HasComponent<T> (Entity entity) where T : IEntityComponent
+		internal bool HasComponent<T> (Entity entity) where T : IComponent
 		{
 			return _componentManager.HasComponent<T>(entity);
 		}
@@ -161,7 +161,7 @@ namespace Frost.Entities
 		/// <param name="entity">Entity to attach the component to</param>
 		/// <param name="component">Component to add to the entity</param>
 		/// <exception cref="ArgumentNullException">The entity and component can't be null.</exception>
-		public void AddComponent (Entity entity, IEntityComponent component)
+		public void AddComponent (Entity entity, IComponent component)
 		{
 			if(entity == null)
 				throw new ArgumentNullException("entity");
