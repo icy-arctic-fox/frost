@@ -141,6 +141,7 @@
     <Compile Include="UI\PixelGraph.cs" />
     <Compile Include="Utility\FlagArray.cs" />
     <Compile Include="Utility\FreeList.cs" />
+    <Compile Include="Utility\MathHelper.cs" />
     <Compile Include="Utility\Portability.cs" />
     <Compile Include="Utility\SampleCounter.cs" />
     <Compile Include="Utility\Cache.cs" />
