@@ -7,7 +7,7 @@ namespace Frost.Entities
 	/// Handles retrieving component information from an entity
 	/// </summary>
 	/// <typeparam name="T">Type of component information that the instance will retrieve</typeparam>
-	public class EntityComponentMap<T> where T : IEntityComponent
+	public class ComponentMap<T> where T : IEntityComponent
 	{
 		private readonly IList<IEntityComponent> _componentList;
 
@@ -16,7 +16,7 @@ namespace Frost.Entities
 		/// </summary>
 		/// <param name="componentList">Dynamic list of components, each index referencing a different entity</param>
 		/// <exception cref="ArgumentNullException">The component list can't be null.</exception>
-		internal EntityComponentMap (IList<IEntityComponent> componentList)
+		internal ComponentMap (IList<IEntityComponent> componentList)
 		{
 			if(componentList == null)
 				throw new ArgumentNullException("componentList");

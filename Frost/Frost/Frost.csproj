@@ -62,7 +62,7 @@
     <Compile Include="Display\IDisplay.cs" />
     <Compile Include="Display\WindowClosingEventArgs.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\EntityComponentMap.cs" />
+    <Compile Include="Entities\ComponentMap.cs" />
     <Compile Include="Entities\EntityGroup.cs" />
     <Compile Include="Entities\EntityManager.cs" />
     <Compile Include="Entities\IEntityComponent.cs" />

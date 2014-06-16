@@ -4,8 +4,8 @@
 	{
 		private readonly SFML.Graphics.Sprite _sprite = new SFML.Graphics.Sprite();
 
-		private readonly EntityComponentMap<Positional2DComponent> _pos2DMap;
-		private readonly EntityComponentMap<StaticImageComponent> _imgMap;
+		private readonly ComponentMap<Positional2DComponent> _pos2DMap;
+		private readonly ComponentMap<StaticImageComponent> _imgMap;
 
 		public StaticImageSubsystem (EntityManager manager)
 		{

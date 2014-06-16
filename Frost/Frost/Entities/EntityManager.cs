@@ -135,11 +135,11 @@ namespace Frost.Entities
 		/// </summary>
 		/// <typeparam name="T">Type of entity components to map</typeparam>
 		/// <returns>A mapping object</returns>
-		public EntityComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
+		public ComponentMap<T> GetComponentMap<T> () where T : IEntityComponent
 		{
 			var componentType = typeof(T);
 			var componentList = _componentManager.GetEntityComponentList(componentType);
-			return new EntityComponentMap<T>(componentList);
+			return new ComponentMap<T>(componentList);
 			// TODO: Reuse maps by saving them in a dictionary?
 		}
 
