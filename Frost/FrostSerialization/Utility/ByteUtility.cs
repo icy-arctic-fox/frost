@@ -104,5 +104,24 @@ namespace Frost.Utility
 				bytes[j] = temp;
 			}
 		}
+
+		/// <summary>
+		/// Reverses a subset of an array of bytes.
+		/// A new array is not created, the one provided is reversed in itself.
+		/// </summary>
+		/// <param name="bytes">Array to reverse</param>
+		/// <param name="index">Index to start reversing at</param>
+		/// <param name="count">Number of bytes to reverse</param>
+		public static void Reverse (this byte[] bytes, int index, int count)
+		{
+			var end = index + count;
+			var mid = end / 2;
+			for(int i = index, j = end - 1; i < mid; ++i, --j)
+			{
+				var temp = bytes[i];
+				bytes[i] = bytes[j];
+				bytes[j] = temp;
+			}
+		}
 	}
 }
