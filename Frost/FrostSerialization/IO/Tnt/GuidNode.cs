@@ -1,4 +1,5 @@
 ﻿using System;
+using Frost.Utility;
 
 namespace Frost.IO.Tnt
 {
@@ -75,6 +76,7 @@ namespace Frost.IO.Tnt
 		internal static GuidNode ReadPayload (System.IO.BinaryReader br)
 		{
 			var bytes = br.ReadBytes(GuidSize);
+			adjustByteOrdering(bytes);
 			var guid  = new Guid(bytes);
 			return new GuidNode(guid);
 		}
@@ -86,7 +88,19 @@ namespace Frost.IO.Tnt
 		internal override void WritePayload (System.IO.BinaryWriter bw)
 		{
 			var bytes = Value.ToByteArray();
+			adjustByteOrdering(bytes);
 			bw.Write(bytes);
+		}
+
+		/// <summary>
+		/// Fixes the byte ordering to switch between the .NET GUID format and the standard UUID format
+		/// </summary>
+		/// <param name="bytes">Array of bytes containing the GUID/UUID</param>
+		private static void adjustByteOrdering (byte[] bytes)
+		{
+			bytes.Reverse(0, 4);
+			bytes.Reverse(4, 2);
+			bytes.Reverse(6, 2);
 		}
 		#endregion
 	}
