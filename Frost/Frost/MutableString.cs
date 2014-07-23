@@ -170,6 +170,8 @@ namespace Frost
 				for(var k = 0; k < str.Length; ++j, ++k)
 					_chars[j] = str[k];
 			}
+
+			Length = newLength;
 		}
 
 		/// <summary>
@@ -243,6 +245,8 @@ namespace Frost
 						_chars[j] = separator[k];
 				}
 			}
+
+			Length = newLength;
 		}
 		#endregion
 
