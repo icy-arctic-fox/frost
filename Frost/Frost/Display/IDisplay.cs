@@ -3,7 +3,7 @@
 namespace Frost.Display
 {
 	/// <summary>
-	/// Describes an object that displays frames on the screen
+	/// Device that displays frames to the screen
 	/// </summary>
 	public interface IDisplay : IRenderTarget
 	{

@@ -1,8 +1,10 @@
 ﻿namespace Frost.Graphics
 {
 	/// <summary>
-	/// Component that can be drawn
+	/// Some object that can be drawn.
+	/// It may have multiple states - which means the renderer must tell the object which state to draw.
 	/// </summary>
+	/// <seealso cref="FrameDrawEventArgs"/>
 	public interface IRenderable
 	{
 		/// <summary>

@@ -3,7 +3,8 @@
 namespace Frost.Graphics
 {
 	/// <summary>
-	/// Most basic type used to display a 2D graphic on the screen
+	/// Most basic type used to display a 2D graphic on the screen.
+	/// A sprite consists of a single bitmap texture.
 	/// </summary>
 	public class Sprite : Object2D
 	{

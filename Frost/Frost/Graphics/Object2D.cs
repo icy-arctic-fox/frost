@@ -4,7 +4,7 @@ using SFML.Graphics;
 namespace Frost.Graphics
 {
 	/// <summary>
-	/// A two-dimensional object that can be updated and drawn
+	/// A two-dimensional object that drawn
 	/// </summary>
 	public abstract class Object2D
 	{
