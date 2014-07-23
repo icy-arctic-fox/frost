@@ -800,28 +800,25 @@ namespace Frost
 		#endregion
 
 		/// <summary>
-		/// Generates a string that represents the status of the game
+		/// Retrieves the contents of the debug overlay line
 		/// </summary>
-		/// <returns>A string in the form:
-		/// Frame: # - # u/s - # f/s (#/# dups, # skips)</returns>
-		public override string ToString ()
+		/// <param name="contents">String to store the debug information in</param>
+		public void GetDebugInfo (MutableString contents)
 		{
 			var sm = _stateManager;
-			var sb = new StringBuilder();
-			sb.Append("Frame: ");
-			sb.Append(sm.FrameNumber);
-			sb.Append(" - ");
-			sb.AppendFormat("{0:0.00}", UpdateRate);
-			sb.Append(" u/s ");
-			sb.AppendFormat("{0:0.00}", RenderRate);
-			sb.Append(" f/s (");
-			sb.Append(_scenes.RenderedDuplicateFrames);
-			sb.Append('/');
-			sb.Append(sm.DuplicatedFrames);
-			sb.Append(" dups, ");
-			sb.Append(sm.SkippedFrames);
-			sb.Append(" skips)");
-			return sb.ToString();
+			contents.Append("Frame: ");
+			contents.Append(sm.FrameNumber);
+			contents.Append(" - ");
+			contents.AppendFormat("{0:0.00}", UpdateRate);
+			contents.Append(" u/s ");
+			contents.AppendFormat("{0:0.00}", RenderRate);
+			contents.Append(" f/s (");
+			contents.Append(_scenes.RenderedDuplicateFrames);
+			contents.Append('/');
+			contents.Append(sm.DuplicatedFrames);
+			contents.Append(" dups, ");
+			contents.Append(sm.SkippedFrames);
+			contents.Append(" skips)");
 		}
 	}
 }

@@ -31,6 +31,7 @@ namespace Frost.UI
 		// These are parallel arrays
 		private readonly List<IDebugOverlayLine> _content = new List<IDebugOverlayLine>();
 		private readonly List<SimpleText> _textLines = new List<SimpleText>();
+		private readonly List<MutableString> _strings = new List<MutableString>();
 
 		/// <summary>
 		/// Creates a new debug overlay
@@ -68,6 +69,7 @@ namespace Frost.UI
 			{
 				_content.Add(item);
 				_textLines.Add(line);
+				_strings.Add(new MutableString());
 			}
 		}
 
@@ -84,6 +86,7 @@ namespace Frost.UI
 
 			lock(_locker)
 				return _content.Remove(item);
+			// BUG: Items not removed from _textLines or _strings
 		}
 
 		/// <summary>
@@ -135,7 +138,11 @@ namespace Frost.UI
 				{// Update the text contents of each line
 					var content = _content[i];
 					var line    = _textLines[i];
-					line.Text   = content.ToString();
+					var str     = _strings[i];
+
+					str.Clear();
+					content.GetDebugInfo(str);
+					line.Text = str;
 				}
 		}
 

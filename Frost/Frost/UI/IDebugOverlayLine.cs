@@ -16,7 +16,7 @@ namespace Frost.UI
 		/// <summary>
 		/// Retrieves the contents of the debug overlay line
 		/// </summary>
-		/// <returns>Line contents</returns>
-		string ToString ();
+		/// <param name="contents">String to store the debug information in</param>
+		void GetDebugInfo (MutableString contents);
 	}
 }

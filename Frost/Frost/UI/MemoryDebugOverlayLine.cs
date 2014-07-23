@@ -25,10 +25,10 @@ namespace Frost.UI
 		public event EventHandler<EventArgs> Disposing;
 
 		/// <summary>
-		/// Generates the text displayed in the debug overlay
+		/// Retrieves the contents of the debug overlay line
 		/// </summary>
-		/// <returns>Scene information</returns>
-		public override string ToString ()
+		/// <param name="contents">String to store the debug information in</param>
+		public void GetDebugInfo (MutableString contents)
 		{
 			var managed   = GC.GetTotalMemory(false);
 			var allocated = _process.PrivateMemorySize64;
@@ -38,7 +38,7 @@ namespace Frost.UI
 			var allocatedString = StringUtility.AsByteUnitString(allocated);
 			var workingString   = StringUtility.AsByteUnitString(working);
 
-			return String.Format("{0} managed {1} allocated {2} working", managedString, allocatedString, workingString);
+			contents.AppendFormat("{0} managed {1} allocated {2} working", managedString, allocatedString, workingString);
 		}
 	}
 }

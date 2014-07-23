@@ -40,17 +40,17 @@ namespace Frost.UI
 		public event EventHandler<EventArgs> Disposing;
 
 		/// <summary>
-		/// Generates the text displayed in the debug overlay
+		/// Retrieves the contents of the debug overlay line
 		/// </summary>
-		/// <returns>Scene information</returns>
-		public override string ToString ()
+		/// <param name="contents">String to store the debug information in</param>
+		public void GetDebugInfo (MutableString contents)
 		{
 			var scenes    = _runner.Scenes;
 			var curScene  = scenes.CurrentScene;
 			var sceneName = curScene.Name;
 			var entities  = curScene.EntityManager.Count;
 			var states    = _runner.StateManager;
-			return String.Format("Scene: {0} {1} - {2} entities", sceneName, states, entities);
+			contents.AppendFormat("Scene: {0} {1} - {2} entities", sceneName, states, entities);
 		}
 	}
 }
