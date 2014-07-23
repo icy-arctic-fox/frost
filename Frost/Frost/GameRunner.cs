@@ -15,11 +15,11 @@ namespace Frost
 	/// </summary>
 	public class GameRunner : IFullDisposable, IDebugOverlayLine
 	{
-		/// <summary>
-		/// Display that will be rendered upon
-		/// </summary>
-		private readonly IDisplay _display;
+		private readonly Window _window;
 		private readonly SceneManager _scenes;
+
+		private readonly StateManager _stateManager = new StateManager();
+		private readonly StateSet<Queue<Action>> _preUpdateActions;
 
 		/// <summary>
 		/// Tracks active game scenes
@@ -28,9 +28,6 @@ namespace Frost
 		{
 			get { return _scenes; }
 		}
-
-		private readonly StateManager _stateManager = new StateManager();
-		private readonly StateSet<Queue<Action>> _preUpdateActions;
 
 		/// <summary>
 		/// Tracks the states currently being updated and rendered
@@ -43,18 +40,18 @@ namespace Frost
 		/// <summary>
 		/// Creates a new game runner
 		/// </summary>
-		/// <param name="display">Display to render to</param>
+		/// <param name="window">Window to render to</param>
 		/// <param name="initialScene">Initial scene to process</param>
-		/// <exception cref="ArgumentNullException">The <paramref name="display"/> to render to can't be null.</exception>
-		public GameRunner (IDisplay display, Scene initialScene)
+		/// <exception cref="ArgumentNullException">The <paramref name="window"/> to render to can't be null.</exception>
+		public GameRunner (Window window, Scene initialScene)
 		{
-			if(display == null)
-				throw new ArgumentNullException("display");
+			if(window == null)
+				throw new ArgumentNullException("window");
 
 			// Setup the display and scene manager
-			_display = display;
-			_scenes  = new SceneManager(initialScene, display);
-			_drawArgs.Display = display;
+			_window = window;
+			_scenes = new SceneManager(initialScene, window);
+			_drawArgs.Display = window;
 
 			// Setup the pre-update action queues
 			var initialActionQueues = new List<Queue<Action>>(StateManager.StateCount) {
@@ -218,7 +215,7 @@ namespace Frost
 		private void multiThreadedGameLoop ()
 		{
 			// Disable rendering on the current thread so that the render thread can do it
-			_display.SetActive(false);
+			_window.SetActive(false);
 
 			// Indicate that this thread is the update thread
 			Thread.CurrentThread.Name = "Update Thread";
@@ -420,6 +417,7 @@ namespace Frost
 			var stepArgs = _stepArgs; // Copy to stack
 			OnPreUpdate(stepArgs);
 
+			_window.Update();
 			updateModules(stepArgs);
 			updateScenes(stepArgs);
 
@@ -606,7 +604,7 @@ namespace Frost
 #if DEBUG
 			_stateManager.RenderThreadId = Thread.CurrentThread.ManagedThreadId;
 #endif
-			if(!_display.SetActive())
+			if(!_window.SetActive())
 				throw new AccessViolationException("Could not activate rendering to the display on the render thread. It may be active on another thread.");
 			var timeout = TimeSpan.FromSeconds(MaxRenderInterval);
 

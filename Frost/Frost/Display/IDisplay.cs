@@ -15,11 +15,6 @@ namespace Frost.Display
 		bool VSync { get; set; } // TODO: Implement 'Adaptive' VSync
 
 		/// <summary>
-		/// Performs any updates to the display's state (not part of the rendered frames)
-		/// </summary>
-		void Update ();
-
-		/// <summary>
 		/// Sets a display object as being actively rendered in on a thread.
 		/// A display object can be rendered from only one thread at a time.
 		/// Call this method with false to so that other threads can render to it.

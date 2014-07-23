@@ -231,7 +231,6 @@ namespace Frost
 		/// <remarks>A return value of false indicates that the last scene has exited and the game should terminate.</remarks>
 		internal bool Update (FrameStepEventArgs stepArgs)
 		{
-			_display.Update();
 			updateSceneStack(stepArgs);
 			return ScenesRemaining;
 		}
