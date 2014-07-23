@@ -124,6 +124,14 @@ namespace Frost
 		#region Operations
 
 		/// <summary>
+		/// Empties the contents of the string without reducing its capacity
+		/// </summary>
+		public void Clear ()
+		{
+			Length = 0;
+		}
+
+		/// <summary>
 		/// Appends one or more items to the string, expanding the capacity as needed
 		/// </summary>
 		/// <param name="items">Collection of items to append to the string</param>
