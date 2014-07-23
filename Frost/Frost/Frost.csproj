@@ -99,6 +99,7 @@
     <Compile Include="Graphics\Text\LiveTextString.cs" />
     <Compile Include="Graphics\Text\Word.cs" />
     <Compile Include="Graphics\Text\WordWrap.cs" />
+    <Compile Include="MutableString.cs" />
     <Compile Include="ResourceLoader.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Texture.cs" />
