@@ -15,8 +15,9 @@ namespace Frost.Graphics.Text
 		private readonly uint _size;
 		private readonly int _spacing;
 		private readonly SFML.Graphics.Font _font;
-		private readonly VertexArray _verts;
+		private readonly VertexArray _verts = new VertexArray(PrimitiveType.Quads);
 		private RenderStates _rs = RenderStates.Default;
+		private readonly MutableString _text = new MutableString();
 
 		/// <summary>
 		/// Creates a new simple text object
@@ -29,11 +30,8 @@ namespace Frost.Graphics.Text
 			_font    = font.UnderlyingFont;
 			_size    = size;
 			_spacing = _font.GetLineSpacing(size);
-			_verts   = new VertexArray(PrimitiveType.Quads);
 			_color   = color;
 		}
-
-		private string _text;
 
 		/// <summary>
 		/// Displayed text
@@ -43,9 +41,18 @@ namespace Frost.Graphics.Text
 			get { return _text ?? String.Empty; }
 			set
 			{
-				_text = value ?? String.Empty;
+				_text.Clear();
+				_text.Append(value ?? String.Empty);
 				constructVertices();
 			}
+		}
+
+		/// <summary>
+		/// Low-level access to each character displayed
+		/// </summary>
+		public MutableString Contents
+		{
+			get { return _text; }
 		}
 
 		private SFML.Graphics.Color _color;
