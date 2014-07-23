@@ -74,13 +74,13 @@ namespace Frost.Utility
 		}
 
 		/// <summary>
-		/// Creates a copy of an array of bytes
+		/// Copies a subset of bytes from an array
 		/// </summary>
 		/// <param name="src">Original byte array</param>
 		/// <param name="srcStart">Index in <paramref name="src"/> to start copying bytes at</param>
 		/// <param name="count">Number of bytes to copy</param>
 		/// <returns>A new byte array containing the same <seealso cref="count"/> bytes as <paramref name="src"/> starting at <paramref name="srcStart"/></returns>
-		public static byte[] Duplicate (this byte[] src, int srcStart, int count)
+		public static byte[] Subset (this byte[] src, int srcStart, int count)
 		{
 			var dest = new byte[count];
 			Copy(src, dest, srcStart, 0, count);
