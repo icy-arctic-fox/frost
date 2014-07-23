@@ -270,7 +270,8 @@ namespace Frost
 		/// <returns>Regular string</returns>
 		public override string ToString ()
 		{
-			throw new NotImplementedException();
+			var chars = resizeArray(_chars, Length, Length);
+			return new string(chars);
 		}
 
 		/// <summary>
