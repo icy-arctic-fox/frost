@@ -18,10 +18,7 @@ namespace Frost
 		/// <summary>
 		/// Number of characters in the string
 		/// </summary>
-		public int Length
-		{
-			get { throw new NotImplementedException(); }
-		}
+		public int Length { get; private set; }
 
 		/// <summary>
 		/// Number of available characters the string can hold before reallocating memory
@@ -49,26 +46,34 @@ namespace Frost
 		/// </summary>
 		public MutableString ()
 		{
-			throw new NotImplementedException();
+			_chars = new char[DefaultCapacity];
 		}
 
 		/// <summary>
 		/// Creates an empty mutable string with an initial character capacity
 		/// </summary>
 		/// <param name="capacity">Initial number of characters the string can hold</param>
+		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="capacity"/> cannot be a negative number.</exception>
 		public MutableString (int capacity)
 		{
-			throw new NotImplementedException();
+			if(capacity < 0)
+				throw new ArgumentOutOfRangeException("capacity", "The capacity cannot be a negative number.");
+
+			_chars = new char[capacity];
 		}
 
 		/// <summary>
 		/// Creates a mutable string from an existing string
 		/// </summary>
-		/// <param name="s">Existing string</param>
+		/// <param name="source">Existing string</param>
 		/// <exception cref="ArgumentNullException">The existing string can't be null.</exception>
-		public MutableString (string s)
+		public MutableString (string source)
 		{
-			throw new NotImplementedException();
+			if(source == null)
+				throw new ArgumentNullException("source");
+
+			_chars = source.ToCharArray();
+			Length = _chars.Length;
 		}
 
 		/// <summary>
@@ -76,21 +81,42 @@ namespace Frost
 		/// </summary>
 		/// <param name="chars">Initial characters</param>
 		/// <exception cref="ArgumentNullException">The initial characters can't be null.</exception>
-		public MutableString (char[] chars)
+		public MutableString (IList<char> chars)
 		{
-			throw new NotImplementedException();
+			if(chars == null)
+				throw new ArgumentNullException("chars");
+
+			Length = chars.Count;
+			_chars = copyCharArray(chars);
 		}
 
 		/// <summary>
 		/// Copies an existing mutable string
 		/// </summary>
-		/// <param name="s">String to copy from</param>
+		/// <param name="str">String to copy from</param>
 		/// <exception cref="ArgumentNullException">The string to copy from can't be null.</exception>
-		public MutableString (MutableString s)
+		public MutableString (MutableString str)
 		{
-			throw new NotImplementedException();
+			if(str == null)
+				throw new ArgumentNullException("str");
+
+			Length = str.Length;
+			_chars = copyCharArray(str._chars);
 		}
 		#endregion
+
+		/// <summary>
+		/// Copies an array of characters
+		/// </summary>
+		/// <param name="source">Source character array</param>
+		/// <returns>Copy of the character array</returns>
+		private static char[] copyCharArray (IList<char> source)
+		{
+			var dest = new char[source.Count];
+			for(var i = 0; i < dest.Length; ++i)
+				dest[i] = source[i];
+			return dest;
+		}
 
 		#region Operations
 		#endregion
