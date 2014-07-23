@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Threading;
+using Frost.UI;
+using Frost.Utility;
 
 namespace Frost
 {
 	/// <summary>
 	/// Tracks the states to be updated and rendered
 	/// </summary>
-	internal class StateManager : IDisposable
+	internal class StateManager : IDebugOverlayLine, IDisposable
 	{
 		// TODO: Add ability to save older states for roll-back
 
@@ -257,7 +259,7 @@ namespace Frost
 		/// [ ] signify that the state is being updated.
 		/// </summary>
 		/// <returns>A string that shows which frames are being rendered and updated</returns>
-		public override string ToString ()
+		public void GetDebugInfo (MutableString contents)
 		{
 			var frames = new long[3];
 			int updateIndex, renderIndex;
@@ -269,34 +271,37 @@ namespace Frost
 				renderIndex = _curRenderStateIndex;
 			}
 
-			var sb = new System.Text.StringBuilder();
 			for(var i = 0; i < frames.Length; ++i)
 			{
 				if(updateIndex == i)
 				{
-					sb.Append('[');
-					sb.Append(frames[i]);
-					sb.Append(']');
+					contents.Append('[');
+					contents.Append(frames[i]);
+					contents.Append(']');
 				}
 				else if(renderIndex == i)
 				{
-					sb.Append('<');
-					sb.Append(frames[i]);
-					sb.Append('>');
+					contents.Append('<');
+					contents.Append(frames[i]);
+					contents.Append('>');
 				}
 				else
 				{
-					sb.Append(' ');
-					sb.Append(frames[i]);
-					sb.Append(' ');
+					contents.Append(' ');
+					contents.Append(frames[i]);
+					contents.Append(' ');
 				}
 				if(i - 1 < frames.Length)
-					sb.Append(' ');
+					contents.Append(' ');
 			}
-			return sb.ToString();
 		}
 
 		#region Disposable
+
+		/// <summary>
+		/// Event that is triggered when the state manager is being disposed
+		/// </summary>
+		public event EventHandler<EventArgs> Disposing;
 
 		/// <summary>
 		/// Disposes of the state manager by releasing resources it holds
@@ -321,6 +326,7 @@ namespace Frost
 		/// <param name="disposing">True if inner-resources should be disposed of (<see cref="Dispose"/> was called)</param>
 		protected virtual void Dispose (bool disposing)
 		{
+			Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
 			if(disposing)
 			{
 				lock(_locker)

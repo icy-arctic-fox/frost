@@ -50,7 +50,13 @@ namespace Frost.UI
 			var sceneName = curScene.Name;
 			var entities  = curScene.EntityManager.Count;
 			var states    = _runner.StateManager;
-			contents.AppendFormat("Scene: {0} {1} - {2} entities", sceneName, states, entities);
+			contents.Append("Scene: ");
+			contents.Append(sceneName);
+			contents.Append(' ');
+			states.GetDebugInfo(contents);
+			contents.Append(" - ");
+			contents.Append(entities);
+			contents.Append(" entities");
 		}
 	}
 }

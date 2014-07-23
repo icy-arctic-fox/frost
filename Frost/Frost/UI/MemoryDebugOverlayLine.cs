@@ -38,7 +38,12 @@ namespace Frost.UI
 			var allocatedString = StringUtility.AsByteUnitString(allocated);
 			var workingString   = StringUtility.AsByteUnitString(working);
 
-			contents.AppendFormat("{0} managed {1} allocated {2} working", managedString, allocatedString, workingString);
+			contents.Append(managedString);
+			contents.Append(" managed ");
+			contents.Append(allocatedString);
+			contents.Append(" allocated ");
+			contents.Append(workingString);
+			contents.Append(" working");
 		}
 	}
 }
