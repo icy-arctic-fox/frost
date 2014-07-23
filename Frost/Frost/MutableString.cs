@@ -452,14 +452,11 @@ namespace Frost
 		/// </summary>
 		/// <param name="original">Original array</param>
 		/// <param name="newSize">Size to resize the array to</param>
-		/// <param name="count">Number of items to copy (default is to copy all items)</param>
+		/// <param name="count">Number of items to copy</param>
 		/// <returns>Resized array</returns>
-		private static char[] resizeArray (char[] original, int newSize, int count = -1)
+		private static char[] resizeArray (char[] original, int newSize, int count)
 		{
-			if(count < 0)
-				count = original.Length; // Default to original size
-
-			if(newSize == count)
+			if(newSize == original.Length && count >= newSize)
 				return original; // Don't do anything - same size
 
 			var newArray = new char[newSize];
