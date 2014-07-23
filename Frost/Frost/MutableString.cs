@@ -161,6 +161,24 @@ namespace Frost
 					_chars[j] = str[k];
 			}
 		}
+
+		/// <summary>
+		/// Appends a set of items joined together by a formatting template
+		/// </summary>
+		/// <param name="format">String formatting template</param>
+		/// <param name="items">Collection of items to append to the string</param>
+		/// <exception cref="ArgumentNullException">The formatting template can't be null.</exception>
+		/// <remarks><see cref="Object.ToString"/> is called for every item in <paramref name="items"/></remarks>
+		public void AppendFormat (string format, params object[] items)
+		{
+			if(format == null)
+				throw new ArgumentNullException("format");
+			if(items == null)
+				throw new ArgumentNullException("items");
+
+			var str = String.Format(format, items);
+			Append(str);
+		}
 		#endregion
 
 		/// <summary>
