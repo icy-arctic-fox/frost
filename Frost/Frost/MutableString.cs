@@ -132,6 +132,8 @@ namespace Frost
 		{
 			if(items == null)
 				throw new ArgumentNullException("items");
+			if(items.Length <= 0)
+				return;
 
 			// Get the string representation of each item
 			var strings = new string[items.Length];
@@ -178,6 +180,61 @@ namespace Frost
 
 			var str = String.Format(format, items);
 			Append(str);
+		}
+
+		/// <summary>
+		/// Appends a set of items joined together by a separator
+		/// </summary>
+		/// <param name="separator">String to insert between each item</param>
+		/// <param name="items">Collection of items to append to the string</param>
+		/// <exception cref="ArgumentNullException">The <paramref name="separator"/> can't be null.</exception>
+		/// <remarks><see cref="Object.ToString"/> is called for every item in <paramref name="items"/></remarks>
+		public void AppendJoin (string separator, params object[] items)
+		{
+			if(separator == null)
+				throw new ArgumentNullException("separator");
+			if(items == null)
+				throw new ArgumentNullException("items");
+			if(items.Length <= 0)
+				return;
+
+			// Get the string representation of each item
+			var strings = new string[items.Length];
+			var size = 0;
+			for(var i = 0; i < items.Length; ++i)
+			{
+				var str = items[i].ToString();
+				strings[i] = str;
+				size += str.Length;
+			}
+
+			// Find out how many separators there will be and the size they will consume
+			var sepCount = items.Length - 1;
+			var sepSize  = separator.Length * sepCount;
+
+			var newLength = Length + size + sepSize;
+			if(newLength > Capacity)
+			{// Capacity is too small, extend the array
+				var mult = newLength / DefaultCapacity;
+				if(newLength % DefaultCapacity == 0)
+					++mult; // Allow extra padding (planning ahead for more appending)
+				var newCapacity = DefaultCapacity * mult;
+				_chars = resizeArray(_chars, newCapacity, Length);
+			}
+
+			// Append each string
+			for(int i = 0, j = Length; i < strings.Length; ++i)
+			{
+				var str = strings[i];
+				for(var k = 0; k < str.Length; ++j, ++k)
+					_chars[j] = str[k];
+
+				if(i < strings.Length - 1)
+				{// Insert separator
+					for(var k = 0; k < separator.Length; ++j, ++k)
+						_chars[j] = separator[k];
+				}
+			}
 		}
 		#endregion
 
