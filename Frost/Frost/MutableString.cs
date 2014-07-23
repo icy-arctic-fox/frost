@@ -132,6 +132,19 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Appends a character to the string, expanding the capacity if needed
+		/// </summary>
+		/// <param name="c">Character to append</param>
+		public void Append (char c)
+		{
+			var newLength = Length + 1;
+			extendCapacity(newLength);
+
+			_chars[Length] = c;
+			Length = newLength;
+		}
+
+		/// <summary>
 		/// Appends an object to the string, expanding the capacity if needed
 		/// </summary>
 		/// <param name="obj">Item to append to the string</param>
