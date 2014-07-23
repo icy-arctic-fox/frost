@@ -15,6 +15,7 @@ namespace Frost.Graphics.Text
 		private readonly uint _size;
 		private readonly int _spacing;
 		private readonly SFML.Graphics.Font _font;
+		private SFML.Graphics.Color _color;
 		private readonly VertexArray _verts = new VertexArray(PrimitiveType.Quads);
 		private RenderStates _rs = RenderStates.Default;
 		private readonly MutableString _text = new MutableString();
@@ -43,19 +44,18 @@ namespace Frost.Graphics.Text
 			{
 				_text.Clear();
 				_text.Append(value ?? String.Empty);
-				constructVertices();
+				Update();
 			}
 		}
 
 		/// <summary>
 		/// Low-level access to each character displayed
 		/// </summary>
+		/// <remarks><see cref="Update"/> must be called if the string is modified.</remarks>
 		public MutableString Contents
 		{
 			get { return _text; }
 		}
-
-		private SFML.Graphics.Color _color;
 
 		/// <summary>
 		/// Color of the text
@@ -74,6 +74,15 @@ namespace Frost.Graphics.Text
 		/// Bounds of the text
 		/// </summary>
 		public Rect2f Bounds { get; private set; }
+
+		/// <summary>
+		/// Forces the text display information to update
+		/// </summary>
+		/// <remarks>This method must be called after modifying <see name="Contents"/>.</remarks>
+		public void Update ()
+		{
+			constructVertices();
+		}
 
 		/// <summary>
 		/// Updates the vertices that display each glyph
