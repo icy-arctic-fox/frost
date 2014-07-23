@@ -130,7 +130,8 @@ namespace Frost
 		/// <returns>An enumerator that can be used to iterate through the characters in the string</returns>
 		public IEnumerator<char> GetEnumerator ()
 		{
-			throw new NotImplementedException();
+			for(var i = 0; i < Length; ++i)
+				yield return _chars[i];
 		}
 
 		/// <summary>
