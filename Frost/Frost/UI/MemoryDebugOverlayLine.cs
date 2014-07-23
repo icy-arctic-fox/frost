@@ -34,9 +34,9 @@ namespace Frost.UI
 			var allocated = _process.PrivateMemorySize64;
 			var working   = _process.WorkingSet64;
 
-			var managedString   = StringUtility.ToByteString(managed);
-			var allocatedString = StringUtility.ToByteString(allocated);
-			var workingString   = StringUtility.ToByteString(working);
+			var managedString   = StringUtility.AsByteUnitString(managed);
+			var allocatedString = StringUtility.AsByteUnitString(allocated);
+			var workingString   = StringUtility.AsByteUnitString(working);
 
 			return String.Format("{0} managed {1} allocated {2} working", managedString, allocatedString, workingString);
 		}

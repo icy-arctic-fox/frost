@@ -318,7 +318,7 @@ namespace Frost.ResourcePackager
 		{
 			using(var reader = new ResourcePackageReader(filepath, _password))
 				foreach(var resource in reader.Resources)
-					Console.WriteLine("{0} {1,9} {2}", resource.Id, StringUtility.ToByteString(resource.Size), resource.Name);
+					Console.WriteLine("{0} {1,9} {2}", resource.Id, StringUtility.AsByteUnitString(resource.Size), resource.Name);
 			return ReturnCode.Ok;
 		}
 

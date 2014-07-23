@@ -193,7 +193,7 @@ namespace Frost.Utility
 		/// </summary>
 		/// <param name="bytes">Number of bytes</param>
 		/// <returns>Reduced bytes with units</returns>
-		public static string ToByteString (long bytes)
+		public static string AsByteUnitString (long bytes)
 		{
 			var unitIndex = 0;
 			var b = (double)bytes;

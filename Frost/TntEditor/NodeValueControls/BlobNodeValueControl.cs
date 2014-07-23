@@ -40,7 +40,7 @@ namespace Frost.TntEditor.NodeValueControls
 		private void updateSizeLabel ()
 		{
 			var bytes = _data.LongLength;
-			var text  = StringUtility.ToByteString(bytes);
+			var text  = StringUtility.AsByteUnitString(bytes);
 			bytesLabel.Text = text;
 		}
 
