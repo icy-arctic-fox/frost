@@ -122,6 +122,45 @@ namespace Frost
 		#endregion
 
 		#region Operations
+
+		/// <summary>
+		/// Appends one or more items to the string, expanding the capacity as needed
+		/// </summary>
+		/// <param name="items">Collection of items to append to the string</param>
+		/// <remarks><see cref="Object.ToString"/> is called for every item in <paramref name="items"/></remarks>
+		public void Append (params object[] items)
+		{
+			if(items == null)
+				throw new ArgumentNullException("items");
+
+			// Get the string representation of each item
+			var strings = new string[items.Length];
+			var size = 0;
+			for(var i = 0; i < items.Length; ++i)
+			{
+				var str = items[i].ToString();
+				strings[i] = str;
+				size += str.Length;
+			}
+
+			var newLength = Length + size;
+			if(newLength > Capacity)
+			{// Capacity is too small, extend the array
+				var mult = newLength / DefaultCapacity;
+				if(newLength % DefaultCapacity == 0)
+					++mult; // Allow extra padding (planning ahead for more appending)
+				var newCapacity = DefaultCapacity * mult;
+				_chars = resizeArray(_chars, newCapacity, Length);
+			}
+
+			// Append each string
+			for(int i = 0, j = Length; i < strings.Length; ++i)
+			{
+				var str = strings[i];
+				for(var k = 0; k < str.Length; ++j, ++k)
+					_chars[j] = str[k];
+			}
+		}
 		#endregion
 
 		/// <summary>
