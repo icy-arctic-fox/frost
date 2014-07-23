@@ -25,8 +25,13 @@ namespace Frost
 		/// </summary>
 		public int Capacity
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return _chars.Length; }
+			set
+			{
+				if(value < 0)
+					throw new ArgumentOutOfRangeException("value", "The new capacity must be non-negative.");
+				_chars = resizeArray(_chars, value, Length);
+			}
 		}
 
 		/// <summary>
@@ -35,8 +40,19 @@ namespace Frost
 		/// <param name="index">Index of the character to access</param>
 		public char this[int index]
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get
+			{
+				if(index < 0 || index >= Length)
+					throw new IndexOutOfRangeException();
+				return _chars[index];
+			}
+
+			set
+			{
+				if(index < 0 || index >= Length)
+					throw new IndexOutOfRangeException();
+				_chars[index] = value;
+			}
 		}
 
 		#region Constructors
@@ -104,19 +120,6 @@ namespace Frost
 			_chars = copyCharArray(str._chars);
 		}
 		#endregion
-
-		/// <summary>
-		/// Copies an array of characters
-		/// </summary>
-		/// <param name="source">Source character array</param>
-		/// <returns>Copy of the character array</returns>
-		private static char[] copyCharArray (IList<char> source)
-		{
-			var dest = new char[source.Count];
-			for(var i = 0; i < dest.Length; ++i)
-				dest[i] = source[i];
-			return dest;
-		}
 
 		#region Operations
 		#endregion
@@ -239,5 +242,44 @@ namespace Frost
 		{
 			return str == null ? null : str.ToString();
 		}
+
+		#region Utility methods
+
+		/// <summary>
+		/// Copies an array of characters
+		/// </summary>
+		/// <param name="source">Source character array</param>
+		/// <returns>Copy of the character array</returns>
+		private static char[] copyCharArray (IList<char> source)
+		{
+			var dest = new char[source.Count];
+			for(var i = 0; i < dest.Length; ++i)
+				dest[i] = source[i];
+			return dest;
+		}
+
+		/// <summary>
+		/// Creates a new array containing the contents of an existing array
+		/// </summary>
+		/// <param name="original">Original array</param>
+		/// <param name="newSize">Size to resize the array to</param>
+		/// <param name="count">Number of items to copy (default is to copy all items)</param>
+		/// <returns>Resized array</returns>
+		private static char[] resizeArray (char[] original, int newSize, int count = -1)
+		{
+			if(count < 0)
+				count = original.Length; // Default to original size
+
+			if(newSize == count)
+				return original; // Don't do anything - same size
+
+			var newArray = new char[newSize];
+			var limit = newSize < count ? newSize : count;
+			for(var i = 0; i < limit; ++i)
+				newArray[i] = original[i];
+
+			return newArray;
+		}
+		#endregion
 	}
 }
