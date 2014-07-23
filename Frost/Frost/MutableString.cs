@@ -259,15 +259,31 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Compares the current object with another object of the same type.
+		/// Compares the current mutable string with another string
 		/// </summary>
-		/// <returns>
-		/// A value that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the <paramref name="other"/> parameter.Zero This object is equal to <paramref name="other"/>. Greater than zero This object is greater than <paramref name="other"/>. 
-		/// </returns>
-		/// <param name="other">An object to compare with this object.</param>
+		/// <param name="other">A string to compare with this object.</param>
+		/// <returns>A value that indicates the relative order of the string being compared.
+		/// The return value has the following meanings:<list type="unordered">
+		/// <item>Less than zero - this object is less than the <paramref name="other"/> parameter</item>
+		/// <item>Zero - this object is equal to <paramref name="other"/></item>
+		/// <item>Greater than zero - this object is greater than <paramref name="other"/></item>
+		/// </list></returns>
 		public int CompareTo (string other)
 		{
-			throw new NotImplementedException();
+			if(other == null)
+				return 1; // null appears before non-null
+
+			for(var i = 0; i < Length && i < other.Length; ++i)
+			{
+				var left  = _chars[i];
+				var right = other[i];
+				if(left != right)
+					return left.CompareTo(right);
+			}
+
+			if(Length == other.Length)
+				return 0;
+			return (Length < other.Length) ? -1 : 1;
 		}
 
 		/// <summary>
