@@ -221,7 +221,13 @@ namespace Frost
 		/// <returns>A hash code for the current string</returns>
 		public override int GetHashCode ()
 		{
-			throw new NotImplementedException();
+			unchecked
+			{
+				var hash = 17;
+				for(var i = 0; i < Length; ++i)
+					hash = hash * 23 + _chars[i];
+				return hash;
+			}
 		}
 
 		/// <summary>
