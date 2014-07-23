@@ -145,14 +145,7 @@ namespace Frost
 			var str  = obj.ToString();
 			var size = str.Length;
 			var newLength = Length + size;
-			if(newLength > Capacity)
-			{// Capacity is too small, extend the array
-				var mult = newLength / DefaultCapacity;
-				if(newLength % DefaultCapacity == 0)
-					++mult; // Allow extra padding (planning ahead for more appending)
-				var newCapacity = DefaultCapacity * mult;
-				_chars = resizeArray(_chars, newCapacity, Length);
-			}
+			extendCapacity(newLength);
 
 			for(int i = 0, j = Length; i < str.Length; ++i, ++j)
 				_chars[j] = str[i];
@@ -223,14 +216,7 @@ namespace Frost
 			var sepSize  = separator.Length * sepCount;
 
 			var newLength = Length + size + sepSize;
-			if(newLength > Capacity)
-			{// Capacity is too small, extend the array
-				var mult = newLength / DefaultCapacity;
-				if(newLength % DefaultCapacity == 0)
-					++mult; // Allow extra padding (planning ahead for more appending)
-				var newCapacity = DefaultCapacity * mult;
-				_chars = resizeArray(_chars, newCapacity, Length);
-			}
+			extendCapacity(newLength);
 
 			// Append each string
 			for(int i = 0, j = Length; i < strings.Length; ++i)
@@ -465,6 +451,23 @@ namespace Frost
 				newArray[i] = original[i];
 
 			return newArray;
+		}
+
+		/// <summary>
+		/// Extends the capacity of the character array (if needed)
+		/// </summary>
+		/// <param name="required">Number of characters needed</param>
+		/// <remarks>Extra space may be acquired to reduce the number of memory allocations made.</remarks>
+		private void extendCapacity (int required)
+		{
+			if(required > Capacity)
+			{// Capacity is too small, extend the array
+				var mult = required / DefaultCapacity;
+				if(required % DefaultCapacity == 0)
+					++mult; // Allow extra padding (planning ahead for more appending)
+				var newCapacity = DefaultCapacity * mult;
+				_chars = resizeArray(_chars, newCapacity, Length);
+			}
 		}
 		#endregion
 	}
