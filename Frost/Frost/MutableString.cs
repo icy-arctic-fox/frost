@@ -132,6 +132,35 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Appends an object to the string, expanding the capacity if needed
+		/// </summary>
+		/// <param name="obj">Item to append to the string</param>
+		/// <exception cref="ArgumentNullException">The object to append can't be null.</exception>
+		/// <remarks><see cref="Object.ToString"/> is called for on <paramref name="obj"/></remarks>
+		public void Append (object obj)
+		{
+			if(obj == null)
+				throw new ArgumentNullException("obj");
+
+			var str  = obj.ToString();
+			var size = str.Length;
+			var newLength = Length + size;
+			if(newLength > Capacity)
+			{// Capacity is too small, extend the array
+				var mult = newLength / DefaultCapacity;
+				if(newLength % DefaultCapacity == 0)
+					++mult; // Allow extra padding (planning ahead for more appending)
+				var newCapacity = DefaultCapacity * mult;
+				_chars = resizeArray(_chars, newCapacity, Length);
+			}
+
+			for(int i = 0, j = Length; i < str.Length; ++i, ++j)
+				_chars[j] = str[i];
+
+			Length = newLength;
+		}
+
+		/// <summary>
 		/// Appends one or more items to the string, expanding the capacity as needed
 		/// </summary>
 		/// <param name="items">Collection of items to append to the string</param>
