@@ -77,7 +77,6 @@
     <Compile Include="Geometry\Rect2i.cs" />
     <Compile Include="Geometry\Vector2.cs" />
     <Compile Include="Graphics\Color.cs" />
-    <Compile Include="Graphics\IDisplayContainer.cs" />
     <Compile Include="Graphics\IRenderTarget.cs" />
     <Compile Include="Graphics\Object2D.cs" />
     <Compile Include="Graphics\Pen.cs" />
