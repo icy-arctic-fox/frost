@@ -159,7 +159,20 @@ namespace Frost
 		/// <returns>True if the object has the same contents</returns>
 		public override bool Equals (object obj)
 		{
-			throw new NotImplementedException();
+			if(obj == null)
+				return false;
+
+			// Compare as mutable string
+			var other = obj as MutableString;
+			if(other != null)
+				return equals(other);
+
+			// Compare as regular string
+			var str = obj as string;
+			if(str != null)
+				return Equals(str);
+
+			return false;
 		}
 
 		/// <summary>
@@ -169,7 +182,17 @@ namespace Frost
 		/// <returns>True if the current object is equal to the <paramref name="other"/> parameter; otherwise, false</returns>
 		public bool Equals (string other)
 		{
-			throw new NotImplementedException();
+			if(other == null)
+				return false;
+
+			if(Length != other.Length)
+				return false;
+
+			for(var i = 0; i < Length; ++i)
+				if(_chars[i] != other[i])
+					return false;
+
+			return true;
 		}
 
 		/// <summary>
@@ -177,9 +200,19 @@ namespace Frost
 		/// </summary>
 		/// <param name="other">String to compare against</param>
 		/// <returns>True if the mutable strings' contents are equal</returns>
-		private bool Equals (MutableString other)
+		private bool equals (MutableString other)
 		{
-			throw new NotImplementedException();
+			if(other == null)
+				return false;
+
+			if(Length != other.Length)
+				return false;
+
+			for(var i = 0; i < Length; ++i)
+				if(_chars[i] != other._chars[i])
+					return false;
+
+			return true;
 		}
 
 		/// <summary>
@@ -199,7 +232,10 @@ namespace Frost
 		/// <returns>True if the <paramref name="left"/> and <paramref name="right"/> are equal</returns>
 		public static bool operator == (MutableString left, MutableString right)
 		{
-			throw new NotImplementedException();
+			if(ReferenceEquals(left, right))
+				return true;
+
+			return !ReferenceEquals(left, null) && left.equals(right);
 		}
 
 		/// <summary>
@@ -210,7 +246,10 @@ namespace Frost
 		/// <returns>True if the <paramref name="left"/> and <paramref name="right"/> are not equal</returns>
 		public static bool operator != (MutableString left, MutableString right)
 		{
-			throw new NotImplementedException();
+			if(ReferenceEquals(left, right))
+				return false;
+
+			return ReferenceEquals(left, null) || !left.equals(right);
 		}
 
 		/// <summary>
