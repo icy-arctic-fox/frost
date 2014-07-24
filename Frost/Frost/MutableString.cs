@@ -530,7 +530,7 @@ namespace Frost
 		{
 			if(required > Capacity)
 			{// Capacity is too small, extend the array
-				var mult = required / DefaultCapacity;
+				var mult = required / DefaultCapacity + 1;
 				if(required % DefaultCapacity == 0)
 					++mult; // Allow extra padding (planning ahead for more appending)
 				var newCapacity = DefaultCapacity * mult;
