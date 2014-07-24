@@ -145,6 +145,61 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Appends an integer to the string in a specified value
+		/// </summary>
+		/// <param name="value">Integer to append</param>
+		public void Append (long value)
+		{
+			AppendInteger(value, 10);
+		}
+
+		/// <summary>
+		/// Appends an integer to the string in a specified base
+		/// </summary>
+		/// <param name="value">Integer to append</param>
+		/// <param name="b">Base to display the integer in (2, 8, 10, 16)</param>
+		public void AppendInteger (long value, int b)
+		{
+			int newLength;
+			if(value == 0L)
+			{
+				newLength = Length + 1;
+				extendCapacity(newLength);
+				_chars[Length] = '0';
+			}
+
+			else
+			{
+				var size = (int)(value / b) + 1;
+				if(value % b == 0)
+					++size;
+				var negative = false;
+				if(b == 10 && value < 0)
+				{
+					negative = true;
+					value = -value;
+					++size;
+				}
+
+				newLength = Length + size;
+				extendCapacity(newLength);
+
+				for(var i = newLength - 1; value != 0; --i)
+				{
+					var remainder = value % b;
+					var c = (char)((remainder > 9) ? (remainder - 10) + 'a' : remainder + '0');
+					_chars[i] = c;
+					value /= b;
+				}
+
+				if(negative)
+					_chars[Length] = '-';
+			}
+
+			Length = newLength;
+		}
+
+		/// <summary>
 		/// Appends an object to the string, expanding the capacity if needed
 		/// </summary>
 		/// <param name="obj">Item to append to the string</param>
