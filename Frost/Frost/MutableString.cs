@@ -170,9 +170,10 @@ namespace Frost
 
 			else
 			{
-				var size = (int)(value / b) + 1;
-				if(value % b == 0)
-					++size;
+				var temp = value;
+				var size = 0;
+				for(; temp != 0; ++size, temp /= b) { }
+
 				var negative = false;
 				if(b == 10 && value < 0)
 				{
