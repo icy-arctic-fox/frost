@@ -70,6 +70,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameConfiguration.cs" />
     <Compile Include="GameRunner.cs" />
+    <Compile Include="Geometry\Size2.cs" />
     <Compile Include="Geometry\Point2f.cs" />
     <Compile Include="Geometry\Point3f.cs" />
     <Compile Include="Geometry\Rect2f.cs" />
