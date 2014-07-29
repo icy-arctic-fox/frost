@@ -5,6 +5,11 @@
 	/// </summary>
 	public class Pen
 	{
+		/// <summary>
+		/// Default pen type
+		/// </summary>
+		public static readonly Pen Default = new Pen(new Color(), 1f);
+
 		private readonly Color _color;
 		private readonly float _width;
 
