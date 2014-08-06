@@ -53,9 +53,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="LexerNumericalTests.cs" />
-    <Compile Include="LexerTests.cs" />
-    <Compile Include="LexerTestUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
