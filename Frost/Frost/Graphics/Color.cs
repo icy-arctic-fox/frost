@@ -1,4 +1,6 @@
 ﻿using System;
+using NColor = System.Drawing.Color;
+using SColor = SFML.Graphics.Color;
 
 namespace Frost.Graphics
 {
@@ -70,7 +72,7 @@ namespace Frost.Graphics
 		/// Copies color values from a .net color
 		/// </summary>
 		/// <param name="color">.net color</param>
-		public Color (System.Drawing.Color color)
+		public Color (NColor color)
 		{
 			_value = color.ToArgb();
 		}
@@ -79,7 +81,7 @@ namespace Frost.Graphics
 		/// Copies color values from a SFML color
 		/// </summary>
 		/// <param name="color">SFML color</param>
-		public Color (SFML.Graphics.Color color)
+		public Color (SColor color)
 		{
 			_value = ArgbToInt(color.R, color.G, color.B, color.A);
 		}
@@ -269,7 +271,7 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">.net color</param>
 		/// <returns>A color structure</returns>
-		public static implicit operator Color (System.Drawing.Color color)
+		public static implicit operator Color (NColor color)
 		{
 			return new Color(color);
 		}
@@ -279,7 +281,7 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">SFML color</param>
 		/// <returns>A color structure</returns>
-		public static implicit operator Color (SFML.Graphics.Color color)
+		public static implicit operator Color (SColor color)
 		{
 			return new Color(color);
 		}
@@ -289,9 +291,9 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">Color to convert</param>
 		/// <returns>A .net color</returns>
-		public static implicit operator System.Drawing.Color (Color color)
+		public static implicit operator NColor (Color color)
 		{
-			return System.Drawing.Color.FromArgb(color._value);
+			return NColor.FromArgb(color._value);
 		}
 
 		/// <summary>
@@ -299,9 +301,9 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">Color to convert</param>
 		/// <returns>A SFML color</returns>
-		public static implicit operator SFML.Graphics.Color (Color color)
+		public static implicit operator SColor (Color color)
 		{
-			return new SFML.Graphics.Color(color.Red, color.Green, color.Blue, color.Alpha);
+			return new SColor(color.Red, color.Green, color.Blue, color.Alpha);
 		}
 		#endregion
 
@@ -406,6 +408,9 @@ namespace Frost.Graphics
 			blue  = (byte)(value & 0xff);
 			alpha = (byte)((value >> 24) & 0xff);
 		}
+		#endregion
+
+		#region HSL
 
 		/// <summary>
 		/// Converts RGB color components to HSL color components
