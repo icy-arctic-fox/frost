@@ -13,7 +13,7 @@ namespace Frost.UI
 	/// Informational overlay that displays useful debugging information.
 	/// Lines can be added dynamically to the overlay while the game is running.
 	/// </summary>
-	public class DebugOverlay : IFrameRender, IFullDisposable
+	public class DebugOverlay : IFrameUpdate, IFrameRender, IFullDisposable
 	{
 		private const int TextColor        = 0xffffff;
 		private const int BackgroundColor  = 0x404040;
@@ -112,7 +112,8 @@ namespace Frost.UI
 		/// <summary>
 		/// Updates the contents of the overlay
 		/// </summary>
-		public void Update ()
+		/// <param name="args">Update information</param>
+		public void Update (FrameStepEventArgs args)
 		{
 			updateText();
 			

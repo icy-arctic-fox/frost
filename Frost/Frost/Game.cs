@@ -267,7 +267,7 @@ namespace Frost
 		/// <param name="e">Update information</param>
 		private void updateDebugOverlay (object sender, FrameStepEventArgs e)
 		{
-			DebugOverlay.Update(); // TODO: Pass e
+			DebugOverlay.Update(e);
 		}
 
 		/// <summary>
