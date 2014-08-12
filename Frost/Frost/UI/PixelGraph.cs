@@ -1,6 +1,5 @@
 ﻿using System;
 using Frost.Geometry;
-using Frost.Graphics;
 using Frost.Utility;
 using SFML.Graphics;
 

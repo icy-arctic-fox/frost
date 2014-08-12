@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Frost.Geometry;
-using Frost.Graphics;
 using Frost.Graphics.Text;
 using Frost.Utility;
 using SFML.Graphics;

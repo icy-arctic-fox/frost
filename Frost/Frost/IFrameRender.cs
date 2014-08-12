@@ -1,4 +1,4 @@
-﻿namespace Frost.Graphics
+﻿namespace Frost
 {
 	/// <summary>
 	/// Able to render a state to a visual frame

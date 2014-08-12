@@ -1,5 +1,4 @@
 ﻿using Frost.Entities;
-using Frost.Graphics;
 
 namespace Frost
 {
