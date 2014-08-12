@@ -1,4 +1,5 @@
 ﻿using Frost.Display;
+using SfmlSprite = SFML.Graphics.Sprite;
 
 namespace Frost.Graphics
 {
@@ -11,7 +12,7 @@ namespace Frost.Graphics
 		/// <summary>
 		/// Underlying SFML implementation of the sprite
 		/// </summary>
-		private readonly SFML.Graphics.Sprite _sprite;
+		private readonly SfmlSprite _sprite;
 
 		/// <summary>
 		/// Width of the sprite in pixels (before scaling)
@@ -35,7 +36,7 @@ namespace Frost.Graphics
 		/// <param name="texture">Texture to apply to the sprite</param>
 		public Sprite (Texture texture)
 		{
-			_sprite = new SFML.Graphics.Sprite(texture.SfmlTexture);
+			_sprite = new SfmlSprite(texture.SfmlTexture);
 		}
 
 		/// <summary>
