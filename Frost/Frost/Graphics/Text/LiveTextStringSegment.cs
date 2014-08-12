@@ -98,7 +98,7 @@ namespace Frost.Graphics.Text
 
 			// Calculate the line height
 			var lineCount  = _text.CountLines();
-			var lineHeight = _appearance.Font.UnderlyingFont.GetLineSpacing(_appearance.Size);
+			var lineHeight = _appearance.Font.SfmlFont.GetLineSpacing(_appearance.Size);
 			var textHeight = lineHeight * lineCount;
 
 			// Set the height to the larger of the two

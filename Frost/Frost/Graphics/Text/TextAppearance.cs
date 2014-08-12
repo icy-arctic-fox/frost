@@ -126,7 +126,7 @@ namespace Frost.Graphics.Text
 		internal void ApplyTo (SFML.Graphics.Text t)
 		{
 			t.CharacterSize = Size;
-			t.Font  = _font.UnderlyingFont;
+			t.Font  = _font.SfmlFont;
 			t.Color = Color;
 
 			t.Style = SFML.Graphics.Text.Styles.Regular;

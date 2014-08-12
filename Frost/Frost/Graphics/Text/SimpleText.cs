@@ -28,7 +28,7 @@ namespace Frost.Graphics.Text
 		/// <param name="color">Font color</param>
 		public SimpleText (Font font, uint size, Color color)
 		{
-			_font    = font.UnderlyingFont;
+			_font    = font.SfmlFont;
 			_size    = size;
 			_spacing = _font.GetLineSpacing(size);
 			_color   = color;

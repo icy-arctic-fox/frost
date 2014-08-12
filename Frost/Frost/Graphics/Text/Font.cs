@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Frost.Utility;
-using F = SFML.Graphics.Font;
+using SfmlFont = SFML.Graphics.Font;
 
 namespace Frost.Graphics.Text
 {
@@ -23,7 +23,7 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		/// <returns>Default font information</returns>
 		/// <exception cref="BadImageFormatException">The font wasn't found embedded in the dll.</exception>
-		public static Font GetDefaultFont()
+		public static Font GetDefaultFont ()
 		{
 			lock(_defaultLocker)
 			{
@@ -60,12 +60,12 @@ namespace Frost.Graphics.Text
 		}
 		#endregion
 
-		private readonly F _font;
+		private readonly SfmlFont _font;
 
 		/// <summary>
 		/// Reference to the underlying SFML font
 		/// </summary>
-		internal F UnderlyingFont
+		internal SfmlFont SfmlFont
 		{
 			get { return _font; }
 		}
@@ -74,7 +74,7 @@ namespace Frost.Graphics.Text
 		/// Creates a new font
 		/// </summary>
 		/// <param name="font">Underlying SFML font object</param>
-		private Font (F font)
+		private Font (SfmlFont font)
 		{
 			_font = font;
 		}
@@ -142,7 +142,7 @@ namespace Frost.Graphics.Text
 		}
 
 		/// <summary>
-		/// Deconstructs the font
+		/// Destroys the font
 		/// </summary>
 		~Font ()
 		{
