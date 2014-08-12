@@ -28,6 +28,15 @@ namespace Frost.Graphics
 			Pen      = Pen.Default;
 		}
 
+		/// <summary>
+		/// Retrieves a texture containing the contents of the canvas
+		/// </summary>
+		/// <returns>Texture suitable for rendering</returns>
+		public Texture GetTexture ()
+		{
+			return new Texture(_texture.Texture);
+		}
+
 		#region Drawing methods
 
 		/// <summary>
