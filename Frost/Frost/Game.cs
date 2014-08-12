@@ -173,20 +173,20 @@ namespace Frost
 		/// </summary>
 		public virtual void Shutdown ()
 		{
-			if(Initialized)
-			{
-				if(Configuration.Dirty)
-				{// Save the modified configuration
-					var gameDataDir = GameDataPath;
-					if(!Directory.Exists(gameDataDir))
-						Directory.CreateDirectory(gameDataDir);
-					Configuration.Save(GameConfigurationPath);
-				}
+			if(!Initialized)
+				return;
 
-				Window.Dispose();
-				Resources.Dispose();
-				ShutdownModules();
+			if(Configuration.Dirty)
+			{// Save the modified configuration
+				var gameDataDir = GameDataPath;
+				if(!Directory.Exists(gameDataDir))
+					Directory.CreateDirectory(gameDataDir);
+				Configuration.Save(GameConfigurationPath);
 			}
+
+			Window.Dispose();
+			Resources.Dispose();
+			ShutdownModules();
 		}
 
 		#region Debug overlay
@@ -406,17 +406,17 @@ namespace Frost
 		/// <param name="disposing">True if <see cref="Dispose"/> was called and inner resources should be disposed as well</param>
 		protected virtual void Dispose (bool disposing)
 		{
-			if(!Disposed)
-			{// Don't do anything if the game is already disposed
-				Disposed = true;
-				Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
-				if(disposing)
-				{// Dispose of the resources this object holds
-					Shutdown();
-					Runner.Dispose();
-					Window.Dispose();
-					Resources.Dispose();
-				}
+			if(Disposed)
+				return; // Don't do anything if the game is already disposed
+
+			Disposed = true;
+			Disposing.NotifyThreadedSubscribers(this, EventArgs.Empty);
+			if(disposing)
+			{// Dispose of the resources this object holds
+				Shutdown();
+				Runner.Dispose();
+				Window.Dispose();
+				Resources.Dispose();
 			}
 		}
 		#endregion
