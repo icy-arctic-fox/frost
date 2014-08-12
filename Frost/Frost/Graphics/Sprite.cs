@@ -35,7 +35,7 @@ namespace Frost.Graphics
 		/// <param name="texture">Texture to apply to the sprite</param>
 		public Sprite (Texture texture)
 		{
-			_sprite = new SFML.Graphics.Sprite(texture.InternalTexture);
+			_sprite = new SFML.Graphics.Sprite(texture.SfmlTexture);
 		}
 
 		/// <summary>

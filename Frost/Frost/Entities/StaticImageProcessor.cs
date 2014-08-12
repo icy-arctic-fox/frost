@@ -34,7 +34,7 @@
 			var img   = _imgMap.Get(entity);
 			var pos   = pos2D.States[args.StateIndex];
 
-			_sprite.Texture  = img.Texture.InternalTexture;
+			_sprite.Texture  = img.Texture.SfmlTexture;
 			_sprite.Position = new SFML.Window.Vector2f(pos.X, pos.Y);
 			args.Display.Draw(_sprite);
 		}
