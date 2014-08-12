@@ -6,7 +6,7 @@ namespace Frost
 	/// <summary>
 	/// Logically separate section of the game
 	/// </summary>
-	public abstract class Scene : IStepable, IRenderable
+	public abstract class Scene : IFrameUpdate, IRenderable
 	{
 		/// <summary>
 		/// Manager that owns the scene
@@ -59,10 +59,10 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Updates the state of the scene by a single step
+		/// Updates the state of the scene by a single step and moves to the next frame
 		/// </summary>
 		/// <param name="args">Update information</param>
-		public void Step (FrameStepEventArgs args)
+		public void Update (FrameStepEventArgs args)
 		{
 			OnStep(args);
 		}

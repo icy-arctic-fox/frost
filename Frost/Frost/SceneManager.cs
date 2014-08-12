@@ -248,7 +248,7 @@ namespace Frost
 				while(curNode != null)
 				{// Step through each scene that is part of the render
 					var scene = curNode.Value;
-					scene.Step(args);
+					scene.Update(args);
 					curNode = curNode.Previous; // Advance from top to bottom of the stack
 				}
 			}

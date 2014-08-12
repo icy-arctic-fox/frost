@@ -129,7 +129,7 @@
     <Compile Include="Graphics\IRenderable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IStepable.cs" />
+    <Compile Include="IFrameUpdate.cs" />
     <Compile Include="StateManager.cs" />
     <Compile Include="StateSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
