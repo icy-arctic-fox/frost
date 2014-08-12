@@ -22,7 +22,7 @@ namespace Frost.UI
 		private static readonly SFML.Graphics.Color _backgroundColor = new Color(BackgroundColor, BackgroundAlpha);
 		private static readonly Color _textColor = new Color(TextColor);
 
-		private readonly SFML.Graphics.Sprite _background;
+		private readonly Sprite _background;
 		private readonly Font _font;
 		private readonly uint _fontSize;
 		private readonly object _locker = new object();
@@ -47,7 +47,7 @@ namespace Frost.UI
 
 			_font       = font;
 			_fontSize   = fontSize;
-			_background = new SFML.Graphics.Sprite();
+			_background = new Sprite();
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@ namespace Frost.UI
 
 				// Create the new texture
 				var background          = new Image(width, height, _backgroundColor);
-				_background.Texture     = new SFML.Graphics.Texture(background);
+				_background.Texture     = new Texture(background);
 				_background.TextureRect = new IntRect(0, 0, (int)width, (int)height);
 				_resize = false;
 			}

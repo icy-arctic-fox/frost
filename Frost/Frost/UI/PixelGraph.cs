@@ -13,7 +13,7 @@ namespace Frost.UI
 	{
 		private const int DefaultColor = 0x2eb82e;
 
-		private readonly SFML.Graphics.Sprite _sprite;
+		private readonly Sprite _sprite;
 		private readonly RenderTexture _texture;
 		private readonly Vertex[] _verts;
 
@@ -38,8 +38,8 @@ namespace Frost.UI
 			{
 				_color = value;
 				_verts[0].Color = value;
-				_verts[1].Color = new SFML.Graphics.Color(value.Red, value.Green, value.Blue, 0);
-				_verts[2].Color = new SFML.Graphics.Color(0, 0, 0, 0);
+				_verts[1].Color = new Color(value.Red, value.Green, value.Blue, 0);
+				_verts[2].Color = new Color(0, 0, 0, 0);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace Frost.UI
 			_width   = width;
 			_height  = height;
 			_texture = new RenderTexture(width, height);
-			_sprite  = new SFML.Graphics.Sprite(_texture.Texture);
+			_sprite  = new Sprite(_texture.Texture);
 
 			// Start at an offset to correct gaps due to rounding errors
 			_pos = 0.1f;
@@ -87,7 +87,7 @@ namespace Frost.UI
 			if(_pos > _width)
 			{// Loop around
 				_pos = 0.1f;
-				_texture.Clear(new SFML.Graphics.Color(0, 0, 0, 0));
+				_texture.Clear(new Color(0, 0, 0, 0));
 			}
 		}
 
