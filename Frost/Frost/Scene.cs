@@ -6,7 +6,7 @@ namespace Frost
 	/// <summary>
 	/// Logically separate section of the game
 	/// </summary>
-	public abstract class Scene : IFrameUpdate, IRenderable
+	public abstract class Scene : IFrameUpdate, IFrameRender
 	{
 		/// <summary>
 		/// Manager that owns the scene
@@ -79,10 +79,10 @@ namespace Frost
 		}
 
 		/// <summary>
-		/// Draws the state of the scene
+		/// Renders the state of the scene
 		/// </summary>
 		/// <param name="args">Render information</param>
-		public void Draw (FrameDrawEventArgs args)
+		public void Render (FrameDrawEventArgs args)
 		{
 			OnDraw(args);
 		}

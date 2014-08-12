@@ -10,7 +10,7 @@ namespace Frost.UI
 	/// A horizontal graph with each bar 1 pixel in size.
 	/// This graph is useful for diagnostics.
 	/// </summary>
-	public class PixelGraph : IRenderable, IFullDisposable
+	public class PixelGraph : IFrameRender, IFullDisposable
 	{
 		private const int DefaultColor = 0x2eb82e;
 
@@ -96,7 +96,7 @@ namespace Frost.UI
 		/// Draws the graph
 		/// </summary>
 		/// <param name="args">Render information</param>
-		public void Draw (FrameDrawEventArgs args)
+		public void Render (FrameDrawEventArgs args)
 		{
 			_texture.Display();
 			var rs = RenderStates.Default;
