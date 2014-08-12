@@ -1,6 +1,6 @@
 ﻿using System;
-using NColor = System.Drawing.Color;
-using SColor = SFML.Graphics.Color;
+using NetColor  = System.Drawing.Color;
+using SfmlColor = SFML.Graphics.Color;
 
 namespace Frost.Graphics
 {
@@ -72,7 +72,7 @@ namespace Frost.Graphics
 		/// Copies color values from a .net color
 		/// </summary>
 		/// <param name="color">.net color</param>
-		public Color (NColor color)
+		public Color (NetColor color)
 		{
 			_value = color.ToArgb();
 		}
@@ -81,7 +81,7 @@ namespace Frost.Graphics
 		/// Copies color values from a SFML color
 		/// </summary>
 		/// <param name="color">SFML color</param>
-		public Color (SColor color)
+		public Color (SfmlColor color)
 		{
 			_value = ArgbToInt(color.R, color.G, color.B, color.A);
 		}
@@ -271,7 +271,7 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">.net color</param>
 		/// <returns>A color structure</returns>
-		public static implicit operator Color (NColor color)
+		public static implicit operator Color (NetColor color)
 		{
 			return new Color(color);
 		}
@@ -281,7 +281,7 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">SFML color</param>
 		/// <returns>A color structure</returns>
-		public static implicit operator Color (SColor color)
+		public static implicit operator Color (SfmlColor color)
 		{
 			return new Color(color);
 		}
@@ -291,9 +291,9 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">Color to convert</param>
 		/// <returns>A .net color</returns>
-		public static implicit operator NColor (Color color)
+		public static implicit operator NetColor (Color color)
 		{
-			return NColor.FromArgb(color._value);
+			return NetColor.FromArgb(color._value);
 		}
 
 		/// <summary>
@@ -301,9 +301,9 @@ namespace Frost.Graphics
 		/// </summary>
 		/// <param name="color">Color to convert</param>
 		/// <returns>A SFML color</returns>
-		public static implicit operator SColor (Color color)
+		public static implicit operator SfmlColor (Color color)
 		{
-			return new SColor(color.Red, color.Green, color.Blue, color.Alpha);
+			return new SfmlColor(color.Red, color.Green, color.Blue, color.Alpha);
 		}
 		#endregion
 
