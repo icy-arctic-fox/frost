@@ -1,5 +1,6 @@
 ﻿using System;
 using Frost.Geometry;
+using SFML.Graphics;
 
 namespace Frost.Graphics
 {
@@ -8,6 +9,8 @@ namespace Frost.Graphics
 	/// </summary>
 	public class Canvas // TODO: Implement IRenderTarget
 	{
+		private readonly RenderTexture _texture;
+
 		/// <summary>
 		/// Pen used to draw lines
 		/// </summary>
@@ -21,7 +24,8 @@ namespace Frost.Graphics
 		/// <param name="height">Height of the drawable region in pixels</param>
 		public Canvas (uint width, uint height)
 		{
-			Pen = Pen.Default;
+			_texture = new RenderTexture(width, height);
+			Pen      = Pen.Default;
 		}
 
 		#region Drawing methods
