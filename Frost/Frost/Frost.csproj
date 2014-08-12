@@ -82,6 +82,7 @@
     <Compile Include="Graphics\IRenderTarget.cs" />
     <Compile Include="Graphics\Object2D.cs" />
     <Compile Include="Graphics\Pen.cs" />
+    <Compile Include="Graphics\SolidPen.cs" />
     <Compile Include="Graphics\Text\ILiveTextStringSegment.cs" />
     <Compile Include="Graphics\Text\ITextSize.cs" />
     <Compile Include="Graphics\Text\LiveTextEndFormatToken.cs" />
