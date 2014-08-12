@@ -6,7 +6,7 @@
 	public class SolidPen : Pen
 	{
 		private readonly Color _color;
-		private readonly float _width;
+		private readonly float _thickness;
 
 		/// <summary>
 		/// Color of the line
@@ -17,22 +17,22 @@
 		}
 
 		/// <summary>
-		/// Thickness of the line (in pixels)
+		/// Width of the line in pixels
 		/// </summary>
-		public float Width
+		public float Thickness
 		{
-			get { return _width; }
+			get { return _thickness; }
 		}
 
 		/// <summary>
 		/// Creates a pen
 		/// </summary>
 		/// <param name="color">Color of the pen</param>
-		/// <param name="width">Thickness of the pen</param>
-		public SolidPen (Color color, float width)
+		/// <param name="thickness">Width of the line in pixels</param>
+		public SolidPen (Color color, float thickness)
 		{
 			_color = color;
-			_width = width;
+			_thickness = thickness;
 		}
 	}
 }
