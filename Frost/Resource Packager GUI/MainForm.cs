@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using Frost.IO.Resources;
+using Frost.Resources;
 
 namespace Frost.ResourcePackagerGui
 {

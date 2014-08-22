@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Frost.IO.Resources;
+using Frost.Resources;
 using Frost.Utility;
 
 namespace Frost.ResourcePackager
@@ -318,7 +318,7 @@ namespace Frost.ResourcePackager
 		{
 			using(var reader = new ResourcePackageReader(filepath, _password))
 				foreach(var resource in reader.Resources)
-					Console.WriteLine("{0} {1,9} {2}", resource.Id, StringUtility.AsByteUnitString(resource.Size), resource.Name);
+					Console.WriteLine("{0} {1,9} {2}", resource.Id,  StringUtility.AsByteUnitString(resource.Size), resource.Name);
 			return ReturnCode.Ok;
 		}
 

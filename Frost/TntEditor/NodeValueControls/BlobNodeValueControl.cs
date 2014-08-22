@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Frost.IO.Tnt;
+using Frost.Tnt;
 using Frost.Utility;
 
 namespace Frost.TntEditor.NodeValueControls
