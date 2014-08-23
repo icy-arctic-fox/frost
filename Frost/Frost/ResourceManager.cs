@@ -160,6 +160,30 @@ namespace Frost
 		}
 
 		/// <summary>
+		/// Attempts to find and retrieve a resource by a given name
+		/// </summary>
+		/// <param name="name">Name of the requested resource</param>
+		/// <param name="allowMod">When true, allows overwritten (modded) resources to be retrieved</param>
+		/// <returns>A stream containing the data for the resource or null if the resource doesn't exist</returns>
+		/// <remarks>This method will not cache resource data.</remarks>
+		/// <exception cref="ArgumentNullException">The <paramref name="name"/> of the resource to retrieve can't be null.</exception>
+		public Stream GetResourceStream (string name, bool allowMod = true)
+		{
+			if(name == null)
+				throw new ArgumentNullException("name");
+
+			lock(_locker)
+			{
+				if(!allowMod && _originalResources.ContainsKey(name))
+				{// Don't allow mods and use the original resource
+					var reader = _originalResources[name];
+					return reader.GetResourceStream(name);
+				}
+				return _knownResources.ContainsKey(name) ? _knownResources[name].GetResourceStream(name) : null;
+			}
+		}
+
+		/// <summary>
 		/// Describes a method that transforms a resource from its raw form to a usable format
 		/// </summary>
 		/// <typeparam name="TResource">Type of resource that is produced</typeparam>
