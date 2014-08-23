@@ -29,6 +29,18 @@ namespace Frost.Entities
 		}
 
 		/// <summary>
+		/// Creates a new component for an entity to exist in 2D space with initial coordinates and rotation
+		/// </summary>
+		/// <param name="x">Initial x-coordinate</param>
+		/// <param name="y">Initial y-coordinate</param>
+		/// <param name="rot">Initial rotation (in degrees)</param>
+		public Positional2DComponent (float x, float y, float rot = 0f)
+		{
+			var initialStates = new List<State>(StateManager.StateCount) { new State(x, y, rot), new State(x, y, rot), new State(x, y, rot) };
+			_states = new StateSet<State>(initialStates);
+		}
+
+		/// <summary>
 		/// Constructor used for cloning
 		/// </summary>
 		/// <param name="initialStates">Initial states for the component</param>
