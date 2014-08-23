@@ -279,7 +279,7 @@ namespace Frost.Modules.Input
 		/// <param name="args">Information about the input</param>
 		protected override void OnInputStarted (InputEventArgs args)
 		{
-			base.OnInputEnded(args);
+			base.OnInputStarted(args);
 
 			EventHandler<InputEventArgs> ev;
 			switch(args.Id)
