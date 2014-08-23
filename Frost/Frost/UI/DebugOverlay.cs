@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using Frost.Geometry;
 using Frost.Graphics.Text;
 using Frost.Utility;
-using SFML.Graphics;
 using Color = Frost.Graphics.Color;
-using Font = Frost.Graphics.Text.Font;
+using Font  = Frost.Graphics.Text.Font;
+using SfmlColor    = SFML.Graphics.Color;
+using SfmlTexture  = SFML.Graphics.Texture;
+using SfmlImage    = SFML.Graphics.Image;
+using SfmlSprite   = SFML.Graphics.Sprite;
+using RenderStates = SFML.Graphics.RenderStates;
+using IntRect      = SFML.Graphics.IntRect;
 
 namespace Frost.UI
 {
@@ -16,13 +21,15 @@ namespace Frost.UI
 	public class DebugOverlay : IFrameUpdate, IFrameRender, IFullDisposable
 	{
 		private const int TextColor        = 0xffffff;
-		private const int BackgroundColor  = 0x404040;
+		private const byte BackgroundRed   = 0x40;
+		private const byte BackgroundGreen = 0x40;
+		private const byte BackgroundBlue  = 0x40;
 		private const byte BackgroundAlpha = 0x80;
 
-		private static readonly SFML.Graphics.Color _backgroundColor = new Color(BackgroundColor, BackgroundAlpha);
+		private static readonly SfmlColor _backgroundColor = new SfmlColor(BackgroundRed, BackgroundGreen, BackgroundBlue, BackgroundAlpha);
 		private static readonly Color _textColor = new Color(TextColor);
 
-		private readonly Sprite _background;
+		private readonly SfmlSprite _background;
 		private readonly Font _font;
 		private readonly uint _fontSize;
 		private readonly object _locker = new object();
@@ -47,7 +54,7 @@ namespace Frost.UI
 
 			_font       = font;
 			_fontSize   = fontSize;
-			_background = new Sprite();
+			_background = new SfmlSprite();
 		}
 
 		/// <summary>
@@ -178,8 +185,8 @@ namespace Frost.UI
 				var height = (uint)(bounds.Height + 1);
 
 				// Create the new texture
-				var background          = new Image(width, height, _backgroundColor);
-				_background.Texture     = new Texture(background);
+				var background          = new SfmlImage(width, height, _backgroundColor);
+				_background.Texture     = new SfmlTexture(background);
 				_background.TextureRect = new IntRect(0, 0, (int)width, (int)height);
 				_resize = false;
 			}
