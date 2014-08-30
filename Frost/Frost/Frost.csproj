@@ -79,6 +79,7 @@
     <Compile Include="Geometry\Vector2.cs" />
     <Compile Include="Graphics\Canvas.cs" />
     <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\ColorExtensions.cs" />
     <Compile Include="Graphics\IRenderTarget.cs" />
     <Compile Include="Graphics\Object2D.cs" />
     <Compile Include="Graphics\Pen.cs" />

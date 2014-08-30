@@ -1,7 +1,9 @@
 ﻿using System;
 using Frost.Geometry;
-using SFML.Graphics;
 using Frost.Utility;
+using SFML.Graphics;
+using SfmlFont  = SFML.Graphics.Font;
+using SfmlColor = SFML.Graphics.Color;
 
 namespace Frost.Graphics.Text
 {
@@ -14,8 +16,8 @@ namespace Frost.Graphics.Text
 	{
 		private readonly uint _size;
 		private readonly int _spacing;
-		private readonly SFML.Graphics.Font _font;
-		private SFML.Graphics.Color _color;
+		private readonly SfmlFont _font;
+		private SfmlColor _color;
 		private readonly VertexArray _verts = new VertexArray(PrimitiveType.Quads);
 		private RenderStates _rs = RenderStates.Default;
 		private readonly MutableString _text = new MutableString();
@@ -31,7 +33,7 @@ namespace Frost.Graphics.Text
 			_font    = font.SfmlFont;
 			_size    = size;
 			_spacing = _font.GetLineSpacing(size);
-			_color   = color;
+			_color   = color.ToSfmlColor();
 		}
 
 		/// <summary>
@@ -62,10 +64,10 @@ namespace Frost.Graphics.Text
 		/// </summary>
 		public Color Color
 		{
-			get { return _color; }
+			get { return _color.FromSfmlColor(); }
 			set
 			{
-				_color = value;
+				_color = value.ToSfmlColor();
 				updateVertColor(_color);
 			}
 		}

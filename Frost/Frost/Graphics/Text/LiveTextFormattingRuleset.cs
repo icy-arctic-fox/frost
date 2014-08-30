@@ -175,7 +175,7 @@ namespace Frost.Graphics.Text
 					return new Color(hexValue);
 
 				// Last resort is a color name
-				return new Color(value);
+				ColorExtensions.FromName(value);
 			}
 
 			return new Color(0x000000); // Black by default

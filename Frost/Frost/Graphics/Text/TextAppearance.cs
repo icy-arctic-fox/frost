@@ -127,7 +127,7 @@ namespace Frost.Graphics.Text
 		{
 			t.CharacterSize = Size;
 			t.Font  = _font.SfmlFont;
-			t.Color = Color;
+			t.Color = Color.ToSfmlColor();
 
 			t.Style = SFML.Graphics.Text.Styles.Regular;
 			if(Bold)

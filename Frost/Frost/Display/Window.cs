@@ -1,9 +1,11 @@
 ﻿using System;
 using Frost.Geometry;
+using Frost.Graphics;
 using SFML.Graphics;
 using SFML.Window;
 using Frost.Modules.Input;
 using Frost.Utility;
+using Color = SFML.Graphics.Color;
 using Mouse = Frost.Modules.Input.Mouse;
 using M     = SFML.Window.Mouse;
 
@@ -512,8 +514,8 @@ namespace Frost.Display
 		/// </summary>
 		public Graphics.Color BackgroundColor
 		{
-			get { return _backColor; }
-			set { _backColor = value; }
+			get { return _backColor.FromSfmlColor(); }
+			set { _backColor = value.ToSfmlColor(); }
 		}
 
 		#region Mouse

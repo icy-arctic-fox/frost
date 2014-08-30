@@ -1,7 +1,10 @@
 ﻿using System;
 using Frost.Geometry;
+using Frost.Graphics;
 using Frost.Utility;
 using SFML.Graphics;
+using SfmlColor  = SFML.Graphics.Color;
+using SfmlSprite = SFML.Graphics.Sprite;
 
 namespace Frost.UI
 {
@@ -11,9 +14,11 @@ namespace Frost.UI
 	/// </summary>
 	public class PixelGraph : IFrameRender, IFullDisposable
 	{
-		private const int DefaultColor = 0x2eb82e;
+		private const byte DefaultColorRed   = 0x2e;
+		private const byte DefaultColorGreen = 0xb8;
+		private const byte DefaultColorBlue  = 0x2e;
 
-		private readonly Sprite _sprite;
+		private readonly SfmlSprite _sprite;
 		private readonly RenderTexture _texture;
 		private readonly Vertex[] _verts;
 
@@ -26,7 +31,7 @@ namespace Frost.UI
 		/// </summary>
 		public Point2f Position { get; set; }
 
-		private Graphics.Color _color = new Graphics.Color(DefaultColor);
+		private Graphics.Color _color = new Graphics.Color(DefaultColorRed, DefaultColorGreen, DefaultColorBlue);
 
 		/// <summary>
 		/// Color of the bars on the graph
@@ -37,9 +42,9 @@ namespace Frost.UI
 			set
 			{
 				_color = value;
-				_verts[0].Color = value;
-				_verts[1].Color = new Color(value.Red, value.Green, value.Blue, 0);
-				_verts[2].Color = new Color(0, 0, 0, 0);
+				_verts[0].Color = value.ToSfmlColor();
+				_verts[1].Color = new SfmlColor(value.Red, value.Green, value.Blue, 0);
+				_verts[2].Color = new SfmlColor(0, 0, 0, 0);
 			}
 		}
 
@@ -59,16 +64,16 @@ namespace Frost.UI
 			_width   = width;
 			_height  = height;
 			_texture = new RenderTexture(width, height);
-			_sprite  = new Sprite(_texture.Texture);
+			_sprite  = new SfmlSprite(_texture.Texture);
 
 			// Start at an offset to correct gaps due to rounding errors
 			_pos = 0.1f;
 
 			// Construct vertices
 			_verts    = new Vertex[3];
-			_verts[0] = new Vertex(new SFML.Window.Vector2f(0f, height), new Graphics.Color(DefaultColor));
-			_verts[1] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new Graphics.Color(DefaultColor, 0));
-			_verts[2] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new Graphics.Color(0, 0, 0, 0));
+			_verts[0] = new Vertex(new SFML.Window.Vector2f(0f, height), new SfmlColor(DefaultColorRed, DefaultColorGreen, DefaultColorBlue));
+			_verts[1] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new SfmlColor(DefaultColorRed, DefaultColorGreen, DefaultColorBlue, 0));
+			_verts[2] = new Vertex(new SFML.Window.Vector2f(0f, 0f), new SfmlColor(0, 0, 0, 0));
 		}
 
 		/// <summary>
@@ -87,7 +92,7 @@ namespace Frost.UI
 			if(_pos > _width)
 			{// Loop around
 				_pos = 0.1f;
-				_texture.Clear(new Color(0, 0, 0, 0));
+				_texture.Clear(new SfmlColor(0, 0, 0, 0));
 			}
 		}
 

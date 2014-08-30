@@ -1,6 +1,4 @@
 ﻿using System;
-using NetColor  = System.Drawing.Color;
-using SfmlColor = SFML.Graphics.Color;
 
 namespace Frost.Graphics
 {
@@ -67,33 +65,6 @@ namespace Frost.Graphics
 		{
 			_value = (color._value & 0x00ffffff) | (alpha << 24);
 		}
-
-		/// <summary>
-		/// Copies color values from a .net color
-		/// </summary>
-		/// <param name="color">.net color</param>
-		public Color (NetColor color)
-		{
-			_value = color.ToArgb();
-		}
-
-		/// <summary>
-		/// Copies color values from a SFML color
-		/// </summary>
-		/// <param name="color">SFML color</param>
-		public Color (SfmlColor color)
-		{
-			_value = ArgbToInt(color.R, color.G, color.B, color.A);
-		}
-
-		/// <summary>
-		/// Creates a new color from the name of a color
-		/// </summary>
-		/// <param name="name">Color name - color names are based on .net's predefined colors.</param>
-		public Color (string name)
-		{
-			_value = System.Drawing.Color.FromName(name).ToArgb();
-		}
 		#endregion
 
 		#region Color values
@@ -133,6 +104,15 @@ namespace Frost.Graphics
 		{
 			get { return (byte)((_value >> 24) & 0xff); }
 			set { _value = (_value & 0x00ffffff) | (value << 24); }
+		}
+
+		/// <summary>
+		/// All color values arranged as alpha, red, green, and blue
+		/// </summary>
+		public int Argb
+		{
+			get { return _value; }
+			set { _value = value; }
 		}
 
 		/// <summary>
@@ -261,49 +241,6 @@ namespace Frost.Graphics
 					_value = (_value & unchecked((int)0xff000000)) | (r << 16) | (g << 8) | b;
 				}
 			}
-		}
-		#endregion
-
-		#region Conversions
-
-		/// <summary>
-		/// Converts a .net color to this color structure
-		/// </summary>
-		/// <param name="color">.net color</param>
-		/// <returns>A color structure</returns>
-		public static implicit operator Color (NetColor color)
-		{
-			return new Color(color);
-		}
-
-		/// <summary>
-		/// Converts a SFML color to this color structure
-		/// </summary>
-		/// <param name="color">SFML color</param>
-		/// <returns>A color structure</returns>
-		public static implicit operator Color (SfmlColor color)
-		{
-			return new Color(color);
-		}
-
-		/// <summary>
-		/// Converts this color structure to a .net color
-		/// </summary>
-		/// <param name="color">Color to convert</param>
-		/// <returns>A .net color</returns>
-		public static implicit operator NetColor (Color color)
-		{
-			return NetColor.FromArgb(color._value);
-		}
-
-		/// <summary>
-		/// Converts this color structure to a SFML color
-		/// </summary>
-		/// <param name="color">Color to convert</param>
-		/// <returns>A SFML color</returns>
-		public static implicit operator SfmlColor (Color color)
-		{
-			return new SfmlColor(color.Red, color.Green, color.Blue, color.Alpha);
 		}
 		#endregion
 
